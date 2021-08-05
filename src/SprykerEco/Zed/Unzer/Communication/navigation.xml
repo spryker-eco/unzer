@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <unzer>
+        <label>Unzer</label>
+        <title>Unzer</title>
+        <bundle>unzer</bundle>
+        <controller>index</controller>
+        <action>index</action>
+    </unzer>
+</config>
