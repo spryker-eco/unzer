@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Communication\Console;
 
 use Spryker\Zed\Kernel\Communication\Console\Console;
@@ -8,12 +13,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @method \Pyz\Zed\Unzer\Business\UnzerFacade getFacade()
+ * @method \SprykerEco\Zed\Unzer\Persistence\UnzerQueryContainerInterface getQueryContainer()
+ * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
  */
 class UnzerConsole extends Console
 {
-
-    const COMMAND_NAME = 'some:command';
-    const DESCRIPTION = 'Describe me!';
+    public const COMMAND_NAME = 'some:command';
+    public const DESCRIPTION = 'Describe me!';
 
     /**
      * @return void
@@ -41,5 +47,4 @@ class UnzerConsole extends Console
 
         return static::CODE_SUCCESS;
     }
-
 }

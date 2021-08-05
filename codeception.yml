@@ -1,7 +1,7 @@
 namespace: UnzerApi
 
 include:
-    - tests/SprykerEcoTest/Zed/UnzerApi
+    - tests/SprykerEcoTest/Zed/Unzer
 
 paths:
     tests: tests
