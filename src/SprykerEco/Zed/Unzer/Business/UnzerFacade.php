@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business;
 
 use Spryker\Zed\Kernel\Business\AbstractFacade;
@@ -9,7 +14,4 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
  */
 class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
 {
-
-    //TODO Implement UnzerFacadeInterface
-
 }
