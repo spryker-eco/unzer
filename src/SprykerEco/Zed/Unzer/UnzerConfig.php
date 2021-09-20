@@ -1,0 +1,217 @@
+<?php
+
+namespace SprykerEco\Zed\Unzer;
+
+use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
+use SprykerEco\Shared\Unzer\UnzerConstants as UnzerSharedConstants;
+use Spryker\Zed\Kernel\AbstractBundleConfig;
+
+/**
+ * @method \SprykerEco\Shared\Unzer\UnzerConfig getSharedConfig()
+ */
+class UnzerConfig extends AbstractBundleConfig
+{
+    protected const UNZER_PAYMENT_STATE_OMS_STATUS_MAP = [
+        UnzerConstants::UNZER_PAYMENT_STATUS_PENDING => UnzerConstants::OMS_STATUS_PAYMENT_PENDING,
+        UnzerConstants::UNZER_PAYMENT_STATUS_COMPLETED => UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
+        UnzerConstants::UNZER_PAYMENT_STATUS_CANCELED => UnzerConstants::OMS_STATUS_PAYMENT_CANCELLED,
+        UnzerConstants::UNZER_PAYMENT_STATUS_CHARGE_BACK => UnzerConstants::OMS_STATUS_PAYMENT_CHARGEBACK,
+    ];
+
+    protected const UNZER_EVENT_OMS_STATUS_MAP = [
+        UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS => UnzerConstants::OMS_STATUS_AUTHORIZE_SUCCEEDED,
+        UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_PENDING => UnzerConstants::OMS_STATUS_AUTHORIZE_PENDING,
+        UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_FAILED => UnzerConstants::OMS_STATUS_AUTHORIZE_FAILED,
+        UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_CANCELED => UnzerConstants::OMS_STATUS_AUTHORIZE_CANCELED,
+        UnzerConstants::NOTIFICATION_TYPE_CHARGE_PENDING => UnzerConstants::OMS_STATUS_CHARGE_PENDING,
+        UnzerConstants::NOTIFICATION_TYPE_CHARGE_FAILED => UnzerConstants::OMS_STATUS_CHARGE_FAILED,
+        UnzerConstants::NOTIFICATION_TYPE_PAYMENT_COMPLETED => UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
+    ];
+
+    protected const UNZER_PAYMENT_METHODS_MAP = [
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD => UnzerConstants::UNZER_PAYMENT_METHOD_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER => UnzerConstants::UNZER_PAYMENT_METHOD_BANK_TRANSFER,
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT => UnzerConstants::UNZER_PAYMENT_METHOD_SOFORT,
+    ];
+
+    protected const AUTHORIZE_PAYMENT_METHODS = [
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
+    ];
+
+    protected const MARKETPLACE_READY_PAYMENT_METHODS = [
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER,
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT,
+    ];
+
+    protected const ENABLED_UNZER_NOTIFICATIONS = [
+        UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS,
+        UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_FAILED,
+        UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_CANCELED,
+
+        UnzerConstants::NOTIFICATION_TYPE_CHARGE_PENDING,
+        UnzerConstants::NOTIFICATION_TYPE_CHARGE_FAILED,
+
+        UnzerConstants::NOTIFICATION_TYPE_PAYMENT_COMPLETED,
+        UnzerConstants::NOTIFICATION_TYPE_PAYMENT_CANCELED,
+        UnzerConstants::NOTIFICATION_TYPE_PAYMENT_CHARGEBACK,
+    ];
+
+    /**
+     * @param string $paymentMethodName
+     *
+     * @return bool
+     */
+    public function isPaymentMethodMarketplaceReady(string $paymentMethodName): bool
+    {
+        return in_array($paymentMethodName, static::MARKETPLACE_READY_PAYMENT_METHODS, true);
+    }
+
+    /**
+     * @param string $paymentMethodName
+     *
+     * @return bool
+     */
+    public function isPaymentAuthorizeRequired(string $paymentMethodName): bool
+    {
+        return in_array($paymentMethodName, static::AUTHORIZE_PAYMENT_METHODS, true);
+    }
+
+    /**
+     * @param string $paymentMethodName
+     *
+     * @return string
+     */
+    public function getUnzerPaymentMethodKey(string $paymentMethodName): string
+    {
+        return static::UNZER_PAYMENT_METHODS_MAP[$paymentMethodName];
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthorizeReturnUrl(): string
+    {
+        return (string)$this->get(UnzerSharedConstants::UNZER_AUTHORIZE_RETURN_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getChargeReturnUrl(): string
+    {
+        return (string)$this->get(UnzerSharedConstants::UNZER_CHARGE_RETURN_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebhookRetrieveUrl(): string
+    {
+        return (string)$this->get(UnzerSharedConstants::WEBHOOK_RETRIEVE_URL);
+    }
+
+    /**
+     * @return string
+     */
+    public function getOmsStatusNew(): string
+    {
+        return UnzerConstants::OMS_STATUS_NEW;
+    }
+
+    /**
+     * @param int $unzerStateId
+     *
+     * @return string
+     */
+    public function mapUnzerPaymentStatusToOmsStatus(int $unzerStateId): string
+    {
+        return static::UNZER_PAYMENT_STATE_OMS_STATUS_MAP[$unzerStateId];
+    }
+
+    /**
+     * @param string $eventType
+     *
+     * @return bool
+     */
+    public function isNotificationTypeEnabled(string $eventType): bool
+    {
+        return in_array($eventType, static::ENABLED_UNZER_NOTIFICATIONS, true);
+    }
+
+    /**
+     * @param string $unzerEvent
+     *
+     * @return string
+     */
+    public function mapUnzerEventToOmsStatus(string $unzerEvent): string
+    {
+        return static::UNZER_EVENT_OMS_STATUS_MAP[$unzerEvent];
+    }
+
+    /**
+     * @return string
+     */
+    public function getOmsStatusAuthorizeSucceeded(): string
+    {
+        return UnzerConstants::OMS_STATUS_AUTHORIZE_SUCCEEDED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOmsStatusAuthorizePending(): string
+    {
+        return UnzerConstants::OMS_STATUS_AUTHORIZE_PENDING;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOmsStatusAuthorizeFailed(): string
+    {
+        return UnzerConstants::OMS_STATUS_AUTHORIZE_FAILED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOmsStatusAuthorizeCanceled(): string
+    {
+        return UnzerConstants::OMS_STATUS_AUTHORIZE_CANCELED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOmsStatusPaymentCompleted(): string
+    {
+        return UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOmsStatusChargeFailed(): string
+    {
+        return UnzerConstants::OMS_STATUS_CHARGE_FAILED;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOmsStatusChargeback(): string
+    {
+        return UnzerConstants::OMS_STATUS_PAYMENT_CHARGEBACK;
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getProviderName(): string
+    {
+        return $this->getSharedConfig()->getProviderName();
+    }
+}

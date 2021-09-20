@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<transfers xmlns="spryker:transfer-01"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
+
+    <transfer name="UnzerWebhook">
+        <property name="id" type="string"/>
+        <property name="retrieveUrl" type="string"/>
+        <property name="event" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerBasket">
+        <property name="id" type="string"/>
+        <property name="amountTotalGross" type="float"/>
+        <property name="amountTotalVat" type="float"/>
+        <property name="currencyCode" type="string"/>
+        <property name="note" type="string"/>
+        <property name="orderId" type="string"/>
+        <property name="basketItems" type="UnzerBasketItem[]" singular="basketItem"/>
+    </transfer>
+
+    <transfer name="UnzerBasketItem">
+        <property name="basketItemReferenceId" type="string"/>
+        <property name="quantity" type="int"/>
+        <property name="amountDiscount" type="float"/>
+        <property name="vat" type="float"/>
+        <property name="amountGross" type="float"/>
+        <property name="amountVat" type="float"/>
+        <property name="amountPerUnit" type="float"/>
+        <property name="amountNet" type="float"/>
+        <property name="title" type="string"/>
+        <property name="participantId" type="string"/>
+        <property name="type" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerRefund">
+        <property name="paymentReference" type="string"/>
+        <property name="amount" type="float"/>
+        <property name="orderId" type="string"/>
+        <property name="invoiceId" type="string"/>
+        <property name="paymentId" type="string"/>
+        <property name="chargeId" type="string"/>
+        <property name="isMarketplace" type="bool"/>
+        <property name="isPartialRefund" type="bool"/>
+        <property name="items" type="UnzerRefundItem[]" singular="item"/>
+    </transfer>
+
+    <transfer name="UnzerRefundItem">
+        <property name="basketItemReferenceId" type="string"/>
+        <property name="quantity" type="int"/>
+        <property name="amountGross" type="float"/>
+        <property name="participantId" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerCustomer">
+        <property name="id" type="string"/>
+        <property name="lastname" type="string"/>
+        <property name="firstname" type="string"/>
+        <property name="salutation" type="string"/>
+        <property name="company" type="string"/>
+        <property name="birthDate" type="string"/>
+        <property name="email" type="string"/>
+        <property name="phone" type="string"/>
+        <property name="mobile" type="string"/>
+        <property name="type" type="string"/>
+        <property name="billingAddress" type="UnzerAddress"/>
+        <property name="shippingAddress" type="UnzerAddress"/>
+        <property name="geoLocation" type="UnzerGeolocation"/>
+    </transfer>
+
+    <transfer name="UnzerAddress">
+        <property name="name" type="string"/>
+        <property name="street" type="string"/>
+        <property name="state" type="string"/>
+        <property name="zip" type="string"/>
+        <property name="city" type="string"/>
+        <property name="country" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerGeolocation">
+        <property name="clientIp" type="string"/>
+        <property name="countryIsoA2" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerMetadata">
+        <property name="id" type="string"/>
+        <property name="store" type="string"/>
+        <property name="locale" type="string"/>
+        <property name="priceMode" type="string"/>
+        <property name="createdAt" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerPaymentResource">
+        <property name="id" type="string"/>
+        <property name="type" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerPayment">
+        <property name="id" type="string"/>
+        <property name="stateId" type="int"/>
+        <property name="stateName" type="string"/>
+        <property name="amountTotal" type="int"/>
+        <property name="amountCharged" type="int"/>
+        <property name="amountCanceled" type="int"/>
+        <property name="amountRemaining" type="int"/>
+        <property name="currency" type="string"/>
+        <property name="orderId" type="string"/>
+        <property name="invoiceId" type="string"/>
+        <property name="customer" type="UnzerCustomer"/>
+        <property name="metadata" type="UnzerMetadata"/>
+        <property name="basket" type="UnzerBasket"/>
+        <property name="paymentResource" type="UnzerPaymentResource"/>
+        <property name="transactions" type="UnzerTransaction[]" singular="transaction"/>
+        <property name="isMarketplace" type="bool"/>
+        <property name="isAuthorizable" type="bool"/>
+        <property name="redirectUrl" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerTransaction">
+        <property name="participantId" type="string"/>
+        <property name="date" type="string"/>
+        <property name="type" type="string"/>
+        <property name="status" type="string"/>
+        <property name="url" type="string"/>
+        <property name="amount" type="float"/>
+    </transfer>
+
+    <transfer name="UnzerNotification">
+        <property name="event" type="string"/>
+        <property name="publicKey" type="string"/>
+        <property name="retrieveUrl" type="string"/>
+        <property name="paymentId" type="string"/>
+        <property name="isProcessed" type="bool"/>
+    </transfer>
+
+    <transfer name="Payment">
+        <property name="unzerPayment" type="UnzerPayment"/>
+    </transfer>
+
+    <transfer name="Item">
+        <property name="unzerParticipantId" type="string"/>
+    </transfer>
+
+    <transfer name="Merchant">
+        <property name="merchantUnzerParticipantId" type="string"/>
+    </transfer>
+
+    <!--    Propel transfers group-->
+    <transfer name="MerchantUnzerParticipant">
+        <property name="merchantReference" type="string"/>
+        <property name="merchantId" type="int"/>
+        <property name="participantId" type="string"/>
+    </transfer>
+
+    <transfer name="PaymentUnzer">
+        <property name="idPaymentUnzer" type="int"/>
+        <property name="idSalesOrder" type="int"/>
+        <property name="state" type="string"/>
+        <property name="stateId" type="int"/>
+        <property name="paymentId" type="string"/>
+        <property name="customerId" type="string"/>
+        <property name="basketId" type="string"/>
+        <property name="typeId" type="string"/>
+        <property name="amountTotal" type="int"/>
+        <property name="amountCharged" type="int"/>
+        <property name="amountCanceled" type="int"/>
+        <property name="amountRemaining" type="int"/>
+        <property name="currency" type="string"/>
+        <property name="orderId" type="string"/>
+        <property name="invoiceId" type="string"/>
+        <property name="metadataId" type="string"/>
+        <property name="payPageId" type="string"/>
+        <property name="isMarketplace" type="bool"/>
+        <property name="isAuthorizable" type="bool"/>
+    </transfer>
+
+    <transfer name="PaymentUnzerOrderItem">
+        <property name="idPaymentUnzerOrderItem" type="int"/>
+        <property name="idPaymentUnzer" type="int"/>
+        <property name="idSalesOrderItem" type="int"/>
+        <property name="participantId" type="string"/>
+        <property name="status" type="string"/>
+    </transfer>
+
+    <transfer name="PaymentUnzerTransaction">
+        <property name="idPaymentUnzerTransaction" type="int"/>
+        <property name="idPaymentUnzer" type="int"/>
+        <property name="transactionUniqueId" type="string"/>
+        <property name="participantId" type="string"/>
+        <property name="date" type="string"/>
+        <property name="type" type="string"/>
+        <property name="status" type="string"/>
+        <property name="transactionId" type="string"/>
+        <property name="amount" type="int"/>
+    </transfer>
+
+    <transfer name="PaymentUnzerTransactionCollection">
+        <property name="paymentUnzerTransactions" type="PaymentUnzerTransaction[]" singular="paymentUnzerTransaction"/>
+    </transfer>
+
+    <transfer name="PaymentUnzerOrderItemCollection">
+        <property name="paymentUnzerOrderItems" type="PaymentUnzerOrderItem[]" singular="paymentUnzerOrderItem"/>
+    </transfer>
+
+    <transfer name="RestUnzerNotificationAttributes">
+        <property name="event" type="string"/>
+        <property name="publicKey" type="string"/>
+        <property name="retrieveUrl" type="string"/>
+        <property name="paymentId" type="string"/>
+    </transfer>
+
+</transfers>
