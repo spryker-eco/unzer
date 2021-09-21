@@ -13,7 +13,8 @@
     "require-dev": {
         "phpstan/phpstan": "*",
         "spryker/code-sniffer": "*",
-        "spryker/testify": "*"
+        "spryker/testify": "*",
+        "codeception/module-asserts": "^1.3"
     },
     "autoload": {
         "psr-4": {
@@ -23,6 +24,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "test": "vendor/bin/codecept run",
         "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/",
         "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/",
         "stan": "phpstan analyse -c phpstan.neon -l 8 src/",

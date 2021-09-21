@@ -20,3 +20,5 @@ settings:
 coverage:
   enabled: true
   whitelist: { include: ['src/*'] }
+
+bootstrap: bootstrap.php

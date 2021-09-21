@@ -56,7 +56,7 @@
         <column name="status" type="VARCHAR" size="255" required="true"/>
         <column name="transaction_id" type="VARCHAR" size="255" required="true"/>
         <column name="amount" type="INTEGER"/>
-        <foreign-key name="spy_payment_unzer-fk_payment_unzer" foreignTable="spy_payment_unzer" phpName="PaymentUnzer" refPhpName="PaymentUnzerTransaction" onDelete="CASCADE">
+        <foreign-key name="spy_payment_unzer-fk_payment_unzer_transaction" foreignTable="spy_payment_unzer" phpName="PaymentUnzer" refPhpName="PaymentUnzerTransaction" onDelete="CASCADE">
             <reference local="fk_payment_unzer" foreign="id_payment_unzer"/>
         </foreign-key>
         <unique name="spy_payment_transaction-uk_transaction_unique_id">

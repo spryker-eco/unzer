@@ -12,3 +12,5 @@
 composer.lock
 composer.phar
 phpunit.phar
+tests/app/src/Generated/
+tests/app/src/Spryker/
