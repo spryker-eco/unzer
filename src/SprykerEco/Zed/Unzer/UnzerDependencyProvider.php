@@ -1,17 +1,37 @@
 <?php declare(strict_types = 1);
 
-namespace Pyz\Zed\Unzer;
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
+namespace SprykerEco\Zed\Unzer;
 
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 
 class UnzerDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
     public const FACADE_UNZER_API = 'FACADE_UNZER_API';
+    /**
+     * @var string
+     */
     public const FACADE_SALES = 'FACADE_SALES';
+    /**
+     * @var string
+     */
     public const FACADE_CALCULATION = 'FACADE_CALCULATION';
+    /**
+     * @var string
+     */
     public const FACADE_REFUND = 'FACADE_REFUND';
 
+    /**
+     * @var string
+     */
     public const CLIENT_QUOTE = 'CLIENT_QUOTE';
 
     /**

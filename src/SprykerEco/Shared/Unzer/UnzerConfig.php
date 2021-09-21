@@ -1,11 +1,19 @@
 <?php declare(strict_types = 1);
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Shared\Unzer;
 
 use Spryker\Shared\Kernel\AbstractBundleConfig;
 
 class UnzerConfig extends AbstractBundleConfig
 {
+    /**
+     * @var string
+     */
     public const PROVIDER_NAME = 'unzer';
 
     public const PAYMENT_METHOD_MARKETPLACE_SOFORT = self::PROVIDER_NAME . 'MarketplaceSofort';

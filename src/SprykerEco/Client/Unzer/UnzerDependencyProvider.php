@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Client\Unzer;
 
 use Spryker\Client\Kernel\AbstractDependencyProvider;
@@ -7,6 +12,9 @@ use Spryker\Client\Kernel\Container;
 
 class UnzerDependencyProvider extends AbstractDependencyProvider
 {
+    /**
+     * @var string
+     */
     public const CLIENT_ZED_REQUEST = 'CLIENT_ZED_REQUEST';
 
     /**

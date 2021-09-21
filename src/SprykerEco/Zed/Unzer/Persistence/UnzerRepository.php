@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
@@ -7,8 +12,8 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
-use Pyz\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
+use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerPersistenceFactory getFactory()

@@ -1,16 +1,24 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer;
 
+use Spryker\Zed\Kernel\AbstractBundleConfig;
 use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants as UnzerSharedConstants;
-use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 /**
  * @method \SprykerEco\Shared\Unzer\UnzerConfig getSharedConfig()
  */
 class UnzerConfig extends AbstractBundleConfig
 {
+    /**
+     * @var array
+     */
     protected const UNZER_PAYMENT_STATE_OMS_STATUS_MAP = [
         UnzerConstants::UNZER_PAYMENT_STATUS_PENDING => UnzerConstants::OMS_STATUS_PAYMENT_PENDING,
         UnzerConstants::UNZER_PAYMENT_STATUS_COMPLETED => UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
@@ -18,6 +26,9 @@ class UnzerConfig extends AbstractBundleConfig
         UnzerConstants::UNZER_PAYMENT_STATUS_CHARGE_BACK => UnzerConstants::OMS_STATUS_PAYMENT_CHARGEBACK,
     ];
 
+    /**
+     * @var array
+     */
     protected const UNZER_EVENT_OMS_STATUS_MAP = [
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS => UnzerConstants::OMS_STATUS_AUTHORIZE_SUCCEEDED,
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_PENDING => UnzerConstants::OMS_STATUS_AUTHORIZE_PENDING,
@@ -28,22 +39,34 @@ class UnzerConfig extends AbstractBundleConfig
         UnzerConstants::NOTIFICATION_TYPE_PAYMENT_COMPLETED => UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
     ];
 
+    /**
+     * @var array
+     */
     protected const UNZER_PAYMENT_METHODS_MAP = [
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD => UnzerConstants::UNZER_PAYMENT_METHOD_CARD,
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER => UnzerConstants::UNZER_PAYMENT_METHOD_BANK_TRANSFER,
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT => UnzerConstants::UNZER_PAYMENT_METHOD_SOFORT,
     ];
 
+    /**
+     * @var array
+     */
     protected const AUTHORIZE_PAYMENT_METHODS = [
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
     ];
 
+    /**
+     * @var array
+     */
     protected const MARKETPLACE_READY_PAYMENT_METHODS = [
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER,
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT,
     ];
 
+    /**
+     * @var array
+     */
     protected const ENABLED_UNZER_NOTIFICATIONS = [
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS,
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_FAILED,
@@ -58,6 +81,8 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
+     * @api
+     *
      * @param string $paymentMethodName
      *
      * @return bool
@@ -68,6 +93,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @param string $paymentMethodName
      *
      * @return bool
@@ -78,6 +105,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @param string $paymentMethodName
      *
      * @return string
@@ -88,6 +117,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getAuthorizeReturnUrl(): string
@@ -96,6 +127,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getChargeReturnUrl(): string
@@ -104,6 +137,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getWebhookRetrieveUrl(): string
@@ -112,6 +147,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getOmsStatusNew(): string
@@ -120,6 +157,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @param int $unzerStateId
      *
      * @return string
@@ -130,6 +169,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @param string $eventType
      *
      * @return bool
@@ -140,6 +181,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @param string $unzerEvent
      *
      * @return string
@@ -150,6 +193,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getOmsStatusAuthorizeSucceeded(): string
@@ -158,6 +203,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getOmsStatusAuthorizePending(): string
@@ -166,6 +213,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getOmsStatusAuthorizeFailed(): string
@@ -174,6 +223,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getOmsStatusAuthorizeCanceled(): string
@@ -182,6 +233,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getOmsStatusPaymentCompleted(): string
@@ -190,6 +243,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getOmsStatusChargeFailed(): string
@@ -198,6 +253,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return string
      */
     public function getOmsStatusChargeback(): string

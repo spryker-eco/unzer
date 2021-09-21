@@ -1,13 +1,18 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItemQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery;
-use Pyz\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
+use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 
 /**
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
