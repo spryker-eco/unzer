@@ -7,6 +7,8 @@
 
 namespace SprykerEco\Zed\Unzer\Communication;
 
+use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
+
 /**
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()

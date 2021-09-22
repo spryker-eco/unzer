@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php
 
 /**
  * MIT License
@@ -9,9 +9,15 @@ namespace SprykerEco\Zed\Unzer;
 
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiBridge;
 
 class UnzerDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
+    public const FACADE_UNZER_API = 'FACADE_UNZER_API';
+
     /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
@@ -33,7 +39,8 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public function provideBusinessLayerDependencies(Container $container)
     {
         $container = parent::provideBusinessLayerDependencies($container);
-        //TODO Provide dependencies
+
+        $container = $this->addUnzerApiFacade($container);
 
         return $container;
     }
@@ -43,9 +50,11 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function providePersistenceLayerDependencies(Container $container)
+    protected function addUnzerApiFacade(Container $container): Container
     {
-        //TODO Provide dependencies
+        $container->set(static::FACADE_UNZER_API, function (Container $container) {
+            return new UnzerToUnzerApiBridge($container->getLocator()->unzerApi()->facade());
+        });
 
         return $container;
     }
