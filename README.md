@@ -5,6 +5,9 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/spryker-eco/unzer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/spryker-eco/unzer/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/spryker-eco/unzer/badges/build.png?b=master)](https://scrutinizer-ci.com/g/spryker-eco/unzer/build-status/master)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%207.3-8892BF.svg)](https://php.net/)
+
+Unzer module provides main business logic for Unzer regular and marketplace payment system integrations.
+
 ## Installation
 ```
 composer require spryker-eco/unzer
