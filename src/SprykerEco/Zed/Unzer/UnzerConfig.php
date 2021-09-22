@@ -17,7 +17,7 @@ use SprykerEco\Shared\Unzer\UnzerConstants as UnzerSharedConstants;
 class UnzerConfig extends AbstractBundleConfig
 {
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected const UNZER_PAYMENT_STATE_OMS_STATUS_MAP = [
         UnzerConstants::UNZER_PAYMENT_STATUS_PENDING => UnzerConstants::OMS_STATUS_PAYMENT_PENDING,
@@ -27,7 +27,7 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected const UNZER_EVENT_OMS_STATUS_MAP = [
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS => UnzerConstants::OMS_STATUS_AUTHORIZE_SUCCEEDED,
@@ -40,7 +40,7 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected const UNZER_PAYMENT_METHODS_MAP = [
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD => UnzerConstants::UNZER_PAYMENT_METHOD_CARD,
@@ -49,14 +49,14 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
-     * @var array
+     * @var array<string>
      */
     protected const AUTHORIZE_PAYMENT_METHODS = [
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
     ];
 
     /**
-     * @var array
+     * @var array<string>
      */
     protected const MARKETPLACE_READY_PAYMENT_METHODS = [
         UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
@@ -65,7 +65,7 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
-     * @var array
+     * @var array<string>
      */
     protected const ENABLED_UNZER_NOTIFICATIONS = [
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS,

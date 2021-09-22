@@ -20,7 +20,7 @@ suites:
         - Asserts
         - \SprykerTest\Shared\Testify\Helper\Environment
         - \SprykerTest\Shared\Testify\Helper\LocatorHelper:
-            projectNamespaces: ['Pyz']
+            projectNamespaces: ['SprykerEco']
         - \SprykerTest\Shared\Testify\Helper\DependencyHelper
         - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
         - \SprykerTest\Shared\Propel\Helper\TransactionHelper

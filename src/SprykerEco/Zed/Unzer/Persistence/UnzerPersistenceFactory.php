@@ -16,7 +16,6 @@ use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 
 /**
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
- * @method \SprykerEco\Zed\Unzer\Persistence\UnzerQueryContainer getQueryContainer()
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface getRepository()
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface getEntityManager()
  */
@@ -55,7 +54,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
-     * @return \Pyz\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
+     * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
      */
     public function createUnzerPersistenceMapper(): UnzerPersistenceMapper
     {

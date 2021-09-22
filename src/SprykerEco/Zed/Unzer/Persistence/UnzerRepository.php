@@ -21,6 +21,19 @@ use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 class UnzerRepository extends AbstractRepository implements UnzerRepositoryInterface
 {
     /**
+     * @var \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
+     */
+    protected $unzerPersistenceMapper;
+
+    /**
+     * @param \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper $unzerPersistenceMapper
+     */
+    public function __construct(UnzerPersistenceMapper $unzerPersistenceMapper)
+    {
+        $this->unzerPersistenceMapper = $unzerPersistenceMapper;
+    }
+
+    /**
      * @param string $merchantReference
      *
      * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer|null
@@ -30,7 +43,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         /** @var \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant|null $merchantUnzerParticipantEntity */
         $merchantUnzerParticipantEntity = $this->getFactory()->createMerchantUnzerParticipantQuery()
             ->useMerchantQuery()
-            ->filterByMerchantReference($merchantReference)
+                ->filterByMerchantReference($merchantReference)
             ->endUse()
             ->findOne();
 
@@ -38,7 +51,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->getMapper()
+        return $this->unzerPersistenceMapper
             ->mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer(
                 $merchantUnzerParticipantEntity,
                 new MerchantUnzerParticipantTransfer()
@@ -60,7 +73,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->getMapper()->mapPaymentUnzerEntityToPaymentUnzerTransfer(
+        return $this->unzerPersistenceMapper->mapPaymentUnzerEntityToPaymentUnzerTransfer(
             $paymentUnzerEntity,
             new PaymentUnzerTransfer()
         );
@@ -76,24 +89,16 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         $paymentUnzerOrderItemEntities = $this->getFactory()
             ->createPaymentUnzerOrderItemQuery()
             ->usePaymentUnzerQuery()
-            ->filterByOrderId($orderId)
+                ->filterByOrderId($orderId)
             ->endUse()
             ->find();
 
         return $this
-            ->getMapper()
+            ->unzerPersistenceMapper
             ->mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
                 $paymentUnzerOrderItemEntities,
                 new PaymentUnzerOrderItemCollectionTransfer()
             );
-    }
-
-    /**
-     * @return \Pyz\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
-     */
-    protected function getMapper(): UnzerPersistenceMapper
-    {
-        return $this->getFactory()->createUnzerPersistenceMapper();
     }
 
     /**
@@ -111,7 +116,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->getMapper()
+        return $this->unzerPersistenceMapper
             ->mapPaymentUnzerEntityToPaymentUnzerTransfer($paymentUnzerEntity, new PaymentUnzerTransfer());
     }
 
@@ -131,7 +136,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->getMapper()
+        return $this->unzerPersistenceMapper
             ->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
                 $paymentUnzerOrderItemEntity,
                 new PaymentUnzerOrderItemTransfer()
@@ -167,7 +172,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->getMapper()
+        return $this->unzerPersistenceMapper
             ->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
                 $paymentUnzerTransactionEntity,
                 new PaymentUnzerTransactionTransfer()

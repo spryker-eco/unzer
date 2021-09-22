@@ -7,8 +7,20 @@
 
 namespace SprykerEco\Client\Unzer\Zed;
 
-use Spryker\Client\ZedRequest\Stub\ZedRequestStub;
+use SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface;
 
-class UnzerStub extends ZedRequestStub implements UnzerStubInterface
+class UnzerStub implements UnzerStubInterface
 {
+    /**
+     * @var \SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface
+     */
+    protected $zedStubClient;
+
+    /**
+     * @param \SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface $zedStubClient
+     */
+    public function __construct(UnzerToZedRequestClientInterface $zedStubClient)
+    {
+        $this->zedStubClient = $zedStubClient;
+    }
 }

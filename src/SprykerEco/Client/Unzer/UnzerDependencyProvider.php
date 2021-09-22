@@ -9,6 +9,7 @@ namespace SprykerEco\Client\Unzer;
 
 use Spryker\Client\Kernel\AbstractDependencyProvider;
 use Spryker\Client\Kernel\Container;
+use SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientBridge;
 
 class UnzerDependencyProvider extends AbstractDependencyProvider
 {
@@ -34,11 +35,11 @@ class UnzerDependencyProvider extends AbstractDependencyProvider
      *
      * @return \Spryker\Client\Kernel\Container
      */
-    protected function addZedRequestClient(Container $container)
+    protected function addZedRequestClient(Container $container): Container
     {
-        $container[static::CLIENT_ZED_REQUEST] = function (Container $container) {
-            return $container->getLocator()->zedRequest()->client();
-        };
+        $container->set(static::CLIENT_ZED_REQUEST, function (Container $container) {
+            return new UnzerToZedRequestClientBridge($container->getLocator()->zedRequest()->client());
+        });
 
         return $container;
     }

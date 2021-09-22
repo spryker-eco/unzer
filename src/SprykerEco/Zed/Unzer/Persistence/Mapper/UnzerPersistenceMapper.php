@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php
 
 /**
  * MIT License
@@ -69,7 +69,7 @@ class UnzerPersistenceMapper
         SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity,
         MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
     ): MerchantUnzerParticipantTransfer {
-        $merchantUnzerParticipantTransfer->setParticipantId($merchantUnzerParticipantEntity->getParticipantId());
+        $merchantUnzerParticipantTransfer->fromArray($merchantUnzerParticipantEntity->toArray(), true);
         $merchantUnzerParticipantTransfer->setMerchantId($merchantUnzerParticipantEntity->getFkMerchant());
 
         return $merchantUnzerParticipantTransfer;
@@ -85,7 +85,7 @@ class UnzerPersistenceMapper
         MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer,
         SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
     ): SpyMerchantUnzerParticipant {
-        $merchantUnzerParticipantEntity->setParticipantId($merchantUnzerParticipantTransfer->getParticipantId());
+        $merchantUnzerParticipantEntity->fromArray($merchantUnzerParticipantTransfer->toArray());
         $merchantUnzerParticipantEntity->setFkMerchant($merchantUnzerParticipantTransfer->getMerchantId());
 
         return $merchantUnzerParticipantEntity;

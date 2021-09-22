@@ -8,7 +8,7 @@
 namespace SprykerEco\Client\Unzer;
 
 use Spryker\Client\Kernel\AbstractFactory;
-use Spryker\Client\ZedRequest\ZedRequestClientInterface;
+use SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface;
 use SprykerEco\Client\Unzer\Zed\UnzerStub;
 use SprykerEco\Client\Unzer\Zed\UnzerStubInterface;
 
@@ -23,11 +23,11 @@ class UnzerFactory extends AbstractFactory
     }
 
     /**
-     * @return \Spryker\Client\ZedRequest\ZedRequestClientInterface
+     * @return \SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface
      */
-    public function getZedRequestClient(): ZedRequestClientInterface
+    public function getZedRequestClient(): UnzerToZedRequestClientInterface
     {
-        /** @var \Spryker\Client\ZedRequest\ZedRequestClientInterface $zedRequestClient */
+        /** @var \SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface $zedRequestClient */
         $zedRequestClient = $this->getProvidedDependency(UnzerDependencyProvider::CLIENT_ZED_REQUEST);
 
         return $zedRequestClient;
