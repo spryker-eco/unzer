@@ -7,6 +7,14 @@
 
 namespace SprykerEco\Client\Unzer\Zed;
 
+use Generated\Shared\Transfer\UnzerNotificationTransfer;
+
 interface UnzerStubInterface
 {
+    /**
+     * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $notificationTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
+     */
+    public function processNotification(UnzerNotificationTransfer $notificationTransfer): UnzerNotificationTransfer;
 }

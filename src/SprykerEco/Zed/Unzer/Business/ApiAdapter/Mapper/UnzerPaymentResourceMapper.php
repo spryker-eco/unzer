@@ -1,0 +1,38 @@
+<?php
+
+namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
+
+use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceResponseTransfer;
+use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
+
+class UnzerPaymentResourceMapper implements UnzerPaymentResourceMapperInterface
+{
+    /**
+     * @param \Generated\Shared\Transfer\UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiCreatePaymentResourceRequestTransfer $unzerApiCreatePaymentResourceRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiCreatePaymentResourceRequestTransfer
+     */
+    public function mapUnzerPaymentResourceTransferToUnzerApiCreatePaymentResourceRequestTransfer(
+        UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer,
+        UnzerApiCreatePaymentResourceRequestTransfer $unzerApiCreatePaymentResourceRequestTransfer
+    ): UnzerApiCreatePaymentResourceRequestTransfer {
+        $unzerApiCreatePaymentResourceRequestTransfer->setPaymentMethod($unzerPaymentResourceTransfer->getType());
+
+        return $unzerApiCreatePaymentResourceRequestTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiCreatePaymentResourceResponseTransfer $unzerApiCreatePaymentResourceResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
+     */
+    public function mapUnzerApiCreatePaymentResourceTransferResponseToUnzerPaymentResourceTransfer(
+        UnzerApiCreatePaymentResourceResponseTransfer $unzerApiCreatePaymentResourceResponseTransfer,
+        UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
+    ): UnzerPaymentResourceTransfer {
+        return $unzerPaymentResourceTransfer->fromArray($unzerApiCreatePaymentResourceResponseTransfer->toArray(), true);
+    }
+}

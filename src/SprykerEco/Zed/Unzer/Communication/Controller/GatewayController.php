@@ -1,15 +1,22 @@
 <?php
 
-/**
- * MIT License
- * For full license information, please view the LICENSE file that was distributed with this source code.
- */
-
 namespace SprykerEco\Zed\Unzer\Communication\Controller;
+
+use Generated\Shared\Transfer\UnzerNotificationTransfer;
+use Spryker\Zed\Kernel\Communication\Controller\AbstractGatewayController;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacade getFacade()
  */
-class GatewayController
+class GatewayController extends AbstractGatewayController
 {
+    /**
+     * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $notificationTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
+     */
+    public function processNotificationAction(UnzerNotificationTransfer $notificationTransfer): UnzerNotificationTransfer
+    {
+        return $this->getFacade()->processNotification($notificationTransfer);
+    }
 }

@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Client\Unzer;
 
+use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Spryker\Client\Kernel\AbstractClient;
 
 /**
@@ -14,4 +15,13 @@ use Spryker\Client\Kernel\AbstractClient;
  */
 class UnzerClient extends AbstractClient implements UnzerClientInterface
 {
+    /**
+     * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $unzerNotificationTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
+     */
+    public function processNotification(UnzerNotificationTransfer $unzerNotificationTransfer): UnzerNotificationTransfer
+    {
+        return $this->getFactory()->createZedStub()->processNotification($unzerNotificationTransfer);
+    }
 }

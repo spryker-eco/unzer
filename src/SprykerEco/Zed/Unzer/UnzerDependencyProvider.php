@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php
 
 /**
  * MIT License
@@ -9,9 +9,31 @@ namespace SprykerEco\Zed\Unzer;
 
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 
 class UnzerDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
+    public const FACADE_UNZER_API = 'FACADE_UNZER_API';
+    /**
+     * @var string
+     */
+    public const FACADE_SALES = 'FACADE_SALES';
+    /**
+     * @var string
+     */
+    public const FACADE_CALCULATION = 'FACADE_CALCULATION';
+    /**
+     * @var string
+     */
+    public const FACADE_REFUND = 'FACADE_REFUND';
+    /**
+     * @var string
+     */
+    public const CLIENT_QUOTE = 'CLIENT_QUOTE';
+
     /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
@@ -20,7 +42,9 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public function provideCommunicationLayerDependencies(Container $container)
     {
         $container = parent::provideCommunicationLayerDependencies($container);
-        //TODO Provide dependencies
+        $container = $this->addSalesFacade($container);
+        $container = $this->addCalculationFacade($container);
+        $container = $this->addRefundFacade($container);
 
         return $container;
     }
@@ -33,7 +57,24 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public function provideBusinessLayerDependencies(Container $container)
     {
         $container = parent::provideBusinessLayerDependencies($container);
-        //TODO Provide dependencies
+
+        $container = $this->addUnzerApiFacade($container);
+        $container = $this->addQuoteClient($container);
+        $container = $this->addRefundFacade($container);
+
+        return $container;
+    }
+
+    /**
+     * @param Container $container
+     *
+     * @return Container
+     */
+    protected function addUnzerApiFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_UNZER_API, function (Container $container) {
+            return new UnzerToUnzerApiFacadeBridge($container->getLocator()->unzerApi()->facade());
+        });
 
         return $container;
     }
@@ -43,9 +84,53 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function providePersistenceLayerDependencies(Container $container)
+    protected function addQuoteClient(Container $container): Container
     {
-        //TODO Provide dependencies
+        $container->set(static::CLIENT_QUOTE, function (Container $container) {
+            return new UnzerToQuoteClientBridge($container->getLocator()->quote()->client());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addSalesFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_SALES, function (Container $container) {
+            return new UnzerToSalesFacadeBridge($container->getLocator()->sales()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addCalculationFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_CALCULATION, function (Container $container) {
+            return new UnzerToCalculationFacadeBridge($container->getLocator()->calculation()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addRefundFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_REFUND, function (Container $container) {
+            return new UnzerToRefundFacadeBridge($container->getLocator()->refund()->facade());
+        });
 
         return $container;
     }
