@@ -13,6 +13,11 @@ use SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface;
 class UnzerStub implements UnzerStubInterface
 {
     /**
+     * @var string
+     */
+    protected const ZED_PROCESS_NOTIFICATION = '/unzer/gateway/process-notification';
+
+    /**
      * @var \SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface
      */
     protected $zedStubClient;
@@ -24,8 +29,6 @@ class UnzerStub implements UnzerStubInterface
     {
         $this->zedStubClient = $zedStubClient;
     }
-
-    protected const ZED_PROCESS_NOTIFICATION = '/unzer/gateway/process-notification';
 
     /**
      * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $notificationTransfer

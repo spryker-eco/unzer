@@ -1,16 +1,21 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Oms\Command;
 
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorStrategyResolverInterface;
-use Spryker\Zed\Refund\Business\RefundFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 
 class RefundOmsCommand extends AbstractOmsCommand implements UnzerRefundOmsCommandByOrderInterface
 {
     /**
-     * @var \Spryker\Zed\Refund\Business\RefundFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface
      */
     protected $refundFacade;
 
@@ -20,11 +25,11 @@ class RefundOmsCommand extends AbstractOmsCommand implements UnzerRefundOmsComma
     protected $paymentProcessorStrategyResolver;
 
     /**
-     * @param \Spryker\Zed\Refund\Business\RefundFacadeInterface $refundFacade
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade
      * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorStrategyResolverInterface $paymentProcessorStrategyResolver
      */
     public function __construct(
-        RefundFacadeInterface $refundFacade,
+        UnzerToRefundFacadeInterface $refundFacade,
         UnzerPaymentProcessorStrategyResolverInterface $paymentProcessorStrategyResolver
     ) {
         $this->refundFacade = $refundFacade;

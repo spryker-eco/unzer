@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business;
 
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
@@ -224,16 +229,20 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
-    public function filterPaymentMethods(
+    public function filterMarketplacePaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
         return $this->getFactory()
-            ->createPaymentMethodFilter()
+            ->createMarketplacePaymentMethodFilter()
             ->filterPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
      * @param string $merchantReference
      *
      * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer

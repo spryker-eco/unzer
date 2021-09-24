@@ -1,17 +1,22 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Communication;
 
-use SprykerEco\Zed\Sales\Business\SalesFacadeInterface;
+use Spryker\Zed\Calculation\Business\CalculationFacadeInterface;
+use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
+use Spryker\Zed\Refund\Business\RefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\ChargeCommand;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\RefundCommand;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\UnzerOmsCommandByOrderInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapper;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
-use Spryker\Zed\Calculation\Business\CalculationFacadeInterface;
-use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
-use Spryker\Zed\Refund\Business\RefundFacadeInterface;
 
 /**
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
@@ -56,11 +61,11 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Sales\Business\SalesFacadeInterface
+     * @return UnzerToSalesFacadeInterface
      */
-    public function getSalesFacade(): SalesFacadeInterface
+    public function getSalesFacade(): UnzerToSalesFacadeInterface
     {
-        /** @var \SprykerEco\Zed\Sales\Business\SalesFacadeInterface $salesFacade */
+        /** @var UnzerToSalesFacadeInterface $salesFacade */
         $salesFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SALES);
 
         return $salesFacade;

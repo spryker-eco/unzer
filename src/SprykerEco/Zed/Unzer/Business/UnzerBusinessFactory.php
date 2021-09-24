@@ -1,7 +1,13 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business;
 
+use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface;
@@ -49,7 +55,7 @@ use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsChargebackOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsChargeFailedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsPaymentCompletedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\UnzerConditionInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilter;
+use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
@@ -72,17 +78,13 @@ use SprykerEco\Zed\Unzer\Business\Reader\UnzerReader;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriter;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
-use SprykerEco\Zed\Unzer\Persistence\UnzerRepository;
-use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
-use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface;
-use Spryker\Client\Quote\QuoteClientInterface;
-use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
-use Spryker\Zed\Refund\Business\RefundFacadeInterface;
 
 /**
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
- * @method \SprykerEco\Zed\Unzer\Persistence\UnzerQueryContainer getQueryContainer()
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface getRepository()
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface getEntityManager()
  */
@@ -131,16 +133,8 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerReader(): UnzerReaderInterface
     {
         return new UnzerReader(
-            $this->createUnzerRepository()
+            $this->getRepository()
         );
-    }
-
-    /**
-     * @return \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
-     */
-    public function createUnzerRepository(): UnzerRepositoryInterface
-    {
-        return new UnzerRepository();
     }
 
     /**
@@ -316,33 +310,33 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
      */
-    public function getUnzerApiFacade(): UnzerApiFacadeInterface
+    public function getUnzerApiFacade(): UnzerToUnzerApiFacadeInterface
     {
-        /** @var \SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface $unzerApiFacade */
+        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade */
         $unzerApiFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_UNZER_API);
 
         return $unzerApiFacade;
     }
 
     /**
-     * @return \Spryker\Client\Quote\QuoteClientInterface
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface
      */
-    public function getQuoteClient(): QuoteClientInterface
+    public function getQuoteClient(): UnzerToQuoteClientInterface
     {
-        /** @var \Spryker\Client\Quote\QuoteClientInterface $quoteClient */
+        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient */
         $quoteClient = $this->getProvidedDependency(UnzerDependencyProvider::CLIENT_QUOTE);
 
         return $quoteClient;
     }
 
     /**
-     * @return \Spryker\Zed\Refund\Business\RefundFacadeInterface|null
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface
      */
-    public function getRefundFacade(): ?RefundFacadeInterface
+    public function getRefundFacade(): UnzerToRefundFacadeInterface
     {
-        /** @var \Spryker\Zed\Refund\Business\RefundFacade $refundFacade */
+        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade */
         $refundFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_REFUND);
 
         return $refundFacade;
@@ -452,9 +446,9 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface
      */
-    public function createPaymentMethodFilter(): UnzerPaymentMethodFilterInterface
+    public function createMarketplacePaymentMethodFilter(): UnzerPaymentMethodFilterInterface
     {
-        return new UnzerPaymentMethodFilter($this->getConfig());
+        return new UnzerMarketplacePaymentMethodFilter($this->getConfig());
     }
 
     /**

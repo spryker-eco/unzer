@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiMarketplaceRefundRequestTransfer;
@@ -18,11 +23,9 @@ class UnzerRefundMapper implements UnzerRefundMapperInterface
         UnzerRefundTransfer $unzerRefundTransfer,
         UnzerApiMarketplaceRefundRequestTransfer $unzerApiMarketplaceRefundRequestTransfer
     ): UnzerApiMarketplaceRefundRequestTransfer {
-        $unzerApiMarketplaceRefundRequestTransfer->fromArray($unzerRefundTransfer->toArray(), true);
-        $unzerApiMarketplaceRefundRequestTransfer
+        return $unzerApiMarketplaceRefundRequestTransfer
+            ->fromArray($unzerRefundTransfer->toArray(), true)
             ->setCanceledBasket($unzerRefundTransfer->getItems());
-
-        return $unzerApiMarketplaceRefundRequestTransfer;
     }
 
     /**

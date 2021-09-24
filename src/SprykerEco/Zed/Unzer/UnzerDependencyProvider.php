@@ -9,6 +9,10 @@ namespace SprykerEco\Zed\Unzer;
 
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 
 class UnzerDependencyProvider extends AbstractBundleDependencyProvider
@@ -66,9 +70,9 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @param Container $container
+     * @param \Spryker\Zed\Kernel\Container $container
      *
-     * @return Container
+     * @return \Spryker\Zed\Kernel\Container
      */
     protected function addUnzerApiFacade(Container $container): Container
     {

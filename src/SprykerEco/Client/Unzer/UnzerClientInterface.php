@@ -12,6 +12,11 @@ use Generated\Shared\Transfer\UnzerNotificationTransfer;
 interface UnzerClientInterface
 {
     /**
+     * Specification:
+     *  - Processes Unzer notification.
+     *
+     * @api
+     *
      * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $unzerNotificationTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerNotificationTransfer

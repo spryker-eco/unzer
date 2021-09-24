@@ -7,9 +7,11 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
+use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 
@@ -112,5 +114,56 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
                 $paymentUnzerTransactionEntity,
                 $paymentUnzerTransactionTransfer
             );
+    }
+
+        /**
+     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
+     *
+     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer
+     */
+    public function saveMerchantUnzerParticipantEntity(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): MerchantUnzerParticipantTransfer
+    {
+        $merchantUnzerParticipantEntity = $this->getFactory()
+            ->createMerchantUnzerParticipantQuery()
+            ->filterByFkMerchant($merchantUnzerParticipantTransfer->getMerchantId())
+            ->findOneOrCreate();
+
+        $merchantUnzerParticipantEntity = $this->getMapper()
+            ->mapMerchantUnzerParticipantTransferToEntity($merchantUnzerParticipantTransfer, $merchantUnzerParticipantEntity);
+
+        $merchantUnzerParticipantEntity = $this->saveOrDeleteMerchantUnzerParticipantEntity($merchantUnzerParticipantEntity);
+
+        return $this->getMapper()
+            ->mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer($merchantUnzerParticipantEntity, $merchantUnzerParticipantTransfer);
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
+     */
+    protected function getMapper(): UnzerPersistenceMapper
+    {
+        return $this->getFactory()->createUnzerPersistenceMapper();
+    }
+
+    /**
+     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
+     *
+     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant
+     */
+    protected function saveOrDeleteMerchantUnzerParticipantEntity(SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity): SpyMerchantUnzerParticipant
+    {
+        if ($merchantUnzerParticipantEntity->getParticipantId()) {
+            $merchantUnzerParticipantEntity->save();
+
+            return $merchantUnzerParticipantEntity;
+        }
+
+        if ($merchantUnzerParticipantEntity->getIdMerchantUnzerParticipant()) {
+            $merchantUnzerParticipantEntity->delete();
+
+            return $merchantUnzerParticipantEntity;
+        }
+
+        return $merchantUnzerParticipantEntity;
     }
 }

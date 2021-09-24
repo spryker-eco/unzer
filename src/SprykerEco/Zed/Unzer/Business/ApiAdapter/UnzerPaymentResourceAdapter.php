@@ -1,17 +1,22 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerPaymentResourceMapperInterface;
-use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
 class UnzerPaymentResourceAdapter extends UnzerAbstractApiAdapter implements UnzerPaymentResourceAdapterInterface
 {
     /**
-     * @var \SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
      */
     protected $unzerApiFacade;
 
@@ -21,11 +26,11 @@ class UnzerPaymentResourceAdapter extends UnzerAbstractApiAdapter implements Unz
     protected $unzerPaymentResourceMapper;
 
     /**
-     * @param \SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface $unzerApiFacade
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerPaymentResourceMapperInterface $unzerPaymentResourceMapper
      */
     public function __construct(
-        UnzerApiFacadeInterface $unzerApiFacade,
+        UnzerToUnzerApiFacadeInterface $unzerApiFacade,
         UnzerPaymentResourceMapperInterface $unzerPaymentResourceMapper
     ) {
         $this->unzerApiFacade = $unzerApiFacade;

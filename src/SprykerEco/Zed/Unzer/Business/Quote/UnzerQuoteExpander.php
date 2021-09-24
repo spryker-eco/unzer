@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
 use Generated\Shared\Transfer\ItemTransfer;
@@ -11,8 +16,8 @@ use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteExpanderMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
-use Spryker\Client\Quote\QuoteClientInterface;
 
 class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
 {
@@ -27,7 +32,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected $unzerQuoteExpanderMapper;
 
     /**
-     * @var \Spryker\Client\Quote\QuoteClientInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface
      */
     protected $quoteClient;
 
@@ -44,14 +49,14 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface $customerAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteExpanderMapperInterface $unzerQuoteExpanderMapper
-     * @param \Spryker\Client\Quote\QuoteClientInterface $quoteClient
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
     public function __construct(
         UnzerCustomerAdapterInterface $customerAdapter,
         UnzerQuoteExpanderMapperInterface $unzerQuoteExpanderMapper,
-        QuoteClientInterface $quoteClient,
+        UnzerToQuoteClientInterface $quoteClient,
         UnzerConfig $unzerConfig,
         UnzerReaderInterface $unzerReader
     ) {

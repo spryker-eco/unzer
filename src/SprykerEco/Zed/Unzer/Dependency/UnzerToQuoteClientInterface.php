@@ -5,16 +5,21 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Business\Quote;
+namespace SprykerEco\Zed\Unzer\Dependency;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 
-interface UnzerQuoteExpanderInterface
+interface UnzerToQuoteClientInterface
 {
+    /**
+     * @return \Generated\Shared\Transfer\QuoteTransfer
+     */
+    public function getQuote();
+
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \Generated\Shared\Transfer\QuoteTransfer
+     * @return void
      */
-    public function expand(QuoteTransfer $quoteTransfer): QuoteTransfer;
+    public function setQuote(QuoteTransfer $quoteTransfer);
 }

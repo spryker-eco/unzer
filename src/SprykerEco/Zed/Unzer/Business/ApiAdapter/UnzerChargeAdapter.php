@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiChargeRequestTransfer;
@@ -7,12 +12,12 @@ use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerChargeMapperInterface;
-use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
 class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeAdapterInterface
 {
     /**
-     * @var \SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
      */
     protected $unzerApiFacade;
 
@@ -22,11 +27,11 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
     protected $unzerChargeMapper;
 
     /**
-     * @param \SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface $unzerApiFacade
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerChargeMapperInterface $unzerChargeMapper
      */
     public function __construct(
-        UnzerApiFacadeInterface $unzerApiFacade,
+        UnzerToUnzerApiFacadeInterface $unzerApiFacade,
         UnzerChargeMapperInterface $unzerChargeMapper
     ) {
         $this->unzerApiFacade = $unzerApiFacade;

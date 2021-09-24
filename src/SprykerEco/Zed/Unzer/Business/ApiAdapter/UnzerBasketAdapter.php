@@ -1,17 +1,22 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiCreateBasketRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerBasketMapperInterface;
-use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
 class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketAdapterInterface
 {
     /**
-     * @var \SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
      */
     protected $unzerApiFacade;
 
@@ -21,11 +26,11 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
     protected $unzerBasketMapper;
 
     /**
-     * @param \SprykerEco\Zed\UnzerApi\Business\UnzerApiFacadeInterface $unzerApiFacade
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerBasketMapperInterface $unzerBasketMapper
      */
     public function __construct(
-        UnzerApiFacadeInterface $unzerApiFacade,
+        UnzerToUnzerApiFacadeInterface $unzerApiFacade,
         UnzerBasketMapperInterface $unzerBasketMapper
     ) {
         $this->unzerApiFacade = $unzerApiFacade;

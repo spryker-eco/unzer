@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiChargeRequestTransfer;
@@ -35,7 +40,7 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
         UnzerPaymentTransfer $unzerPaymentTransfer,
         UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
     ): UnzerApiChargeRequestTransfer {
-        $unzerApiChargeRequestTransfer
+        return $unzerApiChargeRequestTransfer
             ->setPaymentId($unzerPaymentTransfer->getId())
             ->setCustomerId($unzerPaymentTransfer->getCustomer()->getId())
             ->setBasketId($unzerPaymentTransfer->getBasket()->getId())
@@ -46,8 +51,6 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
             ->setOrderId($unzerPaymentTransfer->getOrderId())
             ->setInvoiceId($unzerPaymentTransfer->getInvoiceId())
             ->setPaymentReference($unzerPaymentTransfer->getOrderId());
-
-            return $unzerApiChargeRequestTransfer;
     }
 
     /**
@@ -61,9 +64,7 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
         //Only stateId should be mapped
-        $unzerPaymentTransfer->setStateId($unzerApiChargeResponseTransfer->getStateId());
-
-        return $unzerPaymentTransfer;
+       return $unzerPaymentTransfer->setStateId($unzerApiChargeResponseTransfer->getStateId());
     }
 
     /**
@@ -76,21 +77,13 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
         UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
-        $unzerPaymentTransfer->setId($unzerApiChargeResponseTransfer->getPaymentId())
+        return $unzerPaymentTransfer->setId($unzerApiChargeResponseTransfer->getPaymentId())
             ->setAmountTotal((int)$unzerApiChargeResponseTransfer->getAmount() * 100)
             ->setCurrency($unzerApiChargeResponseTransfer->getCurrency())
             ->setRedirectUrl($unzerApiChargeResponseTransfer->getRedirectUrl())
-            ->setCustomer(
-                (new UnzerCustomerTransfer())->setId($unzerApiChargeResponseTransfer->getCustomerId())
-            )
-            ->setBasket(
-                (new UnzerBasketTransfer())->setId($unzerApiChargeResponseTransfer->getBasketId())
-            )
-            ->setPaymentResource(
-                (new UnzerPaymentResourceTransfer())->setId($unzerApiChargeResponseTransfer->getTypeId())
-            )
+            ->setCustomer((new UnzerCustomerTransfer())->setId($unzerApiChargeResponseTransfer->getCustomerId()))
+            ->setBasket((new UnzerBasketTransfer())->setId($unzerApiChargeResponseTransfer->getBasketId()))
+            ->setPaymentResource((new UnzerPaymentResourceTransfer())->setId($unzerApiChargeResponseTransfer->getTypeId()))
             ->setRedirectUrl($unzerApiChargeResponseTransfer->getRedirectUrl());
-
-        return $unzerPaymentTransfer;
     }
 }

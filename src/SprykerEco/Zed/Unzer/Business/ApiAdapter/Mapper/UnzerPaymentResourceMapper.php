@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceRequestTransfer;
@@ -18,9 +23,7 @@ class UnzerPaymentResourceMapper implements UnzerPaymentResourceMapperInterface
         UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer,
         UnzerApiCreatePaymentResourceRequestTransfer $unzerApiCreatePaymentResourceRequestTransfer
     ): UnzerApiCreatePaymentResourceRequestTransfer {
-        $unzerApiCreatePaymentResourceRequestTransfer->setPaymentMethod($unzerPaymentResourceTransfer->getType());
-
-        return $unzerApiCreatePaymentResourceRequestTransfer;
+        return $unzerApiCreatePaymentResourceRequestTransfer->setPaymentMethod($unzerPaymentResourceTransfer->getType());
     }
 
     /**

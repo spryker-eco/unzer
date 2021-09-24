@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
@@ -34,19 +39,16 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
     public function mapUnzerPaymentTransferToUnzerApiMarketplaceAuthorizeRequestTransfer(
         UnzerPaymentTransfer $unzerPaymentTransfer,
         UnzerApiMarketplaceAuthorizeRequestTransfer $unzerApiMarketplaceAuthorizeRequestTransfer
-    ): UnzerApiMarketplaceAuthorizeRequestTransfer {
-        $unzerApiMarketplaceAuthorizeRequestTransfer->setAmount($unzerPaymentTransfer->getAmountTotal());
-        $unzerApiMarketplaceAuthorizeRequestTransfer->setCurrency($unzerPaymentTransfer->getCurrency());
-        $unzerApiMarketplaceAuthorizeRequestTransfer->setOrderId($unzerPaymentTransfer->getOrderId());
-        $unzerApiMarketplaceAuthorizeRequestTransfer->setInvoiceId($unzerPaymentTransfer->getInvoiceId());
-        $unzerApiMarketplaceAuthorizeRequestTransfer->setPaymentReference($unzerPaymentTransfer->getOrderId());
+    ): UnzerApiMarketplaceAuthorizeRequestTransfer
+    {
 
-        $unzerApiMarketplaceAuthorizeRequestTransfer->setTypeId($unzerPaymentTransfer->getPaymentResource()->getId());
-        $unzerApiMarketplaceAuthorizeRequestTransfer->setCustomerId($unzerPaymentTransfer->getCustomer()->getId());
-        $unzerApiMarketplaceAuthorizeRequestTransfer->setBasketId($unzerPaymentTransfer->getBasket()->getId());
-        $unzerApiMarketplaceAuthorizeRequestTransfer->setReturnUrl($this->unzerConfig->getAuthorizeReturnUrl());
-
-        return $unzerApiMarketplaceAuthorizeRequestTransfer;
+        return $unzerApiMarketplaceAuthorizeRequestTransfer->fromArray($unzerPaymentTransfer->toArray(), true)
+            ->setAmount($unzerPaymentTransfer->getAmountTotal())
+            ->setPaymentReference($unzerPaymentTransfer->getOrderId())
+            ->setTypeId($unzerPaymentTransfer->getPaymentResource()->getId())
+            ->setCustomerId($unzerPaymentTransfer->getCustomer()->getId())
+            ->setBasketId($unzerPaymentTransfer->getBasket()->getId())
+            ->setReturnUrl($this->unzerConfig->getAuthorizeReturnUrl());
     }
 
     /**
@@ -58,22 +60,16 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
     public function mapUnzerApiMarketplaceAuthorizeResponseTransferToUnzerPaymentTransfer(
         UnzerApiMarketplaceAuthorizeResponseTransfer $unzerApiMarketplaceAuthorizeResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
-    ): UnzerPaymentTransfer {
-        $unzerPaymentTransfer->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getPaymentId())
-            ->setAmountTotal($unzerApiMarketplaceAuthorizeResponseTransfer->getAmount() * 100)
+    ): UnzerPaymentTransfer
+    {
+        return $unzerPaymentTransfer
+            ->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getPaymentId())
+            ->setAmountTotal((int)($unzerApiMarketplaceAuthorizeResponseTransfer->getAmount() * 100))
             ->setCurrency($unzerApiMarketplaceAuthorizeResponseTransfer->getCurrency())
             ->setRedirectUrl($unzerApiMarketplaceAuthorizeResponseTransfer->getRedirectUrl())
-            ->setCustomer(
-                (new UnzerCustomerTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getCustomerId())
-            )
-            ->setBasket(
-                (new UnzerBasketTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getBasketId())
-            )
-            ->setPaymentResource(
-                (new UnzerPaymentResourceTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getTypeId())
-            )
+            ->setCustomer((new UnzerCustomerTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getCustomerId()))
+            ->setBasket((new UnzerBasketTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getBasketId()))
+            ->setPaymentResource((new UnzerPaymentResourceTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getTypeId()))
             ->setRedirectUrl($unzerApiMarketplaceAuthorizeResponseTransfer->getRedirectUrl());
-
-        return $unzerPaymentTransfer;
     }
 }

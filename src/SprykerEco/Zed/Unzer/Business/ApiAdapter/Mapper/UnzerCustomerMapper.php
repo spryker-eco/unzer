@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiCreateCustomerRequestTransfer;
@@ -18,10 +23,9 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
         UnzerCustomerTransfer $unzerCustomerTransfer,
         UnzerApiCreateCustomerRequestTransfer $unzerApiCreateCustomerRequestTransfer
     ): UnzerApiCreateCustomerRequestTransfer {
-        $unzerApiCreateCustomerRequestTransfer->fromArray($unzerCustomerTransfer->toArray(), true);
-        $unzerApiCreateCustomerRequestTransfer->setCustomerId($unzerCustomerTransfer->getId());
-
-        return $unzerApiCreateCustomerRequestTransfer;
+        return $unzerApiCreateCustomerRequestTransfer
+            ->fromArray($unzerCustomerTransfer->toArray(), true)
+            ->setCustomerId($unzerCustomerTransfer->getId());
     }
 
     /**
@@ -34,8 +38,6 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
         UnzerApiCreateCustomerResponseTransfer $createCustomerResponse,
         UnzerCustomerTransfer $unzerCustomerTransfer
     ): UnzerCustomerTransfer {
-        $unzerCustomerTransfer->fromArray($createCustomerResponse->toArray());
-
-        return $unzerCustomerTransfer;
+        return $unzerCustomerTransfer->fromArray($createCustomerResponse->toArray());
     }
 }

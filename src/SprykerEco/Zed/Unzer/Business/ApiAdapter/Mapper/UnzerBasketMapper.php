@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiCreateBasketRequestTransfer;
@@ -18,10 +23,9 @@ class UnzerBasketMapper implements UnzerBasketMapperInterface
         UnzerBasketTransfer $unzerBasketTransfer,
         UnzerApiCreateBasketRequestTransfer $unzerApiCreateBasketRequestTransfer
     ): UnzerApiCreateBasketRequestTransfer {
-        $unzerApiCreateBasketRequestTransfer->fromArray($unzerBasketTransfer->toArray(), true);
-        $unzerApiCreateBasketRequestTransfer->setOrderId($unzerBasketTransfer->getOrderId());
-
-        return $unzerApiCreateBasketRequestTransfer;
+        return $unzerApiCreateBasketRequestTransfer
+            ->fromArray($unzerBasketTransfer->toArray(), true)
+            ->setOrderId($unzerBasketTransfer->getOrderId());
     }
 
     /**
@@ -34,8 +38,6 @@ class UnzerBasketMapper implements UnzerBasketMapperInterface
         UnzerApiCreateBasketResponseTransfer $unzerApiCreateBasketResponseTransfer,
         UnzerBasketTransfer $unzerBasketTransfer
     ): UnzerBasketTransfer {
-        $unzerBasketTransfer->fromArray($unzerApiCreateBasketResponseTransfer->toArray(), true);
-
-        return $unzerBasketTransfer;
+        return $unzerBasketTransfer->fromArray($unzerApiCreateBasketResponseTransfer->toArray(), true);
     }
 }

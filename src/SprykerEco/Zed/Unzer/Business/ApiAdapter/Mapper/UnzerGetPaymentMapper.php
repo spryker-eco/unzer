@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use ArrayObject;
@@ -20,9 +25,7 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         UnzerPaymentTransfer $unzerPaymentTransfer,
         UnzerApiGetPaymentRequestTransfer $unzerApiGetPaymentRequestTransfer
     ): UnzerApiGetPaymentRequestTransfer {
-        $unzerApiGetPaymentRequestTransfer->setPaymentId($unzerPaymentTransfer->getId());
-
-        return $unzerApiGetPaymentRequestTransfer;
+        return $unzerApiGetPaymentRequestTransfer->setPaymentId($unzerPaymentTransfer->getId());
     }
 
     /**
@@ -36,15 +39,8 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
         $unzerPaymentTransfer
-            ->setStateId($unzerApiGetPaymentResponseTransfer->getStateId())
-            ->setStateName($unzerApiGetPaymentResponseTransfer->getStateName())
-            ->setAmountTotal($unzerApiGetPaymentResponseTransfer->getAmountTotal())
-            ->setAmountCharged($unzerApiGetPaymentResponseTransfer->getAmountCharged())
-            ->setAmountCanceled($unzerApiGetPaymentResponseTransfer->getAmountCanceled())
-            ->setAmountRemaining($unzerApiGetPaymentResponseTransfer->getAmountRemaining());
-
-        $unzerPaymentTransactions = $this->mapUnzerTransactions($unzerApiGetPaymentResponseTransfer);
-        $unzerPaymentTransfer->setTransactions($unzerPaymentTransactions);
+            ->fromArray($unzerApiGetPaymentResponseTransfer->toArray(), true)
+            ->setTransactions($this->mapUnzerTransactions($unzerApiGetPaymentResponseTransfer));
 
         return $unzerPaymentTransfer;
     }

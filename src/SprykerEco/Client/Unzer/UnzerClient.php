@@ -16,6 +16,10 @@ use Spryker\Client\Kernel\AbstractClient;
 class UnzerClient extends AbstractClient implements UnzerClientInterface
 {
     /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
      * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $unzerNotificationTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerNotificationTransfer

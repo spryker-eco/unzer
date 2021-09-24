@@ -1,13 +1,18 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Communication\Oms\Command;
 
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 use Orm\Zed\Sales\Persistence\SpySalesOrderItem;
-use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
-use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
 use Spryker\Zed\Refund\Business\RefundFacadeInterface;
+use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
+use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 
 class RefundCommand implements UnzerOmsCommandByOrderInterface
 {

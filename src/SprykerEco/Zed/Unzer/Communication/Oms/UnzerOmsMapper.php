@@ -1,16 +1,22 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Communication\Oms;
 
 use Generated\Shared\Transfer\OrderTransfer;
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
-use SprykerEco\Zed\Sales\Business\SalesFacadeInterface;
 use Spryker\Zed\Calculation\Business\CalculationFacadeInterface;
+use SprykerEco\Zed\Sales\Business\SalesFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
 
 class UnzerOmsMapper implements UnzerOmsMapperInterface
 {
     /**
-     * @var \SprykerEco\Zed\Sales\Business\SalesFacadeInterface
+     * @var UnzerToSalesFacadeInterface
      */
     protected $salesFacade;
 
@@ -20,11 +26,11 @@ class UnzerOmsMapper implements UnzerOmsMapperInterface
     protected $calculationFacade;
 
     /**
-     * @param \SprykerEco\Zed\Sales\Business\SalesFacadeInterface $salesFacade
+     * @param UnzerToSalesFacadeInterface $salesFacade
      * @param \Spryker\Zed\Calculation\Business\CalculationFacadeInterface $calculationFacade
      */
     public function __construct(
-        SalesFacadeInterface $salesFacade,
+        UnzerToSalesFacadeInterface $salesFacade,
         CalculationFacadeInterface $calculationFacade
     ) {
         $this->salesFacade = $salesFacade;
