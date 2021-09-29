@@ -53,8 +53,7 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
      */
     public function authorizePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $isMarketplace = $unzerPaymentTransfer->getIsMarketplaceOrFail();
-        if ($isMarketplace) {
+        if ($unzerPaymentTransfer->getIsMarketplaceOrFail()) {
             return $this->performMarketplaceAuthorize($unzerPaymentTransfer);
         }
 

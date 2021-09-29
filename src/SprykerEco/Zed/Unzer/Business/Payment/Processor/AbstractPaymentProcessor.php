@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 
@@ -41,7 +42,7 @@ abstract class AbstractPaymentProcessor
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    protected function prepareUnzerPaymentTransfer(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer)
+    protected function prepareUnzerPaymentTransfer(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
         $quoteTransfer = $this->setUnzerPaymentOrderId($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer = $quoteTransfer->getPayment()->getUnzerPaymentOrFail();

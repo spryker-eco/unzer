@@ -40,14 +40,12 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         QuoteTransfer $quoteTransfer,
         UnzerBasketTransfer $unzerBasketTransfer
     ): UnzerBasketTransfer {
-        $unzerBasketTransfer->setAmountTotalGross($quoteTransfer->getTotals()->getGrandTotal() / 100);
-        $unzerBasketTransfer->setAmountTotalVat($quoteTransfer->getTotals()->getTaxTotal()->getAmount() / 100);
-        $unzerBasketTransfer->setCurrencyCode($quoteTransfer->getCurrency()->getCode());
-        $unzerBasketTransfer->setNote('');
-        $unzerBasketTransfer->setOrderId($quoteTransfer->getPayment()->getUnzerPayment()->getOrderId());
-        $unzerBasketTransfer->setBasketItems($this->mapQuoteItemsCollectionToBasketItemsCollection($quoteTransfer));
-
-        return $unzerBasketTransfer;
+        return $unzerBasketTransfer->setAmountTotalGross($quoteTransfer->getTotals()->getGrandTotal() / 100)
+            ->setAmountTotalVat($quoteTransfer->getTotals()->getTaxTotal()->getAmount() / 100)
+            ->setCurrencyCode($quoteTransfer->getCurrency()->getCode())
+            ->setNote('')
+            ->setOrderId($quoteTransfer->getPayment()->getUnzerPayment()->getOrderId())
+            ->setBasketItems($this->mapQuoteItemsCollectionToBasketItemsCollection($quoteTransfer));
     }
 
     /**
@@ -60,11 +58,9 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         QuoteTransfer $quoteTransfer,
         UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
     ): UnzerPaymentResourceTransfer {
-        $unzerPaymentResourceTransfer->setType(
+        return $unzerPaymentResourceTransfer->setType(
             $this->mapUnzerPaymentType($quoteTransfer->getPayment()->getPaymentSelection())
         );
-
-        return $unzerPaymentResourceTransfer;
     }
 
     /**
@@ -94,18 +90,16 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         ItemTransfer $itemTransfer,
         UnzerBasketItemTransfer $unzerBasketItemTransfer
     ): UnzerBasketItemTransfer {
-        $unzerBasketItemTransfer->setBasketItemReferenceId($itemTransfer->getSku());
-        $unzerBasketItemTransfer->setQuantity($itemTransfer->getQuantity());
-        $unzerBasketItemTransfer->setAmountGross($itemTransfer->getSumGrossPrice() / 100);
-        $unzerBasketItemTransfer->setAmountVat($itemTransfer->getSumTaxAmount() / 100);
-        $unzerBasketItemTransfer->setAmountDiscount($itemTransfer->getSumDiscountAmountAggregation() / 100);
-        $unzerBasketItemTransfer->setAmountPerUnit($itemTransfer->getUnitPriceToPayAggregation() / 100);
-        $unzerBasketItemTransfer->setAmountNet($itemTransfer->getSumNetPrice() / 100);
-        $unzerBasketItemTransfer->setTitle($itemTransfer->getName());
-        $unzerBasketItemTransfer->setParticipantId($itemTransfer->getUnzerParticipantId());
-        $unzerBasketItemTransfer->setType('Wire');
-
-        return $unzerBasketItemTransfer;
+        return $unzerBasketItemTransfer->setBasketItemReferenceId($itemTransfer->getSku())
+            ->setQuantity($itemTransfer->getQuantity())
+            ->setAmountGross($itemTransfer->getSumGrossPrice() / 100)
+            ->setAmountVat($itemTransfer->getSumTaxAmount() / 100)
+            ->setAmountDiscount($itemTransfer->getSumDiscountAmountAggregation() / 100)
+            ->setAmountPerUnit($itemTransfer->getUnitPriceToPayAggregation() / 100)
+            ->setAmountNet($itemTransfer->getSumNetPrice() / 100)
+            ->setTitle($itemTransfer->getName())
+            ->setParticipantId($itemTransfer->getUnzerParticipantId())
+            ->setType('Wire');
     }
 
     /**

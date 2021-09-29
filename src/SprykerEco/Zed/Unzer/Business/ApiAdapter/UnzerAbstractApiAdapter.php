@@ -20,7 +20,7 @@ abstract class UnzerAbstractApiAdapter
      *
      * @return void
      */
-    protected function checkSuccessResponse(UnzerApiResponseTransfer $unzerApiResponseTransfer)
+    protected function checkSuccessResponse(UnzerApiResponseTransfer $unzerApiResponseTransfer): void
     {
         if ($unzerApiResponseTransfer->getIsSuccess()) {
             return;

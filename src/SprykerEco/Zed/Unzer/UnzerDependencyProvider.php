@@ -21,18 +21,22 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
      * @var string
      */
     public const FACADE_UNZER_API = 'FACADE_UNZER_API';
+
     /**
      * @var string
      */
     public const FACADE_SALES = 'FACADE_SALES';
+
     /**
      * @var string
      */
     public const FACADE_CALCULATION = 'FACADE_CALCULATION';
+
     /**
      * @var string
      */
     public const FACADE_REFUND = 'FACADE_REFUND';
+
     /**
      * @var string
      */

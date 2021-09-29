@@ -13,7 +13,7 @@ use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 
-class ChargeCommand implements UnzerOmsCommandByOrderInterface
+class ChargeCommand extends AbstractCommand implements UnzerOmsCommandByOrderInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface
@@ -38,7 +38,7 @@ class ChargeCommand implements UnzerOmsCommandByOrderInterface
     }
 
     /**
-     * @param array $salesOrderItems
+     * @param \Orm\Zed\Sales\Persistence\SpySalesOrderItem[] $salesOrderItems
      * @param \Orm\Zed\Sales\Persistence\SpySalesOrder $salesOrderEntity
      * @param \Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject $data
      *
@@ -47,13 +47,7 @@ class ChargeCommand implements UnzerOmsCommandByOrderInterface
     public function execute(array $salesOrderItems, SpySalesOrder $salesOrderEntity, ReadOnlyArrayObject $data): void
     {
         $orderTransfer = $this->unzerOmsMapper->mapSpySalesOrderToOrderTransfer($salesOrderEntity);
-
-        $salesOrderItemIds = array_map(
-            function (SpySalesOrderItem $orderItem) {
-                return $orderItem->getIdSalesOrderItem();
-            },
-            $salesOrderItems
-        );
+        $salesOrderItemIds = $this->mapSalesOrderItemsIds($salesOrderItems);
 
         $this->unzerFacade->executeChargeOmsCommand($orderTransfer, $salesOrderItemIds);
     }

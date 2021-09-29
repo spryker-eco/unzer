@@ -89,15 +89,9 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
         UnzerPaymentTransfer $unzerPaymentTransfer,
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer
     ): PaymentUnzerTransactionTransfer {
-        $paymentUnzerTransactionTransfer->fromArray($unzerTransactionTransfer->toArray(), true);
-        $paymentUnzerTransactionTransfer->setTransactionUniqueId(
-            $this->generateUniqueTransactionId($unzerTransactionTransfer, $unzerPaymentTransfer)
-        );
-        $paymentUnzerTransactionTransfer->setTransactionId(
-            $this->parseTransactionId($unzerTransactionTransfer)
-        );
-
-        return $paymentUnzerTransactionTransfer;
+        return $paymentUnzerTransactionTransfer->fromArray($unzerTransactionTransfer->toArray(), true)
+            ->setTransactionUniqueId($this->generateUniqueTransactionId($unzerTransactionTransfer, $unzerPaymentTransfer))
+            ->setTransactionId($this->parseTransactionId($unzerTransactionTransfer));
     }
 
     /**

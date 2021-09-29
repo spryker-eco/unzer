@@ -116,7 +116,7 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
             );
     }
 
-        /**
+    /**
      * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
      *
      * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer

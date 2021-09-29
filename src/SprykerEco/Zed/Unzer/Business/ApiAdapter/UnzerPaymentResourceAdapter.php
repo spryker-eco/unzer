@@ -51,17 +51,17 @@ class UnzerPaymentResourceAdapter extends UnzerAbstractApiAdapter implements Unz
                 new UnzerApiCreatePaymentResourceRequestTransfer()
             );
 
-        $unzerApiRequest = new UnzerApiRequestTransfer();
-        $unzerApiRequest->setCreatePaymentResourceRequest($createPaymentResourceRequest);
+        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+            ->setCreatePaymentResourceRequest($createPaymentResourceRequest);
 
-        $unzerApiResponse = $this->unzerApiFacade->performCreatePaymentResourceApiCall($unzerApiRequest);
-        $this->checkSuccessResponse($unzerApiResponse);
-        $createPaymentResourceResponse = $unzerApiResponse->getCreatePaymentResourceResponseOrFail();
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performCreatePaymentResourceApiCall($unzerApiRequestTransfer);
+        $this->checkSuccessResponse($unzerApiResponseTransfer);
+        $unzerApiCreatePaymentResourceResponseTransfer = $unzerApiResponseTransfer->getCreatePaymentResourceResponseOrFail();
 
         return $this->
         unzerPaymentResourceMapper
             ->mapUnzerApiCreatePaymentResourceTransferResponseToUnzerPaymentResourceTransfer(
-                $createPaymentResourceResponse,
+                $unzerApiCreatePaymentResourceResponseTransfer,
                 $unzerPaymentResourceTransfer
             );
     }

@@ -41,7 +41,6 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
         UnzerApiMarketplaceAuthorizeRequestTransfer $unzerApiMarketplaceAuthorizeRequestTransfer
     ): UnzerApiMarketplaceAuthorizeRequestTransfer
     {
-
         return $unzerApiMarketplaceAuthorizeRequestTransfer->fromArray($unzerPaymentTransfer->toArray(), true)
             ->setAmount($unzerPaymentTransfer->getAmountTotal())
             ->setPaymentReference($unzerPaymentTransfer->getOrderId())

@@ -63,8 +63,8 @@ class UnzerPaymentAdapter extends UnzerAbstractApiAdapter implements UnzerPaymen
                 $unzerPaymentTransfer,
                 new UnzerApiGetPaymentRequestTransfer()
             );
-        $unzerApiRequestTransfer = new UnzerApiRequestTransfer();
-        $unzerApiRequestTransfer->setGetPaymentRequest($unzerApiPaymentRequestTransfer);
+        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+            ->setGetPaymentRequest($unzerApiPaymentRequestTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceGetPaymentApiCall($unzerApiRequestTransfer);
         $this->checkSuccessResponse($unzerApiResponseTransfer);
@@ -89,16 +89,16 @@ class UnzerPaymentAdapter extends UnzerAbstractApiAdapter implements UnzerPaymen
                 $unzerPaymentTransfer,
                 new UnzerApiGetPaymentRequestTransfer()
             );
-        $unzerApiRequestTransfer = new UnzerApiRequestTransfer();
-        $unzerApiRequestTransfer->setGetPaymentRequest($unzerApiPaymentRequestTransfer);
+        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+            ->setGetPaymentRequest($unzerApiPaymentRequestTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performGetPaymentApiCall($unzerApiRequestTransfer);
         $this->checkSuccessResponse($unzerApiResponseTransfer);
 
-        $unzerApiGetPaymentResponse = $unzerApiResponseTransfer->getGetPaymentResponseOrFail();
+        $unzerApiGetPaymentResponseTransfer = $unzerApiResponseTransfer->getGetPaymentResponseOrFail();
 
         return $this->unzerPaymentMapper->mapUnzerApiGetPaymentResponseTransferToUnzerPaymentTransfer(
-            $unzerApiGetPaymentResponse,
+            $unzerApiGetPaymentResponseTransfer,
             $unzerPaymentTransfer
         );
     }

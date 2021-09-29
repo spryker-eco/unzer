@@ -55,8 +55,8 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         $unzerPaymentTransactions = new ArrayObject();
         foreach ($unzerApiGetPaymentResponseTransfer->getTransactions() as $unzerApiTransactionTransfer) {
             $unzerTransactionTransfer = (new UnzerTransactionTransfer())
-                ->fromArray($unzerApiTransactionTransfer->toArray(), true);
-            $unzerTransactionTransfer->setAmount($unzerApiTransactionTransfer->getAmount() * 100);
+                ->fromArray($unzerApiTransactionTransfer->toArray(), true)
+                ->setAmount($unzerApiTransactionTransfer->getAmount() * 100);
 
             $unzerPaymentTransactions->append($unzerTransactionTransfer);
         }

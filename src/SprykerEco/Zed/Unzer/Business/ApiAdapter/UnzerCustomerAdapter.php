@@ -53,24 +53,23 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
      */
     public function createCustomer(UnzerCustomerTransfer $unzerCustomerTransfer): UnzerCustomerTransfer
     {
-        $createCustomerRequest = $this
-            ->unzerCustomerMapper
+        $createCustomerRequest = $this->unzerCustomerMapper
             ->mapUnzerCustomerTransferToUnzerApiCreateCustomerRequestTransfer(
                 $unzerCustomerTransfer,
                 new UnzerApiCreateCustomerRequestTransfer()
             );
 
-        $unzerApiRequest = new UnzerApiRequestTransfer();
-        $unzerApiRequest->setCreateCustomerRequest($createCustomerRequest);
+        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+            ->setCreateCustomerRequest($createCustomerRequest);
 
-        $unzerApiResponse = $this->unzerApiFacade->performCreateCustomerApiCall($unzerApiRequest);
-        $this->checkSuccessResponse($unzerApiResponse);
-        $createCustomerResponse = $unzerApiResponse->getCreateCustomerResponseOrFail();
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateCustomerApiCall($unzerApiRequestTransfer);
+        $this->checkSuccessResponse($unzerApiResponseTransfer);
+        $unzerApiCreateCustomerResponseTransfer = $unzerApiResponseTransfer->getCreateCustomerResponseOrFail();
 
         $unzerCustomerTransfer = $this->
         unzerCustomerMapper
             ->mapUnzerApiCreateCustomerResponseTransferToUnzerCustomerTransfer(
-                $createCustomerResponse,
+                $unzerApiCreateCustomerResponseTransfer,
                 $unzerCustomerTransfer
             );
 

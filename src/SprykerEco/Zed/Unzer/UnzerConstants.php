@@ -13,47 +13,58 @@ interface UnzerConstants
      * @var string
      */
     public const UNZER_PAYMENT_METHOD_CARD = 'card';
+
     /**
      * @var string
      */
     public const UNZER_PAYMENT_METHOD_BANK_TRANSFER = 'pis';
+
     /**
      * @var string
      */
     public const UNZER_PAYMENT_METHOD_SOFORT = 'sofort';
+
     /**
      * @var string
      */
     public const UNZER_PAYMENT_METHOD_PAYPAL = 'paypal';
+
     /**
      * @var string
      */
     public const UNZER_PAYMENT_METHOD_INVOICE_SECURED = 'invoice-secured';
+
     /**
      * @var string
      */
     public const UNZER_PAYMENT_METHOD_INSTALMENT = 'installment-secured';
 
+
     /**
      * @var int
      */
     public const UNZER_PAYMENT_STATUS_PENDING = 0;
+
     /**
      * @var int
      */
     public const UNZER_PAYMENT_STATUS_COMPLETED = 1;
+
     /**
      * @var int
      */
     public const UNZER_PAYMENT_STATUS_CANCELED = 2;
+
     /**
      * @var int
      */
     public const UNZER_PAYMENT_STATUS_PARTLY = 3;
+
     /**
      * @var int
      */
     public const UNZER_PAYMENT_STATUS_REVIEW = 4;
+
     /**
      * @var int
      */
@@ -63,46 +74,57 @@ interface UnzerConstants
      * @var string
      */
     public const OMS_STATUS_NEW = 'new';
+
     /**
      * @var string
      */
     public const OMS_STATUS_AUTHORIZE_PENDING = 'authorize pending';
+
     /**
      * @var string
      */
     public const OMS_STATUS_AUTHORIZE_SUCCEEDED = 'authorize succeeded';
+
     /**
      * @var string
      */
     public const OMS_STATUS_AUTHORIZE_FAILED = 'authorize failed';
+
     /**
      * @var string
      */
     public const OMS_STATUS_AUTHORIZE_CANCELED = 'authorize canceled';
+
     /**
      * @var string
      */
     public const OMS_STATUS_CHARGE_PENDING = 'charge pending';
+
     /**
      * @var string
      */
     public const OMS_STATUS_CHARGE_FAILED = 'charge failed';
+
     /**
      * @var string
      */
     public const OMS_STATUS_CHARGE_REFUNDED = 'refunded';
+
     /**
      * @var string
      */
     public const OMS_STATUS_PAYMENT_PENDING = 'payment pending';
+
     /**
      * @var string
      */
     public const OMS_STATUS_PAYMENT_COMPLETED = 'payment completed';
+
     /**
      * @var string
      */
     public const OMS_STATUS_PAYMENT_CANCELLED = 'payment canceled';
+
     /**
      * @var string
      */
@@ -112,34 +134,42 @@ interface UnzerConstants
      * @var string
      */
     public const NOTIFICATION_TYPE_AUTHORIZE_SUCCESS = 'authorize.succeeded';
+
     /**
      * @var string
      */
     public const NOTIFICATION_TYPE_AUTHORIZE_PENDING = 'authorize.pending';
+
     /**
      * @var string
      */
     public const NOTIFICATION_TYPE_AUTHORIZE_FAILED = 'authorize.failed';
+
     /**
      * @var string
      */
     public const NOTIFICATION_TYPE_AUTHORIZE_CANCELED = 'authorize.canceled';
+
     /**
      * @var string
      */
     public const NOTIFICATION_TYPE_CHARGE_PENDING = 'charge.pending';
+
     /**
      * @var string
      */
     public const NOTIFICATION_TYPE_CHARGE_FAILED = 'charge.failed';
+
     /**
      * @var string
      */
     public const NOTIFICATION_TYPE_PAYMENT_COMPLETED = 'payment.completed';
+
     /**
      * @var string
      */
     public const NOTIFICATION_TYPE_PAYMENT_CANCELED = 'payment.canceled';
+
     /**
      * @var string
      */
@@ -149,6 +179,7 @@ interface UnzerConstants
      * @var int
      */
     public const PARTIAL_REFUND_QUANTITY = 0;
+
     /**
      * @var string
      */

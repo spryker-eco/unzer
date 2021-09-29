@@ -24,7 +24,7 @@ class UnzerQuoteExpanderMapper implements UnzerQuoteExpanderMapperInterface
         QuoteTransfer $quoteTransfer,
         UnzerCustomerTransfer $unzerCustomerTransfer
     ): UnzerCustomerTransfer {
-        $unzerCustomerTransfer
+        return $unzerCustomerTransfer
             ->setId($quoteTransfer->getCustomerReference() . uniqid('', true))
             ->setLastname($quoteTransfer->getCustomer()->getLastName())
             ->setFirstname($quoteTransfer->getCustomer()->getFirstName())
@@ -40,8 +40,6 @@ class UnzerQuoteExpanderMapper implements UnzerQuoteExpanderMapperInterface
             ->setBillingAddress(
                 $this->mapAddressTransferToUnzerAddressTransfer($quoteTransfer->getBillingAddress(), new UnzerAddressTransfer())
             );
-
-        return $unzerCustomerTransfer;
     }
 
     /**
@@ -54,13 +52,11 @@ class UnzerQuoteExpanderMapper implements UnzerQuoteExpanderMapperInterface
         AddressTransfer $addressTransfer,
         UnzerAddressTransfer $unzerAddressTransfer
     ): UnzerAddressTransfer {
-        $unzerAddressTransfer->setCountry($addressTransfer->getIso2Code());
-        $unzerAddressTransfer->setState($addressTransfer->getState());
-        $unzerAddressTransfer->setCity($addressTransfer->getCity());
-        $unzerAddressTransfer->setName($addressTransfer->getFirstName() . ' ' . $addressTransfer->getLastName());
-        $unzerAddressTransfer->setZip($addressTransfer->getZipCode());
-        $unzerAddressTransfer->setStreet($addressTransfer->getAddress1());
-
-        return $unzerAddressTransfer;
+        return $unzerAddressTransfer->setCountry($addressTransfer->getIso2Code())
+            ->setState($addressTransfer->getState())
+            ->setCity($addressTransfer->getCity())
+            ->setName($addressTransfer->getFirstName() . ' ' . $addressTransfer->getLastName())
+            ->setZip($addressTransfer->getZipCode())
+            ->setStreet($addressTransfer->getAddress1());
     }
 }

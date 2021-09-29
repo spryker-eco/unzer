@@ -73,8 +73,8 @@ class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
 
         $unzerPaymentTransfer = $paymentProcessor->processOrderPayment($quoteTransfer, $checkoutResponse->getSaveOrder());
 
-        $checkoutResponse->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl());
-        $checkoutResponse->setIsExternalRedirect(true);
+        $checkoutResponse->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
+            ->setIsExternalRedirect(true);
         $quoteTransfer->getPayment()->setUnzerPayment($unzerPaymentTransfer);
 
         $this->unzerPaymentSaver->savePaymentEntities($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);

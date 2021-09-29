@@ -51,12 +51,12 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
                 new UnzerApiCreateBasketRequestTransfer()
             );
 
-        $unzerApiRequest = new UnzerApiRequestTransfer();
-        $unzerApiRequest->setCreateBasketRequest($createBasketRequest);
+        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+            ->setCreateBasketRequest($createBasketRequest);
 
-        $unzerApiResponse = $this->unzerApiFacade->performCreateBasketApiCall($unzerApiRequest);
-        $this->checkSuccessResponse($unzerApiResponse);
-        $createBasketResponseTransfer = $unzerApiResponse->getCreateBasketResponseOrFail();
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateBasketApiCall($unzerApiRequestTransfer);
+        $this->checkSuccessResponse($unzerApiResponseTransfer);
+        $createBasketResponseTransfer = $unzerApiResponseTransfer->getCreateBasketResponseOrFail();
 
         return $this->unzerBasketMapper
             ->mapUnzerApiCreateBasketResponseTransferToUnzerBasketTransfer(

@@ -52,11 +52,10 @@ class UnzerPersistenceMapper
         SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity,
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
     ): PaymentUnzerOrderItemTransfer {
-        $paymentUnzerOrderItemTransfer->fromArray($paymentUnzerOrderItemEntity->toArray(), true);
-        $paymentUnzerOrderItemTransfer->setIdPaymentUnzer($paymentUnzerOrderItemEntity->getFkPaymentUnzer());
-        $paymentUnzerOrderItemTransfer->setIdSalesOrderItem($paymentUnzerOrderItemEntity->getFkSalesOrderItem());
-
-        return $paymentUnzerOrderItemTransfer;
+        return $paymentUnzerOrderItemTransfer
+            ->fromArray($paymentUnzerOrderItemEntity->toArray(), true)
+            ->setIdPaymentUnzer($paymentUnzerOrderItemEntity->getFkPaymentUnzer())
+            ->setIdSalesOrderItem($paymentUnzerOrderItemEntity->getFkSalesOrderItem());
     }
 
     /**
@@ -69,10 +68,9 @@ class UnzerPersistenceMapper
         SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity,
         MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
     ): MerchantUnzerParticipantTransfer {
-        $merchantUnzerParticipantTransfer->fromArray($merchantUnzerParticipantEntity->toArray(), true);
-        $merchantUnzerParticipantTransfer->setMerchantId($merchantUnzerParticipantEntity->getFkMerchant());
-
-        return $merchantUnzerParticipantTransfer;
+        return $merchantUnzerParticipantTransfer
+            ->fromArray($merchantUnzerParticipantEntity->toArray(), true)
+            ->setMerchantId($merchantUnzerParticipantEntity->getFkMerchant());
     }
 
     /**
@@ -85,10 +83,9 @@ class UnzerPersistenceMapper
         MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer,
         SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
     ): SpyMerchantUnzerParticipant {
-        $merchantUnzerParticipantEntity->fromArray($merchantUnzerParticipantTransfer->toArray());
-        $merchantUnzerParticipantEntity->setFkMerchant($merchantUnzerParticipantTransfer->getMerchantId());
-
-        return $merchantUnzerParticipantEntity;
+        return $merchantUnzerParticipantEntity
+            ->fromArray($merchantUnzerParticipantTransfer->toArray())
+            ->setFkMerchant($merchantUnzerParticipantTransfer->getMerchantId());
     }
 
     /**
@@ -101,10 +98,9 @@ class UnzerPersistenceMapper
         SpyPaymentUnzer $paymentUnzerEntity,
         PaymentUnzerTransfer $paymentUnzerTransfer
     ): PaymentUnzerTransfer {
-        $paymentUnzerTransfer->fromArray($paymentUnzerEntity->toArray(), true);
-        $paymentUnzerTransfer->setIdSalesOrder($paymentUnzerEntity->getFkSalesOrder());
-
-        return $paymentUnzerTransfer;
+        return $paymentUnzerTransfer
+            ->fromArray($paymentUnzerEntity->toArray(), true)
+            ->setIdSalesOrder($paymentUnzerEntity->getFkSalesOrder());
     }
 
     /**
@@ -117,10 +113,9 @@ class UnzerPersistenceMapper
         PaymentUnzerTransfer $paymentUnzerTransfer,
         SpyPaymentUnzer $paymentUnzerEntity
     ): SpyPaymentUnzer {
-        $paymentUnzerEntity->fromArray($paymentUnzerTransfer->toArray());
-        $paymentUnzerEntity->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder());
-
-        return $paymentUnzerEntity;
+        return $paymentUnzerEntity
+            ->fromArray($paymentUnzerTransfer->toArray())
+            ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder());
     }
 
     /**
@@ -133,11 +128,10 @@ class UnzerPersistenceMapper
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer,
         SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity
     ): SpyPaymentUnzerOrderItem {
-        $paymentUnzerOrderItemEntity->fromArray($paymentUnzerOrderItemTransfer->toArray());
-        $paymentUnzerOrderItemEntity->setFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
-        $paymentUnzerOrderItemEntity->setFkPaymentUnzer($paymentUnzerOrderItemTransfer->getIdPaymentUnzer());
-
-        return $paymentUnzerOrderItemEntity;
+        return $paymentUnzerOrderItemEntity
+            ->fromArray($paymentUnzerOrderItemTransfer->toArray())
+            ->setFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItem())
+            ->setFkPaymentUnzer($paymentUnzerOrderItemTransfer->getIdPaymentUnzer());
     }
 
     /**
@@ -150,10 +144,9 @@ class UnzerPersistenceMapper
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer,
         SpyPaymentUnzerTransaction $paymentUnzerTransactionEntity
     ): SpyPaymentUnzerTransaction {
-        $paymentUnzerTransactionEntity->fromArray($paymentUnzerTransactionTransfer->toArray());
-        $paymentUnzerTransactionEntity->setFkPaymentUnzer($paymentUnzerTransactionTransfer->getIdPaymentUnzer());
-
-        return $paymentUnzerTransactionEntity;
+        return $paymentUnzerTransactionEntity
+            ->fromArray($paymentUnzerTransactionTransfer->toArray())
+            ->setFkPaymentUnzer($paymentUnzerTransactionTransfer->getIdPaymentUnzer());
     }
 
     /**
@@ -166,9 +159,8 @@ class UnzerPersistenceMapper
         SpyPaymentUnzerTransaction $paymentUnzerTransactionEntity,
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer
     ): PaymentUnzerTransactionTransfer {
-        $paymentUnzerTransactionTransfer->fromArray($paymentUnzerTransactionEntity->toArray(), true);
-        $paymentUnzerTransactionTransfer->setIdPaymentUnzer($paymentUnzerTransactionEntity->getFkPaymentUnzer());
-
-        return $paymentUnzerTransactionTransfer;
+        return $paymentUnzerTransactionTransfer
+            ->fromArray($paymentUnzerTransactionEntity->toArray(), true)
+            ->setIdPaymentUnzer($paymentUnzerTransactionEntity->getFkPaymentUnzer());
     }
 }

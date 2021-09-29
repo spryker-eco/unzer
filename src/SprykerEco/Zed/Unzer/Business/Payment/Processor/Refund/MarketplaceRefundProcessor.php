@@ -137,12 +137,12 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
                 $participantId
             );
 
-        $unzerRefundTransfer = new UnzerRefundTransfer();
-        $unzerRefundTransfer->setIsMarketplace(true);
-        $unzerRefundTransfer->setOrderId($paymentUnzerTransfer->getOrderId());
-        $unzerRefundTransfer->setInvoiceId($paymentUnzerTransfer->getOrderId());
-        $unzerRefundTransfer->setPaymentId($paymentUnzerTransfer->getPaymentId());
-        $unzerRefundTransfer->setChargeId($paymentUnzerTransactionTransfer->getTransactionId());
+        $unzerRefundTransfer = (new UnzerRefundTransfer())
+            ->setIsMarketplace(true)
+            ->setOrderId($paymentUnzerTransfer->getOrderId())
+            ->setInvoiceId($paymentUnzerTransfer->getOrderId())
+            ->setPaymentId($paymentUnzerTransfer->getPaymentId())
+            ->setChargeId($paymentUnzerTransactionTransfer->getTransactionId());
 
         foreach ($itemTransfers as $itemTransfer) {
             $unzerRefundItemTransfer = $this->buildUnzerRefundItemTransfer($itemTransfer);
@@ -193,11 +193,11 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      */
     protected function buildUnzerRefundItemTransfer(ItemTransfer $itemTransfer): UnzerRefundItemTransfer
     {
-        $unzerRefundItemTransfer = new UnzerRefundItemTransfer();
-        $unzerRefundItemTransfer->setParticipantId($itemTransfer->getUnzerParticipantId());
-        $unzerRefundItemTransfer->setAmountGross($itemTransfer->getRefundableAmount() / 100);
-        $unzerRefundItemTransfer->setBasketItemReferenceId($itemTransfer->getSku());
-        $unzerRefundItemTransfer->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY);
+        $unzerRefundItemTransfer = (new UnzerRefundItemTransfer())
+            ->setParticipantId($itemTransfer->getUnzerParticipantId())
+            ->setAmountGross($itemTransfer->getRefundableAmount() / 100)
+            ->setBasketItemReferenceId($itemTransfer->getSku())
+            ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY);
 
         return $unzerRefundItemTransfer;
     }

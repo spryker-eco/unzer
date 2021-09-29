@@ -92,8 +92,8 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
                 new UnzerApiChargeRequestTransfer()
             );
 
-        $unzerApiRequestTransfer = new UnzerApiRequestTransfer();
-        $unzerApiRequestTransfer->setChargeRequest($unzerApiChargeRequestTransfer);
+        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+            ->setChargeRequest($unzerApiChargeRequestTransfer);
 
         return $unzerApiRequestTransfer;
     }
@@ -106,9 +106,7 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
      */
     protected function performCharge(UnzerApiRequestTransfer $unzerApiRequestTransfer, UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiResponseTransfer
     {
-        $isMarketPlace = $unzerPaymentTransfer->getIsMarketplace();
-
-        if ($isMarketPlace) {
+        if ($unzerPaymentTransfer->getIsMarketplace()) {
             return $this->unzerApiFacade->performMarketplaceChargeApiCall($unzerApiRequestTransfer);
         }
 
@@ -125,9 +123,7 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
         UnzerApiRequestTransfer $unzerApiRequestTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerApiResponseTransfer {
-        $isMarketPlace = $unzerPaymentTransfer->getIsMarketplace();
-
-        if ($isMarketPlace) {
+        if ($unzerPaymentTransfer->getIsMarketplace()) {
             return $this->unzerApiFacade->performMarketplaceAuthorizableChargeApiCall($unzerApiRequestTransfer);
         }
 

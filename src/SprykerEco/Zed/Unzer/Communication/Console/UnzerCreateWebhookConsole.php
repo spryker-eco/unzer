@@ -26,6 +26,7 @@ class UnzerCreateWebhookConsole extends Console
      * @var string
      */
     public const COMMAND_NAME = 'unzer:register-webhook';
+
     /**
      * @var string
      */

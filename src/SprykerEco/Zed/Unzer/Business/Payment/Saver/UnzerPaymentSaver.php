@@ -19,6 +19,7 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
@@ -80,8 +81,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
 
         $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($saveOrderTransfer->getOrderReference());
         if ($paymentUnzerTransfer->getIdPaymentUnzer() !== null) {
-            //@todo refactor
-            throw new Exception('order already exists!');
+            throw new UnzerException(sprintf('Order with ID %s already exists!', $paymentUnzerTransfer->getIdPaymentUnzer()));
         }
 
         $this->unzerWriter->saveUnzerPaymentEntities($quoteTransfer, $saveOrderTransfer);
