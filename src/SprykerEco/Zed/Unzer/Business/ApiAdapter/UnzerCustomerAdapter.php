@@ -66,8 +66,7 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
         $this->checkSuccessResponse($unzerApiResponseTransfer);
         $unzerApiCreateCustomerResponseTransfer = $unzerApiResponseTransfer->getCreateCustomerResponseOrFail();
 
-        $unzerCustomerTransfer = $this->
-        unzerCustomerMapper
+        $unzerCustomerTransfer = $this->unzerCustomerMapper
             ->mapUnzerApiCreateCustomerResponseTransferToUnzerCustomerTransfer(
                 $unzerApiCreateCustomerResponseTransfer,
                 $unzerCustomerTransfer
