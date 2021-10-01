@@ -21,19 +21,6 @@ use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 class UnzerRepository extends AbstractRepository implements UnzerRepositoryInterface
 {
     /**
-     * @var \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
-     */
-    protected $unzerPersistenceMapper;
-
-    /**
-     * @param \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper $unzerPersistenceMapper
-     */
-    public function __construct(UnzerPersistenceMapper $unzerPersistenceMapper)
-    {
-        $this->unzerPersistenceMapper = $unzerPersistenceMapper;
-    }
-
-    /**
      * @param string $merchantReference
      *
      * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer|null
@@ -51,7 +38,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->unzerPersistenceMapper
+        return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer(
                 $merchantUnzerParticipantEntity,
                 new MerchantUnzerParticipantTransfer()
@@ -73,7 +60,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->unzerPersistenceMapper->mapPaymentUnzerEntityToPaymentUnzerTransfer(
+        return $this->getFactory()->createUnzerPersistenceMapper()->mapPaymentUnzerEntityToPaymentUnzerTransfer(
             $paymentUnzerEntity,
             new PaymentUnzerTransfer()
         );
@@ -93,8 +80,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             ->endUse()
             ->find();
 
-        return $this
-            ->unzerPersistenceMapper
+        return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
                 $paymentUnzerOrderItemEntities,
                 new PaymentUnzerOrderItemCollectionTransfer()
@@ -116,7 +102,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->unzerPersistenceMapper
+        return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapPaymentUnzerEntityToPaymentUnzerTransfer($paymentUnzerEntity, new PaymentUnzerTransfer());
     }
 
@@ -136,7 +122,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->unzerPersistenceMapper
+        return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
                 $paymentUnzerOrderItemEntity,
                 new PaymentUnzerOrderItemTransfer()
@@ -172,7 +158,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->unzerPersistenceMapper
+        return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
                 $paymentUnzerTransactionEntity,
                 new PaymentUnzerTransactionTransfer()

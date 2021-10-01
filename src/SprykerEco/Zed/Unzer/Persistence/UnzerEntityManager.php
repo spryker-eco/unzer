@@ -21,19 +21,6 @@ use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityManagerInterface
 {
     /**
-     * @var \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
-     */
-    protected $unzerPersistenceMapper;
-
-    /**
-     * @param \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper $unzerPersistenceMapper
-     */
-    public function __construct(UnzerPersistenceMapper $unzerPersistenceMapper)
-    {
-        $this->unzerPersistenceMapper = $unzerPersistenceMapper;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
@@ -46,11 +33,13 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
             ->filterByOrderId($paymentUnzerTransfer->getOrderId())
             ->findOneOrCreate();
 
-        $paymentUnzerEntity = $this->unzerPersistenceMapper
+        $UnzerPersistenceMapper = $this->getFactory()->createUnzerPersistenceMapper();
+
+        $paymentUnzerEntity = $UnzerPersistenceMapper
             ->mapPaymentUnzerTransferToPaymentUnzerEntity($paymentUnzerTransfer, $paymentUnzerEntity);
         $paymentUnzerEntity->save();
 
-        return $this->unzerPersistenceMapper
+        return $UnzerPersistenceMapper
             ->mapPaymentUnzerEntityToPaymentUnzerTransfer($paymentUnzerEntity, $paymentUnzerTransfer);
     }
 
@@ -69,7 +58,9 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
             ->filterByFkPaymentUnzer($paymentUnzerOrderItemTransfer->getIdPaymentUnzer())
             ->findOneOrCreate();
 
-        $paymentUnzerOrderItemEntity = $this->unzerPersistenceMapper
+        $unzerPersistenceMapper = $this->getFactory()->createUnzerPersistenceMapper();
+
+        $paymentUnzerOrderItemEntity = $unzerPersistenceMapper
             ->mapPaymentUnzerOrderItemTransferToPaymentUnzerOrderItemEntity(
                 $paymentUnzerOrderItemTransfer,
                 $paymentUnzerOrderItemEntity
@@ -77,11 +68,10 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
 
         $paymentUnzerOrderItemEntity->save();
 
-        return $this->unzerPersistenceMapper
-            ->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
-                $paymentUnzerOrderItemEntity,
-                $paymentUnzerOrderItemTransfer
-            );
+        return $unzerPersistenceMapper->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
+            $paymentUnzerOrderItemEntity,
+            $paymentUnzerOrderItemTransfer
+        );
     }
 
     /**
@@ -101,7 +91,9 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
             return $paymentUnzerTransactionTransfer;
         }
 
-        $paymentUnzerTransactionEntity = $this->unzerPersistenceMapper
+        $unzerPersistenceMapper = $this->getFactory()->createUnzerPersistenceMapper();
+
+        $paymentUnzerTransactionEntity = $unzerPersistenceMapper
             ->mapPaymentUnzerTransactionTransferToPaymentUnzerTransactionEntity(
                 $paymentUnzerTransactionTransfer,
                 $paymentUnzerTransactionEntity
@@ -109,11 +101,10 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
 
         $paymentUnzerTransactionEntity->save();
 
-        return $this->unzerPersistenceMapper
-            ->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
-                $paymentUnzerTransactionEntity,
-                $paymentUnzerTransactionTransfer
-            );
+        return $unzerPersistenceMapper->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
+            $paymentUnzerTransactionEntity,
+            $paymentUnzerTransactionTransfer
+        );
     }
 
     /**
