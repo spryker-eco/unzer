@@ -38,11 +38,9 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
-        $unzerPaymentTransfer
+        return $unzerPaymentTransfer
             ->fromArray($unzerApiGetPaymentResponseTransfer->toArray(), true)
             ->setTransactions($this->mapUnzerTransactions($unzerApiGetPaymentResponseTransfer));
-
-        return $unzerPaymentTransfer;
     }
 
     /**

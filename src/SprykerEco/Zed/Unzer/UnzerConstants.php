@@ -39,7 +39,6 @@ interface UnzerConstants
      */
     public const UNZER_PAYMENT_METHOD_INSTALMENT = 'installment-secured';
 
-
     /**
      * @var int
      */

@@ -40,7 +40,8 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         QuoteTransfer $quoteTransfer,
         UnzerBasketTransfer $unzerBasketTransfer
     ): UnzerBasketTransfer {
-        return $unzerBasketTransfer->setAmountTotalGross($quoteTransfer->getTotals()->getGrandTotal() / 100)
+        return $unzerBasketTransfer
+            ->setAmountTotalGross($quoteTransfer->getTotals()->getGrandTotal() / 100)
             ->setAmountTotalVat($quoteTransfer->getTotals()->getTaxTotal()->getAmount() / 100)
             ->setCurrencyCode($quoteTransfer->getCurrency()->getCode())
             ->setNote('')
@@ -90,7 +91,8 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         ItemTransfer $itemTransfer,
         UnzerBasketItemTransfer $unzerBasketItemTransfer
     ): UnzerBasketItemTransfer {
-        return $unzerBasketItemTransfer->setBasketItemReferenceId($itemTransfer->getSku())
+        return $unzerBasketItemTransfer
+            ->setBasketItemReferenceId($itemTransfer->getSku())
             ->setQuantity($itemTransfer->getQuantity())
             ->setAmountGross($itemTransfer->getSumGrossPrice() / 100)
             ->setAmountVat($itemTransfer->getSumTaxAmount() / 100)

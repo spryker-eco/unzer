@@ -24,6 +24,8 @@ class UnzerQuoteExpanderMapper implements UnzerQuoteExpanderMapperInterface
         QuoteTransfer $quoteTransfer,
         UnzerCustomerTransfer $unzerCustomerTransfer
     ): UnzerCustomerTransfer {
+        $shippingAddress = $this->getShippingAddressFromQuote($quoteTransfer);
+
         return $unzerCustomerTransfer
             ->setId($quoteTransfer->getCustomerReference() . uniqid('', true))
             ->setLastname($quoteTransfer->getCustomer()->getLastName())
@@ -32,10 +34,10 @@ class UnzerQuoteExpanderMapper implements UnzerQuoteExpanderMapperInterface
             ->setCompany($quoteTransfer->getCustomer()->getCompany())
             ->setBirthDate($quoteTransfer->getCustomer()->getDateOfBirth())
             ->setEmail($quoteTransfer->getCustomer()->getEmail())
-            ->setPhone($quoteTransfer->getShippingAddress()->getPhone())
+            ->setPhone($shippingAddress->getPhone())
             ->setMobile($quoteTransfer->getCustomer()->getPhone())
             ->setShippingAddress(
-                $this->mapAddressTransferToUnzerAddressTransfer($quoteTransfer->getShippingAddress(), new UnzerAddressTransfer())
+                $this->mapAddressTransferToUnzerAddressTransfer($shippingAddress, new UnzerAddressTransfer())
             )
             ->setBillingAddress(
                 $this->mapAddressTransferToUnzerAddressTransfer($quoteTransfer->getBillingAddress(), new UnzerAddressTransfer())
@@ -58,5 +60,23 @@ class UnzerQuoteExpanderMapper implements UnzerQuoteExpanderMapperInterface
             ->setName($addressTransfer->getFirstName() . ' ' . $addressTransfer->getLastName())
             ->setZip($addressTransfer->getZipCode())
             ->setStreet($addressTransfer->getAddress1());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\AddressTransfer|null
+     */
+    protected function getShippingAddressFromQuote(QuoteTransfer $quoteTransfer): ?AddressTransfer
+    {
+        if ($quoteTransfer->getShippingAddress()) {
+            return $quoteTransfer->getShippingAddress();
+        }
+
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            return $itemTransfer->getShipment()->getShippingAddress();
+        }
+
+        return null;
     }
 }

@@ -16,10 +16,12 @@ interface UnzerConstants
      * @var string
      */
     public const UNZER_AUTHORIZE_RETURN_URL = 'UNZER:UNZER_AUTHORIZE_RETURN_URL';
+
     /**
      * @var string
      */
     public const UNZER_CHARGE_RETURN_URL = 'UNZER:UNZER_CHARGE_RETURN_URL';
+
     /**
      * @var string
      */

@@ -39,8 +39,7 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
     public function mapUnzerPaymentTransferToUnzerApiMarketplaceAuthorizeRequestTransfer(
         UnzerPaymentTransfer $unzerPaymentTransfer,
         UnzerApiMarketplaceAuthorizeRequestTransfer $unzerApiMarketplaceAuthorizeRequestTransfer
-    ): UnzerApiMarketplaceAuthorizeRequestTransfer
-    {
+    ): UnzerApiMarketplaceAuthorizeRequestTransfer {
         return $unzerApiMarketplaceAuthorizeRequestTransfer->fromArray($unzerPaymentTransfer->toArray(), true)
             ->setAmount($unzerPaymentTransfer->getAmountTotal())
             ->setPaymentReference($unzerPaymentTransfer->getOrderId())
@@ -59,8 +58,7 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
     public function mapUnzerApiMarketplaceAuthorizeResponseTransferToUnzerPaymentTransfer(
         UnzerApiMarketplaceAuthorizeResponseTransfer $unzerApiMarketplaceAuthorizeResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
-    ): UnzerPaymentTransfer
-    {
+    ): UnzerPaymentTransfer {
         return $unzerPaymentTransfer
             ->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getPaymentId())
             ->setAmountTotal((int)($unzerApiMarketplaceAuthorizeResponseTransfer->getAmount() * 100))

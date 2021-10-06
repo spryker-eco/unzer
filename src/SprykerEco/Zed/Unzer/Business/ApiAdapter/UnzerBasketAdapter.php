@@ -44,8 +44,7 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
      */
     public function createBasket(UnzerBasketTransfer $unzerBasketTransfer): UnzerBasketTransfer
     {
-        $createBasketRequest = $this
-            ->unzerBasketMapper
+        $createBasketRequest = $this->unzerBasketMapper
             ->mapUnzerBasketTransferToUnzerApiCreateBasketRequestTransfer(
                 $unzerBasketTransfer,
                 new UnzerApiCreateBasketRequestTransfer()
