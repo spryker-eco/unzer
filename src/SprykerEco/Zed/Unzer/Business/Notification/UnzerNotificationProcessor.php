@@ -15,7 +15,7 @@ use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
-class NotificationProcessor implements NotificationProcessorInterface
+class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
@@ -70,7 +70,7 @@ class NotificationProcessor implements NotificationProcessorInterface
      */
     public function processNotification(UnzerNotificationTransfer $unzerNotificationTransfer): UnzerNotificationTransfer
     {
-        if (!$this->checkNotificationEnabled($unzerNotificationTransfer)) {
+        if (!$this->unzerConfig->isNotificationTypeEnabled($unzerNotificationTransfer->getEvent())) {
             $unzerNotificationTransfer->setIsProcessed(true);
 
             return $unzerNotificationTransfer;
@@ -94,19 +94,9 @@ class NotificationProcessor implements NotificationProcessorInterface
             $unzerNotificationTransfer->getEvent()
         );
 
-        $this->unzerPaymentSaver->savePaymentEntities($unzerPaymentTransfer, $orderItemStatus);
+        $this->unzerPaymentSaver->saveUnzerPaymentDetails($unzerPaymentTransfer, $orderItemStatus);
         $unzerNotificationTransfer->setIsProcessed(true);
 
         return $unzerNotificationTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $unzerNotificationTransfer
-     *
-     * @return bool
-     */
-    protected function checkNotificationEnabled(UnzerNotificationTransfer $unzerNotificationTransfer): bool
-    {
-        return $this->unzerConfig->isNotificationTypeEnabled($unzerNotificationTransfer->getEvent());
     }
 }

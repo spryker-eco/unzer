@@ -27,23 +27,15 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
     protected $unzerAuthorizePaymentMapper;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\UnzerConfig
-     */
-    protected $unzerConfig;
-
-    /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper
-     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      */
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
-        UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper,
-        UnzerConfig $unzerConfig
+        UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper
     ) {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerAuthorizePaymentMapper = $unzerAuthorizePaymentMapper;
-        $this->unzerConfig = $unzerConfig;
     }
 
     /**
@@ -78,7 +70,7 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
 
         $unzerApiRequestTransfer->setMarketplaceAuthorizeRequest($unzerApiMarketplaceAuthorizeRequestTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceAuthorizeApiCall($unzerApiRequestTransfer);
-        $this->checkSuccessResponse($unzerApiResponseTransfer);
+        $this->assertSuccessResponse($unzerApiResponseTransfer);
 
         $unzerApiMarketplaceAuthorizeResponseTransfer = $unzerApiResponseTransfer->getMarketplaceAuthorizeResponseOrFail();
 
@@ -97,6 +89,7 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
      */
     protected function performRegularAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
+        //@todo implement for regular payments
         return $unzerPaymentTransfer;
     }
 }

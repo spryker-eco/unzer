@@ -25,21 +25,6 @@ interface UnzerConstants
     public const UNZER_PAYMENT_METHOD_SOFORT = 'sofort';
 
     /**
-     * @var string
-     */
-    public const UNZER_PAYMENT_METHOD_PAYPAL = 'paypal';
-
-    /**
-     * @var string
-     */
-    public const UNZER_PAYMENT_METHOD_INVOICE_SECURED = 'invoice-secured';
-
-    /**
-     * @var string
-     */
-    public const UNZER_PAYMENT_METHOD_INSTALMENT = 'installment-secured';
-
-    /**
      * @var int
      */
     public const UNZER_PAYMENT_STATUS_PENDING = 0;
@@ -53,16 +38,6 @@ interface UnzerConstants
      * @var int
      */
     public const UNZER_PAYMENT_STATUS_CANCELED = 2;
-
-    /**
-     * @var int
-     */
-    public const UNZER_PAYMENT_STATUS_PARTLY = 3;
-
-    /**
-     * @var int
-     */
-    public const UNZER_PAYMENT_STATUS_REVIEW = 4;
 
     /**
      * @var int

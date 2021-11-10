@@ -30,7 +30,7 @@ interface UnzerPaymentSaverInterface
      *
      * @return void
      */
-    public function savePaymentEntities(
+    public function saveUnzerPaymentDetails(
         UnzerPaymentTransfer $unzerPaymentTransfer,
         string $orderItemStatus,
         ?array $filteredSalesOrderItemIds = null

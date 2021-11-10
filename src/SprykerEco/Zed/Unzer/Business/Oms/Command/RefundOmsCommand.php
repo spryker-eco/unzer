@@ -9,10 +9,10 @@ namespace SprykerEco\Zed\Unzer\Business\Oms\Command;
 
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
-use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorStrategyResolverInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 
-class RefundOmsCommand extends AbstractOmsCommand implements UnzerRefundOmsCommandByOrderInterface
+class RefundOmsCommand extends AbstractOmsCommand implements UnzerRefundOmsCommandInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface
@@ -20,33 +20,33 @@ class RefundOmsCommand extends AbstractOmsCommand implements UnzerRefundOmsComma
     protected $refundFacade;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorStrategyResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface
      */
-    protected $paymentProcessorStrategyResolver;
+    protected $unzerPaymentProcessorStrategyResolver;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorStrategyResolverInterface $paymentProcessorStrategyResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
      */
     public function __construct(
         UnzerToRefundFacadeInterface $refundFacade,
-        UnzerPaymentProcessorStrategyResolverInterface $paymentProcessorStrategyResolver
+        UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
     ) {
         $this->refundFacade = $refundFacade;
-        $this->paymentProcessorStrategyResolver = $paymentProcessorStrategyResolver;
+        $this->unzerPaymentProcessorStrategyResolver = $paymentProcessorStrategyResolver;
     }
 
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */
     public function execute(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         $paymentMethodName = $this->getPaymentMethodName($orderTransfer);
-        $paymentProcessor = $this->paymentProcessorStrategyResolver->resolvePaymentProcessor($paymentMethodName);
+        $paymentProcessor = $this->unzerPaymentProcessorStrategyResolver->resolvePaymentProcessor($paymentMethodName);
 
         $paymentProcessor->processRefund($refundTransfer, $orderTransfer, $salesOrderItemIds);
 

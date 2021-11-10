@@ -8,14 +8,16 @@
 namespace SprykerEco\Zed\Unzer\Business\Oms\Command;
 
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\RefundTransfer;
 
-interface UnzerOmsCommandByOrderInterface
+interface UnzerRefundOmsCommandInterface
 {
     /**
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param int[] $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */
-    public function execute(OrderTransfer $orderTransfer, array $salesOrderItemIds): void;
+    public function execute(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void;
 }

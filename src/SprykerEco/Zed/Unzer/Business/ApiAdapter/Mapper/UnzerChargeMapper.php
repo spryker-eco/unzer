@@ -42,9 +42,9 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
     ): UnzerApiChargeRequestTransfer {
         return $unzerApiChargeRequestTransfer
             ->setPaymentId($unzerPaymentTransfer->getId())
-            ->setCustomerId($unzerPaymentTransfer->getCustomer()->getId())
-            ->setBasketId($unzerPaymentTransfer->getBasket()->getId())
-            ->setTypeId($unzerPaymentTransfer->getPaymentResource()->getId())
+            ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
+            ->setBasketId($unzerPaymentTransfer->getBasketOrFail()->getId())
+            ->setTypeId($unzerPaymentTransfer->getPaymentResourceOrFail()->getId())
             ->setReturnUrl($this->unzerConfig->getChargeReturnUrl())
             ->setAmount($unzerPaymentTransfer->getAmountTotal())
             ->setCurrency($unzerPaymentTransfer->getCurrency())
@@ -63,7 +63,6 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
         UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
-        //Only stateId should be mapped
        return $unzerPaymentTransfer->setStateId($unzerApiChargeResponseTransfer->getStateId());
     }
 

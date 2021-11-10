@@ -14,7 +14,7 @@ use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteExpanderMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
@@ -24,10 +24,10 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface
      */
-    protected $customerAdapter;
+    protected $unzerCustomerAdapter;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteExpanderMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface
      */
     protected $unzerQuoteExpanderMapper;
 
@@ -47,20 +47,20 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected $unzerReader;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface $customerAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteExpanderMapperInterface $unzerQuoteExpanderMapper
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface $unzerCustomerAdapter
+     * @param \SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface $unzerQuoteExpanderMapper
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
     public function __construct(
-        UnzerCustomerAdapterInterface $customerAdapter,
-        UnzerQuoteExpanderMapperInterface $unzerQuoteExpanderMapper,
+        UnzerCustomerAdapterInterface $unzerCustomerAdapter,
+        UnzerQuoteMapperInterface $unzerQuoteExpanderMapper,
         UnzerToQuoteClientInterface $quoteClient,
         UnzerConfig $unzerConfig,
         UnzerReaderInterface $unzerReader
     ) {
-        $this->customerAdapter = $customerAdapter;
+        $this->unzerCustomerAdapter = $unzerCustomerAdapter;
         $this->unzerQuoteExpanderMapper = $unzerQuoteExpanderMapper;
         $this->quoteClient = $quoteClient;
         $this->unzerConfig = $unzerConfig;
@@ -74,13 +74,14 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      */
     public function expand(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        if ($quoteTransfer->getPayment()->getPaymentProvider() !== SharedUnzerConfig::PROVIDER_NAME) {
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PROVIDER_NAME) {
             return $quoteTransfer;
         }
 
-        $quoteTransfer = $this->createUnzerPayment($quoteTransfer);
-        $quoteTransfer = $this->createUnzerCustomer($quoteTransfer);
-        if ($quoteTransfer->getPayment()->getUnzerPayment()->getIsMarketplace()) {
+        $quoteTransfer = $this->addUnzerPayment($quoteTransfer);
+        $quoteTransfer = $this->addUnzerCustomer($quoteTransfer);
+
+        if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
             $quoteTransfer = $this->expandQuoteItemsWithUnzerParticipants($quoteTransfer);
         }
 
@@ -94,11 +95,11 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      *
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
-    protected function createUnzerCustomer(QuoteTransfer $quoteTransfer): QuoteTransfer
+    protected function addUnzerCustomer(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
         if (
-            $quoteTransfer->getPayment()->getUnzerPayment() !== null &&
-            $quoteTransfer->getPayment()->getUnzerPayment()->getCustomer() !== null
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail() !== null &&
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getCustomer() !== null
         ) {
             return $quoteTransfer;
         }
@@ -107,8 +108,8 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
             ->unzerQuoteExpanderMapper
             ->mapQuoteTransferToUnzerCustomerTransfer($quoteTransfer, new UnzerCustomerTransfer());
 
-        $unzerCustomerTransfer = $this->customerAdapter->createCustomer($unzerCustomerTransfer);
-        $quoteTransfer->getPayment()->getUnzerPayment()->setCustomer($unzerCustomerTransfer);
+        $unzerCustomerTransfer = $this->unzerCustomerAdapter->createCustomer($unzerCustomerTransfer);
+        $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setCustomer($unzerCustomerTransfer);
 
         return $quoteTransfer;
     }
@@ -118,17 +119,17 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      *
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
-    protected function createUnzerPayment(QuoteTransfer $quoteTransfer): QuoteTransfer
+    protected function addUnzerPayment(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $paymentResourceTransfer = $this->extractPaymentResourceFromQuote($quoteTransfer);
-        $paymentSelection = $quoteTransfer->getPayment()->getPaymentSelection();
+        $paymentResourceTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResource();
+        $paymentSelection = $quoteTransfer->getPaymentOrFail()->getPaymentSelection();
 
         $unzerPaymentTransfer = (new UnzerPaymentTransfer())
             ->setIsMarketplace($this->unzerConfig->isPaymentMethodMarketplaceReady($paymentSelection))
             ->setIsAuthorizable($this->unzerConfig->isPaymentAuthorizeRequired($paymentSelection))
             ->setPaymentResource($paymentResourceTransfer);
 
-        $quoteTransfer->getPayment()->setUnzerPayment($unzerPaymentTransfer);
+        $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
 
         return $quoteTransfer;
     }
@@ -154,7 +155,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      */
     protected function setParticipantId(ItemTransfer $itemTransfer): ItemTransfer
     {
-        if (empty($itemTransfer->getMerchantReference())) {
+        if (!$itemTransfer->getMerchantReference()) {
             return $itemTransfer;
         }
 
@@ -164,19 +165,5 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
         }
 
         return $itemTransfer->setUnzerParticipantId($merchantUnzerParticipant->getParticipantId());
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer|null
-     */
-    protected function extractPaymentResourceFromQuote(QuoteTransfer $quoteTransfer): ?UnzerPaymentResourceTransfer
-    {
-        if ($quoteTransfer->getPayment()->getUnzerPayment()->getPaymentResource() !== null) {
-            return $quoteTransfer->getPayment()->getUnzerPayment()->getPaymentResource();
-        }
-
-        return null;
     }
 }

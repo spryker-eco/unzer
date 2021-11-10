@@ -56,7 +56,7 @@ class UnzerWriter implements UnzerWriterInterface
      *
      * @return void
      */
-    public function saveMerchantUnzerParticipantEntity(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): void
+    public function saveMerchantUnzerParticipant(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): void
     {
          $this->unzerEntityManager->saveMerchantUnzerParticipantEntity($merchantUnzerParticipantTransfer);
     }
@@ -67,12 +67,12 @@ class UnzerWriter implements UnzerWriterInterface
      *
      * @return void
      */
-    public function saveUnzerPaymentEntities(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): void
+    public function createUnzerPaymentDetails(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): void
     {
-        $paymentUnzerTransfer = $this->createPaymentUnzerEntity($quoteTransfer, $saveOrderTransfer);
+        $paymentUnzerTransfer = $this->createPaymentUnzer($quoteTransfer, $saveOrderTransfer);
 
-        foreach ($saveOrderTransfer->getOrderItems() as $orderItem) {
-            $this->createPaymentUnzerOrderItemEntity($paymentUnzerTransfer, $orderItem);
+        foreach ($saveOrderTransfer->getOrderItems() as $orderItemTransfer) {
+            $this->createPaymentUnzerOrderItemTransfer($paymentUnzerTransfer, $orderItemTransfer);
         }
     }
 
@@ -83,19 +83,19 @@ class UnzerWriter implements UnzerWriterInterface
      *
      * @return void
      */
-    public function updateUnzerPaymentEntities(
+    public function updateUnzerPaymentDetails(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
     ): void {
         $this->unzerEntityManager->savePaymentUnzerEntity($paymentUnzerTransfer);
 
-        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
-            $this->unzerEntityManager->savePaymentUnzerOrderItemEntity($paymentUnzerOrderItem);
+        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
+            $this->unzerEntityManager->savePaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);
         }
 
-        foreach ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions() as $paymentUnzerTransaction) {
-            $this->unzerEntityManager->savePaymentUnzerTransactionEntity($paymentUnzerTransaction);
+        foreach ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions() as $paymentUnzerTransactionTransfer) {
+            $this->unzerEntityManager->savePaymentUnzerTransactionEntity($paymentUnzerTransactionTransfer);
         }
     }
 
@@ -105,7 +105,7 @@ class UnzerWriter implements UnzerWriterInterface
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
      */
-    protected function createPaymentUnzerEntity(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): PaymentUnzerTransfer
+    protected function createPaymentUnzer(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): PaymentUnzerTransfer
     {
         $unzerPaymentTransfer = $quoteTransfer->getPayment()->getUnzerPayment();
 
@@ -121,18 +121,18 @@ class UnzerWriter implements UnzerWriterInterface
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \Generated\Shared\Transfer\ItemTransfer $orderItem
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer
      */
-    protected function createPaymentUnzerOrderItemEntity(
+    protected function createPaymentUnzerOrderItemTransfer(
         PaymentUnzerTransfer $paymentUnzerTransfer,
-        ItemTransfer $orderItem
+        ItemTransfer $itemTransfer
     ): PaymentUnzerOrderItemTransfer {
         $paymentUnzerOrderItemTransfer = (new PaymentUnzerOrderItemTransfer())
             ->setIdPaymentUnzer($paymentUnzerTransfer->getIdPaymentUnzer())
-            ->setIdSalesOrderItem($orderItem->getIdSalesOrderItem())
-            ->setParticipantId($this->getParticipantIdForOrderItem($orderItem))
+            ->setIdSalesOrderItem($itemTransfer->getIdSalesOrderItem())
+            ->setParticipantId($this->getParticipantIdForOrderItem($itemTransfer))
             ->setStatus($this->unzerConfig->getOmsStatusNew());
 
         return $this->unzerEntityManager->savePaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);

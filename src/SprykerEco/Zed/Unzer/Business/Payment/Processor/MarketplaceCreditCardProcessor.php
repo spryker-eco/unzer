@@ -74,7 +74,9 @@ class MarketplaceCreditCardProcessor extends AbstractPaymentProcessor implements
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
         $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
-        $unzerPaymentTransfer = $this->setPaymentResource($unzerPaymentTransfer, $quoteTransfer);
+        $unzerPaymentTransfer->setPaymentResource(
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResourceOrFail()
+        );
         $unzerPaymentTransfer = $this->unzerAuthorizeAdapter->authorizePayment($unzerPaymentTransfer);
 
         return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
@@ -101,20 +103,5 @@ class MarketplaceCreditCardProcessor extends AbstractPaymentProcessor implements
     public function processRefund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         $this->unzerRefundProcessor->refund($refundTransfer, $orderTransfer, $salesOrderItemIds);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
-     */
-    protected function setPaymentResource(UnzerPaymentTransfer $unzerPaymentTransfer, QuoteTransfer $quoteTransfer): UnzerPaymentTransfer
-    {
-        $unzerPaymentTransfer->setPaymentResource(
-            $quoteTransfer->getPayment()->getUnzerPaymentOrFail()->getPaymentResourceOrFail()
-        );
-
-        return $unzerPaymentTransfer;
     }
 }

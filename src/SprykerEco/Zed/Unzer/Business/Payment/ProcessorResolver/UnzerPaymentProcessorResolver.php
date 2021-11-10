@@ -10,19 +10,19 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface;
 
-class UnzerPaymentProcessorStrategyResolver implements UnzerPaymentProcessorStrategyResolverInterface
+class UnzerPaymentProcessorResolver implements UnzerPaymentProcessorResolverInterface
 {
     /**
-     * @var \Closure[]
+     * @var array<\Closure>
      */
-    protected $strategyContainer;
+    protected $unzerPaymentProcessorsCollection;
 
     /**
-     * @param \Closure[] $strategyContainer
+     * @param array<\Closure> $unzerPaymentProcessorsCollection
      */
-    public function __construct(array $strategyContainer)
+    public function __construct(array $unzerPaymentProcessorsCollection)
     {
-        $this->strategyContainer = $strategyContainer;
+        $this->unzerPaymentProcessorsCollection = $unzerPaymentProcessorsCollection;
     }
 
     /**
@@ -34,8 +34,8 @@ class UnzerPaymentProcessorStrategyResolver implements UnzerPaymentProcessorStra
      */
     public function resolvePaymentProcessor(string $paymentMethodName): UnzerPaymentProcessorInterface
     {
-        if (isset($this->strategyContainer[$paymentMethodName])) {
-            return call_user_func($this->strategyContainer[$paymentMethodName]);
+        if (isset($this->unzerPaymentProcessorsCollection[$paymentMethodName])) {
+            return call_user_func($this->unzerPaymentProcessorsCollection[$paymentMethodName]);
         }
 
         throw new UnzerException(sprintf('Payment processor for %s not found!', $paymentMethodName));

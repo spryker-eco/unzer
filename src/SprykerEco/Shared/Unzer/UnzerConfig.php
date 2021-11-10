@@ -30,14 +30,4 @@ class UnzerConfig extends AbstractBundleConfig
      * @var string
      */
     public const PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER = self::PROVIDER_NAME . 'MarketplaceBankTransfer';
-
-    /**
-     * @api
-     *
-     * @return string
-     */
-    public function getProviderName(): string
-    {
-        return static::PROVIDER_NAME;
-    }
 }

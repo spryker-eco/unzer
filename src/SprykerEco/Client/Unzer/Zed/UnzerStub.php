@@ -13,33 +13,27 @@ use SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface;
 class UnzerStub implements UnzerStubInterface
 {
     /**
-     * @var string
-     */
-    protected const ZED_PROCESS_NOTIFICATION = '/unzer/gateway/process-notification';
-
-    /**
      * @var \SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface
      */
-    protected $zedStubClient;
+    protected $zedRequestClient;
 
     /**
-     * @param \SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface $zedStubClient
+     * @param \SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface $zedRequestClient
      */
-    public function __construct(UnzerToZedRequestClientInterface $zedStubClient)
+    public function __construct(UnzerToZedRequestClientInterface $zedRequestClient)
     {
-        $this->zedStubClient = $zedStubClient;
+        $this->zedRequestClient = $zedRequestClient;
     }
 
     /**
+     * @uses \SprykerEco\Zed\Unzer\Communication\Controller\GatewayController::processNotificationAction()
+     *
      * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $notificationTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
      */
     public function processNotification(UnzerNotificationTransfer $notificationTransfer): UnzerNotificationTransfer
     {
-        /** @var \Generated\Shared\Transfer\UnzerNotificationTransfer $notificationTransfer */
-        $notificationTransfer = $this->zedStubClient->call(static::ZED_PROCESS_NOTIFICATION, $notificationTransfer);
-
-        return $notificationTransfer;
+        return $this->zedRequestClient->call('/unzer/gateway/process-notification', $notificationTransfer);
     }
 }

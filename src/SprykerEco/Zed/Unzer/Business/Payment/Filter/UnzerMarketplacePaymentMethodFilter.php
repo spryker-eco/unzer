@@ -38,22 +38,22 @@ class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInt
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        $result = new ArrayObject();
+        $filteredPaymentMethodTransfersCollection = new ArrayObject();
 
-        $hasMultipleMerchants = $this->getQuoteHasMultipleMerchants($quoteTransfer);
+        $hasMultipleMerchants = $this->hasMultipleMerchants($quoteTransfer);
         if ($hasMultipleMerchants === false) {
             return $paymentMethodsTransfer;
         }
 
-        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethod) {
-            if ($this->isPaymentProviderUnzer($paymentMethod) && !$this->isMarketplace($paymentMethod)) {
+        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
+            if ($this->isUnzerPaymentProvider($paymentMethodTransfer) && !$this->isMarketplace($paymentMethodTransfer)) {
                 continue;
             }
 
-            $result->append($paymentMethod);
+            $filteredPaymentMethodTransfersCollection->append($paymentMethodTransfer);
         }
 
-        $paymentMethodsTransfer->setMethods($result);
+        $paymentMethodsTransfer->setMethods($filteredPaymentMethodTransfersCollection);
 
         return $paymentMethodsTransfer;
     }
@@ -63,17 +63,17 @@ class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInt
      *
      * @return bool
      */
-    protected function getQuoteHasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
+    protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
     {
-        $merchants = [];
-        foreach ($quoteTransfer->getItems() as $item) {
-            $merchantReference = $item->getMerchantReference();
-            if ($merchantReference !== null && !in_array($merchantReference, $merchants)) {
-                $merchants[] = $merchantReference;
+        $merchantReferences = [];
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            $merchantReference = $itemTransfer->getMerchantReference();
+            if ($merchantReference !== null && !in_array($merchantReference, $merchantReferences, true)) {
+                $merchantReferences[] = $merchantReference;
             }
         }
 
-        return count($merchants) > 1;
+        return count($merchantReferences) > 1;
     }
 
     /**
@@ -81,7 +81,7 @@ class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInt
      *
      * @return bool
      */
-    protected function isPaymentProviderUnzer(PaymentMethodTransfer $paymentMethodTransfer): bool
+    protected function isUnzerPaymentProvider(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
         return strpos($paymentMethodTransfer->getMethodName(), $this->config->getProviderName()) !== false;
     }

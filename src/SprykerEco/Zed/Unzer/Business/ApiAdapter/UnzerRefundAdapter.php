@@ -71,7 +71,7 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
             ->setMarketplaceRefundRequest($unzerApiMarketplaceRefundRequestTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceRefundApiCall($unzerApiRequestTransfer);
-        $this->checkSuccessResponse($unzerApiResponseTransfer);
+        $this->assertSuccessResponse($unzerApiResponseTransfer);
     }
 
     /**
@@ -91,6 +91,6 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
             ->setRefundRequest($unzerApiRefundRequestTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performRefundApiCall($unzerApiRequestTransfer);
-        $this->checkSuccessResponse($unzerApiResponseTransfer);
+        $this->assertSuccessResponse($unzerApiResponseTransfer);
     }
 }

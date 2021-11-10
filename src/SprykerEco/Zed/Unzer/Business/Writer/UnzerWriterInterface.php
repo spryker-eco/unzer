@@ -22,7 +22,7 @@ interface UnzerWriterInterface
      *
      * @return void
      */
-    public function saveUnzerPaymentEntities(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): void;
+    public function createUnzerPaymentDetails(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): void;
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
@@ -31,7 +31,7 @@ interface UnzerWriterInterface
      *
      * @return void
      */
-    public function updateUnzerPaymentEntities(
+    public function updateUnzerPaymentDetails(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
@@ -42,5 +42,5 @@ interface UnzerWriterInterface
      *
      * @return void
      */
-    public function saveMerchantUnzerParticipantEntity(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): void;
+    public function saveMerchantUnzerParticipant(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): void;
 }

@@ -9,7 +9,7 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver;
 
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface;
 
-interface UnzerPaymentProcessorStrategyResolverInterface
+interface UnzerPaymentProcessorResolverInterface
 {
     /**
      * @param string $paymentMethodName

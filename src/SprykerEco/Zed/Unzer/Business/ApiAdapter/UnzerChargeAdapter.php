@@ -48,7 +48,7 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
         $unzerApiRequestTransfer = $this->prepareChargeRequest($unzerPaymentTransfer);
 
         $unzerApiResponseTransfer = $this->performCharge($unzerApiRequestTransfer, $unzerPaymentTransfer);
-        $this->checkSuccessResponse($unzerApiResponseTransfer);
+        $this->assertSuccessResponse($unzerApiResponseTransfer);
         $unzerApiChargeResponseTransfer = $unzerApiResponseTransfer->getChargeResponseOrFail();
 
         return $this->unzerChargeMapper
@@ -68,7 +68,7 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
         $unzerApiRequestTransfer = $this->prepareChargeRequest($unzerPaymentTransfer);
 
         $unzerApiResponseTransfer = $this->performAuthorizableCharge($unzerApiRequestTransfer, $unzerPaymentTransfer);
-        $this->checkSuccessResponse($unzerApiResponseTransfer);
+        $this->assertSuccessResponse($unzerApiResponseTransfer);
         $unzerApiChargeResponseTransfer = $unzerApiResponseTransfer->getChargeResponseOrFail();
 
         return $this->unzerChargeMapper

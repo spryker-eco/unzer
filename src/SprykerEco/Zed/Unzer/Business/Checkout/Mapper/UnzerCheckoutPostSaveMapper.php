@@ -41,12 +41,12 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         UnzerBasketTransfer $unzerBasketTransfer
     ): UnzerBasketTransfer {
         return $unzerBasketTransfer
-            ->setAmountTotalGross($quoteTransfer->getTotals()->getGrandTotal() / 100)
-            ->setAmountTotalVat($quoteTransfer->getTotals()->getTaxTotal()->getAmount() / 100)
+            ->setAmountTotalGross($quoteTransfer->getTotalsOrFail()->getGrandTotal() / 100)
+            ->setAmountTotalVat($quoteTransfer->getTotalsOrFail()->getTaxTotalOrFail()->getAmount() / 100)
             ->setCurrencyCode($quoteTransfer->getCurrency()->getCode())
             ->setNote('')
-            ->setOrderId($quoteTransfer->getPayment()->getUnzerPayment()->getOrderId())
-            ->setBasketItems($this->mapQuoteItemsCollectionToBasketItemsCollection($quoteTransfer));
+            ->setOrderId($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getOrderId())
+            ->setBasketItems($this->mapQuoteToBasketItemsCollection($quoteTransfer));
     }
 
     /**
@@ -60,25 +60,28 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
     ): UnzerPaymentResourceTransfer {
         return $unzerPaymentResourceTransfer->setType(
-            $this->mapUnzerPaymentType($quoteTransfer->getPayment()->getPaymentSelection())
+            $this->unzerConfig
+                ->getUnzerPaymentMethodKey(
+                    $quoteTransfer->getPaymentOrFail()->getPaymentSelection()
+                )
         );
     }
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \ArrayObject|\Generated\Shared\Transfer\UnzerBasketItemTransfer[]
+     * @return \ArrayObject|array<\Generated\Shared\Transfer\UnzerBasketItemTransfer>
      */
-    protected function mapQuoteItemsCollectionToBasketItemsCollection(QuoteTransfer $quoteTransfer): ArrayObject
+    protected function mapQuoteToBasketItemsCollection(QuoteTransfer $quoteTransfer): ArrayObject
     {
-        $basketItems = new ArrayObject();
+        $basketItemTransfers = new ArrayObject();
         foreach ($quoteTransfer->getItems() as $quoteItemTransfer) {
-            $basketItems->append(
+            $basketItemTransfers->append(
                 $this->mapQuoteItemTransferToUnzerBasketItemTransfer($quoteItemTransfer, new UnzerBasketItemTransfer())
             );
         }
 
-        return $basketItems;
+        return $basketItemTransfers;
     }
 
     /**
@@ -102,15 +105,5 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
             ->setType('Wire');
-    }
-
-    /**
-     * @param string $paymentSelection
-     *
-     * @return string
-     */
-    protected function mapUnzerPaymentType(string $paymentSelection): string
-    {
-        return $this->unzerConfig->getUnzerPaymentMethodKey($paymentSelection);
     }
 }

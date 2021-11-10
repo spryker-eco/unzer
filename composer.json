@@ -4,11 +4,20 @@
     "description": "Unzer PSP module",
     "license": "MIT",
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "spryker/kernel": "^3.30.0",
         "spryker/store": "^1.0.0",
         "spryker/util-text": "^1.0.0",
-        "spryker/zed-request": "^3.0.0"
+        "spryker/zed-request": "^3.0.0",
+        "spryker/checkout-extension": "^6.3.0",
+        "spryker/merchant-extension": "^1.1.0",
+        "spryker/payment-extension": "^1.0.0",
+        "spryker/calculation": "^4.11.0",
+        "spryker/sales": "^11.27.0",
+        "spryker/oms": "^11.15.0",
+        "spryker/quote": "^2.15.0",
+        "spryker/refund": "^5.4.0",
+        "spryker-eco/unzer-api": "dev-feature/cc-14610/cc-14662/code-migration as 1.0"
     },
     "require-dev": {
         "phpstan/phpstan": "*",

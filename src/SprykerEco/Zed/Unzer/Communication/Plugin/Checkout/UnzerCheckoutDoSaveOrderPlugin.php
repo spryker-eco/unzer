@@ -16,12 +16,12 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
  * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
- * @method \SprykerEco\Zed\Unzer\Persistence\UnzerQueryContainerInterface getQueryContainer()
  */
-class UnzerDoSaveOrderPlugin extends AbstractPlugin implements CheckoutDoSaveOrderInterface
+class UnzerCheckoutDoSaveOrderPlugin extends AbstractPlugin implements CheckoutDoSaveOrderInterface
 {
     /**
      * {@inheritDoc}
+     *  - Prepares Unzer payment details and saves it to database.
      *
      * @api
      *

@@ -40,25 +40,27 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
     ): UnzerPaymentTransfer {
         return $unzerPaymentTransfer
             ->fromArray($unzerApiGetPaymentResponseTransfer->toArray(), true)
-            ->setTransactions($this->mapUnzerTransactions($unzerApiGetPaymentResponseTransfer));
+            ->setTransactions(
+                $this->mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers($unzerApiGetPaymentResponseTransfer)
+            );
     }
 
     /**
      * @param \Generated\Shared\Transfer\UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer
      *
-     * @return \ArrayObject|\Generated\Shared\Transfer\UnzerTransactionTransfer[]
+     * @return \ArrayObject|array<\Generated\Shared\Transfer\UnzerTransactionTransfer>
      */
-    protected function mapUnzerTransactions(UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer): ArrayObject
+    protected function mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers(UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer): ArrayObject
     {
-        $unzerPaymentTransactions = new ArrayObject();
+        $unzerTransactionTransfers = new ArrayObject();
         foreach ($unzerApiGetPaymentResponseTransfer->getTransactions() as $unzerApiTransactionTransfer) {
             $unzerTransactionTransfer = (new UnzerTransactionTransfer())
                 ->fromArray($unzerApiTransactionTransfer->toArray(), true)
                 ->setAmount($unzerApiTransactionTransfer->getAmount() * 100);
 
-            $unzerPaymentTransactions->append($unzerTransactionTransfer);
+            $unzerTransactionTransfers->append($unzerTransactionTransfer);
         }
 
-        return $unzerPaymentTransactions;
+        return $unzerTransactionTransfers;
     }
 }

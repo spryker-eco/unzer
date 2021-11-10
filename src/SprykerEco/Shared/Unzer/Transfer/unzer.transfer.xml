@@ -145,7 +145,6 @@
         <property name="merchantUnzerParticipantId" type="string"/>
     </transfer>
 
-    <!--    Propel transfers group-->
     <transfer name="MerchantUnzerParticipant">
         <property name="merchantReference" type="string"/>
         <property name="merchantId" type="int"/>
@@ -208,5 +207,23 @@
         <property name="retrieveUrl" type="string"/>
         <property name="paymentId" type="string"/>
     </transfer>
+
+    <transfer name="UnzerApiResponse">
+        <property name="isSuccess" type="bool"/>
+        <property name="errorResponse" type="UnzerApiErrorResponse"/>
+    </transfer>
+
+    <transfer name="UnzerApiErrorResponse">
+        <property name="url" type="string"/>
+        <property name="timestamp" type="string"/>
+        <property name="errors" type="UnzerApiResponseError[]" singular="error"/>
+    </transfer>
+
+    <transfer name="UnzerApiResponseError">
+        <property name="code" type="string"/>
+        <property name="merchantMessage" type="string"/>
+        <property name="customerMessage" type="string"/>
+    </transfer>
+
 
 </transfers>

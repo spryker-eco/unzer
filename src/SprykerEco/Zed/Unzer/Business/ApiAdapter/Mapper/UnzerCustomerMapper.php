@@ -38,6 +38,6 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
         UnzerApiCreateCustomerResponseTransfer $createCustomerResponse,
         UnzerCustomerTransfer $unzerCustomerTransfer
     ): UnzerCustomerTransfer {
-        return $unzerCustomerTransfer->fromArray($createCustomerResponse->toArray());
+        return $unzerCustomerTransfer->fromArray($createCustomerResponse->toArray(), true);
     }
 }

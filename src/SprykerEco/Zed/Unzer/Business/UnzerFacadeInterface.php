@@ -18,6 +18,7 @@ use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
+use Generated\Shared\Transfer\UnzerNotificationTransfer;
 
 interface UnzerFacadeInterface
 {
@@ -46,6 +47,20 @@ interface UnzerFacadeInterface
      * @return void
      */
     public function saveOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): void;
+
+    /**
+     * Specification:
+     *  - Checks if provided Unzer notification is enabled.
+     *  - Processes Unzer notification.
+     *  - Updates payment details in DB.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $notificationTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
+     */
+    public function processNotification(UnzerNotificationTransfer $notificationTransfer): UnzerNotificationTransfer;
 
     /**
      * Specification:
@@ -154,7 +169,7 @@ interface UnzerFacadeInterface
      * @api
      *
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param int[] $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */
@@ -168,7 +183,7 @@ interface UnzerFacadeInterface
      *
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param int[] $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */

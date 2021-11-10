@@ -13,7 +13,8 @@ interface UnzerClientInterface
 {
     /**
      * Specification:
-     *  - Processes Unzer notification.
+     *  - Makes Zed request.
+     *  - Processes Unzer notification and modifies payment properties.
      *
      * @api
      *

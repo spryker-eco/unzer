@@ -8,34 +8,34 @@
 namespace SprykerEco\Zed\Unzer\Business\Oms\Command;
 
 use Generated\Shared\Transfer\OrderTransfer;
-use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorStrategyResolverInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
 
-class ChargeOmsCommand extends AbstractOmsCommand implements UnzerOmsCommandByOrderInterface
+class ChargeOmsCommand extends AbstractOmsCommand implements UnzerOmsCommandInterface
 {
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorStrategyResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface
      */
-    protected $paymentProcessorStrategyResolver;
+    protected $unzerPaymentProcessorStrategyResolver;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorStrategyResolverInterface $paymentProcessorStrategyResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
      */
     public function __construct(
-        UnzerPaymentProcessorStrategyResolverInterface $paymentProcessorStrategyResolver
+        UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
     ) {
-        $this->paymentProcessorStrategyResolver = $paymentProcessorStrategyResolver;
+        $this->unzerPaymentProcessorStrategyResolver = $paymentProcessorStrategyResolver;
     }
 
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param int[] $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */
     public function execute(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         $paymentMethodName = $this->getPaymentMethodName($orderTransfer);
-        $paymentProcessor = $this->paymentProcessorStrategyResolver->resolvePaymentProcessor($paymentMethodName);
+        $paymentProcessor = $this->unzerPaymentProcessorStrategyResolver->resolvePaymentProcessor($paymentMethodName);
 
         $paymentProcessor->processCharge($orderTransfer, $salesOrderItemIds);
     }

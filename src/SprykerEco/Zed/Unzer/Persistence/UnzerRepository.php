@@ -71,7 +71,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
      */
-    public function findPaymentUnzerOrderItemCollectionByOrderId(string $orderId): PaymentUnzerOrderItemCollectionTransfer
+    public function getPaymentUnzerOrderItemCollectionByOrderId(string $orderId): PaymentUnzerOrderItemCollectionTransfer
     {
         $paymentUnzerOrderItemEntities = $this->getFactory()
             ->createPaymentUnzerOrderItemQuery()

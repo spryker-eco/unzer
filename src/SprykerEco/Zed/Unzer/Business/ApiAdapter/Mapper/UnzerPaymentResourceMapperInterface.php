@@ -30,7 +30,7 @@ interface UnzerPaymentResourceMapperInterface
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
      */
-    public function mapUnzerApiCreatePaymentResourceTransferResponseToUnzerPaymentResourceTransfer(
+    public function mapUnzerApiCreatePaymentResourceResponseTransferToUnzerPaymentResourceTransfer(
         UnzerApiCreatePaymentResourceResponseTransfer $unzerApiCreatePaymentResourceResponseTransfer,
         UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
     ): UnzerPaymentResourceTransfer;

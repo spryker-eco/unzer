@@ -56,9 +56,9 @@ class UnzerReader implements UnzerReaderInterface
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
      */
-    public function getPaymentUnzerOrderItemCollectionByOrderReference(string $orderId): PaymentUnzerOrderItemCollectionTransfer
+    public function getPaymentUnzerOrderItemCollectionByOrderId(string $orderId): PaymentUnzerOrderItemCollectionTransfer
     {
-        return $this->unzerRepository->findPaymentUnzerOrderItemCollectionByOrderId($orderId);
+        return $this->unzerRepository->getPaymentUnzerOrderItemCollectionByOrderId($orderId);
     }
 
     /**

@@ -43,9 +43,9 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
         return $unzerApiMarketplaceAuthorizeRequestTransfer->fromArray($unzerPaymentTransfer->toArray(), true)
             ->setAmount($unzerPaymentTransfer->getAmountTotal())
             ->setPaymentReference($unzerPaymentTransfer->getOrderId())
-            ->setTypeId($unzerPaymentTransfer->getPaymentResource()->getId())
-            ->setCustomerId($unzerPaymentTransfer->getCustomer()->getId())
-            ->setBasketId($unzerPaymentTransfer->getBasket()->getId())
+            ->setTypeId($unzerPaymentTransfer->getPaymentResourceOrFail()->getId())
+            ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
+            ->setBasketId($unzerPaymentTransfer->getBasketOrFail()->getId())
             ->setReturnUrl($this->unzerConfig->getAuthorizeReturnUrl());
     }
 

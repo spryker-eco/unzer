@@ -9,7 +9,7 @@ namespace SprykerEco\Zed\Unzer\Business\Notification;
 
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 
-interface NotificationProcessorInterface
+interface UnzerNotificationProcessorInterface
 {
     /**
      * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $unzerNotificationTransfer

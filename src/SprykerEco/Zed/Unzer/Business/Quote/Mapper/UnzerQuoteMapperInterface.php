@@ -10,7 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\Quote\Mapper;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 
-interface UnzerQuoteExpanderMapperInterface
+interface UnzerQuoteMapperInterface
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer

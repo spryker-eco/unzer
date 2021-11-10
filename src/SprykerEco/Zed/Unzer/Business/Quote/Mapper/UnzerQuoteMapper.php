@@ -12,7 +12,7 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerAddressTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 
-class UnzerQuoteExpanderMapper implements UnzerQuoteExpanderMapperInterface
+class UnzerQuoteMapper implements UnzerQuoteMapperInterface
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -28,14 +28,14 @@ class UnzerQuoteExpanderMapper implements UnzerQuoteExpanderMapperInterface
 
         return $unzerCustomerTransfer
             ->setId($quoteTransfer->getCustomerReference() . uniqid('', true))
-            ->setLastname($quoteTransfer->getCustomer()->getLastName())
-            ->setFirstname($quoteTransfer->getCustomer()->getFirstName())
-            ->setSalutation($quoteTransfer->getCustomer()->getSalutation())
-            ->setCompany($quoteTransfer->getCustomer()->getCompany())
-            ->setBirthDate($quoteTransfer->getCustomer()->getDateOfBirth())
-            ->setEmail($quoteTransfer->getCustomer()->getEmail())
+            ->setLastname($quoteTransfer->getCustomerOrFail()->getLastName())
+            ->setFirstname($quoteTransfer->getCustomerOrFail()->getFirstName())
+            ->setSalutation($quoteTransfer->getCustomerOrFail()->getSalutation())
+            ->setCompany($quoteTransfer->getCustomerOrFail()->getCompany())
+            ->setBirthDate($quoteTransfer->getCustomerOrFail()->getDateOfBirth())
+            ->setEmail($quoteTransfer->getCustomerOrFail()->getEmail())
             ->setPhone($shippingAddress->getPhone())
-            ->setMobile($quoteTransfer->getCustomer()->getPhone())
+            ->setMobile($quoteTransfer->getCustomerOrFail()->getPhone())
             ->setShippingAddress(
                 $this->mapAddressTransferToUnzerAddressTransfer($shippingAddress, new UnzerAddressTransfer())
             )
@@ -69,12 +69,14 @@ class UnzerQuoteExpanderMapper implements UnzerQuoteExpanderMapperInterface
      */
     protected function getShippingAddressFromQuote(QuoteTransfer $quoteTransfer): ?AddressTransfer
     {
-        if ($quoteTransfer->getShippingAddress()) {
-            return $quoteTransfer->getShippingAddress();
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            if ($itemTransfer->getShipment()){
+                return $itemTransfer->getShipmentOrFail()->getShippingAddress();
+            }
         }
 
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            return $itemTransfer->getShipment()->getShippingAddress();
+        if ($quoteTransfer->getShippingAddress()) {
+            return $quoteTransfer->getShippingAddress();
         }
 
         return null;

@@ -75,22 +75,22 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     public function refund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
-        $unzerRefundTransfers = $this->buildUnzerMarketplaceRefundTransfers($refundTransfer, $paymentUnzerTransfer);
+        $unzerRefundTransfers = $this->createUnzerMarketplaceRefundTransfers($refundTransfer, $paymentUnzerTransfer);
 
         foreach ($unzerRefundTransfers as $unzerRefundTransfer) {
             $this->unzerRefundAdapter->refundPayment($unzerRefundTransfer);
         }
 
-        $this->savePaymentEntities($paymentUnzerTransfer, $salesOrderItemIds);
+        $this->saveUnzerPaymentDetails($paymentUnzerTransfer, $salesOrderItemIds);
     }
 
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerRefundTransfer[]
+     * @return array<\Generated\Shared\Transfer\UnzerRefundTransfer>
      */
-    protected function buildUnzerMarketplaceRefundTransfers(
+    protected function createUnzerMarketplaceRefundTransfers(
         RefundTransfer $refundTransfer,
         PaymentUnzerTransfer $paymentUnzerTransfer
     ): array {
@@ -112,7 +112,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      * @param string $participantId
-     * @param \Generated\Shared\Transfer\ItemTransfer[] $itemTransfers
+     * @param array<\Generated\Shared\Transfer\ItemTransfer> $itemTransfers
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
@@ -141,7 +141,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
             ->setChargeId($paymentUnzerTransactionTransfer->getTransactionId());
 
         foreach ($itemTransfers as $itemTransfer) {
-            $unzerRefundItemTransfer = $this->buildUnzerRefundItemTransfer($itemTransfer);
+            $unzerRefundItemTransfer = $this->createUnzerRefundItemTransfer($itemTransfer);
             $unzerRefundTransfer->addItem($unzerRefundItemTransfer);
         }
 
@@ -169,13 +169,13 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      *
      * @return void
      */
-    protected function savePaymentEntities(PaymentUnzerTransfer $paymentUnzerTransfer, array $salesOrderItemIds): void
+    protected function saveUnzerPaymentDetails(PaymentUnzerTransfer $paymentUnzerTransfer, array $salesOrderItemIds): void
     {
         $unzerPaymentTransfer = $this->unzerPaymentMapper
             ->mapPaymentUnzerTransferToUnzerPaymentTransfer($paymentUnzerTransfer, new UnzerPaymentTransfer());
         $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
 
-        $this->unzerPaymentSaver->savePaymentEntities(
+        $this->unzerPaymentSaver->saveUnzerPaymentDetails(
             $unzerPaymentTransfer,
             UnzerConstants::OMS_STATUS_CHARGE_REFUNDED,
             $salesOrderItemIds
@@ -187,7 +187,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerRefundItemTransfer
      */
-    protected function buildUnzerRefundItemTransfer(ItemTransfer $itemTransfer): UnzerRefundItemTransfer
+    protected function createUnzerRefundItemTransfer(ItemTransfer $itemTransfer): UnzerRefundItemTransfer
     {
         return (new UnzerRefundItemTransfer())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())

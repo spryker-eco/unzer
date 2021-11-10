@@ -20,30 +20,30 @@ abstract class UnzerAbstractApiAdapter
      *
      * @return void
      */
-    protected function checkSuccessResponse(UnzerApiResponseTransfer $unzerApiResponseTransfer): void
+    protected function assertSuccessResponse(UnzerApiResponseTransfer $unzerApiResponseTransfer): void
     {
         if ($unzerApiResponseTransfer->getIsSuccess()) {
             return;
         }
 
-        $errorMessage = $unzerApiResponseTransfer->getErrorResponseOrFail();
+        $unzerApiErrorResponseTransfer = $unzerApiResponseTransfer->getErrorResponseOrFail();
 
-        throw new UnzerApiException($this->concatErrors($errorMessage));
+        throw new UnzerApiException($this->concatErrors($unzerApiErrorResponseTransfer));
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer $apiErrorResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
      *
      * @return string
      */
-    protected function concatErrors(UnzerApiErrorResponseTransfer $apiErrorResponseTransfer): string
+    protected function concatErrors(UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer): string
     {
         $errorsMessage = 'Unzer API errors:';
-        $errors = $apiErrorResponseTransfer->getErrors();
-        foreach ($errors as $error) {
-            $errorsMessage .= $error->getCode() . ' ';
+        $unzerApiResponseErrorTransfers = $unzerApiErrorResponseTransfer->getErrors();
+        foreach ($unzerApiResponseErrorTransfers as $unzerApiResponseErrorTransfer) {
+            $errorsMessage .= $unzerApiResponseErrorTransfer->getCode() . ' ';
         }
 
-        return $errorsMessage;
+        return trim($errorsMessage);
     }
 }

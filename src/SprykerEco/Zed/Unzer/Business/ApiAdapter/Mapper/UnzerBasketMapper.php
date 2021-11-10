@@ -24,8 +24,7 @@ class UnzerBasketMapper implements UnzerBasketMapperInterface
         UnzerApiCreateBasketRequestTransfer $unzerApiCreateBasketRequestTransfer
     ): UnzerApiCreateBasketRequestTransfer {
         return $unzerApiCreateBasketRequestTransfer
-            ->fromArray($unzerBasketTransfer->toArray(), true)
-            ->setOrderId($unzerBasketTransfer->getOrderId());
+            ->fromArray($unzerBasketTransfer->toArray(), true);
     }
 
     /**

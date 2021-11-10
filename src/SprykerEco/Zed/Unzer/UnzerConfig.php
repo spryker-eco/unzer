@@ -11,9 +11,6 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants as UnzerSharedConstants;
 
-/**
- * @method \SprykerEco\Shared\Unzer\UnzerConfig getSharedConfig()
- */
 class UnzerConfig extends AbstractBundleConfig
 {
     /**
@@ -269,6 +266,6 @@ class UnzerConfig extends AbstractBundleConfig
      */
     public function getProviderName(): string
     {
-        return $this->getSharedConfig()->getProviderName();
+        return UnzerSharedConfig::PROVIDER_NAME;
     }
 }

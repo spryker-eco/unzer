@@ -44,29 +44,16 @@ abstract class AbstractPaymentProcessor
      */
     protected function prepareUnzerPaymentTransfer(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $quoteTransfer = $this->setUnzerPaymentOrderId($quoteTransfer, $saveOrderTransfer);
-        $unzerPaymentTransfer = $quoteTransfer->getPayment()->getUnzerPaymentOrFail();
+        $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setOrderId($saveOrderTransfer->getOrderReference());
+        $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();
 
         $unzerBasket = $this->createUnzerBasket($quoteTransfer);
         $unzerPaymentTransfer->setBasket($unzerBasket);
 
-        $unzerPaymentTransfer->setCurrency($quoteTransfer->getCurrency()->getCode());
-        $unzerPaymentTransfer->setAmountTotal($quoteTransfer->getTotals()->getGrandTotal() / 100);
+        $unzerPaymentTransfer->setCurrency($quoteTransfer->getCurrencyOrFail()->getCode());
+        $unzerPaymentTransfer->setAmountTotal($quoteTransfer->getTotalsOrFail()->getGrandTotal() / 100);
 
         return $unzerPaymentTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
-     *
-     * @return \Generated\Shared\Transfer\QuoteTransfer
-     */
-    protected function setUnzerPaymentOrderId(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): QuoteTransfer
-    {
-        $quoteTransfer->getPayment()->getUnzerPayment()->setOrderId($saveOrderTransfer->getOrderReference());
-
-        return $quoteTransfer;
     }
 
     /**
