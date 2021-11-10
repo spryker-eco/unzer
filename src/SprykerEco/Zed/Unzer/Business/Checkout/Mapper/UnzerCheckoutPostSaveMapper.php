@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\UnzerBasketItemTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use SprykerEco\Zed\Unzer\UnzerConfig;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
 {
@@ -41,8 +42,8 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         UnzerBasketTransfer $unzerBasketTransfer
     ): UnzerBasketTransfer {
         return $unzerBasketTransfer
-            ->setAmountTotalGross($quoteTransfer->getTotalsOrFail()->getGrandTotal() / 100)
-            ->setAmountTotalVat($quoteTransfer->getTotalsOrFail()->getTaxTotalOrFail()->getAmount() / 100)
+            ->setAmountTotalGross($quoteTransfer->getTotalsOrFail()->getGrandTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountTotalVat($quoteTransfer->getTotalsOrFail()->getTaxTotalOrFail()->getAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setCurrencyCode($quoteTransfer->getCurrency()->getCode())
             ->setNote('')
             ->setOrderId($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getOrderId())
@@ -97,11 +98,11 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         return $unzerBasketItemTransfer
             ->setBasketItemReferenceId($itemTransfer->getSku())
             ->setQuantity($itemTransfer->getQuantity())
-            ->setAmountGross($itemTransfer->getSumGrossPrice() / 100)
-            ->setAmountVat($itemTransfer->getSumTaxAmount() / 100)
-            ->setAmountDiscount($itemTransfer->getSumDiscountAmountAggregation() / 100)
-            ->setAmountPerUnit($itemTransfer->getUnitPriceToPayAggregation() / 100)
-            ->setAmountNet($itemTransfer->getSumNetPrice() / 100)
+            ->setAmountGross($itemTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountVat($itemTransfer->getSumTaxAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountDiscount($itemTransfer->getSumDiscountAmountAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountPerUnit($itemTransfer->getUnitPriceToPayAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountNet($itemTransfer->getSumNetPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
             ->setType('Wire');

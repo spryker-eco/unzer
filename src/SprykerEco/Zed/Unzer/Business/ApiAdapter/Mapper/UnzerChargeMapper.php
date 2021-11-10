@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\UnzerConfig;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerChargeMapper implements UnzerChargeMapperInterface
 {
@@ -77,7 +78,7 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
         return $unzerPaymentTransfer->setId($unzerApiChargeResponseTransfer->getPaymentId())
-            ->setAmountTotal((int)$unzerApiChargeResponseTransfer->getAmount() * 100)
+            ->setAmountTotal((int)$unzerApiChargeResponseTransfer->getAmount() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setCurrency($unzerApiChargeResponseTransfer->getCurrency())
             ->setRedirectUrl($unzerApiChargeResponseTransfer->getRedirectUrl())
             ->setCustomer((new UnzerCustomerTransfer())->setId($unzerApiChargeResponseTransfer->getCustomerId()))

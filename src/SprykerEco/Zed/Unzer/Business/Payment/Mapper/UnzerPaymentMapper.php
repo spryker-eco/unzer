@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Generated\Shared\Transfer\UnzerTransactionTransfer;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerPaymentMapper implements UnzerPaymentMapperInterface
 {
@@ -36,10 +37,10 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
             ->setId($paymentUnzerTransfer->getPaymentId())
             ->setCurrency($paymentUnzerTransfer->getCurrency())
             ->setOrderId($paymentUnzerTransfer->getOrderId())
-            ->setAmountTotal($paymentUnzerTransfer->getAmountTotal() / static::INT_TO_FLOAT_DIVIDER)
-            ->setAmountRemaining($paymentUnzerTransfer->getAmountRemaining() / static::INT_TO_FLOAT_DIVIDER)
-            ->setAmountCharged($paymentUnzerTransfer->getAmountCharged() / static::INT_TO_FLOAT_DIVIDER)
-            ->setAmountCanceled($paymentUnzerTransfer->getAmountCanceled() / static::INT_TO_FLOAT_DIVIDER)
+            ->setAmountTotal($paymentUnzerTransfer->getAmountTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountRemaining($paymentUnzerTransfer->getAmountRemaining() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountCharged($paymentUnzerTransfer->getAmountCharged() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountCanceled($paymentUnzerTransfer->getAmountCanceled() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setStateName($paymentUnzerTransfer->getState())
             ->setStateId($paymentUnzerTransfer->getStateId())
             ->setCustomer((new UnzerCustomerTransfer())->setId($paymentUnzerTransfer->getCustomerId()))
@@ -62,10 +63,10 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
         PaymentUnzerTransfer $paymentUnzerTransfer
     ): PaymentUnzerTransfer {
         $paymentUnzerTransfer
-            ->setAmountTotal($unzerPaymentTransfer->getAmountTotal() * static::INT_TO_FLOAT_DIVIDER)
-            ->setAmountRemaining($unzerPaymentTransfer->getAmountRemaining() * static::INT_TO_FLOAT_DIVIDER)
-            ->setAmountCanceled($unzerPaymentTransfer->getAmountCanceled() * static::INT_TO_FLOAT_DIVIDER)
-            ->setAmountCharged($unzerPaymentTransfer->getAmountCharged() * static::INT_TO_FLOAT_DIVIDER)
+            ->setAmountTotal($unzerPaymentTransfer->getAmountTotal() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountRemaining($unzerPaymentTransfer->getAmountRemaining() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountCanceled($unzerPaymentTransfer->getAmountCanceled() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountCharged($unzerPaymentTransfer->getAmountCharged() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setState($unzerPaymentTransfer->getStateName())
             ->setStateId($unzerPaymentTransfer->getStateId())
             ->setCustomerId($unzerPaymentTransfer->getCustomer()->getId())

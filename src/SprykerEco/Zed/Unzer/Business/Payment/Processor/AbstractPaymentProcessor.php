@@ -13,6 +13,7 @@ use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
 abstract class AbstractPaymentProcessor
 {
@@ -51,7 +52,7 @@ abstract class AbstractPaymentProcessor
         $unzerPaymentTransfer->setBasket($unzerBasket);
 
         $unzerPaymentTransfer->setCurrency($quoteTransfer->getCurrencyOrFail()->getCode());
-        $unzerPaymentTransfer->setAmountTotal($quoteTransfer->getTotalsOrFail()->getGrandTotal() / 100);
+        $unzerPaymentTransfer->setAmountTotal($quoteTransfer->getTotalsOrFail()->getGrandTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER);
 
         return $unzerPaymentTransfer;
     }

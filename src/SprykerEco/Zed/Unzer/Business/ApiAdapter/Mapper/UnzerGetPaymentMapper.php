@@ -12,6 +12,7 @@ use Generated\Shared\Transfer\UnzerApiGetPaymentRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiGetPaymentResponseTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Generated\Shared\Transfer\UnzerTransactionTransfer;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
 {
@@ -56,7 +57,7 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         foreach ($unzerApiGetPaymentResponseTransfer->getTransactions() as $unzerApiTransactionTransfer) {
             $unzerTransactionTransfer = (new UnzerTransactionTransfer())
                 ->fromArray($unzerApiTransactionTransfer->toArray(), true)
-                ->setAmount($unzerApiTransactionTransfer->getAmount() * 100);
+                ->setAmount($unzerApiTransactionTransfer->getAmount() * UnzerConstants::INT_TO_FLOAT_DIVIDER);
 
             $unzerTransactionTransfers->append($unzerTransactionTransfer);
         }

@@ -158,4 +158,9 @@ interface UnzerConstants
      * @var string
      */
     public const TRANSACTION_TYPE_CHARGE = 'charge';
+
+    /**
+     * @var int
+     */
+    public const INT_TO_FLOAT_DIVIDER = 100;
 }

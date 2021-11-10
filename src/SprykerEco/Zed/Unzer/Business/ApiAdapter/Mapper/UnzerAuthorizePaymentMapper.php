@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\UnzerConfig;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterface
 {
@@ -61,7 +62,7 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
     ): UnzerPaymentTransfer {
         return $unzerPaymentTransfer
             ->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getPaymentId())
-            ->setAmountTotal((int)($unzerApiMarketplaceAuthorizeResponseTransfer->getAmount() * 100))
+            ->setAmountTotal((int)($unzerApiMarketplaceAuthorizeResponseTransfer->getAmount() * UnzerConstants::INT_TO_FLOAT_DIVIDER))
             ->setCurrency($unzerApiMarketplaceAuthorizeResponseTransfer->getCurrency())
             ->setRedirectUrl($unzerApiMarketplaceAuthorizeResponseTransfer->getRedirectUrl())
             ->setCustomer((new UnzerCustomerTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getCustomerId()))

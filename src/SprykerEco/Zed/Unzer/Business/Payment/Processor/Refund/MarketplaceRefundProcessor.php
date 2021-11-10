@@ -191,7 +191,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     {
         return (new UnzerRefundItemTransfer())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
-            ->setAmountGross($itemTransfer->getRefundableAmount() / 100)
+            ->setAmountGross($itemTransfer->getRefundableAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setBasketItemReferenceId($itemTransfer->getSku())
             ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY);
     }
