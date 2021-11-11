@@ -86,12 +86,12 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
 
         $unzerPaymentTransfer = $this->unzerPaymentMapper->mapPaymentUnzerTransferToUnzerPaymentTransfer(
             $paymentUnzerTransfer,
-            new UnzerPaymentTransfer()
+            new UnzerPaymentTransfer(),
         );
         $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
 
         $orderItemStatus = $this->unzerConfig->mapUnzerEventToOmsStatus(
-            $unzerNotificationTransfer->getEvent()
+            $unzerNotificationTransfer->getEvent(),
         );
 
         $this->unzerPaymentSaver->saveUnzerPaymentDetails($unzerPaymentTransfer, $orderItemStatus);

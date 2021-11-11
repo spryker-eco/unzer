@@ -33,7 +33,7 @@ interface UnzerPaymentSaverInterface
     public function saveUnzerPaymentDetails(
         UnzerPaymentTransfer $unzerPaymentTransfer,
         string $orderItemStatus,
-        ?array $filteredSalesOrderItemIds = null
+        array $filteredSalesOrderItemIds = []
     ): void;
 
     /**

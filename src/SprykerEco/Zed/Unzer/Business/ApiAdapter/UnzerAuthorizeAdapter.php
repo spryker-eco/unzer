@@ -12,7 +12,6 @@ use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
-use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuthorizeAdapterInterface
 {
@@ -65,7 +64,7 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
             ->unzerAuthorizePaymentMapper
             ->mapUnzerPaymentTransferToUnzerApiMarketplaceAuthorizeRequestTransfer(
                 $unzerPaymentTransfer,
-                new UnzerApiMarketplaceAuthorizeRequestTransfer()
+                new UnzerApiMarketplaceAuthorizeRequestTransfer(),
             );
 
         $unzerApiRequestTransfer->setMarketplaceAuthorizeRequest($unzerApiMarketplaceAuthorizeRequestTransfer);
@@ -78,7 +77,7 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
             ->unzerAuthorizePaymentMapper
             ->mapUnzerApiMarketplaceAuthorizeResponseTransferToUnzerPaymentTransfer(
                 $unzerApiMarketplaceAuthorizeResponseTransfer,
-                $unzerPaymentTransfer
+                $unzerPaymentTransfer,
             );
     }
 

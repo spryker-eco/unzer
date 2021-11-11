@@ -33,7 +33,7 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
     {
         return new ChargeCommand(
             $this->getFacade(),
-            $this->createUnzerOmsMapper()
+            $this->createUnzerOmsMapper(),
         );
     }
 
@@ -45,7 +45,7 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
         return new RefundCommand(
             $this->getFacade(),
             $this->getRefundFacade(),
-            $this->createUnzerOmsMapper()
+            $this->createUnzerOmsMapper(),
         );
     }
 
@@ -56,16 +56,16 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
     {
         return new UnzerOmsMapper(
             $this->getSalesFacade(),
-            $this->getCalculationFacade()
+            $this->getCalculationFacade(),
         );
     }
 
     /**
-     * @return UnzerToSalesFacadeInterface
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface
      */
     public function getSalesFacade(): UnzerToSalesFacadeInterface
     {
-        /** @var UnzerToSalesFacadeInterface $salesFacade */
+        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface $salesFacade */
         $salesFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SALES);
 
         return $salesFacade;

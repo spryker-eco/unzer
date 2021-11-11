@@ -64,7 +64,7 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
         $unzerApiMarketplaceRefundRequestTransfer = $this->unzerRefundMapper
             ->mapUnzerRefundTransferToUnzerApiMarketplaceRefundRequestTransfer(
                 $unzerRefundTransfer,
-                new UnzerApiMarketplaceRefundRequestTransfer()
+                new UnzerApiMarketplaceRefundRequestTransfer(),
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
@@ -84,7 +84,7 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
         $unzerApiRefundRequestTransfer = $this->unzerRefundMapper
             ->mapUnzerRefundTransferToUnzerApiRefundRequestTransfer(
                 $unzerRefundTransfer,
-                new UnzerApiRefundRequestTransfer()
+                new UnzerApiRefundRequestTransfer(),
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())

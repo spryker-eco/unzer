@@ -42,7 +42,7 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         return $unzerPaymentTransfer
             ->fromArray($unzerApiGetPaymentResponseTransfer->toArray(), true)
             ->setTransactions(
-                $this->mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers($unzerApiGetPaymentResponseTransfer)
+                $this->mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers($unzerApiGetPaymentResponseTransfer),
             );
     }
 
@@ -51,8 +51,9 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
      *
      * @return \ArrayObject|array<\Generated\Shared\Transfer\UnzerTransactionTransfer>
      */
-    protected function mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers(UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer): ArrayObject
-    {
+    protected function mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers(
+        UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer
+    ): ArrayObject {
         $unzerTransactionTransfers = new ArrayObject();
         foreach ($unzerApiGetPaymentResponseTransfer->getTransactions() as $unzerApiTransactionTransfer) {
             $unzerTransactionTransfer = (new UnzerTransactionTransfer())

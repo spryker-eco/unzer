@@ -7,6 +7,8 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Reader;
 
+use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
@@ -30,15 +32,33 @@ class UnzerReader implements UnzerReaderInterface
     }
 
     /**
-     * @param string $merchantReference
+     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer
+     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer|null
      */
-    public function getMerchantUnzerByMerchantReference(string $merchantReference): MerchantUnzerParticipantTransfer
-    {
-        return $this
-                ->unzerRepository
-                ->findMerchantUnzerParticipantByMerchantReference($merchantReference) ?? new MerchantUnzerParticipantTransfer();
+    public function getMerchantUnzerParticipantByCriteria(
+        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
+    ): ?MerchantUnzerParticipantTransfer {
+        $merchantUnzerParticipantCollectionTransfer = $this->unzerRepository
+                ->findMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
+
+        if ($merchantUnzerParticipantCollectionTransfer->getMerchantUnzerParticipants()->count() === 1) {
+            return $merchantUnzerParticipantCollectionTransfer->getMerchantUnzerParticipants()[0];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
+     */
+    public function getMerchantUnzerParticipantCollectionByCriteria(
+        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
+    ): MerchantUnzerParticipantCollectionTransfer {
+        return $this->unzerRepository
+            ->findMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
     }
 
     /**

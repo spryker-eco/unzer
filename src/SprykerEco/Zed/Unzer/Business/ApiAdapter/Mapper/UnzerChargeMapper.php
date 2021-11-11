@@ -64,7 +64,7 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
         UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
-       return $unzerPaymentTransfer->setStateId($unzerApiChargeResponseTransfer->getStateId());
+        return $unzerPaymentTransfer->setStateId($unzerApiChargeResponseTransfer->getStateId());
     }
 
     /**

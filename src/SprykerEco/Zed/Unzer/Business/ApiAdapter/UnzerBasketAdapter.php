@@ -47,7 +47,7 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
         $unzerApiCreateBasketRequestTransfer = $this->unzerBasketMapper
             ->mapUnzerBasketTransferToUnzerApiCreateBasketRequestTransfer(
                 $unzerBasketTransfer,
-                new UnzerApiCreateBasketRequestTransfer()
+                new UnzerApiCreateBasketRequestTransfer(),
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
@@ -60,7 +60,7 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
         return $this->unzerBasketMapper
             ->mapUnzerApiCreateBasketResponseTransferToUnzerBasketTransfer(
                 $createBasketResponseTransfer,
-                $unzerBasketTransfer
+                $unzerBasketTransfer,
             );
     }
 }

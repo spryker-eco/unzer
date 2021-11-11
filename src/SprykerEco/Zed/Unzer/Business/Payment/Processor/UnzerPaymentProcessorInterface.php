@@ -24,14 +24,6 @@ interface UnzerPaymentProcessorInterface
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
-     *
-     * @return void
-     */
-    public function processCharge(OrderTransfer $orderTransfer, array $salesOrderItemIds): void;
-
-    /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $salesOrderItemIds

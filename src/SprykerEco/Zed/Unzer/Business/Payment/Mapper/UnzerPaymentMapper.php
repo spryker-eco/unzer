@@ -109,7 +109,7 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
             $unzerPaymentTransfer->getId() .
             $unzerTransactionTransfer->getType() .
             $unzerTransactionTransfer->getStatus() .
-            $unzerTransactionTransfer->getParticipantId()
+            $unzerTransactionTransfer->getParticipantId(),
         );
     }
 

@@ -63,8 +63,8 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         return $unzerPaymentResourceTransfer->setType(
             $this->unzerConfig
                 ->getUnzerPaymentMethodKey(
-                    $quoteTransfer->getPaymentOrFail()->getPaymentSelection()
-                )
+                    $quoteTransfer->getPaymentOrFail()->getPaymentSelection(),
+                ),
         );
     }
 
@@ -78,7 +78,7 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         $basketItemTransfers = new ArrayObject();
         foreach ($quoteTransfer->getItems() as $quoteItemTransfer) {
             $basketItemTransfers->append(
-                $this->mapQuoteItemTransferToUnzerBasketItemTransfer($quoteItemTransfer, new UnzerBasketItemTransfer())
+                $this->mapQuoteItemTransferToUnzerBasketItemTransfer($quoteItemTransfer, new UnzerBasketItemTransfer()),
             );
         }
 

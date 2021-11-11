@@ -100,7 +100,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerQuoteExpanderMapper(),
             $this->getQuoteClient(),
             $this->getConfig(),
-            $this->createUnzerReader()
+            $this->createUnzerReader(),
         );
     }
 
@@ -111,7 +111,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerPostSaveCheckoutHook(
             $this->createUnzerPaymentSaver(),
-            $this->createPaymentProcessorResolver()
+            $this->createPaymentProcessorResolver(),
         );
     }
 
@@ -121,7 +121,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerCheckoutHookMapper(): UnzerCheckoutMapperInterface
     {
         return new UnzerCheckoutPostSaveMapper(
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -131,7 +131,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerReader(): UnzerReaderInterface
     {
         return new UnzerReader(
-            $this->getRepository()
+            $this->getRepository(),
         );
     }
 
@@ -151,7 +151,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerWriter(
             $this->getEntityManager(),
             $this->getRepository(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -163,7 +163,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerPaymentSaver(
             $this->createUnzerReader(),
             $this->createUnzerWriter(),
-            $this->createUnzerPaymentMapper()
+            $this->createUnzerPaymentMapper(),
         );
     }
 
@@ -174,7 +174,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerCustomerAdapter(
             $this->getUnzerApiFacade(),
-            $this->createUnzerCustomerMapper()
+            $this->createUnzerCustomerMapper(),
         );
     }
 
@@ -193,7 +193,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerBasketAdapter(
             $this->getUnzerApiFacade(),
-            $this->createUnzerBasketMapper()
+            $this->createUnzerBasketMapper(),
         );
     }
 
@@ -212,7 +212,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerPaymentResourceAdapter(
             $this->getUnzerApiFacade(),
-            $this->createUnzerPaymentResourceMapper()
+            $this->createUnzerPaymentResourceMapper(),
         );
     }
 
@@ -231,7 +231,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerAuthorizeAdapter(
             $this->getUnzerApiFacade(),
-            $this->createUnzerAuthorizePaymentMapper()
+            $this->createUnzerAuthorizePaymentMapper(),
         );
     }
 
@@ -241,7 +241,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerAuthorizePaymentMapper(): UnzerAuthorizePaymentMapperInterface
     {
         return new UnzerAuthorizePaymentMapper(
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -252,7 +252,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerChargeAdapter(
             $this->getUnzerApiFacade(),
-            $this->createUnzerChargeMapper()
+            $this->createUnzerChargeMapper(),
         );
     }
 
@@ -262,7 +262,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerChargeMapper(): UnzerChargeMapperInterface
     {
         return new UnzerChargeMapper(
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -273,7 +273,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerPaymentAdapter(
             $this->getUnzerApiFacade(),
-            $this->createUnzerGetPaymentMapper()
+            $this->createUnzerGetPaymentMapper(),
         );
     }
 
@@ -292,7 +292,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerRefundAdapter(
             $this->getUnzerApiFacade(),
-            $this->createUnzerRefundMapper()
+            $this->createUnzerRefundMapper(),
         );
     }
 
@@ -344,7 +344,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->getConfig(),
             $this->createUnzerReader(),
             $this->createUnzerPaymentMapper(),
-            $this->createUnzerPaymentSaver()
+            $this->createUnzerPaymentSaver(),
         );
     }
 
@@ -355,7 +355,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new IsAuthorizePendingOmsCondition(
             $this->createUnzerReader(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -366,7 +366,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new IsAuthorizeSucceededOmsCondition(
             $this->createUnzerReader(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -377,7 +377,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new IsAuthorizeFailedOmsCondition(
             $this->createUnzerReader(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -388,7 +388,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new IsAuthorizeCanceledOmsCondition(
             $this->createUnzerReader(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -399,7 +399,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new IsPaymentCompletedOmsCondition(
             $this->createUnzerReader(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -410,7 +410,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new IsChargeFailedOmsCondition(
             $this->createUnzerReader(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -421,7 +421,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new IsChargebackOmsCondition(
             $this->createUnzerReader(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -431,7 +431,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createChargeOmsCommand(): UnzerOmsCommandInterface
     {
         return new ChargeOmsCommand(
-            $this->createPaymentProcessorResolver()
+            $this->createPaymentProcessorResolver(),
         );
     }
 
@@ -450,7 +450,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new RefundOmsCommand(
             $this->getRefundFacade(),
-            $this->createPaymentProcessorResolver()
+            $this->createPaymentProcessorResolver(),
         );
     }
 
@@ -492,7 +492,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerBasketAdapter(),
             $this->createUnzerChargeAdapter(),
             $this->createUnzerPaymentResourceAdapter(),
-            $this->createUnzerMarketplaceRefundProcessor()
+            $this->createUnzerMarketplaceRefundProcessor(),
         );
     }
 
@@ -507,7 +507,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerAuthorizeAdapter(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerMarketplaceCreditCardChargeProcessor(),
-            $this->createUnzerMarketplaceRefundProcessor()
+            $this->createUnzerMarketplaceRefundProcessor(),
         );
     }
 
@@ -519,7 +519,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerMarketplaceCreditCardChargeProcessor(
             $this->createUnzerReader(),
             $this->createUnzerPaymentMapper(),
-            $this->createUnzerChargeAdapter()
+            $this->createUnzerChargeAdapter(),
         );
     }
 
@@ -533,7 +533,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerRefundAdapter(),
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentAdapter(),
-            $this->createUnzerPaymentSaver()
+            $this->createUnzerPaymentSaver(),
         );
     }
 }

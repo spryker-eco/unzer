@@ -61,7 +61,7 @@ class UnzerPaymentAdapter extends UnzerAbstractApiAdapter implements UnzerPaymen
         $unzerApiGetPaymentRequestTransfer = $this->unzerPaymentMapper
             ->mapUnzerPaymentTransferToUnzerApiGetPaymentRequestTransfer(
                 $unzerPaymentTransfer,
-                new UnzerApiGetPaymentRequestTransfer()
+                new UnzerApiGetPaymentRequestTransfer(),
             );
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
             ->setGetPaymentRequest($unzerApiGetPaymentRequestTransfer);
@@ -73,7 +73,7 @@ class UnzerPaymentAdapter extends UnzerAbstractApiAdapter implements UnzerPaymen
 
         return $this->unzerPaymentMapper->mapUnzerApiGetPaymentResponseTransferToUnzerPaymentTransfer(
             $unzerApiGetPaymentResponse,
-            $unzerPaymentTransfer
+            $unzerPaymentTransfer,
         );
     }
 
@@ -87,7 +87,7 @@ class UnzerPaymentAdapter extends UnzerAbstractApiAdapter implements UnzerPaymen
         $unzerApiPaymentRequestTransfer = $this->unzerPaymentMapper
             ->mapUnzerPaymentTransferToUnzerApiGetPaymentRequestTransfer(
                 $unzerPaymentTransfer,
-                new UnzerApiGetPaymentRequestTransfer()
+                new UnzerApiGetPaymentRequestTransfer(),
             );
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
             ->setGetPaymentRequest($unzerApiPaymentRequestTransfer);
@@ -99,7 +99,7 @@ class UnzerPaymentAdapter extends UnzerAbstractApiAdapter implements UnzerPaymen
 
         return $this->unzerPaymentMapper->mapUnzerApiGetPaymentResponseTransferToUnzerPaymentTransfer(
             $unzerApiGetPaymentResponseTransfer,
-            $unzerPaymentTransfer
+            $unzerPaymentTransfer,
         );
     }
 }

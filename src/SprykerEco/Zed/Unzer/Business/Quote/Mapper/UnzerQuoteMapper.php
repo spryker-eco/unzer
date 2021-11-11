@@ -37,10 +37,10 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
             ->setPhone($shippingAddress->getPhone())
             ->setMobile($quoteTransfer->getCustomerOrFail()->getPhone())
             ->setShippingAddress(
-                $this->mapAddressTransferToUnzerAddressTransfer($shippingAddress, new UnzerAddressTransfer())
+                $this->mapAddressTransferToUnzerAddressTransfer($shippingAddress, new UnzerAddressTransfer()),
             )
             ->setBillingAddress(
-                $this->mapAddressTransferToUnzerAddressTransfer($quoteTransfer->getBillingAddress(), new UnzerAddressTransfer())
+                $this->mapAddressTransferToUnzerAddressTransfer($quoteTransfer->getBillingAddress(), new UnzerAddressTransfer()),
             );
     }
 
@@ -70,7 +70,7 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
     protected function getShippingAddressFromQuote(QuoteTransfer $quoteTransfer): ?AddressTransfer
     {
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            if ($itemTransfer->getShipment()){
+            if ($itemTransfer->getShipment()) {
                 return $itemTransfer->getShipmentOrFail()->getShippingAddress();
             }
         }

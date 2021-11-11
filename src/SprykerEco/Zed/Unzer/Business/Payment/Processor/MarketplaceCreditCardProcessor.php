@@ -19,7 +19,7 @@ use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
 
-class MarketplaceCreditCardProcessor extends AbstractPaymentProcessor implements UnzerPaymentProcessorInterface
+class MarketplaceCreditCardProcessor extends AbstractPaymentProcessor implements UnzerChargeablePaymentProcessorInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface
@@ -75,7 +75,7 @@ class MarketplaceCreditCardProcessor extends AbstractPaymentProcessor implements
     {
         $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer->setPaymentResource(
-            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResourceOrFail()
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResourceOrFail(),
         );
         $unzerPaymentTransfer = $this->unzerAuthorizeAdapter->authorizePayment($unzerPaymentTransfer);
 

@@ -10,13 +10,12 @@ namespace SprykerEco\Zed\Unzer\Communication\Oms;
 use Generated\Shared\Transfer\OrderTransfer;
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 use Spryker\Zed\Calculation\Business\CalculationFacadeInterface;
-use SprykerEco\Zed\Sales\Business\SalesFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
 
 class UnzerOmsMapper implements UnzerOmsMapperInterface
 {
     /**
-     * @var UnzerToSalesFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface
      */
     protected $salesFacade;
 
@@ -26,7 +25,7 @@ class UnzerOmsMapper implements UnzerOmsMapperInterface
     protected $calculationFacade;
 
     /**
-     * @param UnzerToSalesFacadeInterface $salesFacade
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface $salesFacade
      * @param \Spryker\Zed\Calculation\Business\CalculationFacadeInterface $calculationFacade
      */
     public function __construct(

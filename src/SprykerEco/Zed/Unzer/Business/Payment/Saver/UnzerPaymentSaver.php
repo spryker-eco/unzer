@@ -7,7 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Saver;
 
-use Exception;
 use Generated\Shared\Transfer\MerchantResponseTransfer;
 use Generated\Shared\Transfer\MerchantTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
@@ -23,7 +22,6 @@ use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
-use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerPaymentSaver implements UnzerPaymentSaverInterface
 {
@@ -61,7 +59,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
      *
-     * @throws \Exception
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
      * @return void
      */
@@ -89,7 +87,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
     public function saveUnzerPaymentDetails(
         UnzerPaymentTransfer $unzerPaymentTransfer,
         string $orderItemStatus,
-        ?array $filteredSalesOrderItemIds = null
+        array $filteredSalesOrderItemIds = []
     ): void {
         $paymentUnzerTransfer = $this->updatePaymentUnzerTransfer($unzerPaymentTransfer);
         $paymentUnzerOrderItemsCollection = $this->updatePaymentUnzerOrderItemCollection($unzerPaymentTransfer, $orderItemStatus, $filteredSalesOrderItemIds);
@@ -98,7 +96,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
         $this->unzerWriter->updateUnzerPaymentDetails(
             $paymentUnzerTransfer,
             $paymentUnzerOrderItemsCollection,
-            $paymentUnzerTransactionCollection
+            $paymentUnzerTransactionCollection,
         );
     }
 
@@ -145,19 +143,19 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
     protected function updatePaymentUnzerOrderItemCollection(
         UnzerPaymentTransfer $unzerPaymentTransfer,
         string $omsStatus,
-        ?array $filteredSalesOrderItemIds = null
+        array $filteredSalesOrderItemIds = []
     ): PaymentUnzerOrderItemCollectionTransfer {
         $unzerPaymentOrderItemCollection = $this->unzerReader
             ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderId());
 
         foreach ($unzerPaymentOrderItemCollection->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
-            if ($filteredSalesOrderItemIds !== null && in_array($paymentUnzerOrderItem->getIdSalesOrderItem(), $filteredSalesOrderItemIds, true)) {
+            if (count($filteredSalesOrderItemIds) !== 0 && in_array($paymentUnzerOrderItem->getIdSalesOrderItem(), $filteredSalesOrderItemIds, true)) {
                 $paymentUnzerOrderItem->setStatus($omsStatus);
 
                 continue;
             }
 
-            if ($filteredSalesOrderItemIds === null) {
+            if (count($filteredSalesOrderItemIds) === 0) {
                 $paymentUnzerOrderItem->setStatus($omsStatus);
             }
         }
@@ -181,7 +179,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
                 ->mapUnzerTransactionTransferToPaymentUnzerTransactionTransfer(
                     $unzerTransactionTransfer,
                     $unzerPaymentTransfer,
-                    new PaymentUnzerTransactionTransfer()
+                    new PaymentUnzerTransactionTransfer(),
                 );
             $paymentUnzerTransactionTransfer->setIdPaymentUnzer($paymentUnzerTransfer->getIdPaymentUnzer());
 

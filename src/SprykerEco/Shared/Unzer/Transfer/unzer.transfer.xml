@@ -225,5 +225,38 @@
         <property name="customerMessage" type="string"/>
     </transfer>
 
+    <transfer name="MerchantUnzerParticipantCriteria">
+        <property name="merchantUnzerParticipantConditions" type="MerchantUnzerParticipantConditions" />
+        <property name="sortCollection" type="Sort[]" singular="sort"/>
+        <property name="pagination" type="Pagination" />
+    </transfer>
+
+    <transfer name="MerchantUnzerParticipantConditions">
+        <property name="references" type="string[]" singular="reference"/>
+    </transfer>
+
+    <transfer name="MerchantUnzerParticipantCollection">
+        <property name="merchantUnzerParticipants" type="MerchantUnzerParticipant[]" singular="merchantUnzerParticipant"/>
+        <property name="pagination" type="Pagination"/>
+    </transfer>
+
+    <transfer name="Sort">
+        <property name="field" type="string"/>
+        <property name="isAscending" type="bool"/>
+    </transfer>
+
+    <transfer name="Pagination">
+        <property name="limit" type="int" />
+        <property name="offset" type="int" />
+        <property name="page" type="int"/>
+        <property name="maxPerPage" type="int"/>
+        <property name="nbResults" type="int"/>
+        <property name="firstIndex" type="int"/>
+        <property name="lastIndex" type="int"/>
+        <property name="firstPage" type="int"/>
+        <property name="lastPage" type="int"/>
+        <property name="nextPage" type="int"/>
+        <property name="previousPage" type="int"/>
+    </transfer>
 
 </transfers>

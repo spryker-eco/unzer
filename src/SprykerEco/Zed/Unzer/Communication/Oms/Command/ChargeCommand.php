@@ -8,7 +8,6 @@
 namespace SprykerEco\Zed\Unzer\Communication\Oms\Command;
 
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
-use Orm\Zed\Sales\Persistence\SpySalesOrderItem;
 use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
@@ -38,7 +37,7 @@ class ChargeCommand extends AbstractCommand implements UnzerOmsCommandByOrderInt
     }
 
     /**
-     * @param \Orm\Zed\Sales\Persistence\SpySalesOrderItem[] $salesOrderItems
+     * @param array<\Orm\Zed\Sales\Persistence\SpySalesOrderItem> $salesOrderItems
      * @param \Orm\Zed\Sales\Persistence\SpySalesOrder $salesOrderEntity
      * @param \Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject $data
      *

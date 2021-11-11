@@ -146,7 +146,7 @@ class UnzerWriter implements UnzerWriterInterface
     protected function getParticipantIdForOrderItem(ItemTransfer $orderItem): ?string
     {
         $merchantUnzerParticipantTransfer = $this->unzerRepository
-            ->findMerchantUnzerParticipantByMerchantReference($orderItem->getMerchantReference());
+            ->findMerchantUnzerParticipantByCriteria($orderItem->getMerchantReference());
         if ($merchantUnzerParticipantTransfer !== null) {
             return $merchantUnzerParticipantTransfer->getParticipantId();
         }

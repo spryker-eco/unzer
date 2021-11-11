@@ -63,14 +63,14 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
         $paymentUnzerOrderItemEntity = $unzerPersistenceMapper
             ->mapPaymentUnzerOrderItemTransferToPaymentUnzerOrderItemEntity(
                 $paymentUnzerOrderItemTransfer,
-                $paymentUnzerOrderItemEntity
+                $paymentUnzerOrderItemEntity,
             );
 
         $paymentUnzerOrderItemEntity->save();
 
         return $unzerPersistenceMapper->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
             $paymentUnzerOrderItemEntity,
-            $paymentUnzerOrderItemTransfer
+            $paymentUnzerOrderItemTransfer,
         );
     }
 
@@ -96,14 +96,14 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
         $paymentUnzerTransactionEntity = $unzerPersistenceMapper
             ->mapPaymentUnzerTransactionTransferToPaymentUnzerTransactionEntity(
                 $paymentUnzerTransactionTransfer,
-                $paymentUnzerTransactionEntity
+                $paymentUnzerTransactionEntity,
             );
 
         $paymentUnzerTransactionEntity->save();
 
         return $unzerPersistenceMapper->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
             $paymentUnzerTransactionEntity,
-            $paymentUnzerTransactionTransfer
+            $paymentUnzerTransactionTransfer,
         );
     }
 

@@ -54,7 +54,7 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
         return $this->unzerChargeMapper
             ->mapUnzerApiChargeResponseTransferToUnzerPaymentTransfer(
                 $unzerApiChargeResponseTransfer,
-                $unzerPaymentTransfer
+                $unzerPaymentTransfer,
             );
     }
 
@@ -74,7 +74,7 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
         return $this->unzerChargeMapper
             ->mapAuthorizableUnzerApiChargeResponseTransferToUnzerPaymentTransfer(
                 $unzerApiChargeResponseTransfer,
-                $unzerPaymentTransfer
+                $unzerPaymentTransfer,
             );
     }
 
@@ -89,7 +89,7 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
             ->unzerChargeMapper
             ->mapUnzerPaymentTransferToUnzerApiChargeRequestTransfer(
                 $unzerPaymentTransfer,
-                new UnzerApiChargeRequestTransfer()
+                new UnzerApiChargeRequestTransfer(),
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())

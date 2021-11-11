@@ -7,7 +7,8 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
@@ -16,11 +17,13 @@ use Generated\Shared\Transfer\PaymentUnzerTransfer;
 interface UnzerRepositoryInterface
 {
     /**
-     * @param string $merchantReference
+     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer|null
+     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
      */
-    public function findMerchantUnzerParticipantByMerchantReference(string $merchantReference): ?MerchantUnzerParticipantTransfer;
+    public function findMerchantUnzerParticipantByCriteria(
+        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
+    ): MerchantUnzerParticipantCollectionTransfer;
 
     /**
      * @param string $orderReference

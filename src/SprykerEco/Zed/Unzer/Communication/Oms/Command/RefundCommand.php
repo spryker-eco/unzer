@@ -8,7 +8,6 @@
 namespace SprykerEco\Zed\Unzer\Communication\Oms\Command;
 
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
-use Orm\Zed\Sales\Persistence\SpySalesOrderItem;
 use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
 use Spryker\Zed\Refund\Business\RefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
@@ -47,7 +46,7 @@ class RefundCommand extends AbstractCommand implements UnzerOmsCommandByOrderInt
     }
 
     /**
-     * @param \Orm\Zed\Sales\Persistence\SpySalesOrderItem[] $salesOrderItems
+     * @param array<\Orm\Zed\Sales\Persistence\SpySalesOrderItem> $salesOrderItems
      * @param \Orm\Zed\Sales\Persistence\SpySalesOrder $salesOrderEntity
      * @param \Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject $data
      *

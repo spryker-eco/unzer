@@ -8,9 +8,10 @@
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
 use Generated\Shared\Transfer\ItemTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
-use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface;
@@ -159,11 +160,17 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
             return $itemTransfer;
         }
 
-        $merchantUnzerParticipant = $this->unzerReader->getMerchantUnzerByMerchantReference($itemTransfer->getMerchantReference());
-        if ($merchantUnzerParticipant->getMerchantId() === null) {
+        $merchantUnzerParticipantCriteriaTransfer = (new MerchantUnzerParticipantCriteriaTransfer())
+            ->setMerchantUnzerParticipantConditions(
+                (new MerchantUnzerParticipantConditionsTransfer())->setReferences([$itemTransfer->getMerchantReference()]),
+            );
+
+        $merchantUnzerParticipantTransfer = $this->unzerReader->getMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
+
+        if ($merchantUnzerParticipantTransfer === null) {
             return $itemTransfer;
         }
 
-        return $itemTransfer->setUnzerParticipantId($merchantUnzerParticipant->getParticipantId());
+        return $itemTransfer->setUnzerParticipantId($merchantUnzerParticipantTransfer->getParticipantId());
     }
 }

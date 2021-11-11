@@ -10,10 +10,8 @@ namespace SprykerEco\Zed\Unzer\Business\Checkout;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
-use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
-use SprykerEco\Zed\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
@@ -48,11 +46,11 @@ class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
      */
     public function execute(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): void
     {
-        if ($quoteTransfer->getPayment() === null) {
+        if ($quoteTransfer->getPaymentOrFail() === null) {
             return;
         }
 
-        if ($quoteTransfer->getPayment()->getPaymentProvider() !== SharedUnzerConfig::PROVIDER_NAME) {
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PROVIDER_NAME) {
             return;
         }
 
@@ -64,7 +62,7 @@ class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
         $checkoutResponseTransfer
             ->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
             ->setIsExternalRedirect(true);
-        $quoteTransfer->getPayment()->setUnzerPayment($unzerPaymentTransfer);
+        $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
 
         $this->unzerPaymentSaver->saveUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
     }

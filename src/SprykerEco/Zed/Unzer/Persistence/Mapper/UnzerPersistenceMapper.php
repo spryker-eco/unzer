@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence\Mapper;
 
+use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
@@ -34,8 +35,8 @@ class UnzerPersistenceMapper
             $paymentUnzerOrderItemCollectionTransfer->addPaymentUnzerOrderItem(
                 $this->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
                     $paymentUnzerOrderItemEntity,
-                    new PaymentUnzerOrderItemTransfer()
-                )
+                    new PaymentUnzerOrderItemTransfer(),
+                ),
             );
         }
 
@@ -56,6 +57,28 @@ class UnzerPersistenceMapper
             ->fromArray($paymentUnzerOrderItemEntity->toArray(), true)
             ->setIdPaymentUnzer($paymentUnzerOrderItemEntity->getFkPaymentUnzer())
             ->setIdSalesOrderItem($paymentUnzerOrderItemEntity->getFkSalesOrderItem());
+    }
+
+    /**
+     * @param \Propel\Runtime\Collection\ObjectCollection $merchantUnzerParticipantEntities
+     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer $merchantUnzerParticipantCollectionTransfer
+     *
+     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
+     */
+    public function mapMerchantUnzerParticipantEntityCollectionToMerchantUnzerParticipantTransferCollection(
+        ObjectCollection $merchantUnzerParticipantEntities,
+        MerchantUnzerParticipantCollectionTransfer $merchantUnzerParticipantCollectionTransfer
+    ): MerchantUnzerParticipantCollectionTransfer {
+        foreach ($merchantUnzerParticipantEntities as $merchantUnzerParticipantEntity) {
+            $merchantUnzerParticipantCollectionTransfer->addMerchantUnzerParticipant(
+                $this->mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer(
+                    $merchantUnzerParticipantEntity,
+                    new MerchantUnzerParticipantTransfer(),
+                ),
+            );
+        }
+
+        return $merchantUnzerParticipantCollectionTransfer;
     }
 
     /**

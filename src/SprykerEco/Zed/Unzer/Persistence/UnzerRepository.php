@@ -7,13 +7,15 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
-use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerPersistenceFactory getFactory()
@@ -21,27 +23,25 @@ use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 class UnzerRepository extends AbstractRepository implements UnzerRepositoryInterface
 {
     /**
-     * @param string $merchantReference
+     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer|null
+     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
      */
-    public function findMerchantUnzerParticipantByMerchantReference(string $merchantReference): ?MerchantUnzerParticipantTransfer
-    {
-        /** @var \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant|null $merchantUnzerParticipantEntity */
-        $merchantUnzerParticipantEntity = $this->getFactory()->createMerchantUnzerParticipantQuery()
-            ->useMerchantQuery()
-                ->filterByMerchantReference($merchantReference)
-            ->endUse()
-            ->findOne();
+    public function findMerchantUnzerParticipantByCriteria(
+        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
+    ): MerchantUnzerParticipantCollectionTransfer {
+        $merchantUnzerParticipantQuery = $this->getFactory()->createMerchantUnzerParticipantQuery();
+        $merchantUnzerParticipantQuery = $this->setMerchantUnzerParticipantFilters(
+            $merchantUnzerParticipantQuery,
+            $merchantUnzerParticipantCriteriaTransfer->getMerchantUnzerParticipantConditions(),
+        );
 
-        if ($merchantUnzerParticipantEntity === null) {
-            return null;
-        }
+        $merchantUnzerParticipantEntities = $merchantUnzerParticipantQuery->find();
 
         return $this->getFactory()->createUnzerPersistenceMapper()
-            ->mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer(
-                $merchantUnzerParticipantEntity,
-                new MerchantUnzerParticipantTransfer()
+            ->mapMerchantUnzerParticipantEntityCollectionToMerchantUnzerParticipantTransferCollection(
+                $merchantUnzerParticipantEntities,
+                new MerchantUnzerParticipantCollectionTransfer(),
             );
     }
 
@@ -62,7 +62,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
 
         return $this->getFactory()->createUnzerPersistenceMapper()->mapPaymentUnzerEntityToPaymentUnzerTransfer(
             $paymentUnzerEntity,
-            new PaymentUnzerTransfer()
+            new PaymentUnzerTransfer(),
         );
     }
 
@@ -76,14 +76,14 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         $paymentUnzerOrderItemEntities = $this->getFactory()
             ->createPaymentUnzerOrderItemQuery()
             ->usePaymentUnzerQuery()
-                ->filterByOrderId($orderId)
+            ->filterByOrderId($orderId)
             ->endUse()
             ->find();
 
         return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
                 $paymentUnzerOrderItemEntities,
-                new PaymentUnzerOrderItemCollectionTransfer()
+                new PaymentUnzerOrderItemCollectionTransfer(),
             );
     }
 
@@ -125,7 +125,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
                 $paymentUnzerOrderItemEntity,
-                new PaymentUnzerOrderItemTransfer()
+                new PaymentUnzerOrderItemTransfer(),
             );
     }
 
@@ -144,8 +144,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         $paymentUnzerTransactionQuery = $this->getFactory()
             ->createPaymentUnzerTransactionQuery()
             ->usePaymentUnzerQuery()
-                ->filterByPaymentId($paymentId)
-                ->filterByIsMarketplace(true)
+            ->filterByPaymentId($paymentId)
+            ->filterByIsMarketplace(true)
             ->endUse()
             ->filterByType($transactionType);
 
@@ -161,7 +161,29 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
                 $paymentUnzerTransactionEntity,
-                new PaymentUnzerTransactionTransfer()
+                new PaymentUnzerTransactionTransfer(),
             );
+    }
+
+    /**
+     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery $merchantUnzerParticipantQuery
+     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer $merchantUnzerParticipantConditionsTransfer
+     *
+     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery
+     */
+    protected function setMerchantUnzerParticipantFilters(
+        SpyMerchantUnzerParticipantQuery $merchantUnzerParticipantQuery,
+        MerchantUnzerParticipantConditionsTransfer $merchantUnzerParticipantConditionsTransfer
+    ): SpyMerchantUnzerParticipantQuery {
+        if ($merchantUnzerParticipantConditionsTransfer->getReferences()) {
+            $merchantUnzerParticipantQuery
+                ->useMerchantQuery()
+                ->filterByMerchantReference_In(
+                    $merchantUnzerParticipantConditionsTransfer->getReferences(),
+                )
+            ->endUse();
+        }
+
+        return $merchantUnzerParticipantQuery;
     }
 }

@@ -15,6 +15,9 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 
+/**
+ * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
+ */
 class UnzerDependencyProvider extends AbstractBundleDependencyProvider
 {
     /**

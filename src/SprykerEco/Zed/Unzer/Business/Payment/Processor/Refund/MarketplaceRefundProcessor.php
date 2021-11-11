@@ -8,6 +8,8 @@
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund;
 
 use Generated\Shared\Transfer\ItemTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
@@ -102,7 +104,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
             $unzerRefundTransfers[] = $this->buildUnzerMarketplaceRefundTransfer(
                 $paymentUnzerTransfer,
                 $participantId,
-                $itemTransfers
+                $itemTransfers,
             );
         }
 
@@ -130,7 +132,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
             ->getPaymentUnzerTransactionByPaymentIdAndParticipantId(
                 $paymentUnzerTransfer->getPaymentId(),
                 UnzerConstants::TRANSACTION_TYPE_CHARGE,
-                $participantId
+                $participantId,
             );
 
         $unzerRefundTransfer = (new UnzerRefundTransfer())
@@ -156,8 +158,17 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     protected function setParticipantIdForRefundItems(RefundTransfer $refundTransfer): RefundTransfer
     {
         foreach ($refundTransfer->getItems() as $itemTransfer) {
-            $merchantUnzerTransfer = $this->unzerReader->getMerchantUnzerByMerchantReference($itemTransfer->getMerchantReference());
-            $itemTransfer->setUnzerParticipantId($merchantUnzerTransfer->getParticipantId());
+            $merchantUnzerParticipantCriteriaTransfer = (new MerchantUnzerParticipantCriteriaTransfer())
+                ->setMerchantUnzerParticipantConditions(
+                    (new MerchantUnzerParticipantConditionsTransfer())->setReferences([$itemTransfer->getMerchantReference()]),
+                );
+            $merchantUnzerParticipantTransfer = $this->unzerReader->getMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
+
+            if ($merchantUnzerParticipantTransfer === null) {
+                continue;
+            }
+
+            $itemTransfer->setUnzerParticipantId($merchantUnzerParticipantTransfer->getParticipantId());
         }
 
         return $refundTransfer;
@@ -178,7 +189,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
         $this->unzerPaymentSaver->saveUnzerPaymentDetails(
             $unzerPaymentTransfer,
             UnzerConstants::OMS_STATUS_CHARGE_REFUNDED,
-            $salesOrderItemIds
+            $salesOrderItemIds,
         );
     }
 

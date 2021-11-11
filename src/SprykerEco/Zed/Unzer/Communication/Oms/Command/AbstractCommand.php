@@ -1,8 +1,12 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Communication\Oms\Command;
 
-use Generated\Shared\Transfer\SalesOrderItemTransfer;
 use Orm\Zed\Sales\Persistence\SpySalesOrderItem;
 
 class AbstractCommand
@@ -18,7 +22,7 @@ class AbstractCommand
             function (SpySalesOrderItem $orderItem) {
                 return $orderItem->getIdSalesOrderItem();
             },
-            $salesOrderItems
+            $salesOrderItems,
         );
     }
 }

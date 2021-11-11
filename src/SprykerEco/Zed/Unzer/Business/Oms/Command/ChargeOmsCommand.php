@@ -8,6 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Business\Oms\Command;
 
 use Generated\Shared\Transfer\OrderTransfer;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerChargeablePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
 
 class ChargeOmsCommand extends AbstractOmsCommand implements UnzerOmsCommandInterface
@@ -37,6 +38,8 @@ class ChargeOmsCommand extends AbstractOmsCommand implements UnzerOmsCommandInte
         $paymentMethodName = $this->getPaymentMethodName($orderTransfer);
         $paymentProcessor = $this->unzerPaymentProcessorStrategyResolver->resolvePaymentProcessor($paymentMethodName);
 
-        $paymentProcessor->processCharge($orderTransfer, $salesOrderItemIds);
+        if ($paymentProcessor instanceof UnzerChargeablePaymentProcessorInterface) {
+            $paymentProcessor->processCharge($orderTransfer, $salesOrderItemIds);
+        }
     }
 }

@@ -10,7 +10,8 @@ namespace SprykerEco\Zed\Unzer\Business;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\MerchantResponseTransfer;
 use Generated\Shared\Transfer\MerchantTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -243,13 +244,14 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
-     * @param string $merchantReference
+     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer
+     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
      */
-    public function getUnzerMerchantByMerchantReference(string $merchantReference): MerchantUnzerParticipantTransfer
-    {
-        return $this->getFactory()->createUnzerReader()->getMerchantUnzerByMerchantReference($merchantReference);
+    public function getMerchantUnzerParticipantCollection(
+        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
+    ): MerchantUnzerParticipantCollectionTransfer {
+        return $this->getFactory()->createUnzerReader()->getMerchantUnzerParticipantCollectionByCriteria($merchantUnzerParticipantCriteriaTransfer);
     }
 
     /**

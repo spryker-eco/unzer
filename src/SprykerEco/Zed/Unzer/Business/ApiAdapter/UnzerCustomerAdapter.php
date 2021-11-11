@@ -12,7 +12,6 @@ use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
-use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCustomerAdapterInterface
 {
@@ -48,7 +47,7 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
         $unzerApiCreateCustomerRequestTransfer = $this->unzerCustomerMapper
             ->mapUnzerCustomerTransferToUnzerApiCreateCustomerRequestTransfer(
                 $unzerCustomerTransfer,
-                new UnzerApiCreateCustomerRequestTransfer()
+                new UnzerApiCreateCustomerRequestTransfer(),
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
@@ -61,7 +60,7 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
         return $this->unzerCustomerMapper
             ->mapUnzerApiCreateCustomerResponseTransferToUnzerCustomerTransfer(
                 $unzerApiCreateCustomerResponseTransfer,
-                $unzerCustomerTransfer
+                $unzerCustomerTransfer,
             );
     }
 }
