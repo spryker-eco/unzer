@@ -10,7 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\Oms\Command;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 
-interface UnzerRefundOmsCommandInterface
+interface RefundUnzerOmsCommandInterface
 {
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer

@@ -11,7 +11,7 @@ use Generated\Shared\Transfer\OrderTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
-abstract class AbstractOmsCommand
+abstract class AbstractUnzerOmsCommand
 {
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer

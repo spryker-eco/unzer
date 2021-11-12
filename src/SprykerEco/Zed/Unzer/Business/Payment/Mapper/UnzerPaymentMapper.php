@@ -19,11 +19,6 @@ use SprykerEco\Zed\Unzer\UnzerConstants;
 class UnzerPaymentMapper implements UnzerPaymentMapperInterface
 {
     /**
-     * @var int
-     */
-    protected const INT_TO_FLOAT_DIVIDER = 100;
-
-    /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
@@ -69,11 +64,11 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
             ->setAmountCharged($unzerPaymentTransfer->getAmountCharged() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setState($unzerPaymentTransfer->getStateName())
             ->setStateId($unzerPaymentTransfer->getStateId())
-            ->setCustomerId($unzerPaymentTransfer->getCustomer()->getId())
-            ->setBasketId($unzerPaymentTransfer->getBasket()->getId())
+            ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
+            ->setBasketId($unzerPaymentTransfer->getBasketOrFail()->getId())
             ->setPaymentId($unzerPaymentTransfer->getId())
             ->setCurrency($unzerPaymentTransfer->getCurrency())
-            ->setTypeId($unzerPaymentTransfer->getPaymentResource()->getId());
+            ->setTypeId($unzerPaymentTransfer->getPaymentResourceOrFail()->getId());
 
         return $paymentUnzerTransfer;
     }

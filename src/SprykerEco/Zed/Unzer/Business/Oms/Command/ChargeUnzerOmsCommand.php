@@ -8,48 +8,38 @@
 namespace SprykerEco\Zed\Unzer\Business\Oms\Command;
 
 use Generated\Shared\Transfer\OrderTransfer;
-use Generated\Shared\Transfer\RefundTransfer;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerChargeablePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 
-class RefundOmsCommand extends AbstractOmsCommand implements UnzerRefundOmsCommandInterface
+class ChargeUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsCommandInterface
 {
-    /**
-     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface
-     */
-    protected $refundFacade;
-
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface
      */
     protected $unzerPaymentProcessorStrategyResolver;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade
      * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
      */
     public function __construct(
-        UnzerToRefundFacadeInterface $refundFacade,
         UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
     ) {
-        $this->refundFacade = $refundFacade;
         $this->unzerPaymentProcessorStrategyResolver = $paymentProcessorStrategyResolver;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array<int> $salesOrderItemIds
      *
      * @return void
      */
-    public function execute(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
+    public function execute(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         $paymentMethodName = $this->getPaymentMethodName($orderTransfer);
         $paymentProcessor = $this->unzerPaymentProcessorStrategyResolver->resolvePaymentProcessor($paymentMethodName);
 
-        $paymentProcessor->processRefund($refundTransfer, $orderTransfer, $salesOrderItemIds);
-
-        $this->refundFacade->saveRefund($refundTransfer);
+        if ($paymentProcessor instanceof UnzerChargeablePaymentProcessorInterface) {
+            $paymentProcessor->processCharge($orderTransfer, $salesOrderItemIds);
+        }
     }
 }

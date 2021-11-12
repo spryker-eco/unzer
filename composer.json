@@ -17,6 +17,7 @@
         "spryker/oms": "^11.15.0",
         "spryker/quote": "^2.15.0",
         "spryker/refund": "^5.4.0",
+        "spryker/transfer": "^3.25.0",
         "spryker-eco/unzer-api": "dev-feature/cc-14610/cc-14662/code-migration as 1.0"
     },
     "require-dev": {

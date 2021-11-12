@@ -13,7 +13,7 @@ use Spryker\Zed\Refund\Business\RefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 
-class RefundCommand extends AbstractCommand implements UnzerOmsCommandByOrderInterface
+class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsCommandInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface

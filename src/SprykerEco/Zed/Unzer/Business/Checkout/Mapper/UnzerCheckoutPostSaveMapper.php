@@ -44,10 +44,10 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         return $unzerBasketTransfer
             ->setAmountTotalGross($quoteTransfer->getTotalsOrFail()->getGrandTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountTotalVat($quoteTransfer->getTotalsOrFail()->getTaxTotalOrFail()->getAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setCurrencyCode($quoteTransfer->getCurrency()->getCode())
+            ->setCurrencyCode($quoteTransfer->getCurrencyOrFail()->getCode())
             ->setNote('')
             ->setOrderId($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getOrderId())
-            ->setBasketItems($this->mapQuoteToBasketItemsCollection($quoteTransfer));
+            ->setBasketItems($this->mapQuoteTransferToUnzerBasketItemTransferCollection($quoteTransfer));
     }
 
     /**
@@ -73,16 +73,16 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
      *
      * @return \ArrayObject|array<\Generated\Shared\Transfer\UnzerBasketItemTransfer>
      */
-    protected function mapQuoteToBasketItemsCollection(QuoteTransfer $quoteTransfer): ArrayObject
+    protected function mapQuoteTransferToUnzerBasketItemTransferCollection(QuoteTransfer $quoteTransfer): ArrayObject
     {
-        $basketItemTransfers = new ArrayObject();
+        $unzerBasketItemTransferCollection = new ArrayObject();
         foreach ($quoteTransfer->getItems() as $quoteItemTransfer) {
-            $basketItemTransfers->append(
+            $unzerBasketItemTransferCollection->append(
                 $this->mapQuoteItemTransferToUnzerBasketItemTransfer($quoteItemTransfer, new UnzerBasketItemTransfer()),
             );
         }
 
-        return $basketItemTransfers;
+        return $unzerBasketItemTransferCollection;
     }
 
     /**

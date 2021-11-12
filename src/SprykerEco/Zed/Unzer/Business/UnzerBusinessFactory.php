@@ -47,10 +47,10 @@ use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
 use SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessor;
 use SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessorInterface;
-use SprykerEco\Zed\Unzer\Business\Oms\Command\ChargeOmsCommand;
-use SprykerEco\Zed\Unzer\Business\Oms\Command\RefundOmsCommand;
+use SprykerEco\Zed\Unzer\Business\Oms\Command\ChargeUnzerOmsCommand;
+use SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\UnzerOmsCommandInterface;
-use SprykerEco\Zed\Unzer\Business\Oms\Command\UnzerRefundOmsCommandInterface;
+use SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommandInterface;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsAuthorizeCanceledOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsAuthorizeFailedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsAuthorizePendingOmsCondition;
@@ -439,7 +439,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createChargeOmsCommand(): UnzerOmsCommandInterface
     {
-        return new ChargeOmsCommand(
+        return new ChargeUnzerOmsCommand(
             $this->createPaymentProcessorResolver(),
         );
     }
@@ -453,11 +453,11 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Oms\Command\UnzerRefundOmsCommandInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommandInterface
      */
-    public function createRefundOmsCommand(): UnzerRefundOmsCommandInterface
+    public function createRefundOmsCommand(): RefundUnzerOmsCommandInterface
     {
-        return new RefundOmsCommand(
+        return new RefundUnzerOmsCommand(
             $this->getRefundFacade(),
             $this->createPaymentProcessorResolver(),
         );
