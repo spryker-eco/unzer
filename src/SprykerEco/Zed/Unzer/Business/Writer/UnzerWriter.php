@@ -107,11 +107,11 @@ class UnzerWriter implements UnzerWriterInterface
      */
     protected function createPaymentUnzer(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): PaymentUnzerTransfer
     {
-        $unzerPaymentTransfer = $quoteTransfer->getPayment()->getUnzerPayment();
+        $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();
 
         $paymentUnzerTransfer = (new PaymentUnzerTransfer())
             ->setIdSalesOrder($saveOrderTransfer->getIdSalesOrder())
-            ->setCustomerId($unzerPaymentTransfer->getCustomer()->getId())
+            ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
             ->setOrderId($saveOrderTransfer->getOrderReference())
             ->setIsMarketplace($unzerPaymentTransfer->getIsMarketplace())
             ->setIsAuthorizable($unzerPaymentTransfer->getIsAuthorizable());

@@ -38,7 +38,7 @@ class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInt
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        $filteredPaymentMethodTransfersCollection = new ArrayObject();
+        $filteredPaymentMethodTransferCollection = new ArrayObject();
 
         $hasMultipleMerchants = $this->hasMultipleMerchants($quoteTransfer);
         if ($hasMultipleMerchants === false) {
@@ -50,10 +50,10 @@ class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInt
                 continue;
             }
 
-            $filteredPaymentMethodTransfersCollection->append($paymentMethodTransfer);
+            $filteredPaymentMethodTransferCollection->append($paymentMethodTransfer);
         }
 
-        $paymentMethodsTransfer->setMethods($filteredPaymentMethodTransfersCollection);
+        $paymentMethodsTransfer->setMethods($filteredPaymentMethodTransferCollection);
 
         return $paymentMethodsTransfer;
     }

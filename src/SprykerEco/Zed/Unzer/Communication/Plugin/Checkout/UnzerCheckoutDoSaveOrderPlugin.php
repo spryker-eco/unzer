@@ -21,7 +21,7 @@ class UnzerCheckoutDoSaveOrderPlugin extends AbstractPlugin implements CheckoutD
 {
     /**
      * {@inheritDoc}
-     *  - Prepares Unzer payment details and saves it to database.
+     *  - Prepares Unzer payment details and saves to persistence.
      *
      * @api
      *

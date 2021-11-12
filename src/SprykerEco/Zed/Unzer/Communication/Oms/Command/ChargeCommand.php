@@ -12,7 +12,7 @@ use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 
-class ChargeCommand extends AbstractCommand implements UnzerOmsCommandByOrderInterface
+class ChargeCommand extends AbstractCommand implements UnzerOmsCommandInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface

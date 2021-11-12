@@ -10,7 +10,7 @@ namespace SprykerEco\Zed\Unzer\Communication\Oms\Command;
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
 
-interface UnzerOmsCommandByOrderInterface
+interface UnzerOmsCommandInterface
 {
     /**
      * @param array<\Orm\Zed\Sales\Persistence\SpySalesOrderItem> $salesOrderItems
