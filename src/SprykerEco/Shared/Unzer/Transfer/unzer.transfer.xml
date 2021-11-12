@@ -116,6 +116,10 @@
         <property name="redirectUrl" type="string"/>
     </transfer>
 
+    <transfer name="Payment">
+        <property name="unzerMarketplaceBankTransfer" type="UnzerPayment"/>
+    </transfer>
+
     <transfer name="UnzerTransaction">
         <property name="participantId" type="string"/>
         <property name="date" type="string"/>

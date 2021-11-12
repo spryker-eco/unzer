@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
@@ -46,6 +47,11 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public const CLIENT_QUOTE = 'CLIENT_QUOTE';
 
     /**
+     * @var string
+     */
+    public const FACADE_LOCALE = 'FACADE_LOCALE';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -72,6 +78,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addUnzerApiFacade($container);
         $container = $this->addQuoteClient($container);
         $container = $this->addRefundFacade($container);
+        $container = $this->addLocaleFacade($container);
 
         return $container;
     }
@@ -141,6 +148,19 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_REFUND, function (Container $container) {
             return new UnzerToRefundFacadeBridge($container->getLocator()->refund()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param Container $container
+     * @return Container
+     */
+    protected function addLocaleFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_LOCALE, function (Container $container) {
+            return new UnzerToLocaleFacadeBridge($container->getLocator()->locale()->facade());
         });
 
         return $container;

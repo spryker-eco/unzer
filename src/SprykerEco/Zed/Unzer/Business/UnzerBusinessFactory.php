@@ -19,6 +19,8 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMapperInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapper;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerPaymentResourceMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerPaymentResourceMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerRefundMapper;
@@ -31,6 +33,8 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapter;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapter;
@@ -72,12 +76,17 @@ use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaver;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapper;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpander;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpander;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerQuoteExpander;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerQuoteExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReader;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriter;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
@@ -96,8 +105,8 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerQuoteExpander(): UnzerQuoteExpanderInterface
     {
         return new UnzerQuoteExpander(
-            $this->createUnzerCustomerAdapter(),
-            $this->createUnzerQuoteExpanderMapper(),
+            $this->createUnzerCustomerQuoteExpander(),
+            $this->createUnzerMetadataQuoteExpander(),
             $this->getQuoteClient(),
             $this->getConfig(),
             $this->createUnzerReader(),
@@ -138,7 +147,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface
      */
-    public function createUnzerQuoteExpanderMapper(): UnzerQuoteMapperInterface
+    public function createUnzerQuoteMapper(): UnzerQuoteMapperInterface
     {
         return new UnzerQuoteMapper();
     }
@@ -535,5 +544,55 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentSaver(),
         );
+    }
+
+    /**
+     * @return UnzerCustomerQuoteExpanderInterface
+     */
+    public function createUnzerCustomerQuoteExpander(): UnzerCustomerQuoteExpanderInterface
+    {
+        return new UnzerCustomerQuoteExpander(
+            $this->createUnzerCustomerAdapter(),
+            $this->createUnzerCustomerMapper(),
+            $this->createUnzerQuoteMapper()
+        );
+    }
+
+    /**
+     * @return UnzerMetadataQuoteExpanderInterface
+     */
+    public function createUnzerMetadataQuoteExpander(): UnzerMetadataQuoteExpanderInterface
+    {
+        return new UnzerMetadataQuoteExpander(
+            $this->createUnzerMetadataAdapterInterface(),
+            $this->getLocaleFacade(),
+        );
+    }
+
+    /**
+     * @return UnzerMetadataAdapterInterface
+     */
+    public function createUnzerMetadataAdapterInterface(): UnzerMetadataAdapterInterface
+    {
+        return new UnzerMetadataAdapter(
+            $this->getUnzerApiFacade(),
+            $this->createUnzerMetadataMapper(),
+            );
+    }
+
+    /**
+     * @return UnzerToLocaleFacadeInterface
+     */
+    public function getLocaleFacade(): UnzerToLocaleFacadeInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_LOCALE);
+    }
+
+    /**
+     * @return UnzerMetadataMapperInterface
+     */
+    public function createUnzerMetadataMapper(): UnzerMetadataMapperInterface
+    {
+        return new UnzerMetadataMapper();
     }
 }
