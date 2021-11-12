@@ -9,15 +9,21 @@ namespace SprykerEco\Zed\Unzer\Communication\Oms\Command;
 
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
+use Spryker\Zed\Refund\Business\RefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 
-class ChargeCommand extends AbstractCommand implements UnzerOmsCommandInterface
+class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsCommandInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface
      */
     protected $unzerFacade;
+
+    /**
+     * @var \Spryker\Zed\Refund\Business\RefundFacadeInterface
+     */
+    protected $refundFacade;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface
@@ -26,13 +32,16 @@ class ChargeCommand extends AbstractCommand implements UnzerOmsCommandInterface
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface $unzerFacade
+     * @param \Spryker\Zed\Refund\Business\RefundFacadeInterface $refundFacade
      * @param \SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface $unzerOmsMapper
      */
     public function __construct(
         UnzerFacadeInterface $unzerFacade,
+        RefundFacadeInterface $refundFacade,
         UnzerOmsMapperInterface $unzerOmsMapper
     ) {
         $this->unzerFacade = $unzerFacade;
+        $this->refundFacade = $refundFacade;
         $this->unzerOmsMapper = $unzerOmsMapper;
     }
 
@@ -48,6 +57,10 @@ class ChargeCommand extends AbstractCommand implements UnzerOmsCommandInterface
         $orderTransfer = $this->unzerOmsMapper->mapSpySalesOrderToOrderTransfer($salesOrderEntity);
         $salesOrderItemIds = $this->mapSalesOrderItemsIds($salesOrderItems);
 
-        $this->unzerFacade->executeChargeOmsCommand($orderTransfer, $salesOrderItemIds);
+        $refundTransfer = $this->refundFacade
+            ->calculateRefund($salesOrderItems, $salesOrderEntity);
+
+        $this->unzerFacade
+            ->executeRefundOmsCommand($refundTransfer, $orderTransfer, $salesOrderItemIds);
     }
 }

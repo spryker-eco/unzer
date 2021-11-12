@@ -101,7 +101,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
 
         $unzerRefundTransfers = [];
         foreach ($participantReorderedItems as $participantId => $itemTransfers) {
-            $unzerRefundTransfers[] = $this->createUnzerMarketplaceRefundTransfer(
+            $unzerRefundTransfers[] = $this->createUnzerRefundTransfer(
                 $paymentUnzerTransfer,
                 $participantId,
                 $itemTransfers,
@@ -118,7 +118,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
-    protected function createUnzerMarketplaceRefundTransfer(
+    protected function createUnzerRefundTransfer(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         string $participantId,
         array $itemTransfers

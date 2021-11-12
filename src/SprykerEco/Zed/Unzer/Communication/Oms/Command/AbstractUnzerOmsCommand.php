@@ -9,7 +9,7 @@ namespace SprykerEco\Zed\Unzer\Communication\Oms\Command;
 
 use Orm\Zed\Sales\Persistence\SpySalesOrderItem;
 
-class AbstractCommand
+abstract class AbstractUnzerOmsCommand
 {
     /**
      * @param array<\Orm\Zed\Sales\Persistence\SpySalesOrderItem> $salesOrderItems
