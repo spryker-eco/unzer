@@ -1,0 +1,16 @@
+# IDEs
+/.idea
+/.project
+/nbproject
+/.buildpath
+/.settings
+*.sublime-*
+*.AppleDouble
+*.AppleDB
+*.AppleDesktop
+/vendor/
+composer.lock
+composer.phar
+phpunit.phar
+tests/app/src/Generated/
+tests/app/src/Spryker/
