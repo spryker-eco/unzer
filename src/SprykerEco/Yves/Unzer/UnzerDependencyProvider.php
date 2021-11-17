@@ -1,13 +1,24 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Yves\Unzer;
 
 use Spryker\Yves\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Yves\Kernel\Container;
 use SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientBridge;
 
+/**
+ * @method \SprykerEco\Yves\Unzer\UnzerConfig getConfig()
+ */
 class UnzerDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
     public const CLIENT_QUOTE = 'CLIENT_QUOTE';
 
     /**

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Yves\Unzer;
 
 use Spryker\Yves\Kernel\AbstractFactory;
@@ -19,12 +24,12 @@ class UnzerFactory extends AbstractFactory
     public function createMarketplaceBankTransferFormDataProvider(): StepEngineFormDataProviderInterface
     {
         return new MarketplaceBankTransferFormDataProvider(
-            $this->getQuoteClient()
+            $this->getQuoteClient(),
         );
     }
 
     /**
-     * @return UnzerToQuoteClientInterface
+     * @return \SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface
      */
     public function getQuoteClient(): UnzerToQuoteClientInterface
     {
@@ -40,7 +45,7 @@ class UnzerFactory extends AbstractFactory
     }
 
     /**
-     * @return UnzerHandlerInterface
+     * @return \SprykerEco\Yves\Unzer\Handler\UnzerHandlerInterface
      */
     public function createUnzerHandler(): UnzerHandlerInterface
     {

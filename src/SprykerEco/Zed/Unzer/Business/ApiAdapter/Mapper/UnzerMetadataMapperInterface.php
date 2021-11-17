@@ -1,8 +1,12 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
-use Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateMetadataRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateMetadataResponseTransfer;
 use Generated\Shared\Transfer\UnzerMetadataTransfer;
@@ -10,10 +14,10 @@ use Generated\Shared\Transfer\UnzerMetadataTransfer;
 interface UnzerMetadataMapperInterface
 {
     /**
-     * @param UnzerMetadataTransfer $unzerMetadataTransfer
-     * @param UnzerApiCreateMetadataRequestTransfer $unzerApiCreateMetadataRequestTransfer
+     * @param \Generated\Shared\Transfer\UnzerMetadataTransfer $unzerMetadataTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiCreateMetadataRequestTransfer $unzerApiCreateMetadataRequestTransfer
      *
-     * @return UnzerApiCreateMetadataRequestTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiCreateMetadataRequestTransfer
      */
     public function mapUnzerMetadataTransferToUnzerApiCreateMetadataRequestTransfer(
         UnzerMetadataTransfer $unzerMetadataTransfer,
@@ -21,10 +25,10 @@ interface UnzerMetadataMapperInterface
     ): UnzerApiCreateMetadataRequestTransfer;
 
     /**
-     * @param UnzerApiCreateCustomerResponseTransfer $unzerApiCreateMetadataResponseTransfer
-     * @param UnzerMetadataTransfer $unzerMetadataTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer $unzerApiCreateMetadataResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerMetadataTransfer $unzerMetadataTransfer
      *
-     * @return UnzerMetadataTransfer
+     * @return \Generated\Shared\Transfer\UnzerMetadataTransfer
      */
     public function mapUnzerApiCreateMetadataResponseTransferToUnzerMetadataTransfer(
         UnzerApiCreateMetadataResponseTransfer $unzerApiCreateMetadataResponseTransfer,

@@ -122,9 +122,9 @@ class UnzerReader implements UnzerReaderInterface
     }
 
     /**
-     * @param CustomerTransfer $customerTransfer
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
      *
-     * @return UnzerCustomerTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null
      */
     public function getUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer
     {

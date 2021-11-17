@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -13,36 +18,36 @@ use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
 class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
 {
     /**
-     * @var UnzerCustomerAdapterInterface
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface
      */
     protected $unzerCustomerAdapter;
 
     /**
-     * @var UnzerCustomerMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapperInterface
      */
     protected $unzerCustomerMapper;
 
     /**
-     * @var UnzerQuoteMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface
      */
     protected $unzerQuoteMapper;
 
     /**
-     * @var UnzerReaderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
 
     /**
-     * @var UnzerWriterInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface
      */
     protected $unzerWriter;
 
     /**
-     * @param UnzerCustomerAdapterInterface $unzerCustomerAdapter
-     * @param UnzerCustomerMapperInterface $unzerCustomerMapper
-     * @param UnzerQuoteMapperInterface $unzerQuoteMapper
-     * @param UnzerReaderInterface $unzerReader
-     * @param UnzerWriterInterface $unzerWriter
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface $unzerCustomerAdapter
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapperInterface $unzerCustomerMapper
+     * @param \SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface $unzerQuoteMapper
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface $unzerWriter
      */
     public function __construct(
         UnzerCustomerAdapterInterface $unzerCustomerAdapter,
@@ -50,8 +55,7 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
         UnzerQuoteMapperInterface $unzerQuoteMapper,
         UnzerReaderInterface $unzerReader,
         UnzerWriterInterface $unzerWriter
-    )
-    {
+    ) {
         $this->unzerCustomerAdapter = $unzerCustomerAdapter;
         $this->unzerCustomerMapper = $unzerCustomerMapper;
         $this->unzerQuoteMapper = $unzerQuoteMapper;
@@ -60,9 +64,9 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
     }
 
     /**
-     * @param QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return QuoteTransfer
+     * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function expandQuoteWithUnzerCustomer(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
@@ -80,9 +84,9 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
     }
 
     /**
-     * @param QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return UnzerCustomerTransfer
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     protected function retrieveUnzerCustomerTransfer(QuoteTransfer $quoteTransfer): UnzerCustomerTransfer
     {
@@ -99,9 +103,9 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
     }
 
     /**
-     * @param QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return UnzerCustomerTransfer
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     protected function createUnzerCustomer(QuoteTransfer $quoteTransfer): UnzerCustomerTransfer
     {
@@ -112,10 +116,10 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
     }
 
     /**
-     * @param UnzerCustomerTransfer $unzerCustomerTransfer
-     * @param QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return UnzerCustomerTransfer
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     protected function updateUnzerCustomer(UnzerCustomerTransfer $unzerCustomerTransfer, QuoteTransfer $quoteTransfer): UnzerCustomerTransfer
     {

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -10,28 +15,27 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface;
 class UnzerMetadataQuoteExpander implements UnzerMetadataQuoteExpanderInterface
 {
     /**
-     * @var UnzerMetadataAdapterInterface
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapterInterface
      */
     protected $unzerMetadataAdapter;
 
     /**
-     * @var UnzerToLocaleFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface
      */
-    protected  $localeFacade;
+    protected $localeFacade;
 
     public function __construct(
         UnzerMetadataAdapterInterface $unzerMetadataAdapter,
         UnzerToLocaleFacadeInterface $localeFacade
-    )
-    {
+    ) {
         $this->unzerMetadataAdapter = $unzerMetadataAdapter;
         $this->localeFacade = $localeFacade;
     }
 
     /**
-     * @param QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return QuoteTransfer
+     * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function expandQuoteWithUnzerMetadata(QuoteTransfer $quoteTransfer): QuoteTransfer
     {

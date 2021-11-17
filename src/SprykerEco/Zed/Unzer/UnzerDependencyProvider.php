@@ -154,8 +154,9 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     }
 
     /**
-     * @param Container $container
-     * @return Container
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
      */
     protected function addLocaleFacade(Container $container): Container
     {

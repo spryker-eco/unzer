@@ -1,18 +1,21 @@
 <?php
 
-namespace SprykerEco\Zed\Unzer\Dependency;
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
 
-use Spryker\Zed\Locale\Business\LocaleFacadeInterface;
+namespace SprykerEco\Zed\Unzer\Dependency;
 
 class UnzerToLocaleFacadeBridge implements UnzerToLocaleFacadeInterface
 {
     /**
-     * @var LocaleFacadeInterface
+     * @var \Spryker\Zed\Locale\Business\LocaleFacadeInterface
      */
     protected $localeFacade;
 
     /**
-     * @param LocaleFacadeInterface $localeFacade
+     * @param \Spryker\Zed\Locale\Business\LocaleFacadeInterface $localeFacade
      */
     public function __construct($localeFacade)
     {

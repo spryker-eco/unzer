@@ -190,16 +190,15 @@ class UnzerPersistenceMapper
     }
 
     /**
-     * @param SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity
-     * @param UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity
+     * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
      *
-     * @return UnzerCustomerTransfer
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     public function mapPaymentUnzerCustomerEntityToUnzerCustomerTransfer(
         SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity,
         UnzerCustomerTransfer $unzerCustomerTransfer
-    ): UnzerCustomerTransfer
-    {
+    ): UnzerCustomerTransfer {
         return $unzerCustomerTransfer->setId($paymentUnzerCustomerEntity->getUnzerCustomerId());
     }
 }

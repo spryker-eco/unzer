@@ -70,7 +70,7 @@ interface UnzerRepositoryInterface
     /**
      * @param int $idCustomer
      *
-     * @return UnzerCustomerTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null
      */
     public function findUnzerCustomerByIdCustomer(int $idCustomer): ?UnzerCustomerTransfer;
 }

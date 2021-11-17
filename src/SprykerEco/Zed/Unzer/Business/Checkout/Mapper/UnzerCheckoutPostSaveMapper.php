@@ -18,6 +18,9 @@ use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
 {
+    /**
+     * @var string
+     */
     protected const ITEM_TYPE_WIRE = 'Wire';
 
     /**

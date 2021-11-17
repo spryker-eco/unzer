@@ -2,17 +2,19 @@
 
 /**
  * MIT License
- * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
 namespace SprykerEco\Yves\Unzer\Form;
 
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MarketplaceBankTransferSubForm extends AbstractUnzerSubForm
 {
+    /**
+     * @var string
+     */
     public const PAYMENT_METHOD = 'marketplace-bank-transfer';
 
     /**

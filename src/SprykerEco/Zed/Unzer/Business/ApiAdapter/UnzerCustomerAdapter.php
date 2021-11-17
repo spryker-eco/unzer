@@ -10,7 +10,6 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 use Generated\Shared\Transfer\UnzerApiCreateCustomerRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
-use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
@@ -66,9 +65,9 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
     }
 
     /**
-     * @param UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
      *
-     * @return UnzerCustomerTransfer
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     public function updateCustomer(UnzerCustomerTransfer $unzerCustomerTransfer): UnzerCustomerTransfer
     {

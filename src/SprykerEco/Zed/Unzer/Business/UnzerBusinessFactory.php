@@ -49,8 +49,8 @@ use SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessor;
 use SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\ChargeUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommand;
-use SprykerEco\Zed\Unzer\Business\Oms\Command\UnzerOmsCommandInterface;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommandInterface;
+use SprykerEco\Zed\Unzer\Business\Oms\Command\UnzerOmsCommandInterface;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsAuthorizeCanceledOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsAuthorizeFailedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsAuthorizePendingOmsCondition;
@@ -547,7 +547,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return UnzerCustomerQuoteExpanderInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface
      */
     public function createUnzerCustomerQuoteExpander(): UnzerCustomerQuoteExpanderInterface
     {
@@ -556,12 +556,12 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerCustomerMapper(),
             $this->createUnzerQuoteMapper(),
             $this->createUnzerReader(),
-            $this->createUnzerWriter()
+            $this->createUnzerWriter(),
         );
     }
 
     /**
-     * @return UnzerMetadataQuoteExpanderInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface
      */
     public function createUnzerMetadataQuoteExpander(): UnzerMetadataQuoteExpanderInterface
     {
@@ -572,18 +572,18 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return UnzerMetadataAdapterInterface
+     * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapterInterface
      */
     public function createUnzerMetadataAdapterInterface(): UnzerMetadataAdapterInterface
     {
         return new UnzerMetadataAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerMetadataMapper(),
-            );
+        );
     }
 
     /**
-     * @return UnzerToLocaleFacadeInterface
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface
      */
     public function getLocaleFacade(): UnzerToLocaleFacadeInterface
     {
@@ -591,7 +591,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return UnzerMetadataMapperInterface
+     * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapperInterface
      */
     public function createUnzerMetadataMapper(): UnzerMetadataMapperInterface
     {

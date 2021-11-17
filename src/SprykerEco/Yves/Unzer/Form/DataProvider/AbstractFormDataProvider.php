@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Yves\Unzer\Form\DataProvider;
 
 use Generated\Shared\Transfer\PaymentTransfer;
@@ -17,12 +22,12 @@ abstract class AbstractFormDataProvider implements StepEngineFormDataProviderInt
     protected const PAYMENT_PROVIDER_UNZER = 'Unzer';
 
     /**
-     * @var UnzerToQuoteClientInterface
+     * @var \SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface
      */
     protected $quoteClient;
 
     /**
-     * @param UnzerToQuoteClientInterface $quoteClient
+     * @param \SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient
      */
     public function __construct(UnzerToQuoteClientInterface $quoteClient)
     {

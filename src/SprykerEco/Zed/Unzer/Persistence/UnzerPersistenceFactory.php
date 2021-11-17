@@ -69,5 +69,4 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     {
         return new UnzerPersistenceMapper();
     }
-
 }

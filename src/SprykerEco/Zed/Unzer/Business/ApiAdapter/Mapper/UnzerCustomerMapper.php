@@ -29,17 +29,16 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
             ->setCustomerId($unzerCustomerTransfer->getId());
     }
 
-
     /**
-     * @param UnzerCustomerTransfer $unzerCustomerTransfer
-     * @param UnzerApiUpdateCustomerRequestTransfer $unzerApiUpdateCustomerRequestTransfer
-     * @return UnzerApiUpdateCustomerRequestTransfer
+     * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiUpdateCustomerRequestTransfer $unzerApiUpdateCustomerRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiUpdateCustomerRequestTransfer
      */
     public function mapUnzerCustomerTransferToUnzerApiUpdateCustomerRequestTransfer(
         UnzerCustomerTransfer $unzerCustomerTransfer,
         UnzerApiUpdateCustomerRequestTransfer $unzerApiUpdateCustomerRequestTransfer
-    ): UnzerApiUpdateCustomerRequestTransfer
-    {
+    ): UnzerApiUpdateCustomerRequestTransfer {
         return $unzerApiUpdateCustomerRequestTransfer->fromArray($unzerCustomerTransfer->toArray(), true);
     }
 

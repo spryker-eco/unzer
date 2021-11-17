@@ -13,7 +13,6 @@ use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
-use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
@@ -21,12 +20,12 @@ use SprykerEco\Zed\Unzer\UnzerConfig;
 class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
 {
     /**
-     * @var UnzerCustomerQuoteExpanderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface
      */
     protected $unzerCustomerQuoteExpander;
 
     /**
-     * @var UnzerMetadataQuoteExpanderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface
      */
     protected $unzerMetadataQuoteExpander;
 
@@ -46,8 +45,8 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected $unzerReader;
 
     /**
-     * @param UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander
-     * @param UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander
+     * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander
+     * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
@@ -133,6 +132,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     {
         if (!$itemTransfer->getMerchantReference()) {
             $test = $this->unzerConfig->getMasterMerchantParticipantId();
+
             return $itemTransfer->setUnzerParticipantId($test);
         }
 

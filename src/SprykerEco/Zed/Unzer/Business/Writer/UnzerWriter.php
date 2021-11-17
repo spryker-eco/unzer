@@ -17,10 +17,8 @@ use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
-use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
-use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerWriter implements UnzerWriterInterface
@@ -31,7 +29,7 @@ class UnzerWriter implements UnzerWriterInterface
     protected $unzerEntityManager;
 
     /**
-     * @var UnzerReaderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
 
@@ -42,7 +40,7 @@ class UnzerWriter implements UnzerWriterInterface
 
     /**
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
-     * @param UnzerReaderInterface $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      */
     public function __construct(
