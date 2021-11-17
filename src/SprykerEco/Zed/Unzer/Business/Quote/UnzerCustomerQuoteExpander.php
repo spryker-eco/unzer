@@ -7,6 +7,8 @@ use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
+use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
 
 class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
 {
@@ -26,19 +28,35 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
     protected $unzerQuoteMapper;
 
     /**
+     * @var UnzerReaderInterface
+     */
+    protected $unzerReader;
+
+    /**
+     * @var UnzerWriterInterface
+     */
+    protected $unzerWriter;
+
+    /**
      * @param UnzerCustomerAdapterInterface $unzerCustomerAdapter
      * @param UnzerCustomerMapperInterface $unzerCustomerMapper
      * @param UnzerQuoteMapperInterface $unzerQuoteMapper
+     * @param UnzerReaderInterface $unzerReader
+     * @param UnzerWriterInterface $unzerWriter
      */
     public function __construct(
         UnzerCustomerAdapterInterface $unzerCustomerAdapter,
         UnzerCustomerMapperInterface $unzerCustomerMapper,
-        UnzerQuoteMapperInterface $unzerQuoteMapper
+        UnzerQuoteMapperInterface $unzerQuoteMapper,
+        UnzerReaderInterface $unzerReader,
+        UnzerWriterInterface $unzerWriter
     )
     {
         $this->unzerCustomerAdapter = $unzerCustomerAdapter;
         $this->unzerCustomerMapper = $unzerCustomerMapper;
         $this->unzerQuoteMapper = $unzerQuoteMapper;
+        $this->unzerReader = $unzerReader;
+        $this->unzerWriter = $unzerWriter;
     }
 
     /**
@@ -55,12 +73,55 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
             return $quoteTransfer;
         }
 
-        $unzerCustomerTransfer = $this->unzerQuoteMapper
-            ->mapQuoteTransferToUnzerCustomerTransfer($quoteTransfer, new UnzerCustomerTransfer());
-
-        $unzerCustomerTransfer = $this->unzerCustomerAdapter->createCustomer($unzerCustomerTransfer);
+        $unzerCustomerTransfer = $this->retrieveUnzerCustomerTransfer($quoteTransfer);
         $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setCustomer($unzerCustomerTransfer);
 
         return $quoteTransfer;
+    }
+
+    /**
+     * @param QuoteTransfer $quoteTransfer
+     *
+     * @return UnzerCustomerTransfer
+     */
+    protected function retrieveUnzerCustomerTransfer(QuoteTransfer $quoteTransfer): UnzerCustomerTransfer
+    {
+        if ($quoteTransfer->getCustomerOrFail()->getIsGuest()) {
+            return $this->createUnzerCustomer($quoteTransfer);
+        }
+
+        $unzerCustomerTransfer = $this->unzerReader->getUnzerCustomerTransferByCustomerTransfer($quoteTransfer->getCustomer());
+        if ($unzerCustomerTransfer !== null) {
+            return $this->updateUnzerCustomer($unzerCustomerTransfer, $quoteTransfer);
+        }
+
+        return $this->createUnzerCustomer($quoteTransfer);
+    }
+
+    /**
+     * @param QuoteTransfer $quoteTransfer
+     *
+     * @return UnzerCustomerTransfer
+     */
+    protected function createUnzerCustomer(QuoteTransfer $quoteTransfer): UnzerCustomerTransfer
+    {
+        $unzerCustomerTransfer = $this->unzerQuoteMapper
+            ->mapQuoteTransferToUnzerCustomerTransfer($quoteTransfer, new UnzerCustomerTransfer());
+
+        return $this->unzerCustomerAdapter->createCustomer($unzerCustomerTransfer);
+    }
+
+    /**
+     * @param UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param QuoteTransfer $quoteTransfer
+     *
+     * @return UnzerCustomerTransfer
+     */
+    protected function updateUnzerCustomer(UnzerCustomerTransfer $unzerCustomerTransfer, QuoteTransfer $quoteTransfer): UnzerCustomerTransfer
+    {
+        $unzerCustomerTransfer = $this->unzerQuoteMapper
+            ->mapQuoteTransferToUnzerCustomerTransfer($quoteTransfer, $unzerCustomerTransfer);
+
+        return $this->unzerCustomerAdapter->updateCustomer($unzerCustomerTransfer);
     }
 }

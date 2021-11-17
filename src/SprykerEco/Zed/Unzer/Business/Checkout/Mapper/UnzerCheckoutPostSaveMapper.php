@@ -18,6 +18,8 @@ use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
 {
+    protected const ITEM_TYPE_WIRE = 'Wire';
+
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
@@ -96,7 +98,7 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         UnzerBasketItemTransfer $unzerBasketItemTransfer
     ): UnzerBasketItemTransfer {
         return $unzerBasketItemTransfer
-            ->setBasketItemReferenceId($itemTransfer->getSku())
+            ->setBasketItemReferenceId($itemTransfer->getSku() . $itemTransfer->getProductOfferReference())
             ->setQuantity($itemTransfer->getQuantity())
             ->setAmountGross($itemTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountVat($itemTransfer->getSumTaxAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
@@ -105,6 +107,6 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
             ->setAmountNet($itemTransfer->getSumNetPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
-            ->setType('Wire');
+            ->setType(static::ITEM_TYPE_WIRE);
     }
 }

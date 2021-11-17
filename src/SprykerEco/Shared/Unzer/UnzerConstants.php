@@ -26,4 +26,9 @@ interface UnzerConstants
      * @var string
      */
     public const WEBHOOK_RETRIEVE_URL = 'UNZER:WEBHOOK_RETRIEVE_URL';
+
+    /**
+     * @var string
+     */
+    public const MASTER_MERCHANT_PARTICIPANT_ID = 'UNZER:MASTER_MERCHANT_PARTICIPANT_ID';
 }

@@ -266,6 +266,16 @@ class UnzerConfig extends AbstractBundleConfig
      */
     public function getProviderName(): string
     {
-        return UnzerSharedConfig::PROVIDER_NAME;
+        return UnzerSharedConfig::PAYMENT_PROVIDER_NAME;
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getMasterMerchantParticipantId(): string
+    {
+        return $this->get(UnzerSharedConstants::MASTER_MERCHANT_PARTICIPANT_ID);
     }
 }

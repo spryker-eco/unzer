@@ -49,7 +49,7 @@ class UnzerMetadataAdapter extends UnzerAbstractApiAdapter implements UnzerMetad
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateMetadataApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);
-        $unzerApiCreateMetadataResponseTransfer = $unzerApiResponseTransfer->getCreateCustomerResponseOrFail();
+        $unzerApiCreateMetadataResponseTransfer = $unzerApiResponseTransfer->getCreateMetadataResponseOrFail();
 
         return $this->unzerMetadataMapper
             ->mapUnzerApiCreateMetadataResponseTransferToUnzerMetadataTransfer(

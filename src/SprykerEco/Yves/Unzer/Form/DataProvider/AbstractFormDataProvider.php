@@ -12,6 +12,11 @@ use SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface;
 abstract class AbstractFormDataProvider implements StepEngineFormDataProviderInterface
 {
     /**
+     * @var string
+     */
+    protected const PAYMENT_PROVIDER_UNZER = 'Unzer';
+
+    /**
      * @var UnzerToQuoteClientInterface
      */
     protected $quoteClient;
@@ -45,6 +50,7 @@ abstract class AbstractFormDataProvider implements StepEngineFormDataProviderInt
 
         if ($paymentTransfer === null) {
             $paymentTransfer = new PaymentTransfer();
+            $paymentTransfer->setPaymentProvider(static::PAYMENT_PROVIDER_UNZER);
             $quoteTransfer->setPayment($paymentTransfer);
         }
 

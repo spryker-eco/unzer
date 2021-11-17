@@ -13,8 +13,10 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzer;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction;
 use Propel\Runtime\Collection\ObjectCollection;
@@ -185,5 +187,19 @@ class UnzerPersistenceMapper
         return $paymentUnzerTransactionTransfer
             ->fromArray($paymentUnzerTransactionEntity->toArray(), true)
             ->setIdPaymentUnzer($paymentUnzerTransactionEntity->getFkPaymentUnzer());
+    }
+
+    /**
+     * @param SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity
+     * @param UnzerCustomerTransfer $unzerCustomerTransfer
+     *
+     * @return UnzerCustomerTransfer
+     */
+    public function mapPaymentUnzerCustomerEntityToUnzerCustomerTransfer(
+        SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity,
+        UnzerCustomerTransfer $unzerCustomerTransfer
+    ): UnzerCustomerTransfer
+    {
+        return $unzerCustomerTransfer->setId($paymentUnzerCustomerEntity->getUnzerCustomerId());
     }
 }

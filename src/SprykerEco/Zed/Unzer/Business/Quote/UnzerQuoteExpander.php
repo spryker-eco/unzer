@@ -73,7 +73,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      */
     public function expand(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PROVIDER_NAME) {
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PAYMENT_PROVIDER_NAME) {
             return $quoteTransfer;
         }
 
@@ -132,7 +132,8 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected function setParticipantId(ItemTransfer $itemTransfer): ItemTransfer
     {
         if (!$itemTransfer->getMerchantReference()) {
-            return $itemTransfer;
+            $test = $this->unzerConfig->getMasterMerchantParticipantId();
+            return $itemTransfer->setUnzerParticipantId($test);
         }
 
         $merchantUnzerParticipantCriteriaTransfer = (new MerchantUnzerParticipantCriteriaTransfer())

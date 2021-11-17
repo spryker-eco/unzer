@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Reader;
 
+use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
@@ -14,6 +15,7 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 
 class UnzerReader implements UnzerReaderInterface
@@ -117,5 +119,15 @@ class UnzerReader implements UnzerReaderInterface
         return $this->unzerRepository
                 ->findPaymentUnzerTransactionByPaymentIdAndParticipantId($paymentId, $transactionType, $participantId)
             ?? new PaymentUnzerTransactionTransfer();
+    }
+
+    /**
+     * @param CustomerTransfer $customerTransfer
+     *
+     * @return UnzerCustomerTransfer|null
+     */
+    public function getUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer
+    {
+        return $this->unzerRepository->findUnzerCustomerByIdCustomer($customerTransfer->getIdCustomer());
     }
 }

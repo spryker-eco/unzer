@@ -13,6 +13,7 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\UnzerCustomerTransfer;
 
 interface UnzerRepositoryInterface
 {
@@ -65,4 +66,11 @@ interface UnzerRepositoryInterface
         string $transactionType,
         ?string $participantId = null
     ): ?PaymentUnzerTransactionTransfer;
+
+    /**
+     * @param int $idCustomer
+     *
+     * @return UnzerCustomerTransfer|null
+     */
+    public function findUnzerCustomerByIdCustomer(int $idCustomer): ?UnzerCustomerTransfer;
 }

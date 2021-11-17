@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Reader;
 
+use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
@@ -14,6 +15,7 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\UnzerCustomerTransfer;
 
 interface UnzerReaderInterface
 {
@@ -75,4 +77,11 @@ interface UnzerReaderInterface
         string $transactionType,
         ?string $participantId = null
     ): PaymentUnzerTransactionTransfer;
+
+    /**
+     * @param CustomerTransfer $customerTransfer
+     *
+     * @return UnzerCustomerTransfer|null
+     */
+    public function getUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer;
 }

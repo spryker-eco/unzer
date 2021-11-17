@@ -159,7 +159,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerWriter(
             $this->getEntityManager(),
-            $this->getRepository(),
+            $this->createUnzerReader(),
             $this->getConfig(),
         );
     }
@@ -554,7 +554,9 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerCustomerQuoteExpander(
             $this->createUnzerCustomerAdapter(),
             $this->createUnzerCustomerMapper(),
-            $this->createUnzerQuoteMapper()
+            $this->createUnzerQuoteMapper(),
+            $this->createUnzerReader(),
+            $this->createUnzerWriter()
         );
     }
 

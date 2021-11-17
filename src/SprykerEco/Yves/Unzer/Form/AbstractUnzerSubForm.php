@@ -14,6 +14,6 @@ abstract class AbstractUnzerSubForm extends AbstractSubFormType implements SubFo
      */
     public function getProviderName(): string
     {
-        return UnzerConfig::PROVIDER_NAME;
+        return UnzerConfig::PAYMENT_PROVIDER_NAME;
     }
 }

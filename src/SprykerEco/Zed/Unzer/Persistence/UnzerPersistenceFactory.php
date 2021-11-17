@@ -8,6 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItemQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery;
@@ -54,10 +55,19 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
+     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery
+     */
+    public function createPaymentUnzerCustomerQuery(): SpyPaymentUnzerCustomerQuery
+    {
+        return SpyPaymentUnzerCustomerQuery::create();
+    }
+
+    /**
      * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
      */
     public function createUnzerPersistenceMapper(): UnzerPersistenceMapper
     {
         return new UnzerPersistenceMapper();
     }
+
 }

@@ -4,6 +4,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateMetadataRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiCreateMetadataResponseTransfer;
 use Generated\Shared\Transfer\UnzerMetadataTransfer;
 
 class UnzerMetadataMapper implements UnzerMetadataMapperInterface
@@ -14,7 +15,10 @@ class UnzerMetadataMapper implements UnzerMetadataMapperInterface
      *
      * @return UnzerApiCreateMetadataRequestTransfer
      */
-    public function mapUnzerMetadataTransferToUnzerApiCreateMetadataRequestTransfer(UnzerMetadataTransfer $unzerMetadataTransfer, UnzerApiCreateMetadataRequestTransfer $unzerApiCreateMetadataRequestTransfer): UnzerApiCreateMetadataRequestTransfer
+    public function mapUnzerMetadataTransferToUnzerApiCreateMetadataRequestTransfer(
+        UnzerMetadataTransfer $unzerMetadataTransfer,
+        UnzerApiCreateMetadataRequestTransfer $unzerApiCreateMetadataRequestTransfer
+    ): UnzerApiCreateMetadataRequestTransfer
     {
         return $unzerApiCreateMetadataRequestTransfer->fromArray($unzerMetadataTransfer->toArray(), true);
     }
@@ -25,7 +29,10 @@ class UnzerMetadataMapper implements UnzerMetadataMapperInterface
      *
      * @return UnzerMetadataTransfer
      */
-    public function mapUnzerApiCreateMetadataResponseTransferToUnzerMetadataTransfer(UnzerApiCreateCustomerResponseTransfer $unzerApiCreateMetadataResponseTransfer, UnzerMetadataTransfer $unzerMetadataTransfer): UnzerMetadataTransfer
+    public function mapUnzerApiCreateMetadataResponseTransferToUnzerMetadataTransfer(
+        UnzerApiCreateMetadataResponseTransfer $unzerApiCreateMetadataResponseTransfer,
+        UnzerMetadataTransfer $unzerMetadataTransfer
+    ): UnzerMetadataTransfer
     {
         return $unzerMetadataTransfer
             ->setId($unzerApiCreateMetadataResponseTransfer->getId());

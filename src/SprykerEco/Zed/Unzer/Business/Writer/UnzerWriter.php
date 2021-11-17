@@ -8,6 +8,8 @@
 namespace SprykerEco\Zed\Unzer\Business\Writer;
 
 use Generated\Shared\Transfer\ItemTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer;
+use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
@@ -15,6 +17,8 @@ use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
+use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
+use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
@@ -27,9 +31,9 @@ class UnzerWriter implements UnzerWriterInterface
     protected $unzerEntityManager;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
+     * @var UnzerReaderInterface
      */
-    protected $unzerRepository;
+    protected $unzerReader;
 
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
@@ -38,16 +42,16 @@ class UnzerWriter implements UnzerWriterInterface
 
     /**
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
-     * @param \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface $unzerRepository
+     * @param UnzerReaderInterface $unzerReader
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      */
     public function __construct(
         UnzerEntityManagerInterface $unzerEntityManager,
-        UnzerRepositoryInterface $unzerRepository,
+        UnzerReaderInterface $unzerReader,
         UnzerConfig $unzerConfig
     ) {
         $this->unzerEntityManager = $unzerEntityManager;
-        $this->unzerRepository = $unzerRepository;
+        $this->unzerReader = $unzerReader;
         $this->unzerConfig = $unzerConfig;
     }
 
@@ -145,8 +149,14 @@ class UnzerWriter implements UnzerWriterInterface
      */
     protected function getParticipantIdForOrderItem(ItemTransfer $orderItem): ?string
     {
-        $merchantUnzerParticipantTransfer = $this->unzerRepository
-            ->findMerchantUnzerParticipantByCriteria($orderItem->getMerchantReference());
+        $merchantUnzerParticipantCriteriaTransfer = (new MerchantUnzerParticipantCriteriaTransfer())
+            ->setMerchantUnzerParticipantConditions(
+                (new MerchantUnzerParticipantConditionsTransfer())->setReferences([$orderItem->getMerchantReference()]),
+            );
+
+        $merchantUnzerParticipantTransfer = $this->unzerReader
+            ->getMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
+
         if ($merchantUnzerParticipantTransfer !== null) {
             return $merchantUnzerParticipantTransfer->getParticipantId();
         }

@@ -9,6 +9,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiCreateCustomerRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer;
+use Generated\Shared\Transfer\UnzerApiUpdateCustomerRequestTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 
 class UnzerCustomerMapper implements UnzerCustomerMapperInterface
@@ -26,6 +27,20 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
         return $unzerApiCreateCustomerRequestTransfer
             ->fromArray($unzerCustomerTransfer->toArray(), true)
             ->setCustomerId($unzerCustomerTransfer->getId());
+    }
+
+
+    /**
+     * @param UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param UnzerApiUpdateCustomerRequestTransfer $unzerApiUpdateCustomerRequestTransfer
+     * @return UnzerApiUpdateCustomerRequestTransfer
+     */
+    public function mapUnzerCustomerTransferToUnzerApiUpdateCustomerRequestTransfer(
+        UnzerCustomerTransfer $unzerCustomerTransfer,
+        UnzerApiUpdateCustomerRequestTransfer $unzerApiUpdateCustomerRequestTransfer
+    ): UnzerApiUpdateCustomerRequestTransfer
+    {
+        return $unzerApiUpdateCustomerRequestTransfer->fromArray($unzerCustomerTransfer->toArray(), true);
     }
 
     /**

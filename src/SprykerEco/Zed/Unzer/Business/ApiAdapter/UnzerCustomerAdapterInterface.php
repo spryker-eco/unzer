@@ -17,4 +17,11 @@ interface UnzerCustomerAdapterInterface
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     public function createCustomer(UnzerCustomerTransfer $unzerCustomerTransfer): UnzerCustomerTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
+     */
+    public function updateCustomer(UnzerCustomerTransfer $unzerCustomerTransfer): UnzerCustomerTransfer;
 }

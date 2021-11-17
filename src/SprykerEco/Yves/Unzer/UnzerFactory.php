@@ -8,6 +8,8 @@ use Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface;
 use SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Yves\Unzer\Form\DataProvider\MarketplaceBankTransferFormDataProvider;
 use SprykerEco\Yves\Unzer\Form\MarketplaceBankTransferSubForm;
+use SprykerEco\Yves\Unzer\Handler\UnzerHandler;
+use SprykerEco\Yves\Unzer\Handler\UnzerHandlerInterface;
 
 class UnzerFactory extends AbstractFactory
 {
@@ -35,5 +37,13 @@ class UnzerFactory extends AbstractFactory
     public function createMarketplaceBankTransferSubForm(): SubFormInterface
     {
         return new MarketplaceBankTransferSubForm();
+    }
+
+    /**
+     * @return UnzerHandlerInterface
+     */
+    public function createUnzerHandler(): UnzerHandlerInterface
+    {
+        return new UnzerHandler();
     }
 }

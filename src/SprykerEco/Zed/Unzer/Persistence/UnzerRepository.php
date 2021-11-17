@@ -14,7 +14,9 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
 /**
@@ -144,8 +146,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         $paymentUnzerTransactionQuery = $this->getFactory()
             ->createPaymentUnzerTransactionQuery()
             ->usePaymentUnzerQuery()
-            ->filterByPaymentId($paymentId)
-            ->filterByIsMarketplace(true)
+                ->filterByPaymentId($paymentId)
+                ->filterByIsMarketplace(true)
             ->endUse()
             ->filterByType($transactionType);
 
@@ -162,6 +164,32 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             ->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
                 $paymentUnzerTransactionEntity,
                 new PaymentUnzerTransactionTransfer(),
+            );
+    }
+
+    /**
+     * @param int $idCustomer
+     *
+     * @return UnzerCustomerTransfer|null
+     */
+    public function findUnzerCustomerByIdCustomer(int $idCustomer): ?UnzerCustomerTransfer
+    {
+        /** @var SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity */
+        $paymentUnzerCustomerEntity = $this->getFactory()
+            ->createPaymentUnzerCustomerQuery()
+            ->useCustomerQuery()
+                ->filterByIdCustomer($idCustomer)
+            ->endUse()
+            ->findOne();
+
+        if ($paymentUnzerCustomerEntity === null) {
+            return null;
+        }
+
+        return $this->getFactory()->createUnzerPersistenceMapper()
+            ->mapPaymentUnzerCustomerEntityToUnzerCustomerTransfer(
+                $paymentUnzerCustomerEntity,
+                new UnzerCustomerTransfer()
             );
     }
 
