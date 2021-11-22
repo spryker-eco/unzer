@@ -9,13 +9,12 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerMetadataTransfer;
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
 interface UnzerMetadataAdapterInterface
 {
     /**
      * @param \Generated\Shared\Transfer\UnzerMetadataTransfer $unzerMetadataTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerMetadataTransfer
      */

@@ -288,7 +288,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
-     * @param UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
      *
      * @return void
      */

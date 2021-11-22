@@ -30,7 +30,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected $unzerMetadataQuoteExpander;
 
     /**
-     * @var UnzerKeypairQuoteExpanderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface
      */
     protected $unzerKeypairQuoteExpander;
 
@@ -52,6 +52,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander
+     * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface $unzerKeypairQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader

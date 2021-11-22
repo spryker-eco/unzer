@@ -34,8 +34,7 @@ class UnzerPersistenceMapper
     public function mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
         ObjectCollection $paymentUnzerOrderItemEntities,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
-    ): PaymentUnzerOrderItemCollectionTransfer
-    {
+    ): PaymentUnzerOrderItemCollectionTransfer {
         foreach ($paymentUnzerOrderItemEntities as $paymentUnzerOrderItemEntity) {
             $paymentUnzerOrderItemCollectionTransfer->addPaymentUnzerOrderItem(
                 $this->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
@@ -57,8 +56,7 @@ class UnzerPersistenceMapper
     public function mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
         SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity,
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
-    ): PaymentUnzerOrderItemTransfer
-    {
+    ): PaymentUnzerOrderItemTransfer {
         return $paymentUnzerOrderItemTransfer
             ->fromArray($paymentUnzerOrderItemEntity->toArray(), true)
             ->setIdPaymentUnzer($paymentUnzerOrderItemEntity->getFkPaymentUnzer())
@@ -74,8 +72,7 @@ class UnzerPersistenceMapper
     public function mapMerchantUnzerParticipantEntityCollectionToMerchantUnzerParticipantTransferCollection(
         ObjectCollection $merchantUnzerParticipantEntities,
         MerchantUnzerParticipantCollectionTransfer $merchantUnzerParticipantCollectionTransfer
-    ): MerchantUnzerParticipantCollectionTransfer
-    {
+    ): MerchantUnzerParticipantCollectionTransfer {
         foreach ($merchantUnzerParticipantEntities as $merchantUnzerParticipantEntity) {
             $merchantUnzerParticipantCollectionTransfer->addMerchantUnzerParticipant(
                 $this->mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer(
@@ -97,8 +94,7 @@ class UnzerPersistenceMapper
     public function mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer(
         SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity,
         MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
-    ): MerchantUnzerParticipantTransfer
-    {
+    ): MerchantUnzerParticipantTransfer {
         return $merchantUnzerParticipantTransfer
             ->fromArray($merchantUnzerParticipantEntity->toArray(), true)
             ->setMerchantId($merchantUnzerParticipantEntity->getFkMerchant());
@@ -113,8 +109,7 @@ class UnzerPersistenceMapper
     public function mapMerchantUnzerParticipantTransferToEntity(
         MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer,
         SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
-    ): SpyMerchantUnzerParticipant
-    {
+    ): SpyMerchantUnzerParticipant {
         return $merchantUnzerParticipantEntity
             ->fromArray($merchantUnzerParticipantTransfer->toArray())
             ->setFkMerchant($merchantUnzerParticipantTransfer->getMerchantId());
@@ -129,8 +124,7 @@ class UnzerPersistenceMapper
     public function mapPaymentUnzerEntityToPaymentUnzerTransfer(
         SpyPaymentUnzer $paymentUnzerEntity,
         PaymentUnzerTransfer $paymentUnzerTransfer
-    ): PaymentUnzerTransfer
-    {
+    ): PaymentUnzerTransfer {
         return $paymentUnzerTransfer
             ->fromArray($paymentUnzerEntity->toArray(), true)
             ->setIdSalesOrder($paymentUnzerEntity->getFkSalesOrder());
@@ -145,8 +139,7 @@ class UnzerPersistenceMapper
     public function mapPaymentUnzerTransferToPaymentUnzerEntity(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         SpyPaymentUnzer $paymentUnzerEntity
-    ): SpyPaymentUnzer
-    {
+    ): SpyPaymentUnzer {
         return $paymentUnzerEntity
             ->fromArray($paymentUnzerTransfer->toArray())
             ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder())
@@ -162,8 +155,7 @@ class UnzerPersistenceMapper
     public function mapPaymentUnzerOrderItemTransferToPaymentUnzerOrderItemEntity(
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer,
         SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity
-    ): SpyPaymentUnzerOrderItem
-    {
+    ): SpyPaymentUnzerOrderItem {
         return $paymentUnzerOrderItemEntity
             ->fromArray($paymentUnzerOrderItemTransfer->toArray())
             ->setFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItem())
@@ -179,8 +171,7 @@ class UnzerPersistenceMapper
     public function mapPaymentUnzerTransactionTransferToPaymentUnzerTransactionEntity(
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer,
         SpyPaymentUnzerTransaction $paymentUnzerTransactionEntity
-    ): SpyPaymentUnzerTransaction
-    {
+    ): SpyPaymentUnzerTransaction {
         return $paymentUnzerTransactionEntity
             ->fromArray($paymentUnzerTransactionTransfer->toArray())
             ->setFkPaymentUnzer($paymentUnzerTransactionTransfer->getIdPaymentUnzer());
@@ -195,8 +186,7 @@ class UnzerPersistenceMapper
     public function mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
         SpyPaymentUnzerTransaction $paymentUnzerTransactionEntity,
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer
-    ): PaymentUnzerTransactionTransfer
-    {
+    ): PaymentUnzerTransactionTransfer {
         return $paymentUnzerTransactionTransfer
             ->fromArray($paymentUnzerTransactionEntity->toArray(), true)
             ->setIdPaymentUnzer($paymentUnzerTransactionEntity->getFkPaymentUnzer());
@@ -211,22 +201,20 @@ class UnzerPersistenceMapper
     public function mapPaymentUnzerCustomerEntityToUnzerCustomerTransfer(
         SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity,
         UnzerCustomerTransfer $unzerCustomerTransfer
-    ): UnzerCustomerTransfer
-    {
+    ): UnzerCustomerTransfer {
         return $unzerCustomerTransfer->setId($paymentUnzerCustomerEntity->getUnzerCustomerId());
     }
 
     /**
-     * @param SpyUnzerKeypair $unzerKeypairEntity
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerKeypair $unzerKeypairEntity
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
-     * @return UnzerKeypairTransfer
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
      */
     public function mapUnzerKeypairEntityToUnzerKeypairTransfer(
         SpyUnzerKeypair $unzerKeypairEntity,
         UnzerKeypairTransfer $unzerKeypairTransfer
-    ): UnzerKeypairTransfer
-    {
+    ): UnzerKeypairTransfer {
         return $unzerKeypairTransfer->fromArray($unzerKeypairEntity->toArray(), true);
     }
 }

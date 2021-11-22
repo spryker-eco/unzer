@@ -114,7 +114,7 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
 
         return $this->unzerCustomerAdapter->createCustomer(
             $unzerCustomerTransfer,
-            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail()
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail(),
         );
     }
 
@@ -131,7 +131,7 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
 
         return $this->unzerCustomerAdapter->updateCustomer(
             $unzerCustomerTransfer,
-            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail()
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail(),
         );
     }
 }

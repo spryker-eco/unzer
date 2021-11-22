@@ -89,15 +89,16 @@ interface UnzerReaderInterface
 
     /**
      * @param string $merchantReference
-     * @param StoreTransfer $storeTransfer
-     * @return UnzerKeypairTransfer|null
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
      */
-    public function getUnzerKeypairByMerchantReferenceAndStoreId(string $merchantReference, StoreTransfer $storeTransfer): ? UnzerKeypairTransfer;
+    public function getUnzerKeypairByMerchantReferenceAndStoreId(string $merchantReference, StoreTransfer $storeTransfer): ?UnzerKeypairTransfer;
 
     /**
      * @param string $unzerPrimaryKeypairId
      *
-     * @return UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
      */
     public function getUnzerKeypairByKeypairId(string $unzerPrimaryKeypairId): ?UnzerKeypairTransfer;
 }

@@ -73,7 +73,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
-     * @return SpyMerchantUnzerVaultQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerVaultQuery
      */
     public function createMerchantUnzerVaultQuery(): SpyMerchantUnzerVaultQuery
     {
@@ -81,7 +81,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
-     * @return SpyUnzerKeypairQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerKeypairQuery
      */
     public function createUnzerKeypairQuery(): SpyUnzerKeypairQuery
     {

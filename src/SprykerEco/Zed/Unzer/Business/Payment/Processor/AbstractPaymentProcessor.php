@@ -60,7 +60,7 @@ abstract class AbstractPaymentProcessor
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */

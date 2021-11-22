@@ -1,18 +1,21 @@
 <?php
 
-namespace SprykerEco\Zed\Unzer\Dependency;
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
 
-use Spryker\Zed\Store\Business\StoreFacadeInterface;
+namespace SprykerEco\Zed\Unzer\Dependency;
 
 class UnzerToStoreFacadeBridge implements UnzerToStoreFacadeInterface
 {
     /**
-     * @var StoreFacadeInterface
+     * @var \Spryker\Zed\Store\Business\StoreFacadeInterface
      */
     protected $storeFacade;
 
     /**
-     * @param StoreFacadeInterface $storeFacade
+     * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade
      */
     public function __construct($storeFacade)
     {

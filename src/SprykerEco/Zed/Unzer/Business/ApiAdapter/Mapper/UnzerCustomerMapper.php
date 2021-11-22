@@ -24,8 +24,7 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
     public function mapUnzerCustomerTransferToUnzerApiCreateCustomerRequestTransfer(
         UnzerCustomerTransfer $unzerCustomerTransfer,
         UnzerApiCreateCustomerRequestTransfer $unzerApiCreateCustomerRequestTransfer
-    ): UnzerApiCreateCustomerRequestTransfer
-    {
+    ): UnzerApiCreateCustomerRequestTransfer {
         return $unzerApiCreateCustomerRequestTransfer
             ->fromArray($unzerCustomerTransfer->toArray(), true)
             ->setCustomerId($unzerCustomerTransfer->getId());
@@ -40,8 +39,7 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
     public function mapUnzerCustomerTransferToUnzerApiUpdateCustomerRequestTransfer(
         UnzerCustomerTransfer $unzerCustomerTransfer,
         UnzerApiUpdateCustomerRequestTransfer $unzerApiUpdateCustomerRequestTransfer
-    ): UnzerApiUpdateCustomerRequestTransfer
-    {
+    ): UnzerApiUpdateCustomerRequestTransfer {
         return $unzerApiUpdateCustomerRequestTransfer->fromArray($unzerCustomerTransfer->toArray(), true);
     }
 
@@ -54,22 +52,20 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
     public function mapUnzerApiCreateCustomerResponseTransferToUnzerCustomerTransfer(
         UnzerApiCreateCustomerResponseTransfer $unzerApiCreateCustomerResponseTransfer,
         UnzerCustomerTransfer $unzerCustomerTransfer
-    ): UnzerCustomerTransfer
-    {
+    ): UnzerCustomerTransfer {
         return $unzerCustomerTransfer->fromArray($unzerApiCreateCustomerResponseTransfer->toArray(), true);
     }
 
     /**
-     * @param UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer
-     * @param UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
      *
-     * @return UnzerCustomerTransfer
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     public function mapUnzerApiUpdateCustomerResponseTransferToUnzerCustomerTransfer(
         UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer,
         UnzerCustomerTransfer $unzerCustomerTransfer
-    ): UnzerCustomerTransfer
-    {
+    ): UnzerCustomerTransfer {
         return $unzerCustomerTransfer->fromArray($unzerApiUpdateCustomerResponseTransfer->toArray(), true);
     }
 }

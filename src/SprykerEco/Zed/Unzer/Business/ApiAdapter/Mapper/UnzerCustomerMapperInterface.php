@@ -49,10 +49,10 @@ interface UnzerCustomerMapperInterface
     ): UnzerCustomerTransfer;
 
     /**
-     * @param UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer
-     * @param UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
      *
-     * @return UnzerCustomerTransfer
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     public function mapUnzerApiUpdateCustomerResponseTransferToUnzerCustomerTransfer(
         UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer,

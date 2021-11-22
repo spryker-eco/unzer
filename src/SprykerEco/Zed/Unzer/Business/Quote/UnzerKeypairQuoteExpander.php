@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -11,40 +16,39 @@ use SprykerEco\Zed\Unzer\UnzerConfig;
 class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
 {
     /**
-     * @var UnzerKeypairResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface
      */
     protected $unzerKeypairResolver;
 
     /**
-     * @var UnzerConfig
+     * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
     protected $unzerConfig;
 
     /**
-     * @var UnzerToStoreFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeInterface
      */
     protected $storeFacade;
 
     /**
-     * @param UnzerKeypairResolverInterface $unzerKeypairResolver
-     * @param UnzerConfig $unzerConfig
-     * @param UnzerToStoreFacadeInterface $storeFacade
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface $unzerKeypairResolver
+     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeInterface $storeFacade
      */
     public function __construct(
         UnzerKeypairResolverInterface $unzerKeypairResolver,
         UnzerConfig $unzerConfig,
         UnzerToStoreFacadeInterface $storeFacade
-    )
-    {
+    ) {
         $this->unzerKeypairResolver = $unzerKeypairResolver;
         $this->unzerConfig = $unzerConfig;
         $this->storeFacade = $storeFacade;
     }
 
     /**
-     * @param QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return QuoteTransfer
+     * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function expandQuoteWithUnzerKeypair(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
@@ -62,6 +66,11 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
         return $quoteTransfer;
     }
 
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return array
+     */
     protected function extractUniqueMerchantReferences(QuoteTransfer $quoteTransfer): array
     {
         $uniqueMerchantReferences = [];
@@ -76,24 +85,25 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     }
 
     /**
-     * @param UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      * @param string $merchantReference
      *
-     * @return UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
     protected function setMerchantUnzerKeypair(UnzerPaymentTransfer $unzerPaymentTransfer, string $merchantReference): UnzerPaymentTransfer
     {
         $unzerKeypairTransfer = $this->unzerKeypairResolver->getUnzerKeypairByMerchantReferenceAndStore(
-            $merchantReference, $this->storeFacade->getCurrentStore()
+            $merchantReference,
+            $this->storeFacade->getCurrentStore(),
         );
 
         return $unzerPaymentTransfer->setUnzerKeypair($unzerKeypairTransfer);
     }
 
     /**
-     * @param UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
-     * @return UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
     protected function setPrimaryUnzerKeypair(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {

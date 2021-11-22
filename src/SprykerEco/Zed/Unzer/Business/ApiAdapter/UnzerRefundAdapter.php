@@ -11,7 +11,6 @@ use Generated\Shared\Transfer\UnzerApiMarketplaceRefundRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRefundRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Generated\Shared\Transfer\UnzerRefundTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerRefundMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
@@ -42,14 +41,14 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
 
     /**
      * @param \Generated\Shared\Transfer\UnzerRefundTransfer $unzerRefundTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return void
      */
     public function refundPayment(
         UnzerRefundTransfer $unzerRefundTransfer,
         UnzerKeypairTransfer $unzerKeypairTransfer
-    ): void
-    {
+    ): void {
         if ($unzerRefundTransfer->getIsMarketplace()) {
             $this->performMarketplaceRefund($unzerRefundTransfer, $unzerKeypairTransfer);
 
@@ -61,15 +60,14 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
 
     /**
      * @param \Generated\Shared\Transfer\UnzerRefundTransfer $unzerRefundTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return void
      */
     protected function performMarketplaceRefund(
         UnzerRefundTransfer $unzerRefundTransfer,
         UnzerKeypairTransfer $unzerKeypairTransfer
-    ): void
-    {
+    ): void {
         $unzerApiMarketplaceRefundRequestTransfer = $this->unzerRefundMapper
             ->mapUnzerRefundTransferToUnzerApiMarketplaceRefundRequestTransfer(
                 $unzerRefundTransfer,
@@ -86,15 +84,14 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
 
     /**
      * @param \Generated\Shared\Transfer\UnzerRefundTransfer $unzerRefundTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return void
      */
     protected function performRegularRefund(
         UnzerRefundTransfer $unzerRefundTransfer,
         UnzerKeypairTransfer $unzerKeypairTransfer
-    ): void
-    {
+    ): void {
         $unzerApiRefundRequestTransfer = $this->unzerRefundMapper
             ->mapUnzerRefundTransferToUnzerApiRefundRequestTransfer(
                 $unzerRefundTransfer,

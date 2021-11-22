@@ -14,7 +14,7 @@ interface UnzerBasketAdapterInterface
 {
     /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */

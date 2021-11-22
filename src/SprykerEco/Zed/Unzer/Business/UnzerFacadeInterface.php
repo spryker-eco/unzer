@@ -21,7 +21,6 @@ use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
 interface UnzerFacadeInterface
 {
@@ -256,12 +255,13 @@ interface UnzerFacadeInterface
      *  - Performs Unzer Set Notification URL Api all.
      *  - Throws UnzerException if API call failed.
      *
-     * @param UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
+     * @api
      *
-     * @return void
+     * @param \Generated\Shared\Transfer\UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
      *
      * @throws UnzerException
+     *
+     * @return void
      */
     public function setUnzerNotificationUrl(UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer): void;
-
 }

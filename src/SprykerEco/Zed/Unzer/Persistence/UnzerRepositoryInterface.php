@@ -78,6 +78,7 @@ interface UnzerRepositoryInterface
     /**
      * @param string $merchantReference
      * @param int $idStore
+     *
      * @return string|null
      */
     public function findUnzerVaultKeyByMerchantReferenceAndIdStore(string $merchantReference, int $idStore): ?string;
@@ -85,7 +86,7 @@ interface UnzerRepositoryInterface
     /**
      * @param string $vaultKey
      *
-     * @return UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
      */
     public function findUnzerKeypairByKeypairId(string $vaultKey): ?UnzerKeypairTransfer;
 }

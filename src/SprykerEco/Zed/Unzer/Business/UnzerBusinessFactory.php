@@ -553,7 +553,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentSaver(),
-            $this->createUnzerKeypairResolver()
+            $this->createUnzerKeypairResolver(),
         );
     }
 
@@ -610,7 +610,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return UnzerToStoreFacadeInterface
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeInterface
      */
     public function getStoreFacade(): UnzerToStoreFacadeInterface
     {
@@ -618,7 +618,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return UnzerNotificationConfiguratorInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface
      */
     public function createUnzerNotificationConfigurator(): UnzerNotificationConfiguratorInterface
     {
@@ -626,34 +626,34 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerKeypairResolver(),
             $this->getConfig(),
             $this->getUnzerApiFacade(),
-            $this->createUnzerNotificationAdapter()
+            $this->createUnzerNotificationAdapter(),
         );
     }
 
     /**
-     * @return UnzerKeypairQuoteExpanderInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface
      */
     public function createUnzerKeypairQuoteExpander(): UnzerKeypairQuoteExpanderInterface
     {
         return new UnzerKeypairQuoteExpander(
             $this->createUnzerKeypairResolver(),
             $this->getConfig(),
-            $this->getStoreFacade()
+            $this->getStoreFacade(),
         );
     }
 
     /**
-     * @return UnzerKeypairResolverInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface
      */
     public function createUnzerKeypairResolver(): UnzerKeypairResolverInterface
     {
         return new UnzerKeypairResolver(
-            $this->createUnzerReader()
+            $this->createUnzerReader(),
         );
     }
 
     /**
-     * @return UnzerNotificationAdapterInterface
+     * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapterInterface
      */
     public function createUnzerNotificationAdapter(): UnzerNotificationAdapterInterface
     {

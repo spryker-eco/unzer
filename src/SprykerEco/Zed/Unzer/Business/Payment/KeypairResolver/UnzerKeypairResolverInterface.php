@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver;
 
 use Generated\Shared\Transfer\StoreTransfer;
@@ -9,9 +14,9 @@ interface UnzerKeypairResolverInterface
 {
     /**
      * @param string $merchantReference
-     * @param StoreTransfer $storeTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
      *
-     * @return UnzerKeypairTransfer
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
      */
     public function getUnzerKeypairByMerchantReferenceAndStore(
         string $merchantReference,
@@ -21,7 +26,7 @@ interface UnzerKeypairResolverInterface
     /**
      * @param string $unzerPrimaryKeypairId
      *
-     * @return UnzerKeypairTransfer
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
      */
     public function getUnzerKeypairByKeypairId(string $unzerPrimaryKeypairId): UnzerKeypairTransfer;
 }

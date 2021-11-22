@@ -8,12 +8,8 @@
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
-use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
-use Generated\Shared\Transfer\UnzerKeypairTransfer;
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerApiException;
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
 abstract class UnzerAbstractApiAdapter
 {

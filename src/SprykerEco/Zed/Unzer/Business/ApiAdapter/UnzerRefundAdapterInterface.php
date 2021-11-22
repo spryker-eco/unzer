@@ -8,14 +8,13 @@
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Generated\Shared\Transfer\UnzerRefundTransfer;
 
 interface UnzerRefundAdapterInterface
 {
     /**
      * @param \Generated\Shared\Transfer\UnzerRefundTransfer $unzerRefundTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return void
      */

@@ -24,6 +24,10 @@ class UnzerMetadataQuoteExpander implements UnzerMetadataQuoteExpanderInterface
      */
     protected $localeFacade;
 
+    /**
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapterInterface $unzerMetadataAdapter
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface $localeFacade
+     */
     public function __construct(
         UnzerMetadataAdapterInterface $unzerMetadataAdapter,
         UnzerToLocaleFacadeInterface $localeFacade
@@ -47,7 +51,7 @@ class UnzerMetadataQuoteExpander implements UnzerMetadataQuoteExpanderInterface
 
         $unzerMetadataTransfer = $this->unzerMetadataAdapter->createMetadata(
             $unzerMetadataTransfer,
-            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail()
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail(),
         );
         $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setMetadata($unzerMetadataTransfer);
 

@@ -18,7 +18,6 @@ use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 
 class UnzerReader implements UnzerReaderInterface
@@ -43,8 +42,7 @@ class UnzerReader implements UnzerReaderInterface
      */
     public function getMerchantUnzerParticipantByCriteria(
         MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): ?MerchantUnzerParticipantTransfer
-    {
+    ): ?MerchantUnzerParticipantTransfer {
         $merchantUnzerParticipantCollectionTransfer = $this->unzerRepository
             ->findMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
 
@@ -62,8 +60,7 @@ class UnzerReader implements UnzerReaderInterface
      */
     public function getMerchantUnzerParticipantCollectionByCriteria(
         MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): MerchantUnzerParticipantCollectionTransfer
-    {
+    ): MerchantUnzerParticipantCollectionTransfer {
         return $this->unzerRepository
             ->findMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
     }
@@ -120,8 +117,7 @@ class UnzerReader implements UnzerReaderInterface
         string $paymentId,
         string $transactionType,
         ?string $participantId = null
-    ): PaymentUnzerTransactionTransfer
-    {
+    ): PaymentUnzerTransactionTransfer {
         return $this->unzerRepository
                 ->findPaymentUnzerTransactionByPaymentIdAndParticipantId($paymentId, $transactionType, $participantId)
             ?? new PaymentUnzerTransactionTransfer();
@@ -139,9 +135,9 @@ class UnzerReader implements UnzerReaderInterface
 
     /**
      * @param string $merchantReference
-     * @param StoreTransfer $storeTransfer
-     * @return UnzerKeypairTransfer|null
-     * @throws UnzerException
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
      */
     public function getUnzerKeypairByMerchantReferenceAndStoreId(string $merchantReference, StoreTransfer $storeTransfer): ?UnzerKeypairTransfer
     {
@@ -158,7 +154,7 @@ class UnzerReader implements UnzerReaderInterface
     /**
      * @param string $unzerPrimaryKeypairId
      *
-     * @return UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
      */
     public function getUnzerKeypairByKeypairId(string $unzerPrimaryKeypairId): ?UnzerKeypairTransfer
     {

@@ -11,7 +11,6 @@ use Generated\Shared\Transfer\UnzerApiCreateBasketRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerBasketMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
@@ -41,7 +40,7 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
 
     /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */

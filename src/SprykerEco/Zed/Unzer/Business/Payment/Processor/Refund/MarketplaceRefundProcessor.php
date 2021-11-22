@@ -52,7 +52,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     protected $unzerPaymentSaver;
 
     /**
-     * @var UnzerKeypairResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface
      */
     protected $unzerKeypairResolver;
 
@@ -62,6 +62,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface $unzerKeypairResolver
      */
     public function __construct(
         UnzerReaderInterface $unzerReader,
@@ -87,10 +88,9 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
         $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
         $unzerRefundTransfers = $this->createUnzerMarketplaceRefundTransfers($refundTransfer, $paymentUnzerTransfer);
 
-
         foreach ($unzerRefundTransfers as $unzerRefundTransfer) {
             $this->unzerRefundAdapter->refundPayment(
-                $unzerRefundTransfer
+                $unzerRefundTransfer,
             );
         }
 

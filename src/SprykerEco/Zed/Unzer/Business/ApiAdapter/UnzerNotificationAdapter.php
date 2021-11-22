@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
@@ -10,19 +15,22 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 class UnzerNotificationAdapter extends UnzerAbstractApiAdapter implements UnzerNotificationAdapterInterface
 {
     /**
-     * @var UnzerToUnzerApiFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
      */
     protected $unzerApiFacade;
 
+    /**
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
+     */
     public function __construct(UnzerToUnzerApiFacadeInterface $unzerApiFacade)
     {
         $this->unzerApiFacade = $unzerApiFacade;
     }
 
     /**
-     * @param UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
      *
-     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerApiException
+     * @return void
      */
     public function setNotificationUrl(UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer): void
     {

@@ -241,7 +241,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     /**
      * @param string $vaultKey
      *
-     * @return UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
      */
     public function findUnzerKeypairByKeypairId(string $vaultKey): ?UnzerKeypairTransfer
     {
@@ -257,7 +257,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapUnzerKeypairEntityToUnzerKeypairTransfer(
                 $unzerKeypairEntity,
-                new UnzerKeypairTransfer()
+                new UnzerKeypairTransfer(),
             );
     }
 }

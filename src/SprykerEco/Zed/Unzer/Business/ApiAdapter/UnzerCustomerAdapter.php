@@ -41,15 +41,14 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     public function createCustomer(
         UnzerCustomerTransfer $unzerCustomerTransfer,
         UnzerKeypairTransfer $unzerKeypairTransfer
-    ): UnzerCustomerTransfer
-    {
+    ): UnzerCustomerTransfer {
         $unzerApiCreateCustomerRequestTransfer = $this->unzerCustomerMapper
             ->mapUnzerCustomerTransferToUnzerApiCreateCustomerRequestTransfer(
                 $unzerCustomerTransfer,
@@ -73,15 +72,14 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     public function updateCustomer(
         UnzerCustomerTransfer $unzerCustomerTransfer,
         UnzerKeypairTransfer $unzerKeypairTransfer
-    ): UnzerCustomerTransfer
-    {
+    ): UnzerCustomerTransfer {
         $unzerApiUpdateCustomerRequestTransfer = $this->unzerCustomerMapper
             ->mapUnzerCustomerTransferToUnzerApiUpdateCustomerRequestTransfer(
                 $unzerCustomerTransfer,

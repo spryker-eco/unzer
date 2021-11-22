@@ -7,16 +7,12 @@
 
 namespace SprykerEco\Zed\Unzer\Communication\Console;
 
-use Generated\Shared\Transfer\UnzerApiRequestTransfer;
-use Generated\Shared\Transfer\UnzerApiSetWebhookRequestTransfer;
 use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use Spryker\Zed\Kernel\Communication\Console\Console;
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerApiException;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use function Functional\first;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacade getFacade()
