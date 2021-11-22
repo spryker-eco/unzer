@@ -30,6 +30,11 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected $unzerMetadataQuoteExpander;
 
     /**
+     * @var UnzerKeypairQuoteExpanderInterface
+     */
+    protected $unzerKeypairQuoteExpander;
+
+    /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface
      */
     protected $quoteClient;
@@ -54,6 +59,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     public function __construct(
         UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander,
         UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander,
+        UnzerKeypairQuoteExpanderInterface $unzerKeypairQuoteExpander,
         UnzerToQuoteClientInterface $quoteClient,
         UnzerConfig $unzerConfig,
         UnzerReaderInterface $unzerReader
@@ -63,6 +69,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
         $this->quoteClient = $quoteClient;
         $this->unzerConfig = $unzerConfig;
         $this->unzerReader = $unzerReader;
+        $this->unzerKeypairQuoteExpander = $unzerKeypairQuoteExpander;
     }
 
     /**
@@ -77,6 +84,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
         }
 
         $quoteTransfer = $this->addUnzerPayment($quoteTransfer);
+        $quoteTransfer = $this->unzerKeypairQuoteExpander->expandQuoteWithUnzerKeypair($quoteTransfer);
         $quoteTransfer = $this->unzerCustomerQuoteExpander->expandQuoteWithUnzerCustomer($quoteTransfer);
         $quoteTransfer = $this->unzerMetadataQuoteExpander->expandQuoteWithUnzerMetadata($quoteTransfer);
 

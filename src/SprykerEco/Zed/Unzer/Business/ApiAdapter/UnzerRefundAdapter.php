@@ -10,6 +10,8 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 use Generated\Shared\Transfer\UnzerApiMarketplaceRefundRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRefundRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Generated\Shared\Transfer\UnzerRefundTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerRefundMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
@@ -43,23 +45,30 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
      *
      * @return void
      */
-    public function refundPayment(UnzerRefundTransfer $unzerRefundTransfer): void
+    public function refundPayment(
+        UnzerRefundTransfer $unzerRefundTransfer,
+        UnzerKeypairTransfer $unzerKeypairTransfer
+    ): void
     {
         if ($unzerRefundTransfer->getIsMarketplace()) {
-            $this->performMarketplaceRefund($unzerRefundTransfer);
+            $this->performMarketplaceRefund($unzerRefundTransfer, $unzerKeypairTransfer);
 
             return;
         }
 
-        $this->performRegularRefund($unzerRefundTransfer);
+        $this->performRegularRefund($unzerRefundTransfer, $unzerKeypairTransfer);
     }
 
     /**
      * @param \Generated\Shared\Transfer\UnzerRefundTransfer $unzerRefundTransfer
+     * @param UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return void
      */
-    protected function performMarketplaceRefund(UnzerRefundTransfer $unzerRefundTransfer): void
+    protected function performMarketplaceRefund(
+        UnzerRefundTransfer $unzerRefundTransfer,
+        UnzerKeypairTransfer $unzerKeypairTransfer
+    ): void
     {
         $unzerApiMarketplaceRefundRequestTransfer = $this->unzerRefundMapper
             ->mapUnzerRefundTransferToUnzerApiMarketplaceRefundRequestTransfer(
@@ -68,7 +77,8 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setMarketplaceRefundRequest($unzerApiMarketplaceRefundRequestTransfer);
+            ->setMarketplaceRefundRequest($unzerApiMarketplaceRefundRequestTransfer)
+            ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceRefundApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);
@@ -76,10 +86,14 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
 
     /**
      * @param \Generated\Shared\Transfer\UnzerRefundTransfer $unzerRefundTransfer
+     * @param UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return void
      */
-    protected function performRegularRefund(UnzerRefundTransfer $unzerRefundTransfer): void
+    protected function performRegularRefund(
+        UnzerRefundTransfer $unzerRefundTransfer,
+        UnzerKeypairTransfer $unzerKeypairTransfer
+    ): void
     {
         $unzerApiRefundRequestTransfer = $this->unzerRefundMapper
             ->mapUnzerRefundTransferToUnzerApiRefundRequestTransfer(
@@ -88,7 +102,8 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setRefundRequest($unzerApiRefundRequestTransfer);
+            ->setRefundRequest($unzerApiRefundRequestTransfer)
+            ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performRefundApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);

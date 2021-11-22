@@ -9,7 +9,10 @@ namespace SprykerEco\Zed\Unzer\Communication\Console;
 
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiSetWebhookRequestTransfer;
+use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use Spryker\Zed\Kernel\Communication\Console\Console;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerApiException;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -54,26 +57,23 @@ class UnzerCreateWebhookConsole extends Console
         $event = $input->getOption('event');
         $url = $this->getFactory()->getConfig()->getWebhookRetrieveUrl();
 
-        $webHookRequest = (new UnzerApiSetWebhookRequestTransfer())
+        $unzerNotificationConfigTransfer = (new UnzerNotificationConfigTransfer())
             ->setEvent($event)
-            ->setRetrieveUrl($url);
-        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())->setSetWebhookRequest($webHookRequest);
+            ->setUrl($url);
 
-        $result = $this->getFacade()->performSetNotificationUrlApiCall($unzerApiRequestTransfer);
+        try {
+            $this->getFacade()->setUnzerNotificationUrl($unzerNotificationConfigTransfer);
+        } catch (UnzerException $unzerApiException) {
+            $output->writeln('Failed to add webhook:');
+            $output->writeln(sprintf(' - Message: %s', $unzerApiException->getMessage()));
 
-        if ($result->getIsSuccess()) {
-            $output->writeln('Successfully added webhook:');
-            $output->writeln(sprintf(' - Url: %s', $url));
-            $output->writeln(sprintf(' - Event: %s', $event));
-
-            return static::CODE_SUCCESS;
+            return static::CODE_ERROR;
         }
 
-        $errorResponse = first($result->getErrorResponse()->getErrors());
-        $output->writeln('Failed to add webhook:');
-        $output->writeln(sprintf(' - Code: %s', $errorResponse->getCode()));
-        $output->writeln(sprintf(' - Message: %s', $errorResponse->getMerchantMessage()));
+        $output->writeln('Successfully added webhook:');
+        $output->writeln(sprintf(' - Url: %s', $url));
+        $output->writeln(sprintf(' - Event: %s', $event));
 
-        return static::CODE_ERROR;
+        return static::CODE_SUCCESS;
     }
 }

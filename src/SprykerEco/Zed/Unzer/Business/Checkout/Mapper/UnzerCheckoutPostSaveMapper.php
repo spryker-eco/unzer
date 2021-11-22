@@ -101,7 +101,7 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         UnzerBasketItemTransfer $unzerBasketItemTransfer
     ): UnzerBasketItemTransfer {
         return $unzerBasketItemTransfer
-            ->setBasketItemReferenceId($itemTransfer->getSku() . $itemTransfer->getProductOfferReference())
+            ->setBasketItemReferenceId(uniqid($itemTransfer->getSku(), true))
             ->setQuantity($itemTransfer->getQuantity())
             ->setAmountGross($itemTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountVat($itemTransfer->getSumTaxAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)

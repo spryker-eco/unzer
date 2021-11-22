@@ -15,7 +15,9 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\StoreTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 
 interface UnzerReaderInterface
 {
@@ -84,4 +86,18 @@ interface UnzerReaderInterface
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null
      */
     public function getUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer;
+
+    /**
+     * @param string $merchantReference
+     * @param StoreTransfer $storeTransfer
+     * @return UnzerKeypairTransfer|null
+     */
+    public function getUnzerKeypairByMerchantReferenceAndStoreId(string $merchantReference, StoreTransfer $storeTransfer): ? UnzerKeypairTransfer;
+
+    /**
+     * @param string $unzerPrimaryKeypairId
+     *
+     * @return UnzerKeypairTransfer|null
+     */
+    public function getUnzerKeypairByKeypairId(string $unzerPrimaryKeypairId): ?UnzerKeypairTransfer;
 }

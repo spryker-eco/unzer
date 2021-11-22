@@ -278,4 +278,14 @@ class UnzerConfig extends AbstractBundleConfig
     {
         return $this->get(UnzerSharedConstants::MASTER_MERCHANT_PARTICIPANT_ID);
     }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getUnzerPrimaryKeypairId()
+    {
+        return $this->get(UnzerSharedConstants::PRIMARY_KEYPAIR_ID);
+    }
 }

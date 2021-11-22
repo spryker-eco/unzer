@@ -21,6 +21,7 @@
         <column name="pay_page_id" type="VARCHAR" size="255"/>
         <column name="is_marketplace" type="BOOLEAN" required="true"/>
         <column name="is_authorizable" type="BOOLEAN" required="true"/>
+        <column name="unzer_keypair_id" type="VARCHAR" size="255" required="true"/>
 
         <foreign-key name="spy_payment_unzer-fk_sales_order" foreignTable="spy_sales_order" phpName="Order" refPhpName="PaymentUnzer">
             <reference local="fk_sales_order" foreign="id_sales_order"/>
@@ -95,6 +96,32 @@
             <reference local="fk_merchant" foreign="id_merchant"/>
         </foreign-key>
         <id-method-parameter value="spy_merchant_unzer_participant_pk_seq"/>
+    </table>
+
+    <table name="spy_merchant_unzer_vault" idMethod="native" allowPkInsert="true" isCrossRef="true">
+        <column name="id_merchant_unzer_vault" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="fk_merchant" type="INTEGER" required="true"/>
+        <column name="fk_store" type="INTEGER" required="true"/>
+        <column name="vault_key" type="VARCHAR" size="255" required="true"/>
+
+        <foreign-key name="spy_merchant_unzer_vault-fk_merchant" foreignTable="spy_merchant" phpName="Merchant" refPhpName="MerchantUnzerVault">
+            <reference local="fk_merchant" foreign="id_merchant"/>
+        </foreign-key>
+
+        <foreign-key name="spy_merchant_unzer_vault-fk_store" foreignTable="spy_store" phpName="Store" refPhpName="MerchantUnzerVault">
+            <reference local="fk_store" foreign="id_store"/>
+        </foreign-key>
+
+        <id-method-parameter value="spy_merchant_unzer_vault_pk_seq"/>
+    </table>
+
+<!--    Please note that it is temporary table until Unzer module will use spryker/vault-->
+    <table name="spy_unzer_keypair" idMethod="native" allowPkInsert="true" isCrossRef="true">
+        <column name="id_unzer_keypair" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="keypair_id" type="VARCHAR" size="255" required="true"/>
+        <column name="public_key" type="VARCHAR" size="255" required="true"/>
+        <column name="private_key" type="VARCHAR" size="255" required="true"/>
+        <id-method-parameter value="spy_unzer_keypair_pk_seq"/>
     </table>
 
 </database>

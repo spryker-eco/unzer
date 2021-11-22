@@ -8,13 +8,15 @@
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerBasketTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 
 interface UnzerBasketAdapterInterface
 {
     /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
+     * @param UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
-    public function createBasket(UnzerBasketTransfer $unzerBasketTransfer): UnzerBasketTransfer;
+    public function createBasket(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer;
 }

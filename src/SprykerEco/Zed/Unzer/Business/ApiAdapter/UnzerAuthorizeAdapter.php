@@ -32,7 +32,8 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
         UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper
-    ) {
+    )
+    {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerAuthorizePaymentMapper = $unzerAuthorizePaymentMapper;
     }
@@ -58,7 +59,8 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
      */
     protected function performMarketplaceAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $unzerApiRequestTransfer = new UnzerApiRequestTransfer();
+        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
 
         $unzerApiMarketplaceAuthorizeRequestTransfer = $this
             ->unzerAuthorizePaymentMapper

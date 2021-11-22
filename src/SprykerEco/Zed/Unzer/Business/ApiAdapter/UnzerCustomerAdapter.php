@@ -9,7 +9,9 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiCreateCustomerRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiUpdateCustomerRequestTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
@@ -39,10 +41,14 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
-    public function createCustomer(UnzerCustomerTransfer $unzerCustomerTransfer): UnzerCustomerTransfer
+    public function createCustomer(
+        UnzerCustomerTransfer $unzerCustomerTransfer,
+        UnzerKeypairTransfer $unzerKeypairTransfer
+    ): UnzerCustomerTransfer
     {
         $unzerApiCreateCustomerRequestTransfer = $this->unzerCustomerMapper
             ->mapUnzerCustomerTransferToUnzerApiCreateCustomerRequestTransfer(
@@ -51,7 +57,8 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setCreateCustomerRequest($unzerApiCreateCustomerRequestTransfer);
+            ->setCreateCustomerRequest($unzerApiCreateCustomerRequestTransfer)
+            ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateCustomerApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);
@@ -66,27 +73,32 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
+     * @param UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
-    public function updateCustomer(UnzerCustomerTransfer $unzerCustomerTransfer): UnzerCustomerTransfer
+    public function updateCustomer(
+        UnzerCustomerTransfer $unzerCustomerTransfer,
+        UnzerKeypairTransfer $unzerKeypairTransfer
+    ): UnzerCustomerTransfer
     {
         $unzerApiUpdateCustomerRequestTransfer = $this->unzerCustomerMapper
-            ->mapUnzerCustomerTransferToUnzerApiCreateCustomerRequestTransfer(
+            ->mapUnzerCustomerTransferToUnzerApiUpdateCustomerRequestTransfer(
                 $unzerCustomerTransfer,
                 new UnzerApiUpdateCustomerRequestTransfer(),
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setUpdateCustomerRequest($unzerApiUpdateCustomerRequestTransfer);
+            ->setUpdateCustomerRequest($unzerApiUpdateCustomerRequestTransfer)
+            ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateCustomerApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);
-        $unzerApiCreateCustomerResponseTransfer = $unzerApiResponseTransfer->getCreateCustomerResponseOrFail();
+        $unzerApiUpdateCustomerResponseTransfer = $unzerApiResponseTransfer->getUpdateCustomerResponseOrFail();
 
         return $this->unzerCustomerMapper
-            ->mapUnzerApiCreateCustomerResponseTransferToUnzerCustomerTransfer(
-                $unzerApiCreateCustomerResponseTransfer,
+            ->mapUnzerApiUpdateCustomerResponseTransferToUnzerCustomerTransfer(
+                $unzerApiUpdateCustomerResponseTransfer,
                 $unzerCustomerTransfer,
             );
     }

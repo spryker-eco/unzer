@@ -15,6 +15,7 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
@@ -212,5 +213,51 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         }
 
         return $merchantUnzerParticipantQuery;
+    }
+
+    /**
+     * @param string $merchantReference
+     * @param int $idStore
+     *
+     * @return string|null
+     */
+    public function findUnzerVaultKeyByMerchantReferenceAndIdStore(string $merchantReference, int $idStore): ?string
+    {
+        $merchantUnzerVaultEntity = $this->getFactory()
+            ->createMerchantUnzerVaultQuery()
+            ->useMerchantQuery()
+                ->filterByMerchantReference($merchantReference)
+            ->endUse()
+            ->filterByFkStore($idStore)
+            ->findOne();
+
+        if ($merchantUnzerVaultEntity === null) {
+            return null;
+        }
+
+        return $merchantUnzerVaultEntity->getVaultKey();
+    }
+
+    /**
+     * @param string $vaultKey
+     *
+     * @return UnzerKeypairTransfer|null
+     */
+    public function findUnzerKeypairByKeypairId(string $vaultKey): ?UnzerKeypairTransfer
+    {
+        $unzerKeypairEntity = $this->getFactory()
+            ->createUnzerKeypairQuery()
+            ->filterByKeypairId($vaultKey)
+            ->findOne();
+
+        if ($unzerKeypairEntity === null) {
+            return null;
+        }
+
+        return $this->getFactory()->createUnzerPersistenceMapper()
+            ->mapUnzerKeypairEntityToUnzerKeypairTransfer(
+                $unzerKeypairEntity,
+                new UnzerKeypairTransfer()
+            );
     }
 }

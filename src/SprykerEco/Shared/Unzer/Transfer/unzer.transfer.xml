@@ -114,6 +114,13 @@
         <property name="isMarketplace" type="bool"/>
         <property name="isAuthorizable" type="bool"/>
         <property name="redirectUrl" type="string"/>
+        <property name="unzerKeypair" type="UnzerKeypair" />
+    </transfer>
+
+    <transfer name="UnzerKeypair">
+        <property name="keypairId" type="string"/>
+        <property name="publicKey" type="string"/>
+        <property name="privateKey" type="string"/>
     </transfer>
 
     <transfer name="Payment">
@@ -127,6 +134,12 @@
         <property name="status" type="string"/>
         <property name="url" type="string"/>
         <property name="amount" type="float"/>
+    </transfer>
+
+    <transfer name="UnzerNotificationConfig">
+        <property name="event" type="string"/>
+        <property name="url" type="string"/>
+        <property name="unzerKeyPair" type="UnzerKeypair"/>
     </transfer>
 
     <transfer name="UnzerNotification">
@@ -175,6 +188,7 @@
         <property name="payPageId" type="string"/>
         <property name="isMarketplace" type="bool"/>
         <property name="isAuthorizable" type="bool"/>
+        <property name="keypairId" type="string"/>
     </transfer>
 
     <transfer name="PaymentUnzerOrderItem">

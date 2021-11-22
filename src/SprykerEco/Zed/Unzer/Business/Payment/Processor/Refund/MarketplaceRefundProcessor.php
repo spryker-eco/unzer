@@ -18,6 +18,7 @@ use Generated\Shared\Transfer\UnzerRefundItemTransfer;
 use Generated\Shared\Transfer\UnzerRefundTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
@@ -51,6 +52,11 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     protected $unzerPaymentSaver;
 
     /**
+     * @var UnzerKeypairResolverInterface
+     */
+    protected $unzerKeypairResolver;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface $unzerRefundAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
@@ -62,13 +68,15 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
         UnzerRefundAdapterInterface $unzerRefundAdapter,
         UnzerPaymentMapperInterface $unzerPaymentMapper,
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
-        UnzerPaymentSaverInterface $unzerPaymentSaver
+        UnzerPaymentSaverInterface $unzerPaymentSaver,
+        UnzerKeypairResolverInterface $unzerKeypairResolver
     ) {
         $this->unzerReader = $unzerReader;
         $this->unzerRefundAdapter = $unzerRefundAdapter;
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerPaymentSaver = $unzerPaymentSaver;
+        $this->unzerKeypairResolver = $unzerKeypairResolver;
     }
 
     /**
@@ -79,8 +87,11 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
         $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
         $unzerRefundTransfers = $this->createUnzerMarketplaceRefundTransfers($refundTransfer, $paymentUnzerTransfer);
 
+
         foreach ($unzerRefundTransfers as $unzerRefundTransfer) {
-            $this->unzerRefundAdapter->refundPayment($unzerRefundTransfer);
+            $this->unzerRefundAdapter->refundPayment(
+                $unzerRefundTransfer
+            );
         }
 
         $this->saveUnzerPaymentDetails($paymentUnzerTransfer, $salesOrderItemIds);

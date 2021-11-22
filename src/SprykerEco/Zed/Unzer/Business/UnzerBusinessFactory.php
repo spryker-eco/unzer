@@ -35,6 +35,8 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapter;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapter;
@@ -45,8 +47,10 @@ use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutPostSaveMapper;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
-use SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessor;
-use SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessorInterface;
+use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfigurator;
+use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface;
+use SprykerEco\Zed\Unzer\Business\Notification\Processor\UnzerNotificationProcessor;
+use SprykerEco\Zed\Unzer\Business\Notification\Processor\UnzerNotificationProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\ChargeUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommandInterface;
@@ -61,6 +65,8 @@ use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsPaymentCompletedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\UnzerConditionInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolver;
+use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
@@ -78,6 +84,8 @@ use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapper;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpander;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpander;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpander;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerQuoteExpander;
@@ -89,6 +97,7 @@ use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
 
@@ -107,6 +116,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerQuoteExpander(
             $this->createUnzerCustomerQuoteExpander(),
             $this->createUnzerMetadataQuoteExpander(),
+            $this->createUnzerKeypairQuoteExpander(),
             $this->getQuoteClient(),
             $this->getConfig(),
             $this->createUnzerReader(),
@@ -344,7 +354,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessorInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Notification\Processor\UnzerNotificationProcessorInterface
      */
     public function createUnzerNotificationProcessor(): UnzerNotificationProcessorInterface
     {
@@ -543,6 +553,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentSaver(),
+            $this->createUnzerKeypairResolver()
         );
     }
 
@@ -596,5 +607,56 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerMetadataMapper(): UnzerMetadataMapperInterface
     {
         return new UnzerMetadataMapper();
+    }
+
+    /**
+     * @return UnzerToStoreFacadeInterface
+     */
+    public function getStoreFacade(): UnzerToStoreFacadeInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_STORE);
+    }
+
+    /**
+     * @return UnzerNotificationConfiguratorInterface
+     */
+    public function createUnzerNotificationConfigurator(): UnzerNotificationConfiguratorInterface
+    {
+        return new UnzerNotificationConfigurator(
+            $this->createUnzerKeypairResolver(),
+            $this->getConfig(),
+            $this->getUnzerApiFacade(),
+            $this->createUnzerNotificationAdapter()
+        );
+    }
+
+    /**
+     * @return UnzerKeypairQuoteExpanderInterface
+     */
+    public function createUnzerKeypairQuoteExpander(): UnzerKeypairQuoteExpanderInterface
+    {
+        return new UnzerKeypairQuoteExpander(
+            $this->createUnzerKeypairResolver(),
+            $this->getConfig(),
+            $this->getStoreFacade()
+        );
+    }
+
+    /**
+     * @return UnzerKeypairResolverInterface
+     */
+    public function createUnzerKeypairResolver(): UnzerKeypairResolverInterface
+    {
+        return new UnzerKeypairResolver(
+            $this->createUnzerReader()
+        );
+    }
+
+    /**
+     * @return UnzerNotificationAdapterInterface
+     */
+    public function createUnzerNotificationAdapter(): UnzerNotificationAdapterInterface
+    {
+        return new UnzerNotificationAdapter($this->getUnzerApiFacade());
     }
 }

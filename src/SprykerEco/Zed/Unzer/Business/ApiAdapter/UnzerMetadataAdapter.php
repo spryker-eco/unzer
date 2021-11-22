@@ -9,7 +9,9 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiCreateMetadataRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerMetadataTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
@@ -32,15 +34,22 @@ class UnzerMetadataAdapter extends UnzerAbstractApiAdapter implements UnzerMetad
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
         UnzerMetadataMapperInterface $unzerMetadataMapper
-    ) {
+    )
+    {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerMetadataMapper = $unzerMetadataMapper;
     }
 
     /**
-     * @inheritDoc
+     * @param UnzerMetadataTransfer $unzerMetadataTransfer
+     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     *
+     * @return UnzerMetadataTransfer
      */
-    public function createMetadata(UnzerMetadataTransfer $unzerMetadataTransfer): UnzerMetadataTransfer
+    public function createMetadata(
+        UnzerMetadataTransfer $unzerMetadataTransfer,
+        UnzerKeypairTransfer $unzerKeypairTransfer
+    ): UnzerMetadataTransfer
     {
         $unzerApiCreateMetadataRequestTransfer = $this->unzerMetadataMapper
             ->mapUnzerMetadataTransferToUnzerApiCreateMetadataRequestTransfer(
@@ -49,7 +58,8 @@ class UnzerMetadataAdapter extends UnzerAbstractApiAdapter implements UnzerMetad
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setCreateMetadataRequest($unzerApiCreateMetadataRequestTransfer);
+            ->setCreateMetadataRequest($unzerApiCreateMetadataRequestTransfer)
+            ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateMetadataApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);

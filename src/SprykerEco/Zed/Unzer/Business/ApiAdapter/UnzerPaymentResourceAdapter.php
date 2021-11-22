@@ -9,7 +9,9 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerPaymentResourceMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
@@ -32,17 +34,22 @@ class UnzerPaymentResourceAdapter extends UnzerAbstractApiAdapter implements Unz
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
         UnzerPaymentResourceMapperInterface $unzerPaymentResourceMapper
-    ) {
+    )
+    {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerPaymentResourceMapper = $unzerPaymentResourceMapper;
     }
 
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
+     * @param UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
      */
-    public function createPaymentResource(UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer): UnzerPaymentResourceTransfer
+    public function createPaymentResource(
+        UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer,
+        UnzerKeypairTransfer $unzerKeypairTransfer
+    ): UnzerPaymentResourceTransfer
     {
         $unzerApiCreatePaymentResourceRequestTransfer = $this->unzerPaymentResourceMapper
             ->mapUnzerPaymentResourceTransferToUnzerApiCreatePaymentResourceRequestTransfer(
@@ -51,7 +58,8 @@ class UnzerPaymentResourceAdapter extends UnzerAbstractApiAdapter implements Unz
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setCreatePaymentResourceRequest($unzerApiCreatePaymentResourceRequestTransfer);
+            ->setCreatePaymentResourceRequest($unzerApiCreatePaymentResourceRequestTransfer)
+            ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performCreatePaymentResourceApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);

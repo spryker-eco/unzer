@@ -31,4 +31,9 @@ interface UnzerConstants
      * @var string
      */
     public const MASTER_MERCHANT_PARTICIPANT_ID = 'UNZER:MASTER_MERCHANT_PARTICIPANT_ID';
+
+    /**
+     * @var string
+     */
+    public const PRIMARY_KEYPAIR_ID = 'UNZER:PRIMARY_KEYPAIR_ID';
 }

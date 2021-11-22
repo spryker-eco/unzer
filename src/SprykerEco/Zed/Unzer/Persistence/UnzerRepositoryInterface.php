@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 
 interface UnzerRepositoryInterface
 {
@@ -73,4 +74,18 @@ interface UnzerRepositoryInterface
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null
      */
     public function findUnzerCustomerByIdCustomer(int $idCustomer): ?UnzerCustomerTransfer;
+
+    /**
+     * @param string $merchantReference
+     * @param int $idStore
+     * @return string|null
+     */
+    public function findUnzerVaultKeyByMerchantReferenceAndIdStore(string $merchantReference, int $idStore): ?string;
+
+    /**
+     * @param string $vaultKey
+     *
+     * @return UnzerKeypairTransfer|null
+     */
+    public function findUnzerKeypairByKeypairId(string $vaultKey): ?UnzerKeypairTransfer;
 }

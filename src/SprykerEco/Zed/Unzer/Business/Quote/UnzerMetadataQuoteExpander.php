@@ -45,7 +45,10 @@ class UnzerMetadataQuoteExpander implements UnzerMetadataQuoteExpanderInterface
             ->setLocale($this->localeFacade->getCurrentLocale()->getName())
             ->setCreatedAt(time());
 
-        $unzerMetadataTransfer = $this->unzerMetadataAdapter->createMetadata($unzerMetadataTransfer);
+        $unzerMetadataTransfer = $this->unzerMetadataAdapter->createMetadata(
+            $unzerMetadataTransfer,
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail()
+        );
         $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setMetadata($unzerMetadataTransfer);
 
         return $quoteTransfer;

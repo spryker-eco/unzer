@@ -116,7 +116,8 @@ class UnzerWriter implements UnzerWriterInterface
             ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
             ->setOrderId($saveOrderTransfer->getOrderReference())
             ->setIsMarketplace($unzerPaymentTransfer->getIsMarketplace())
-            ->setIsAuthorizable($unzerPaymentTransfer->getIsAuthorizable());
+            ->setIsAuthorizable($unzerPaymentTransfer->getIsAuthorizable())
+            ->setKeypairId($unzerPaymentTransfer->getUnzerKeypairOrFail()->getKeypairIdOrFail());
 
         return $this->unzerEntityManager->savePaymentUnzerEntity($paymentUnzerTransfer);
     }

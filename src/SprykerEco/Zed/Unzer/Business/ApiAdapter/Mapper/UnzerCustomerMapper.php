@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 use Generated\Shared\Transfer\UnzerApiCreateCustomerRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiUpdateCustomerRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiUpdateCustomerResponseTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 
 class UnzerCustomerMapper implements UnzerCustomerMapperInterface
@@ -23,7 +24,8 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
     public function mapUnzerCustomerTransferToUnzerApiCreateCustomerRequestTransfer(
         UnzerCustomerTransfer $unzerCustomerTransfer,
         UnzerApiCreateCustomerRequestTransfer $unzerApiCreateCustomerRequestTransfer
-    ): UnzerApiCreateCustomerRequestTransfer {
+    ): UnzerApiCreateCustomerRequestTransfer
+    {
         return $unzerApiCreateCustomerRequestTransfer
             ->fromArray($unzerCustomerTransfer->toArray(), true)
             ->setCustomerId($unzerCustomerTransfer->getId());
@@ -38,20 +40,36 @@ class UnzerCustomerMapper implements UnzerCustomerMapperInterface
     public function mapUnzerCustomerTransferToUnzerApiUpdateCustomerRequestTransfer(
         UnzerCustomerTransfer $unzerCustomerTransfer,
         UnzerApiUpdateCustomerRequestTransfer $unzerApiUpdateCustomerRequestTransfer
-    ): UnzerApiUpdateCustomerRequestTransfer {
+    ): UnzerApiUpdateCustomerRequestTransfer
+    {
         return $unzerApiUpdateCustomerRequestTransfer->fromArray($unzerCustomerTransfer->toArray(), true);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer $createCustomerResponse
+     * @param \Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer $unzerApiCreateCustomerResponseTransfer
      * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     public function mapUnzerApiCreateCustomerResponseTransferToUnzerCustomerTransfer(
-        UnzerApiCreateCustomerResponseTransfer $createCustomerResponse,
+        UnzerApiCreateCustomerResponseTransfer $unzerApiCreateCustomerResponseTransfer,
         UnzerCustomerTransfer $unzerCustomerTransfer
-    ): UnzerCustomerTransfer {
-        return $unzerCustomerTransfer->fromArray($createCustomerResponse->toArray(), true);
+    ): UnzerCustomerTransfer
+    {
+        return $unzerCustomerTransfer->fromArray($unzerApiCreateCustomerResponseTransfer->toArray(), true);
+    }
+
+    /**
+     * @param UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer
+     * @param UnzerCustomerTransfer $unzerCustomerTransfer
+     *
+     * @return UnzerCustomerTransfer
+     */
+    public function mapUnzerApiUpdateCustomerResponseTransferToUnzerCustomerTransfer(
+        UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer,
+        UnzerCustomerTransfer $unzerCustomerTransfer
+    ): UnzerCustomerTransfer
+    {
+        return $unzerCustomerTransfer->fromArray($unzerApiUpdateCustomerResponseTransfer->toArray(), true);
     }
 }

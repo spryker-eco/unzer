@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 use Generated\Shared\Transfer\UnzerApiCreateCustomerRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiUpdateCustomerRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiUpdateCustomerResponseTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 
 interface UnzerCustomerMapperInterface
@@ -37,13 +38,24 @@ interface UnzerCustomerMapperInterface
     ): UnzerApiUpdateCustomerRequestTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer $createCustomerResponse
+     * @param \Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer $unzerApiCreateCustomerResponseTransfer
      * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
      */
     public function mapUnzerApiCreateCustomerResponseTransferToUnzerCustomerTransfer(
-        UnzerApiCreateCustomerResponseTransfer $createCustomerResponse,
+        UnzerApiCreateCustomerResponseTransfer $unzerApiCreateCustomerResponseTransfer,
+        UnzerCustomerTransfer $unzerCustomerTransfer
+    ): UnzerCustomerTransfer;
+
+    /**
+     * @param UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer
+     * @param UnzerCustomerTransfer $unzerCustomerTransfer
+     *
+     * @return UnzerCustomerTransfer
+     */
+    public function mapUnzerApiUpdateCustomerResponseTransferToUnzerCustomerTransfer(
+        UnzerApiUpdateCustomerResponseTransfer $unzerApiUpdateCustomerResponseTransfer,
         UnzerCustomerTransfer $unzerCustomerTransfer
     ): UnzerCustomerTransfer;
 }
