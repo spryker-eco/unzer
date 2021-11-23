@@ -26,8 +26,14 @@ interface UnzerFacadeInterface
 {
     /**
      * Specification:
+     *  - Expands QuoteTransfer with UnzerPaymentTransfer.
+     *  - Expands QuoteTransfer with UnzerKeypairTransfer.
+     *  - Expands QuoteTransfer with UnzerCustomerTransfer.
+     *  - Expands QuoteTransfer with UnzerMetadataTransfer.
+     *  - If QuoteTransfer contains marketplace items - expands ItemTransfers with Unzer Participant ID.
      *  - Performs Unzer Create Customer API call.
-     *  - Saves Unzer Customer to Quote.
+     *  - Performs Unzer Update Customer API call.
+     *  - Performs Unzer Create Metadata API call.
      *
      * @api
      *
@@ -39,7 +45,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Saves order payment method data according to quote and checkout response transfer data.
+     * - Saves Unzer payment details to Persistence.
      *
      * @api
      *
@@ -66,10 +72,12 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     *  - Expands QuoteTransfer with UnzerBasketTransfer.
+     *  - Expands QuoteTransfer with UnzerPaymentResourceTransfer.
      *  - Performs Unzer Create Basket API call.
      *  - Performs Unzer Create payment resource API call.
-     *  - Performs Unzer Authorize or Change API call.
-     *  - Saves payment detailed info to persistence.
+     *  - Performs Unzer Authorize or Change API call depending on payment type.
+     *  - Saves payment detailed info to Persistence.
      *
      * @api
      *
@@ -197,7 +205,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Filters available payment methods.
+     *  - Filters available marketplace payment methods based on quote items.
      *
      * @api
      *
@@ -236,18 +244,6 @@ interface UnzerFacadeInterface
      * @return \Generated\Shared\Transfer\MerchantResponseTransfer
      */
     public function saveMerchantUnzerParticipantByMerchant(MerchantTransfer $merchantTransfer): MerchantResponseTransfer;
-
-    /**
-     * Specification:
-     *  - Performs Unzer Set Notification URL Api all.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\UnzerApiRequestTransfer $unzerApiRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
-     */
-    public function performSetNotificationUrlApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer;
 
     /**
      * Specification:

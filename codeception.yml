@@ -3,6 +3,8 @@ namespace: Unzer
 include:
   - tests/SprykerEcoTest/Zed/Unzer
 
+actor: Tester
+
 paths:
   tests: tests
   support: .
@@ -20,5 +22,3 @@ settings:
 coverage:
   enabled: true
   whitelist: { include: ['src/*'] }
-
-bootstrap: bootstrap.php

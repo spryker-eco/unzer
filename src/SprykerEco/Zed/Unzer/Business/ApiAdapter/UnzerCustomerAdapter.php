@@ -90,7 +90,7 @@ class UnzerCustomerAdapter extends UnzerAbstractApiAdapter implements UnzerCusto
             ->setUpdateCustomerRequest($unzerApiUpdateCustomerRequestTransfer)
             ->setUnzerKeypair($unzerKeypairTransfer);
 
-        $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateCustomerApiCall($unzerApiRequestTransfer);
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performUpdateCustomerApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);
         $unzerApiUpdateCustomerResponseTransfer = $unzerApiResponseTransfer->getUpdateCustomerResponseOrFail();
 
