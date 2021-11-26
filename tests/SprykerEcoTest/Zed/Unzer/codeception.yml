@@ -20,6 +20,9 @@ suites:
       enabled:
         - Asserts
         - \SprykerTest\Shared\Testify\Helper\Environment
+        - \SprykerTest\Shared\Testify\Helper\ConfigHelper
+        - \SprykerTest\Zed\Testify\Helper\Communication\CommunicationHelper
+        - \SprykerTest\Zed\Testify\Helper\Communication\Table\TableHelper
         - \SprykerTest\Shared\Testify\Helper\LocatorHelper:
             projectNamespaces:
               - 'SprykerEco'
@@ -29,3 +32,8 @@ suites:
         - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
         - \SprykerTest\Shared\Propel\Helper\TransactionHelper
         - \SprykerTest\Shared\Store\Helper\StoreDataHelper
+        - \SprykerTest\Shared\Sales\Helper\SalesDataHelper
+        - \SprykerTest\Shared\Customer\Helper\CustomerDataHelper
+        - \SprykerTest\Zed\StateMachine\Helper\StateMachineHelper
+        - \SprykerTest\Zed\Oms\Helper\OmsHelper
+

@@ -3,10 +3,10 @@
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use Codeception\TestCase\Test;
-use SprykerEco\Zed\CrefoPay\Business\CrefoPayBusinessFactory;
-use SprykerEco\Zed\CrefoPay\Business\CrefoPayFacade;
 use SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
+use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade;
 
 class UnzerFacadeBaseTest extends Test
 {
@@ -27,7 +27,7 @@ class UnzerFacadeBaseTest extends Test
     {
         parent::setUp();
 
-        $this->facade = $this->tester->getFacade();
+        $this->facade = $this->tester->getFacade()->setFactory($this->createFactoryMock());
     }
 
     /**
@@ -36,17 +36,18 @@ class UnzerFacadeBaseTest extends Test
     protected function createFactoryMock(): UnzerBusinessFactory
     {
         $builder = $this->getMockBuilder(UnzerBusinessFactory::class);
-        $builder->setMethods(
+        $builder->onlyMethods(
             [
                 'getConfig',
                 'getRepository',
                 'getEntityManager',
-                'getCalculationFacade',
-                'getQuoteClient',
-                'getRefundFacade',
-                'getStoreFacade',
-                'getLocaleFacade',
-                'getSalesFacade',
+                'getUnzerApiFacade'
+//                'getCalculationFacade',
+//                'getQuoteClient',
+//                'getRefundFacade',
+//                'getStoreFacade',
+//                'getLocaleFacade',
+//                'getSalesFacade',
             ]
         );
 
@@ -57,19 +58,54 @@ class UnzerFacadeBaseTest extends Test
             ->willReturn($this->tester->createRepository());
         $stub->method('getEntityManager')
             ->willReturn($this->tester->createEntityManager());
+        $stub->method('getUnzerApiFacade')
+            ->willReturn($this->getUnzerApiFacade());
 
-        $stub->method('getCalculationFacade')
-            ->willReturn($this->createCalculationFacade());
-        $stub->method('getQuoteClient')
-            ->willReturn($this->createQuoteClient());
-        $stub->method('getRefundFacade')
-            ->willReturn($this->createRefundFacade());
+//        $stub->method('getCalculationFacade')
+//            ->willReturn($this->createCalculationFacade());
+//        $stub->method('getQuoteClient')
+//            ->willReturn($this->createQuoteClient());
+//        $stub->method('getRefundFacade')
+//            ->willReturn($this->createRefundFacade());
 
 
         return $stub;
     }
 
-    protected function createCalculationFacade()
+    /**
+     * @return UnzerToUnzerApiFacadeBridge
+     */
+    protected function getUnzerApiFacade(): UnzerToUnzerApiFacadeBridge
     {
+        return new UnzerToUnzerApiFacadeBridge($this->createUnzerApiFacadeMock());
+    }
+
+    /**
+     * @return mixed|\PHPUnit\Framework\MockObject\MockObject|UnzerApiFacade
+     * @throws \Exception
+     */
+    protected function createUnzerApiFacadeMock(): UnzerApiFacade
+    {
+        return $this->makeEmpty(
+            UnzerApiFacade::class,
+            [
+                'performSetNotificationUrlApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performCreateCustomerApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performUpdateCustomerApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performCreateMetadataApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performCreateBasketApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performMarketplaceAuthorizeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performAuthorizeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performMarketplaceGetPaymentApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performGetPaymentApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performMarketplaceChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performMarketplaceAuthorizableChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performAuthorizableChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performCreatePaymentResourceApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                'performMarketplaceRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+            ]
+        );
     }
 }

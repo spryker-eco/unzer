@@ -7,9 +7,9 @@
 
 namespace SprykerEco\Shared\Unzer;
 
-use Spryker\Shared\Kernel\AbstractBundleConfig;
+use Spryker\Shared\Kernel\AbstractSharedConfig;
 
-class UnzerConfig extends AbstractBundleConfig
+class UnzerConfig extends AbstractSharedConfig
 {
     /**
      * @var string
