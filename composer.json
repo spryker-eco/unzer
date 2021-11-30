@@ -1,45 +1,56 @@
 {
     "name": "spryker-eco/unzer",
     "type": "library",
-    "description": "Unzer PSP module",
+    "description": "Unzer module",
     "license": "MIT",
     "require": {
         "php": ">=7.4",
-        "spryker/kernel": "^3.30.0",
-        "spryker/store": "^1.0.0",
-        "spryker/util-text": "^1.0.0",
-        "spryker/zed-request": "^3.0.0",
-        "spryker/checkout-extension": "^1.3.0",
-        "spryker/merchant-extension": "^1.1.0",
-        "spryker/payment-extension": "^1.0.0",
+        "spryker-eco/unzer-api": "dev-feature/cc-14610/cc-14662/code-migration as 1.0",
         "spryker/calculation": "^4.11.0",
-        "spryker/sales": "^11.27.0",
+        "spryker/checkout-extension": "^1.3.0",
+        "spryker/kernel": "^3.30.0",
+        "spryker/merchant-extension": "^1.1.0",
         "spryker/oms": "^11.15.0",
+        "spryker/payment-extension": "^1.0.0",
         "spryker/quote": "^2.15.0",
         "spryker/refund": "^5.4.0",
+        "spryker/sales": "^11.27.0",
+        "spryker/store": "^1.0.0",
         "spryker/transfer": "^3.25.0",
-        "spryker-eco/unzer-api": "dev-feature/cc-14610/cc-14662/code-migration as 1.0"
+        "spryker/util-text": "^1.0.0",
+        "spryker/zed-request": "^3.0.0"
     },
     "require-dev": {
+        "codeception/module-asserts": "^1.3",
         "phpstan/phpstan": "*",
         "spryker/code-sniffer": "*",
-        "spryker/testify": "*",
-        "codeception/module-asserts": "^1.3"
+        "spryker/testify": "*"
     },
     "autoload": {
         "psr-4": {
             "SprykerEco\\": "src/SprykerEco/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "SprykerEcoTest\\": "tests/SprykerEcoTest/"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
         "test": "vendor/bin/codecept run",
-        "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/",
-        "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/",
+        "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
+        "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
         "stan": "phpstan analyse -c phpstan.neon src/",
         "stan-setup": "cp composer.json composer.backup && COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpstan/phpstan:^0.12 && mv composer.backup composer.json"
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:spryker-eco/unzer-api.git"
+        }
+    ],
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
@@ -49,11 +60,5 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "process-timeout": 600
-    },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "git@github.com:spryker-eco/unzer-api.git"
-        }
-    ]
+    }
 }
