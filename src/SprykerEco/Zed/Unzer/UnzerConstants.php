@@ -12,7 +12,17 @@ interface UnzerConstants
     /**
      * @var string
      */
-    public const UNZER_PAYMENT_METHOD_CARD = 'card';
+    public const UNZER_PAYMENT_METHOD_ALIPAY = 'alipay';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_APPLE_PAY = 'applepay';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_BANCONTACT = 'bancontact';
 
     /**
      * @var string
@@ -22,7 +32,77 @@ interface UnzerConstants
     /**
      * @var string
      */
+    public const UNZER_PAYMENT_METHOD_CREDIT_CARD = 'card';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_DIRECT_DEBIT = 'sepa-direct-debit';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_DIRECT_DEBIT_SECURED = 'sepa-direct-debit-secured';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_ELECTRONIC_PAYMENT_STANDARD = 'eps';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_GIROPAY = 'giropay';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_IDEAL = 'ideal';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_INVOICE = 'invoice';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_INVOICE_SECURED = 'invoice-secured';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_PAYPAL = 'paypal';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_POST_FINANCE_CARD = 'post-finance-card';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_POST_FINANCE_EFINANCE = 'post-finance-efinance';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_PREPAYMENT = 'prepayment';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_PRZELEWY24 = 'przelewy24';
+
+    /**
+     * @var string
+     */
     public const UNZER_PAYMENT_METHOD_SOFORT = 'sofort';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_WECHAT_PAY = 'wechatpay';
 
     /**
      * @var int
