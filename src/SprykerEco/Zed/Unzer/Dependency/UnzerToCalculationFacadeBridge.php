@@ -29,7 +29,7 @@ class UnzerToCalculationFacadeBridge implements UnzerToCalculationFacadeInterfac
      *
      * @return \Generated\Shared\Transfer\OrderTransfer
      */
-    public function recalculateOrder(OrderTransfer $orderTransfer)
+    public function recalculateOrder(OrderTransfer $orderTransfer): OrderTransfer
     {
         return $this->calculationFacade->recalculateOrder($orderTransfer);
     }
