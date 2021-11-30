@@ -13,7 +13,11 @@ use Generated\Shared\Transfer\MerchantTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\PaymentMethodResponseTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
+use Generated\Shared\Transfer\PaymentMethodTransfer;
+use Generated\Shared\Transfer\PaymentProviderResponseTransfer;
+use Generated\Shared\Transfer\PaymentProviderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
@@ -238,7 +242,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Performs Unzer Set Notification URL Api all.
+     *  - Performs Unzer Set Notification URL API call.
      *
      * @api
      *
@@ -247,4 +251,26 @@ interface UnzerFacadeInterface
      * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
      */
     public function performSetNotificationUrlApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer;
+
+    /**
+     * Specification:
+     *  - Performs Unzer Get Paymenet Types URL API call.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerApiRequestTransfer $unzerApiRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
+     */
+    public function performGetPaymentTypesApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer;
+
+    /**
+     * Specification:
+     * - Imports available Unzer payment methods and stores them in database.
+     *
+     * @api
+     *
+     * @return void
+     */
+    public function performPaymentMethodImport(): void;
 }

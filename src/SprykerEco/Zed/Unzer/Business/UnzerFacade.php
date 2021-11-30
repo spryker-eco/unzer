@@ -14,6 +14,8 @@ use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
+use Generated\Shared\Transfer\PaymentProviderCollectionTransfer;
+use Generated\Shared\Transfer\PaymentProviderCriteriaTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
@@ -280,5 +282,45 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
     public function performSetNotificationUrlApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer
     {
         return $this->getFactory()->getUnzerApiFacade()->performSetNotificationUrlApiCall($unzerApiRequestTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerApiRequestTransfer $unzerApiRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
+     */
+    public function performGetPaymentTypesApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer
+    {
+        return $this->getFactory()->getUnzerApiFacade()->performGetPaymentTypesApiCall($unzerApiRequestTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentProviderCollectionTransfer
+     */
+    public function getPaymentProviderCollection(PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer): PaymentProviderCollectionTransfer
+    {
+        return $this->getFactory()->getPaymentFacade()->getPaymentProviderCollection($paymentProviderCriteriaTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @return void
+     */
+    public function performPaymentMethodImport(): void
+    {
+        $this->getFactory()->createUnzerPaymentMethodImporter()->performPaymentMethodImport();
     }
 }
