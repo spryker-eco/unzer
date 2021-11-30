@@ -10,11 +10,12 @@ namespace SprykerEco\Zed\Unzer;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants as UnzerSharedConstants;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
 class UnzerConfig extends AbstractBundleConfig
 {
     /**
-     * @var array<string, string>
+     * @var array<int, string>
      */
     protected const UNZER_PAYMENT_STATE_OMS_STATUS_MAP = [
         UnzerConstants::UNZER_PAYMENT_STATUS_PENDING => UnzerConstants::OMS_STATUS_PAYMENT_PENDING,
@@ -37,41 +38,124 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
-     * @var array<string, string>
+     * @var array<array-key, array<array-key, string>>
      */
-    protected const UNZER_PAYMENT_METHODS_MAP = [
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD => UnzerConstants::UNZER_PAYMENT_METHOD_CARD,
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER => UnzerConstants::UNZER_PAYMENT_METHOD_BANK_TRANSFER,
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT => UnzerConstants::UNZER_PAYMENT_METHOD_SOFORT,
+    protected const UNZER_PAYMENT_METHOD_KEYS_MAP = [
+        UnzerConstants::UNZER_PAYMENT_METHOD_ALIPAY => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_ALIPAY,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_APPLE_PAY => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_APPLE_PAY,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_BANCONTACT => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_BANCONTACT,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_BANK_TRANSFER => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER,
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_CREDIT_CARD => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_CREDIT_CARD,
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_DIRECT_DEBIT => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_DIRECT_DEBIT,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_DIRECT_DEBIT_SECURED => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_DIRECT_DEBIT_SECURED,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_ELECTRONIC_PAYMENT_STANDARD => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_ELECTRONIC_PAYMENT_STANDARD,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_GIROPAY => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_GIROPAY,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_IDEAL => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_IDEAL,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_INVOICE => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_INVOICE,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_INVOICE_SECURED => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_INVOICE_SECURED,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_PAYPAL => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_PAYPAL,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_POST_FINANCE_CARD => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_POST_FINANCE_CARD,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_POST_FINANCE_EFINANCE => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_POST_FINANCE_EFINANCE,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_PREPAYMENT => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_PREPAYMENT,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_PRZELEWY24 => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_PRZELEWY24,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_SOFORT => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_SOFORT,
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
+        ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_WECHAT_PAY => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_WECHAT_PAY,
+        ],
     ];
 
     /**
-     * @var array<string>
+     * @var array<array-key, string>
      */
     protected const AUTHORIZE_PAYMENT_METHODS = [
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
     ];
 
     /**
-     * @var array<string>
+     * @var array<string, string>
+     */
+    protected const UNZER_PAYMENT_METHOD_NAMES_MAP = [
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_ALIPAY => UnzerSharedConfig::PAYMENT_METHOD_NAME_ALIPAY,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_APPLE_PAY => UnzerSharedConfig::PAYMENT_METHOD_NAME_APPLE_PAY,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_BANCONTACT => UnzerSharedConfig::PAYMENT_METHOD_NAME_BANCONTACT,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER => UnzerSharedConfig::PAYMENT_METHOD_NAME_BANK_TRANSFER,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_CREDIT_CARD => UnzerSharedConfig::PAYMENT_METHOD_NAME_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_DIRECT_DEBIT => UnzerSharedConfig::PAYMENT_METHOD_NAME_DIRECT_DEBIT,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_DIRECT_DEBIT_SECURED => UnzerSharedConfig::PAYMENT_METHOD_NAME_DIRECT_DEBIT_SECURED,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_ELECTRONIC_PAYMENT_STANDARD => UnzerSharedConfig::PAYMENT_METHOD_NAME_ELECTRONIC_PAYMENT_STANDARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_GIROPAY => UnzerSharedConfig::PAYMENT_METHOD_NAME_GIROPAY,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_IDEAL => UnzerSharedConfig::PAYMENT_METHOD_NAME_IDEAL,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_INVOICE => UnzerSharedConfig::PAYMENT_METHOD_NAME_INVOICE,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_INVOICE_SECURED => UnzerSharedConfig::PAYMENT_METHOD_NAME_INVOICE_SECURED,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_PAYPAL => UnzerSharedConfig::PAYMENT_METHOD_NAME_PAYPAL,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_POST_FINANCE_CARD => UnzerSharedConfig::PAYMENT_METHOD_NAME_POST_FINANCE_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_POST_FINANCE_EFINANCE => UnzerSharedConfig::PAYMENT_METHOD_NAME_POST_FINANCE_EFINANCE,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_PREPAYMENT => UnzerSharedConfig::PAYMENT_METHOD_NAME_PREPAYMENT,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_PRZELEWY24 => UnzerSharedConfig::PAYMENT_METHOD_NAME_PRZELEWY24,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_SOFORT => UnzerSharedConfig::PAYMENT_METHOD_NAME_SOFORT,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_WECHAT_PAY => UnzerSharedConfig::PAYMENT_METHOD_NAME_WECHAT_PAY,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER => UnzerSharedConfig::PAYMENT_METHOD_NAME_MARKETPLACE_BANK_TRANSFER,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD => UnzerSharedConfig::PAYMENT_METHOD_NAME_MARKETPLACE_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT => UnzerSharedConfig::PAYMENT_METHOD_NAME_MARKETPLACE_SOFORT,
+    ];
+
+    /**
+     * @var array<array-key, string>
      */
     protected const MARKETPLACE_READY_PAYMENT_METHODS = [
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER,
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
     ];
 
     /**
-     * @var array<string>
+     * @var array<array-key, string>
      */
     protected const ENABLED_UNZER_NOTIFICATIONS = [
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS,
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_FAILED,
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_CANCELED,
-
         UnzerConstants::NOTIFICATION_TYPE_CHARGE_PENDING,
         UnzerConstants::NOTIFICATION_TYPE_CHARGE_FAILED,
-
         UnzerConstants::NOTIFICATION_TYPE_PAYMENT_COMPLETED,
         UnzerConstants::NOTIFICATION_TYPE_PAYMENT_CANCELED,
         UnzerConstants::NOTIFICATION_TYPE_PAYMENT_CHARGEBACK,
@@ -104,13 +188,43 @@ class UnzerConfig extends AbstractBundleConfig
     /**
      * @api
      *
-     * @param string $paymentMethodName
+     * @param string $paymentMethodKey
      *
      * @return string
      */
-    public function getUnzerPaymentMethodKey(string $paymentMethodName): string
+    public function getUnzerPaymentMethodKey(string $paymentMethodKey): string
     {
-        return static::UNZER_PAYMENT_METHODS_MAP[$paymentMethodName];
+        foreach (static::UNZER_PAYMENT_METHOD_KEYS_MAP as $unzerPaymentMethodKey => $paymentMethodKeys) {
+            if (in_array($paymentMethodKey, $paymentMethodKeys)) {
+                return $unzerPaymentMethodKey;
+            }
+        }
+
+        throw new UnzerException('Unknown Unzer payment method key '.$paymentMethodKey.' detected.');
+    }
+
+    /**
+     * @api
+     *
+     * @param string $paymentMethodKey
+     *
+     * @return string
+     */
+    public function getPaymentMethodName(string $paymentMethodKey): string
+    {
+        return static::UNZER_PAYMENT_METHOD_NAMES_MAP[$paymentMethodKey];
+    }
+
+    /**
+     * @api
+     *
+     * @param string $unzerPaymentMethodKey
+     *
+     * @return array<array-key, string>
+     */
+    public function getPaymentMethodKeys(string $unzerPaymentMethodKey): array
+    {
+        return static::UNZER_PAYMENT_METHOD_KEYS_MAP[$unzerPaymentMethodKey];
     }
 
     /**
@@ -264,8 +378,18 @@ class UnzerConfig extends AbstractBundleConfig
      *
      * @return string
      */
-    public function getProviderName(): string
+    public function getPaymentProviderName(): string
     {
-        return UnzerSharedConfig::PROVIDER_NAME;
+        return UnzerSharedConfig::PAYMENT_PROVIDER_NAME;
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getPaymentProviderType(): string
+    {
+        return UnzerSharedConfig::PAYMENT_PROVIDER_TYPE;
     }
 }
