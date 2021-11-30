@@ -83,7 +83,7 @@ class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInt
      */
     protected function isUnzerPaymentProvider(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
-        return strpos($paymentMethodTransfer->getMethodName(), $this->config->getProviderName()) !== false;
+        return strpos($paymentMethodTransfer->getMethodName(), $this->config->getPaymentProviderType()) !== false;
     }
 
     /**
