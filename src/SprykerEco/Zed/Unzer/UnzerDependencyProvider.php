@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
@@ -46,11 +47,16 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public const CLIENT_QUOTE = 'CLIENT_QUOTE';
 
     /**
+     * @var string
+     */
+    public const FACADE_PAYMENT = 'FACADE_PAYMENT';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function provideCommunicationLayerDependencies(Container $container)
+    public function provideCommunicationLayerDependencies(Container $container): Container
     {
         $container = parent::provideCommunicationLayerDependencies($container);
         $container = $this->addSalesFacade($container);
@@ -65,13 +71,14 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function provideBusinessLayerDependencies(Container $container)
+    public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = parent::provideBusinessLayerDependencies($container);
 
         $container = $this->addUnzerApiFacade($container);
         $container = $this->addQuoteClient($container);
         $container = $this->addRefundFacade($container);
+        $container = $this->addPaymentFacade($container);
 
         return $container;
     }
@@ -141,6 +148,20 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_REFUND, function (Container $container) {
             return new UnzerToRefundFacadeBridge($container->getLocator()->refund()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addPaymentFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_PAYMENT, function (Container $container) {
+            return new UnzerToPaymentFacadeBridge($container->getLocator()->payment()->facade());
         });
 
         return $container;
