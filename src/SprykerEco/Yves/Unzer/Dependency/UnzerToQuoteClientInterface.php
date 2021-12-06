@@ -21,5 +21,5 @@ interface UnzerToQuoteClientInterface
      *
      * @return void
      */
-    public function setQuote(QuoteTransfer $quoteTransfer);
+    public function setQuote(QuoteTransfer $quoteTransfer): void;
 }

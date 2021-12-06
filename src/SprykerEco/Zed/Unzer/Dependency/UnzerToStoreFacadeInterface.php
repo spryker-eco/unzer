@@ -7,10 +7,12 @@
 
 namespace SprykerEco\Zed\Unzer\Dependency;
 
+use Generated\Shared\Transfer\StoreTransfer;
+
 interface UnzerToStoreFacadeInterface
 {
     /**
      * @return \Generated\Shared\Transfer\StoreTransfer
      */
-    public function getCurrentStore();
+    public function getCurrentStore(): StoreTransfer;
 }

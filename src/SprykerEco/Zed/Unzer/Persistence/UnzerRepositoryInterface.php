@@ -7,26 +7,17 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\StoreRelationTransfer;
+use Generated\Shared\Transfer\UnzerConfigCollectionTransfer;
+use Generated\Shared\Transfer\UnzerConfigCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
-use Generated\Shared\Transfer\UnzerKeypairTransfer;
 
 interface UnzerRepositoryInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
-     */
-    public function findMerchantUnzerParticipantByCriteria(
-        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): MerchantUnzerParticipantCollectionTransfer;
-
     /**
      * @param string $orderReference
      *
@@ -43,10 +34,11 @@ interface UnzerRepositoryInterface
 
     /**
      * @param string $unzerPaymentId
+     * @param string $keypairId
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer|null
      */
-    public function findPaymentUnzerByPaymentId(string $unzerPaymentId): ?PaymentUnzerTransfer;
+    public function findPaymentUnzerByPaymentIdAndKeypairId(string $unzerPaymentId, string $keypairId): ?PaymentUnzerTransfer;
 
     /**
      * @param int $idSalesOrderItem
@@ -76,17 +68,16 @@ interface UnzerRepositoryInterface
     public function findUnzerCustomerByIdCustomer(int $idCustomer): ?UnzerCustomerTransfer;
 
     /**
-     * @param string $merchantReference
-     * @param int $idStore
+     * @param int $idUnzerConfig
      *
-     * @return string|null
+     * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
-    public function findUnzerVaultKeyByMerchantReferenceAndIdStore(string $merchantReference, int $idStore): ?string;
+    public function getStoreRelationByIdPaymentMethod(int $idUnzerConfig): StoreRelationTransfer;
 
     /**
-     * @param string $vaultKey
+     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
      */
-    public function findUnzerKeypairByKeypairId(string $vaultKey): ?UnzerKeypairTransfer;
+    public function findUnzerConfigsByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): UnzerConfigCollectionTransfer;
 }

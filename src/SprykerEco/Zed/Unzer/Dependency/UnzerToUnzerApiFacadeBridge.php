@@ -55,7 +55,6 @@ class UnzerToUnzerApiFacadeBridge implements UnzerToUnzerApiFacadeInterface
         return $this->unzerApiFacade->performUpdateCustomerApiCall($unzerApiRequestTransfer);
     }
 
-
     /**
      * @param \Generated\Shared\Transfer\UnzerApiRequestTransfer $unzerApiRequestTransfer
      *

@@ -7,9 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Saver;
 
-use Generated\Shared\Transfer\MerchantResponseTransfer;
-use Generated\Shared\Transfer\MerchantTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
@@ -98,26 +95,6 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
             $paymentUnzerOrderItemsCollection,
             $paymentUnzerTransactionCollection,
         );
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\MerchantTransfer $merchantTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantResponseTransfer
-     */
-    public function saveMerchantUnzerParticipantByMerchant(MerchantTransfer $merchantTransfer): MerchantResponseTransfer
-    {
-        if ($merchantTransfer->getMerchantUnzerParticipantId()) {
-            $merchantUnzerParticipantTransfer = (new MerchantUnzerParticipantTransfer())
-                ->setMerchantId($merchantTransfer->getIdMerchant())
-                ->setParticipantId($merchantTransfer->getMerchantUnzerParticipantId());
-
-            $this->unzerWriter->saveMerchantUnzerParticipant($merchantUnzerParticipantTransfer);
-        }
-
-        return (new MerchantResponseTransfer())
-            ->setIsSuccess(true)
-            ->setMerchant($merchantTransfer);
     }
 
     /**

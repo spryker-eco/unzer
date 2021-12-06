@@ -8,9 +8,6 @@
 namespace SprykerEco\Zed\Unzer\Business\Writer;
 
 use Generated\Shared\Transfer\ItemTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
@@ -51,16 +48,6 @@ class UnzerWriter implements UnzerWriterInterface
         $this->unzerEntityManager = $unzerEntityManager;
         $this->unzerReader = $unzerReader;
         $this->unzerConfig = $unzerConfig;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
-     *
-     * @return void
-     */
-    public function saveMerchantUnzerParticipant(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): void
-    {
-         $this->unzerEntityManager->saveMerchantUnzerParticipantEntity($merchantUnzerParticipantTransfer);
     }
 
     /**
@@ -135,31 +122,9 @@ class UnzerWriter implements UnzerWriterInterface
         $paymentUnzerOrderItemTransfer = (new PaymentUnzerOrderItemTransfer())
             ->setIdPaymentUnzer($paymentUnzerTransfer->getIdPaymentUnzer())
             ->setIdSalesOrderItem($itemTransfer->getIdSalesOrderItem())
-            ->setParticipantId($this->getParticipantIdForOrderItem($itemTransfer))
+            ->setParticipantId($itemTransfer->getUnzerParticipantId())
             ->setStatus($this->unzerConfig->getOmsStatusNew());
 
         return $this->unzerEntityManager->savePaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $orderItem
-     *
-     * @return string|null
-     */
-    protected function getParticipantIdForOrderItem(ItemTransfer $orderItem): ?string
-    {
-        $merchantUnzerParticipantCriteriaTransfer = (new MerchantUnzerParticipantCriteriaTransfer())
-            ->setMerchantUnzerParticipantConditions(
-                (new MerchantUnzerParticipantConditionsTransfer())->setReferences([$orderItem->getMerchantReference()]),
-            );
-
-        $merchantUnzerParticipantTransfer = $this->unzerReader
-            ->getMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
-
-        if ($merchantUnzerParticipantTransfer !== null) {
-            return $merchantUnzerParticipantTransfer->getParticipantId();
-        }
-
-        return null;
     }
 }

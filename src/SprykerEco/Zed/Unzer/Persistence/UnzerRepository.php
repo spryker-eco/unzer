@@ -7,16 +7,18 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
 use Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\StoreRelationTransfer;
+use Generated\Shared\Transfer\UnzerConfigCollectionTransfer;
+use Generated\Shared\Transfer\UnzerConfigConditionsTransfer;
+use Generated\Shared\Transfer\UnzerConfigCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
-use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery;
+use Orm\Zed\Unzer\Persistence\SpyUnzerConfigQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
 /**
@@ -24,29 +26,6 @@ use Spryker\Zed\Kernel\Persistence\AbstractRepository;
  */
 class UnzerRepository extends AbstractRepository implements UnzerRepositoryInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
-     */
-    public function findMerchantUnzerParticipantByCriteria(
-        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): MerchantUnzerParticipantCollectionTransfer {
-        $merchantUnzerParticipantQuery = $this->getFactory()->createMerchantUnzerParticipantQuery();
-        $merchantUnzerParticipantQuery = $this->setMerchantUnzerParticipantFilters(
-            $merchantUnzerParticipantQuery,
-            $merchantUnzerParticipantCriteriaTransfer->getMerchantUnzerParticipantConditions(),
-        );
-
-        $merchantUnzerParticipantEntities = $merchantUnzerParticipantQuery->find();
-
-        return $this->getFactory()->createUnzerPersistenceMapper()
-            ->mapMerchantUnzerParticipantEntityCollectionToMerchantUnzerParticipantTransferCollection(
-                $merchantUnzerParticipantEntities,
-                new MerchantUnzerParticipantCollectionTransfer(),
-            );
-    }
-
     /**
      * @param string $orderReference
      *
@@ -91,13 +70,15 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
 
     /**
      * @param string $unzerPaymentId
+     * @param string $keypairId
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer|null
      */
-    public function findPaymentUnzerByPaymentId(string $unzerPaymentId): ?PaymentUnzerTransfer
+    public function findPaymentUnzerByPaymentIdAndKeypairId(string $unzerPaymentId, string $keypairId): ?PaymentUnzerTransfer
     {
         $paymentUnzerEntity = $this->getFactory()->createPaymentUnzerQuery()
             ->filterByPaymentId($unzerPaymentId)
+            ->filterByUnzerKeypairId($keypairId)
             ->findOne();
 
         if ($paymentUnzerEntity === null) {
@@ -216,48 +197,84 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
-     * @param string $merchantReference
-     * @param int $idStore
+     * @param int $idUnzerConfig
      *
-     * @return string|null
+     * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
-    public function findUnzerVaultKeyByMerchantReferenceAndIdStore(string $merchantReference, int $idStore): ?string
+    public function getStoreRelationByIdPaymentMethod(int $idUnzerConfig): StoreRelationTransfer
     {
-        $merchantUnzerVaultEntity = $this->getFactory()
-            ->createMerchantUnzerVaultQuery()
-            ->useMerchantQuery()
-                ->filterByMerchantReference($merchantReference)
-            ->endUse()
-            ->filterByFkStore($idStore)
-            ->findOne();
+        $unzerConfigStoreEntities = $this->getFactory()
+            ->createUnzerConfigStoreQuery()
+            ->filterByFkUnzerConfig($idUnzerConfig)
+            ->leftJoinWithStore()
+            ->find();
 
-        if ($merchantUnzerVaultEntity === null) {
-            return null;
-        }
+        $storeRelationTransfer = (new StoreRelationTransfer())->setIdEntity($idUnzerConfig);
 
-        return $merchantUnzerVaultEntity->getVaultKey();
+        return $this->getFactory()
+            ->createUnzerPersistenceMapper()
+            ->mapUnzerConfigStoreEntitiesToStoreRelationTransfer($unzerConfigStoreEntities, $storeRelationTransfer);
     }
 
     /**
-     * @param string $vaultKey
+     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
      */
-    public function findUnzerKeypairByKeypairId(string $vaultKey): ?UnzerKeypairTransfer
+    public function findUnzerConfigsByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): UnzerConfigCollectionTransfer
     {
-        $unzerKeypairEntity = $this->getFactory()
-            ->createUnzerKeypairQuery()
-            ->filterByKeypairId($vaultKey)
-            ->findOne();
+        $unzerConfigQuery = $this->getFactory()->createUnzerConfigQuery();
+        $unzerConfigQuery = $this->setUnzerConfigFilters(
+            $unzerConfigQuery,
+            $unzerConfigCriteriaTransfer->getUnzerConfigConditions(),
+        );
 
-        if ($unzerKeypairEntity === null) {
-            return null;
-        }
+        $unzerConfigEntities = $unzerConfigQuery->find();
 
         return $this->getFactory()->createUnzerPersistenceMapper()
-            ->mapUnzerKeypairEntityToUnzerKeypairTransfer(
-                $unzerKeypairEntity,
-                new UnzerKeypairTransfer(),
+            ->mapUnzerConfigEntityCollectionToUnzerConfigTransferCollection(
+                $unzerConfigEntities,
+                new UnzerConfigCollectionTransfer(),
             );
+    }
+
+    /**
+     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerConfigQuery $unzerConfigQuery
+     * @param \Generated\Shared\Transfer\UnzerConfigConditionsTransfer $unzerConfigConditionsTransfer
+     *
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerConfigQuery
+     */
+    protected function setUnzerConfigFilters(
+        SpyUnzerConfigQuery $unzerConfigQuery,
+        UnzerConfigConditionsTransfer $unzerConfigConditionsTransfer
+    ): SpyUnzerConfigQuery {
+        if ($unzerConfigConditionsTransfer->getKeypairIds() !== null) {
+            $unzerConfigQuery->filterByKeypairId_In($unzerConfigConditionsTransfer->getKeypairIds());
+        }
+
+        if ($unzerConfigConditionsTransfer->getMerchantReferences() !== null) {
+            $unzerConfigQuery->filterByMerchantReference_In($unzerConfigConditionsTransfer->getMerchantReferences());
+        }
+
+        if ($unzerConfigConditionsTransfer->getPublicKeys() !== null) {
+            $unzerConfigQuery->filterByPublicKey_In($unzerConfigConditionsTransfer->getPublicKeys());
+        }
+
+        if ($unzerConfigConditionsTransfer->getTypes() !== null) {
+            $unzerConfigQuery->filterByType_In($unzerConfigConditionsTransfer->getTypes());
+        }
+
+        if ($unzerConfigConditionsTransfer->getStoreNames() !== null) {
+            $unzerConfigQuery
+                ->joinWithUnzerConfigStore()
+                ->useUnzerConfigStoreQuery()
+                    ->joinWithStore()
+                    ->useStoreQuery()
+                        ->filterByName_In($unzerConfigConditionsTransfer->getStoreNames())
+                    ->endUse()
+                ->endUse();
+        }
+
+        return $unzerConfigQuery;
     }
 }

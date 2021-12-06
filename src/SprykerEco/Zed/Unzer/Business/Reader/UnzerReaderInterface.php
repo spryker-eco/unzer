@@ -8,37 +8,17 @@
 namespace SprykerEco\Zed\Unzer\Business\Reader;
 
 use Generated\Shared\Transfer\CustomerTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
-use Generated\Shared\Transfer\StoreTransfer;
+use Generated\Shared\Transfer\UnzerConfigCollectionTransfer;
+use Generated\Shared\Transfer\UnzerConfigCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerConfigTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
-use Generated\Shared\Transfer\UnzerKeypairTransfer;
 
 interface UnzerReaderInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer|null
-     */
-    public function getMerchantUnzerParticipantByCriteria(
-        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): ?MerchantUnzerParticipantTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
-     */
-    public function getMerchantUnzerParticipantCollectionByCriteria(
-        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): MerchantUnzerParticipantCollectionTransfer;
-
     /**
      * @param string $orderReference
      *
@@ -55,10 +35,11 @@ interface UnzerReaderInterface
 
     /**
      * @param string $unzerPaymentId
+     * @param string $publicKey
      *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
+     * @return \Generated\Shared\Transfer\PaymentUnzerTransfer|null
      */
-    public function getPaymentUnzerByPaymentId(string $unzerPaymentId): PaymentUnzerTransfer;
+    public function getPaymentUnzerByPaymentIdAndPublicKey(string $unzerPaymentId, string $publicKey): ?PaymentUnzerTransfer;
 
     /**
      * @param int $idSalesOrderItem
@@ -88,17 +69,16 @@ interface UnzerReaderInterface
     public function getUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer;
 
     /**
-     * @param string $merchantReference
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerConfigTransfer|null
      */
-    public function getUnzerKeypairByMerchantReferenceAndStoreId(string $merchantReference, StoreTransfer $storeTransfer): ?UnzerKeypairTransfer;
+    public function getUnzerConfigByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): ?UnzerConfigTransfer;
 
     /**
-     * @param string $unzerPrimaryKeypairId
+     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
      */
-    public function getUnzerKeypairByKeypairId(string $unzerPrimaryKeypairId): ?UnzerKeypairTransfer;
+    public function getUnzerConfigCollectionByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): UnzerConfigCollectionTransfer;
 }

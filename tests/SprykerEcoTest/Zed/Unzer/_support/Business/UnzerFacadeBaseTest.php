@@ -1,12 +1,19 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use Codeception\TestCase\Test;
+use Spryker\Zed\Vault\Business\VaultFacade;
 use SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory;
-use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade;
+use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
 
 class UnzerFacadeBaseTest extends Test
 {
@@ -16,7 +23,7 @@ class UnzerFacadeBaseTest extends Test
     protected $tester;
 
     /**
-     * @var UnzerFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface
      */
     protected $facade;
 
@@ -41,14 +48,15 @@ class UnzerFacadeBaseTest extends Test
                 'getConfig',
                 'getRepository',
                 'getEntityManager',
-                'getUnzerApiFacade'
-//                'getCalculationFacade',
-//                'getQuoteClient',
-//                'getRefundFacade',
-//                'getStoreFacade',
-//                'getLocaleFacade',
-//                'getSalesFacade',
-            ]
+                'getUnzerApiFacade',
+                'getVaultFacade',
+            //                'getCalculationFacade',
+            //                'getQuoteClient',
+            //                'getRefundFacade',
+            //                'getStoreFacade',
+            //                'getLocaleFacade',
+            //                'getSalesFacade',
+            ],
         );
 
         $stub = $builder->getMock();
@@ -60,6 +68,8 @@ class UnzerFacadeBaseTest extends Test
             ->willReturn($this->tester->createEntityManager());
         $stub->method('getUnzerApiFacade')
             ->willReturn($this->getUnzerApiFacade());
+        $stub->method('getVaultFacade')
+            ->willReturn($this->getVaultFacade());
 
 //        $stub->method('getCalculationFacade')
 //            ->willReturn($this->createCalculationFacade());
@@ -68,12 +78,11 @@ class UnzerFacadeBaseTest extends Test
 //        $stub->method('getRefundFacade')
 //            ->willReturn($this->createRefundFacade());
 
-
         return $stub;
     }
 
     /**
-     * @return UnzerToUnzerApiFacadeBridge
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge
      */
     protected function getUnzerApiFacade(): UnzerToUnzerApiFacadeBridge
     {
@@ -81,8 +90,7 @@ class UnzerFacadeBaseTest extends Test
     }
 
     /**
-     * @return mixed|\PHPUnit\Framework\MockObject\MockObject|UnzerApiFacade
-     * @throws \Exception
+     * @return \PHPUnit\Framework\MockObject\MockObject|\SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade|mixed
      */
     protected function createUnzerApiFacadeMock(): UnzerApiFacade
     {
@@ -105,7 +113,29 @@ class UnzerFacadeBaseTest extends Test
                 'performCreatePaymentResourceApiCall' => $this->tester->createUnzerApiResponseTransfer(),
                 'performRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
                 'performMarketplaceRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-            ]
+            ],
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge
+     */
+    protected function getVaultFacade(): UnzerToVaultFacadeBridge
+    {
+        return new UnzerToVaultFacadeBridge($this->createVaultFacadeMock());
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Zed\Vault\Business\VaultFacade
+     */
+    protected function createVaultFacadeMock(): VaultFacade
+    {
+        return $this->makeEmpty(
+            VaultFacade::class,
+            [
+                'store' => true,
+                'retrieve' => UnzerZedTester::UNZER_PRIVATE_KEY,
+            ],
         );
     }
 }

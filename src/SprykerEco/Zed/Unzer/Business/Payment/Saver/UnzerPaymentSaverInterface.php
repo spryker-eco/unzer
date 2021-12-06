@@ -7,8 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Saver;
 
-use Generated\Shared\Transfer\MerchantResponseTransfer;
-use Generated\Shared\Transfer\MerchantTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
@@ -35,11 +33,4 @@ interface UnzerPaymentSaverInterface
         string $orderItemStatus,
         array $filteredSalesOrderItemIds = []
     ): void;
-
-    /**
-     * @param \Generated\Shared\Transfer\MerchantTransfer $merchantTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantResponseTransfer
-     */
-    public function saveMerchantUnzerParticipantByMerchant(MerchantTransfer $merchantTransfer): MerchantResponseTransfer;
 }

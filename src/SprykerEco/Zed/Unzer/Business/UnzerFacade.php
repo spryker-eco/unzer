@@ -8,15 +8,13 @@
 namespace SprykerEco\Zed\Unzer\Business;
 
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
-use Generated\Shared\Transfer\MerchantResponseTransfer;
-use Generated\Shared\Transfer\MerchantTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
+use Generated\Shared\Transfer\UnzerConfigResponseTransfer;
+use Generated\Shared\Transfer\UnzerConfigTransfer;
 use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
@@ -243,35 +241,6 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
-     */
-    public function getMerchantUnzerParticipantCollection(
-        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): MerchantUnzerParticipantCollectionTransfer {
-        return $this->getFactory()->createUnzerReader()->getMerchantUnzerParticipantCollectionByCriteria($merchantUnzerParticipantCriteriaTransfer);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\MerchantTransfer $merchantTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantResponseTransfer
-     */
-    public function saveMerchantUnzerParticipantByMerchant(MerchantTransfer $merchantTransfer): MerchantResponseTransfer
-    {
-        return $this->getFactory()->createUnzerPaymentSaver()->saveMerchantUnzerParticipantByMerchant($merchantTransfer);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
      *
      * @return void
@@ -279,5 +248,33 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
     public function setUnzerNotificationUrl(UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer): void
     {
         $this->getFactory()->createUnzerNotificationConfigurator()->setNotificationUrl($unzerNotificationConfigTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerConfigResponseTransfer
+     */
+    public function createUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigResponseTransfer
+    {
+        return $this->getFactory()->createUnzerConfigCreator()->createUnzerConfig($unzerConfigTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerConfigResponseTransfer
+     */
+    public function updateUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigResponseTransfer
+    {
+        return $this->getFactory()->createUnzerConfigUpdater()->updateUnzerConfig($unzerConfigTransfer);
     }
 }

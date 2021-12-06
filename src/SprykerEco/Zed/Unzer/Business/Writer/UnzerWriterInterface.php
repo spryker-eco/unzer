@@ -7,7 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Writer;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
@@ -36,11 +35,4 @@ interface UnzerWriterInterface
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
     ): void;
-
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
-     *
-     * @return void
-     */
-    public function saveMerchantUnzerParticipant(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): void;
 }

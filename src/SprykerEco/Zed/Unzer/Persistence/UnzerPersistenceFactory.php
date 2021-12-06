@@ -13,6 +13,8 @@ use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItemQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery;
+use Orm\Zed\Unzer\Persistence\SpyUnzerConfigQuery;
+use Orm\Zed\Unzer\Persistence\SpyUnzerConfigStoreQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerKeypairQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
 use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
@@ -86,5 +88,21 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     public function createUnzerKeypairQuery(): SpyUnzerKeypairQuery
     {
         return SpyUnzerKeypairQuery::create();
+    }
+
+    /**
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerConfigStoreQuery
+     */
+    public function createUnzerConfigStoreQuery(): SpyUnzerConfigStoreQuery
+    {
+        return SpyUnzerConfigStoreQuery::create();
+    }
+
+    /**
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerConfigQuery
+     */
+    public function createUnzerConfigQuery(): SpyUnzerConfigQuery
+    {
+        return SpyUnzerConfigQuery::create();
     }
 }

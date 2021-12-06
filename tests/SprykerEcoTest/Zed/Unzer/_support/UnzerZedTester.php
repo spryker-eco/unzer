@@ -1,60 +1,41 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEcoTest\Zed\Unzer;
 
 use Codeception\Actor;
 use Codeception\Scenario;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\SaveOrderBuilder;
-use Generated\Shared\Transfer\AddressTransfer;
-use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\DataBuilder\UnzerConfigBuilder;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
-use Generated\Shared\Transfer\TotalsTransfer;
-use Generated\Shared\Transfer\UnzerAddressTransfer;
-use Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer;
-use Generated\Shared\Transfer\UnzerApiChargeRequestTransfer;
-use Generated\Shared\Transfer\UnzerApiCreateBasketRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateBasketResponseTransfer;
-use Generated\Shared\Transfer\UnzerApiCreateCustomerRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer;
-use Generated\Shared\Transfer\UnzerApiCreateMetadataRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateMetadataResponseTransfer;
-use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceResponseTransfer;
-use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
-use Generated\Shared\Transfer\UnzerApiMarketplaceRefundRequestTransfer;
-use Generated\Shared\Transfer\UnzerApiRefundRequestTransfer;
-use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
-use Generated\Shared\Transfer\UnzerApiSetWebhookRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiSetWebhookResponseTransfer;
-use Generated\Shared\Transfer\UnzerApiUpdateCustomerRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiUpdateCustomerResponseTransfer;
-use Generated\Shared\Transfer\UnzerBasketItemTransfer;
+use Generated\Shared\Transfer\UnzerConfigTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
-use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEco\Shared\UnzerApi\UnzerApiConstants;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapter;
-use SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory;
-use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeBridge;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManager;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepository;
 use SprykerEco\Zed\Unzer\UnzerConfig;
-use SprykerEco\Zed\UnzerApi\Dependency\Service\UnzerApiToUtilEncodingServiceBridge;
-use SprykerEco\Zed\UnzerApi\Persistence\UnzerApiEntityManager;
-use SprykerEco\Zed\UnzerApi\UnzerApiConfig;
 
 /**
  * Inherited Methods
+ *
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void execute($callable)
@@ -72,33 +53,135 @@ class UnzerZedTester extends Actor
 {
     use _generated\UnzerZedTesterActions;
 
+    /**
+     * @var string
+     */
     public const PAYMENT_SELECTION_MARKETPLACE = 'unzerMarketplaceBankTransfer';
+
+    /**
+     * @var int
+     */
     public const TOTALS_PRICE_TO_PAY = 72350;
+
+    /**
+     * @var string
+     */
     public const ADDRESS_COUNTRY = 'Germany';
+
+    /**
+     * @var string
+     */
     public const ADDRESS_CITY = 'Berlin';
+
+    /**
+     * @var string
+     */
     public const ADDRESS_ZIP = '20537';
+
+    /**
+     * @var string
+     */
     public const ADDRESS_ADDITIONAL = 'street';
+
+    /**
+     * @var int
+     */
     public const ADDRESS_NO = 324324;
+
+    /**
+     * @var string
+     */
     public const ADDRESS_STREET = 'Street';
+
+    /**
+     * @var string
+     */
     public const CUSTOMER_SALUTATION = 'Mr';
+
+    /**
+     * @var string
+     */
     public const CUSTOMER_SURNAME = 'Doe';
+
+    /**
+     * @var string
+     */
     public const CUSTOMER_NAME = 'John';
+
+    /**
+     * @var string
+     */
     public const CUSTOMER_EMAIL = 'john.doe@mail.com';
+
+    /**
+     * @var string
+     */
     public const CUSTOMER_REFERENCE = 'DE-22';
+
+    /**
+     * @var string
+     */
     public const PAYMENT_METHOD = 'unzerMarketplaceBankTransfer';
+
+    /**
+     * @var string
+     */
     public const PAYMENT_PROVIDER = 'unzer';
 
+    /**
+     * @var string
+     */
     public const UNZER_API_RESPONSE_CUSTOMER_ID = 's-cust-43434234';
+
+    /**
+     * @var string
+     */
     public const UNZER_API_RESPONSE_METADATA_ID = 's-meta-5423423';
+
+    /**
+     * @var string
+     */
     public const UNZER_API_RESPONSE_BASKET_ID = 's-bskt-435345';
+
+    /**
+     * @var string
+     */
     public const UNZER_API_RESPONSE_PAYMENT_RESOURCE_ID = 's-type-sofort-1';
+
+    /**
+     * @var string
+     */
     public const UNZER_API_RESPONSE_WEBHOOK_URL = 'https://unzer-spryker.com';
-    const UNZER_KEYPAIR_ID = 'key-1';
-    const UNZER_PUBLIC_KEY = 's-pub';
-    const UNZER_PRIVATE_KEY = 's-priv';
-    const UNZER_PAYMENT_ID = 's-pay-1234';
-    const UNZER_EVENT_AUTHORIZED = 'authorize.succeeded';
-    const ORDER_REFERENCE = 'ORD-DE-12';
+
+    /**
+     * @var string
+     */
+    public const UNZER_KEYPAIR_ID = 'key-1';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PUBLIC_KEY = 's-pub';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PRIVATE_KEY = 's-priv';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_ID = 's-pay-1234';
+
+    /**
+     * @var string
+     */
+    public const UNZER_EVENT_AUTHORIZED = 'authorize.succeeded';
+
+    /**
+     * @var string
+     */
+    public const ORDER_REFERENCE = 'ORD-DE-12';
 
     /**
      * @param \Codeception\Scenario $scenario
@@ -119,11 +202,12 @@ class UnzerZedTester extends Actor
         $this->setConfig(UnzerConstants::UNZER_CHARGE_RETURN_URL, 'https://spryker.com');
         $this->setConfig(UnzerConstants::WEBHOOK_RETRIEVE_URL, 'https://spryker.com');
         $this->setConfig(UnzerConstants::MASTER_MERCHANT_PARTICIPANT_ID, '111111');
-        $this->setConfig(UnzerConstants::PRIMARY_KEYPAIR_ID, 'id');
+        $this->setConfig(UnzerConstants::MAIN_REGULAR_KEYPAIR_ID, 'id');
+        $this->setConfig(UnzerConstants::VAULT_DATA_TYPE, 'unzer-private-key');
     }
 
     /**
-     * @return UnzerConfig
+     * @return \SprykerEco\Zed\Unzer\UnzerConfig
      */
     public function createConfig(): UnzerConfig
     {
@@ -131,7 +215,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerEntityManager
+     * @return \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManager
      */
     public function createEntityManager(): UnzerEntityManager
     {
@@ -139,7 +223,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerRepository
+     * @return \SprykerEco\Zed\Unzer\Persistence\UnzerRepository
      */
     public function createRepository(): UnzerRepository
     {
@@ -147,7 +231,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return QuoteTransfer
+     * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function createQuoteTransfer(): QuoteTransfer
     {
@@ -185,7 +269,6 @@ class UnzerZedTester extends Actor
             ->setUnzerPayment($this->createUnzerPaymentTransfer());
     }
 
-
     public function createUnzerPaymentTransfer(): UnzerPaymentTransfer
     {
         return (new UnzerPaymentTransfer())
@@ -202,7 +285,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerApiResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
      */
     public function createUnzerApiResponseTransfer(): UnzerApiResponseTransfer
     {
@@ -217,7 +300,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerApiCreateCustomerResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer
      */
     protected function createUnzerApiCreateCustomerResponseTransfer(): UnzerApiCreateCustomerResponseTransfer
     {
@@ -226,7 +309,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerApiUpdateCustomerResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiUpdateCustomerResponseTransfer
      */
     protected function createUnzerApiUpdateCustomerResponseTransfer(): UnzerApiUpdateCustomerResponseTransfer
     {
@@ -235,7 +318,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerApiCreateMetadataResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiCreateMetadataResponseTransfer
      */
     protected function createUnzerApiCreateMetadataResponseTransfer(): UnzerApiCreateMetadataResponseTransfer
     {
@@ -244,7 +327,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerApiCreateBasketResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiCreateBasketResponseTransfer
      */
     protected function createUnzerApiCreateBasketResponseTransfer(): UnzerApiCreateBasketResponseTransfer
     {
@@ -253,7 +336,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerApiCreatePaymentResourceResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiCreatePaymentResourceResponseTransfer
      */
     protected function createUnzerApiCreatePaymentResourceResponseTransfer(): UnzerApiCreatePaymentResourceResponseTransfer
     {
@@ -262,7 +345,7 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerApiSetWebhookResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiSetWebhookResponseTransfer
      */
     protected function createUnzerApiSetWebhookResponseTransfer(): UnzerApiSetWebhookResponseTransfer
     {
@@ -271,18 +354,17 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerNotificationConfigTransfer
+     * @return \Generated\Shared\Transfer\UnzerNotificationConfigTransfer
      */
     public function createUnzerNotificationConfigTransfer(): UnzerNotificationConfigTransfer
     {
         return (new UnzerNotificationConfigTransfer())
             ->setUnzerKeyPair($this->createUnzerKeyPair())
-            ->setUrl(static::UNZER_API_RESPONSE_WEBHOOK_URL)
-        ;
+            ->setUrl(static::UNZER_API_RESPONSE_WEBHOOK_URL);
     }
 
     /**
-     * @return UnzerKeypairTransfer
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
      */
     public function createUnzerKeyPair(): UnzerKeypairTransfer
     {
@@ -292,11 +374,23 @@ class UnzerZedTester extends Actor
             ->setPublicKey(static::UNZER_PUBLIC_KEY);
     }
 
-    public function createUnzerNotificationTransfer()
+    /**
+     * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
+     */
+    public function createUnzerNotificationTransfer(): UnzerNotificationTransfer
     {
         return (new UnzerNotificationTransfer())
             ->setEvent(static::UNZER_EVENT_AUTHORIZED)
             ->setPublicKey(static::UNZER_PUBLIC_KEY)
             ->setPaymentId(static::UNZER_PAYMENT_ID);
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\UnzerConfigTransfer
+     */
+    public function createUnzerConfigTransfer(): UnzerConfigTransfer
+    {
+        return (new UnzerConfigBuilder())->build()
+            ->setUnzerKeypair($this->createUnzerKeyPair());
     }
 }

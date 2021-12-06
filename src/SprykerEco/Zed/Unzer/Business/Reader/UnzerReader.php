@@ -8,14 +8,14 @@
 namespace SprykerEco\Zed\Unzer\Business\Reader;
 
 use Generated\Shared\Transfer\CustomerTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
-use Generated\Shared\Transfer\StoreTransfer;
+use Generated\Shared\Transfer\UnzerConfigCollectionTransfer;
+use Generated\Shared\Transfer\UnzerConfigConditionsTransfer;
+use Generated\Shared\Transfer\UnzerConfigCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerConfigTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
@@ -28,41 +28,20 @@ class UnzerReader implements UnzerReaderInterface
     protected $unzerRepository;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerVaultReaderInterface
+     */
+    protected $unzerVaultReader;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface $unzerRepository
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerVaultReaderInterface $unzerVaultReader
      */
-    public function __construct(UnzerRepositoryInterface $unzerRepository)
-    {
+    public function __construct(
+        UnzerRepositoryInterface $unzerRepository,
+        UnzerVaultReaderInterface $unzerVaultReader
+    ) {
         $this->unzerRepository = $unzerRepository;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer|null
-     */
-    public function getMerchantUnzerParticipantByCriteria(
-        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): ?MerchantUnzerParticipantTransfer {
-        $merchantUnzerParticipantCollectionTransfer = $this->unzerRepository
-            ->findMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
-
-        if ($merchantUnzerParticipantCollectionTransfer->getMerchantUnzerParticipants()->count() === 1) {
-            return $merchantUnzerParticipantCollectionTransfer->getMerchantUnzerParticipants()[0];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
-     */
-    public function getMerchantUnzerParticipantCollectionByCriteria(
-        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): MerchantUnzerParticipantCollectionTransfer {
-        return $this->unzerRepository
-            ->findMerchantUnzerParticipantByCriteria($merchantUnzerParticipantCriteriaTransfer);
+        $this->unzerVaultReader = $unzerVaultReader;
     }
 
     /**
@@ -87,12 +66,21 @@ class UnzerReader implements UnzerReaderInterface
 
     /**
      * @param string $unzerPaymentId
+     * @param string $publicKey
      *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
+     * @return \Generated\Shared\Transfer\PaymentUnzerTransfer|null
      */
-    public function getPaymentUnzerByPaymentId(string $unzerPaymentId): PaymentUnzerTransfer
+    public function getPaymentUnzerByPaymentIdAndPublicKey(string $unzerPaymentId, string $publicKey): ?PaymentUnzerTransfer
     {
-        return $this->unzerRepository->findPaymentUnzerByPaymentId($unzerPaymentId) ?? new PaymentUnzerTransfer();
+        $unzerConfigCriteriaTransfer = (new UnzerConfigCriteriaTransfer())->setUnzerConfigConditions(
+            (new UnzerConfigConditionsTransfer())->addPublicKey($publicKey),
+        );
+        $unzerConfigTransferCollection = $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
+        if ($unzerConfigTransferCollection->getUnzerConfigs()->count() === 0) {
+            return null;
+        }
+
+        return $this->unzerRepository->findPaymentUnzerByPaymentIdAndKeypairId($unzerPaymentId, $publicKey);
     }
 
     /**
@@ -134,30 +122,65 @@ class UnzerReader implements UnzerReaderInterface
     }
 
     /**
-     * @param string $merchantReference
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerConfigTransfer|null
      */
-    public function getUnzerKeypairByMerchantReferenceAndStoreId(string $merchantReference, StoreTransfer $storeTransfer): ?UnzerKeypairTransfer
+    public function getUnzerConfigByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): ?UnzerConfigTransfer
     {
-        $vaultKey = $this->unzerRepository
-            ->findUnzerVaultKeyByMerchantReferenceAndIdStore($merchantReference, $storeTransfer->getIdStore());
-        if ($vaultKey === null) {
+        $unzerConfigCollectionTransfer = $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
+        if ($unzerConfigCollectionTransfer->getUnzerConfigs()->count() === 0) {
             return null;
         }
 
-        //this part should be changed to spryker/vault
-        return $this->unzerRepository->findUnzerKeypairByKeypairId($vaultKey);
+        $unzerConfigTransfer = $unzerConfigCollectionTransfer->getUnzerConfigs()[0];
+        $this->attachUnzerKeypairTransfer($unzerConfigTransfer);
+
+        return $unzerConfigTransfer;
     }
 
     /**
-     * @param string $unzerPrimaryKeypairId
+     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
      */
-    public function getUnzerKeypairByKeypairId(string $unzerPrimaryKeypairId): ?UnzerKeypairTransfer
+    public function getUnzerConfigCollectionByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): UnzerConfigCollectionTransfer
     {
-        return $this->unzerRepository->findUnzerKeypairByKeypairId($unzerPrimaryKeypairId);
+        $unzerConfigCollectionTransfer = $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
+        foreach ($unzerConfigCollectionTransfer->getUnzerConfigs() as $unzerConfigTransfer) {
+            $this->attachUnzerKeypairTransfer($unzerConfigTransfer);
+        }
+
+        return $unzerConfigCollectionTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
+     */
+    public function getUnzerConfigsByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): UnzerConfigCollectionTransfer
+    {
+        return $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerConfigTransfer
+     */
+    protected function attachUnzerKeypairTransfer(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigTransfer
+    {
+        $unzerPrivateKey = $this->unzerVaultReader->retrieveUnzerPrivateKey($unzerConfigTransfer->getKeypairId());
+        if ($unzerPrivateKey === null) {
+            return $unzerConfigTransfer;
+        }
+
+        $unzerKeyPairTransfer = (new UnzerKeypairTransfer())
+            ->setPublicKey($unzerConfigTransfer->getPublicKey())
+            ->setPrivateKey($unzerPrivateKey)
+            ->setKeypairId($unzerConfigTransfer->getKeypairId());
+
+        return $unzerConfigTransfer->setUnzerKeypair($unzerKeyPairTransfer);
     }
 }

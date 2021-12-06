@@ -7,10 +7,10 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\UnzerConfigTransfer;
 
 interface UnzerEntityManagerInterface
 {
@@ -40,9 +40,32 @@ interface UnzerEntityManagerInterface
     ): PaymentUnzerTransactionTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
+     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
      *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer
+     * @return \Generated\Shared\Transfer\UnzerConfigTransfer
      */
-    public function saveMerchantUnzerParticipantEntity(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): MerchantUnzerParticipantTransfer;
+    public function createUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigTransfer;
+
+    /**
+     * @param array $idStores
+     * @param int $idUnzerConfig
+     *
+     * @return void
+     */
+    public function addUnzerConfigStoreRelationsForStores(array $idStores, int $idUnzerConfig): void;
+
+    /**
+     * @param array $idStores
+     * @param int $idUnzerConfig
+     *
+     * @return void
+     */
+    public function removeUnzerConfigStoreRelationsForStores(array $idStores, int $idUnzerConfig): void;
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerConfigTransfer|null
+     */
+    public function updateUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): ?UnzerConfigTransfer;
 }

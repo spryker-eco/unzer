@@ -284,8 +284,18 @@ class UnzerConfig extends AbstractBundleConfig
      *
      * @return string
      */
-    public function getUnzerPrimaryKeypairId()
+    public function getUnzerPrimaryKeypairId(): string
     {
-        return $this->get(UnzerSharedConstants::PRIMARY_KEYPAIR_ID);
+        return $this->get(UnzerSharedConstants::MAIN_REGULAR_KEYPAIR_ID);
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getVaultDataType(): string
+    {
+        return $this->get(UnzerSharedConstants::VAULT_DATA_TYPE);
     }
 }

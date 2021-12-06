@@ -1,10 +1,17 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
 class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest
 {
-
+    /**
+     * @return void
+     */
     public function testProcessNotificationSuccessful(): void
     {
         //Arrange
@@ -18,7 +25,9 @@ class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest
         $this->assertTrue($unzerNotificationTransfer->getIsProcessed());
     }
 
-
+    /**
+     * @return void
+     */
     public function testProcessNotificationSkip(): void
     {
         //Arrange
@@ -32,6 +41,9 @@ class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest
         $this->assertTrue($unzerNotificationTransfer->getIsProcessed());
     }
 
+    /**
+     * @return void
+     */
     public function testProcessNotificationTooEarly(): void
     {
         //Arrange

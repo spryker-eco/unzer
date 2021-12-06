@@ -16,6 +16,7 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 
 /**
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
@@ -58,11 +59,16 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public const FACADE_STORE = 'FACADE_STORE';
 
     /**
+     * @var string
+     */
+    public const FACADE_VAULT = 'FACADE_VAULT';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function provideCommunicationLayerDependencies(Container $container)
+    public function provideCommunicationLayerDependencies(Container $container): Container
     {
         $container = parent::provideCommunicationLayerDependencies($container);
         $container = $this->addSalesFacade($container);
@@ -77,7 +83,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function provideBusinessLayerDependencies(Container $container)
+    public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = parent::provideBusinessLayerDependencies($container);
 
@@ -86,6 +92,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addRefundFacade($container);
         $container = $this->addLocaleFacade($container);
         $container = $this->addStoreFacade($container);
+        $container = $this->addVaultFacade($container);
 
         return $container;
     }
@@ -183,6 +190,20 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_STORE, function (Container $container) {
             return new UnzerToStoreFacadeBridge($container->getLocator()->store()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addVaultFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_VAULT, function (Container $container) {
+            return new UnzerToVaultFacadeBridge($container->getLocator()->vault()->facade());
         });
 
         return $container;

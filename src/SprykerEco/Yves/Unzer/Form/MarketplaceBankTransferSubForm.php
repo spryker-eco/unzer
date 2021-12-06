@@ -20,7 +20,7 @@ class MarketplaceBankTransferSubForm extends AbstractUnzerSubForm
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'unzerMarketplaceBankTransfer';
     }
@@ -28,7 +28,7 @@ class MarketplaceBankTransferSubForm extends AbstractUnzerSubForm
     /**
      * @return string
      */
-    public function getPropertyPath()
+    public function getPropertyPath(): string
     {
         return 'unzerMarketplaceBankTransfer';
     }
@@ -36,7 +36,7 @@ class MarketplaceBankTransferSubForm extends AbstractUnzerSubForm
     /**
      * @return string
      */
-    public function getTemplatePath()
+    public function getTemplatePath(): string
     {
         return 'unzer' . '/' . 'marketplaceBankTransfer';
     }
@@ -46,7 +46,7 @@ class MarketplaceBankTransferSubForm extends AbstractUnzerSubForm
      *
      * @return void
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => UnzerPaymentTransfer::class,

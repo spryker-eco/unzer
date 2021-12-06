@@ -24,9 +24,9 @@ interface UnzerKeypairResolverInterface
     ): UnzerKeypairTransfer;
 
     /**
-     * @param string $unzerPrimaryKeypairId
+     * @param string $unzerKeypairId
      *
      * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
      */
-    public function getUnzerKeypairByKeypairId(string $unzerPrimaryKeypairId): UnzerKeypairTransfer;
+    public function getUnzerKeypairByKeypairId(string $unzerKeypairId): UnzerKeypairTransfer;
 }

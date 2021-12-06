@@ -7,11 +7,13 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\UnzerConfigTransfer;
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant;
+use Orm\Zed\Unzer\Persistence\SpyUnzerConfig;
+use Orm\Zed\Unzer\Persistence\SpyUnzerConfigStore;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 
@@ -108,27 +110,6 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer
-     */
-    public function saveMerchantUnzerParticipantEntity(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): MerchantUnzerParticipantTransfer
-    {
-        $merchantUnzerParticipantEntity = $this->getFactory()
-            ->createMerchantUnzerParticipantQuery()
-            ->filterByFkMerchant($merchantUnzerParticipantTransfer->getMerchantId())
-            ->findOneOrCreate();
-
-        $merchantUnzerParticipantEntity = $this->getMapper()
-            ->mapMerchantUnzerParticipantTransferToEntity($merchantUnzerParticipantTransfer, $merchantUnzerParticipantEntity);
-
-        $merchantUnzerParticipantEntity = $this->saveOrDeleteMerchantUnzerParticipantEntity($merchantUnzerParticipantEntity);
-
-        return $this->getMapper()
-            ->mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer($merchantUnzerParticipantEntity, $merchantUnzerParticipantTransfer);
-    }
-
-    /**
      * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
      */
     protected function getMapper(): UnzerPersistenceMapper
@@ -156,5 +137,78 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
         }
 
         return $merchantUnzerParticipantEntity;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerConfigTransfer
+     */
+    public function createUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigTransfer
+    {
+        $unzerConfigEntity = $this->getMapper()
+            ->mapUnzerConfigTransferToUnzerConfigEntity($unzerConfigTransfer, new SpyUnzerConfig());
+
+        $unzerConfigEntity->save();
+
+        return $this->getMapper()
+            ->mapUnzerConfigEntityToUnzerConfigTransfer($unzerConfigEntity, $unzerConfigTransfer);
+    }
+
+    /**
+     * @param array $idStores
+     * @param int $idUnzerConfig
+     *
+     * @return void
+     */
+    public function addUnzerConfigStoreRelationsForStores(array $idStores, int $idUnzerConfig): void
+    {
+        foreach ($idStores as $idStore) {
+            $shipmentMethodStoreEntity = new SpyUnzerConfigStore();
+            $shipmentMethodStoreEntity->setFkStore($idStore)
+                ->setFkUnzerConfig($idUnzerConfig)
+                ->save();
+        }
+    }
+
+    /**
+     * @param array $idStores
+     * @param int $idUnzerConfig
+     *
+     * @return void
+     */
+    public function removeUnzerConfigStoreRelationsForStores(array $idStores, int $idUnzerConfig): void
+    {
+        if ($idStores === []) {
+            return;
+        }
+
+        $this->getFactory()
+            ->createUnzerConfigStoreQuery()
+            ->filterByFkUnzerConfig($idUnzerConfig)
+            ->filterByFkStore_In($idStores)
+            ->delete();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerConfigTransfer|null
+     */
+    public function updateUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): ?UnzerConfigTransfer
+    {
+        $unzerConfigEntity = $this->getFactory()
+            ->createUnzerConfigQuery()
+            ->filterByIdUnzerConfig($unzerConfigTransfer->getIdUnzerConfigOrFail())
+            ->findOne();
+
+        if ($unzerConfigEntity === null) {
+            return null;
+        }
+
+        $unzerConfigEntity = $this->getMapper()->mapUnzerConfigTransferToUnzerConfigEntity($unzerConfigTransfer, $unzerConfigEntity);
+        $unzerConfigEntity->save();
+
+        return $this->getMapper()->mapUnzerConfigEntityToUnzerConfigTransfer($unzerConfigEntity, $unzerConfigTransfer);
     }
 }

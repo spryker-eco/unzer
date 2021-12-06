@@ -6,5 +6,6 @@ $config[UnzerConstants::UNZER_AUTHORIZE_RETURN_URL] = 'https://spryker.com';
 $config[UnzerConstants::UNZER_CHARGE_RETURN_URL] = 'https://spryker.com';
 $config[UnzerConstants::WEBHOOK_RETRIEVE_URL] = 'https://spryker.com';
 
-$config[UnzerConstants::MASTER_MERCHANT_PARTICIPANT_ID] = '';
-$config[UnzerConstants::PRIMARY_KEYPAIR_ID] = '';
+$config[UnzerConstants::MAIN_MARKETPLACE_KEYPAIR_ID] = '';
+$config[UnzerConstants::MAIN_REGULAR_KEYPAIR_ID] = '';
+$config[UnzerConstants::VAULT_DATA_TYPE] = 'UNZER_PRIVATE_KEY';

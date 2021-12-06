@@ -7,6 +7,8 @@
 
 namespace SprykerEco\Zed\Unzer\Dependency;
 
+use Generated\Shared\Transfer\LocaleTransfer;
+
 class UnzerToLocaleFacadeBridge implements UnzerToLocaleFacadeInterface
 {
     /**
@@ -25,7 +27,7 @@ class UnzerToLocaleFacadeBridge implements UnzerToLocaleFacadeInterface
     /**
      * @return \Generated\Shared\Transfer\LocaleTransfer
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): LocaleTransfer
     {
         return $this->localeFacade->getCurrentLocale();
     }

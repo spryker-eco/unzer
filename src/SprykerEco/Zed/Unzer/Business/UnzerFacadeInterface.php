@@ -8,17 +8,13 @@
 namespace SprykerEco\Zed\Unzer\Business;
 
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
-use Generated\Shared\Transfer\MerchantResponseTransfer;
-use Generated\Shared\Transfer\MerchantTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
-use Generated\Shared\Transfer\UnzerApiRequestTransfer;
-use Generated\Shared\Transfer\UnzerApiResponseTransfer;
+use Generated\Shared\Transfer\UnzerConfigResponseTransfer;
+use Generated\Shared\Transfer\UnzerConfigTransfer;
 use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 
@@ -221,32 +217,6 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Get Merchant Unzer participants collection by criteria.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
-     */
-    public function getMerchantUnzerParticipantCollection(
-        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): MerchantUnzerParticipantCollectionTransfer;
-
-    /**
-     * Specification:
-     *  - Saves Unzer Participant Id for Merchant to DB.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\MerchantTransfer $merchantTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantResponseTransfer
-     */
-    public function saveMerchantUnzerParticipantByMerchant(MerchantTransfer $merchantTransfer): MerchantResponseTransfer;
-
-    /**
-     * Specification:
      *  - Prepares UnzerApi request and set Unzer keypair.
      *  - Performs Unzer Set Notification URL Api all.
      *  - Throws UnzerException if API call failed.
@@ -255,9 +225,35 @@ interface UnzerFacadeInterface
      *
      * @param \Generated\Shared\Transfer\UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
      *
-     * @throws UnzerException
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
      * @return void
      */
     public function setUnzerNotificationUrl(UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer): void;
+
+    /**
+     * Specification:
+     *  - Saves UnzerConfigTransfer to Persistence.
+     *  - If UnzerConfigTransfer contains store relations - also saves it to Persistence.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerConfigResponseTransfer
+     */
+    public function createUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigResponseTransfer;
+
+    /**
+     * Specification:
+     *  - Updates UnzerConfigTransfer to Persistence.
+     *  - If UnzerConfigTransfer contains store relations - also updates it to Persistence.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerConfigResponseTransfer
+     */
+    public function updateUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigResponseTransfer;
 }

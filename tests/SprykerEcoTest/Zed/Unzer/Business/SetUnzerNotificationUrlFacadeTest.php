@@ -1,11 +1,19 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
 class SetUnzerNotificationUrlFacadeTest extends UnzerFacadeBaseTest
 {
+    /**
+     * @return void
+     */
     public function testSetUnzerNotificationUrlSuccess(): void
     {
         //Arrange
@@ -18,7 +26,9 @@ class SetUnzerNotificationUrlFacadeTest extends UnzerFacadeBaseTest
         $this->assertTrue(true);
     }
 
-
+    /**
+     * @return void
+     */
     public function testSetUnzerNotificationUrlThrowsException(): void
     {
         //Arrange
