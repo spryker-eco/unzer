@@ -99,6 +99,7 @@ class UnzerWriter implements UnzerWriterInterface
         $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();
 
         $paymentUnzerTransfer = (new PaymentUnzerTransfer())
+            ->setPaymentId($unzerPaymentTransfer->getId())
             ->setIdSalesOrder($saveOrderTransfer->getIdSalesOrder())
             ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
             ->setOrderId($saveOrderTransfer->getOrderReference())

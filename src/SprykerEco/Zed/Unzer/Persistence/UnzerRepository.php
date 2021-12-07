@@ -248,23 +248,23 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         SpyUnzerConfigQuery $unzerConfigQuery,
         UnzerConfigConditionsTransfer $unzerConfigConditionsTransfer
     ): SpyUnzerConfigQuery {
-        if ($unzerConfigConditionsTransfer->getKeypairIds() !== null) {
+        if ($unzerConfigConditionsTransfer->getKeypairIds()) {
             $unzerConfigQuery->filterByKeypairId_In($unzerConfigConditionsTransfer->getKeypairIds());
         }
 
-        if ($unzerConfigConditionsTransfer->getMerchantReferences() !== null) {
+        if ($unzerConfigConditionsTransfer->getMerchantReferences()) {
             $unzerConfigQuery->filterByMerchantReference_In($unzerConfigConditionsTransfer->getMerchantReferences());
         }
 
-        if ($unzerConfigConditionsTransfer->getPublicKeys() !== null) {
+        if ($unzerConfigConditionsTransfer->getPublicKeys()) {
             $unzerConfigQuery->filterByPublicKey_In($unzerConfigConditionsTransfer->getPublicKeys());
         }
 
-        if ($unzerConfigConditionsTransfer->getTypes() !== null) {
+        if ($unzerConfigConditionsTransfer->getTypes()) {
             $unzerConfigQuery->filterByType_In($unzerConfigConditionsTransfer->getTypes());
         }
 
-        if ($unzerConfigConditionsTransfer->getStoreNames() !== null) {
+        if ($unzerConfigConditionsTransfer->getStoreNames()) {
             $unzerConfigQuery
                 ->joinWithUnzerConfigStore()
                 ->useUnzerConfigStoreQuery()

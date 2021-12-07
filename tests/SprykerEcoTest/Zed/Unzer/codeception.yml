@@ -36,4 +36,3 @@ suites:
         - \SprykerTest\Shared\Customer\Helper\CustomerDataHelper
         - \SprykerTest\Zed\StateMachine\Helper\StateMachineHelper
         - \SprykerTest\Zed\Oms\Helper\OmsHelper
-

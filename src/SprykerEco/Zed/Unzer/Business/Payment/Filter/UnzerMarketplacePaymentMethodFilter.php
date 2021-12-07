@@ -13,7 +13,7 @@ use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
-class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInterface
+class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilter implements UnzerPaymentMethodFilterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
@@ -56,43 +56,5 @@ class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInt
         $paymentMethodsTransfer->setMethods($filteredPaymentMethodTransferCollection);
 
         return $paymentMethodsTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return bool
-     */
-    protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
-    {
-        $merchantReferences = [];
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $merchantReference = $itemTransfer->getMerchantReference();
-            if ($merchantReference !== null && !in_array($merchantReference, $merchantReferences, true)) {
-                $merchantReferences[] = $merchantReference;
-            }
-        }
-
-        return count($merchantReferences) > 1;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return bool
-     */
-    protected function isUnzerPaymentProvider(PaymentMethodTransfer $paymentMethodTransfer): bool
-    {
-        return strpos($paymentMethodTransfer->getMethodName(), $this->config->getProviderName()) !== false;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return bool
-     */
-    protected function isMarketplace(PaymentMethodTransfer $paymentMethodTransfer): bool
-    {
-        return strpos($paymentMethodTransfer->getMethodName(), 'Marketplace') !== false;
     }
 }

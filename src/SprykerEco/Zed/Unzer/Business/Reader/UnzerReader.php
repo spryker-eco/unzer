@@ -75,12 +75,16 @@ class UnzerReader implements UnzerReaderInterface
         $unzerConfigCriteriaTransfer = (new UnzerConfigCriteriaTransfer())->setUnzerConfigConditions(
             (new UnzerConfigConditionsTransfer())->addPublicKey($publicKey),
         );
-        $unzerConfigTransferCollection = $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
-        if ($unzerConfigTransferCollection->getUnzerConfigs()->count() === 0) {
+        $unzerConfigCollectionTransfer = $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
+        if ($unzerConfigCollectionTransfer->getUnzerConfigs()->count() === 0) {
             return null;
         }
+        $unzerConfigTransfer = $unzerConfigCollectionTransfer->getUnzerConfigs()[0];
 
-        return $this->unzerRepository->findPaymentUnzerByPaymentIdAndKeypairId($unzerPaymentId, $publicKey);
+        return $this->unzerRepository->findPaymentUnzerByPaymentIdAndKeypairId(
+            $unzerPaymentId,
+            $unzerConfigTransfer->getKeypairId()
+        );
     }
 
     /**
@@ -134,7 +138,7 @@ class UnzerReader implements UnzerReaderInterface
         }
 
         $unzerConfigTransfer = $unzerConfigCollectionTransfer->getUnzerConfigs()[0];
-        $this->attachUnzerKeypairTransfer($unzerConfigTransfer);
+        $this->attachUnzerPrivateKey($unzerConfigTransfer);
 
         return $unzerConfigTransfer;
     }
@@ -148,7 +152,7 @@ class UnzerReader implements UnzerReaderInterface
     {
         $unzerConfigCollectionTransfer = $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
         foreach ($unzerConfigCollectionTransfer->getUnzerConfigs() as $unzerConfigTransfer) {
-            $this->attachUnzerKeypairTransfer($unzerConfigTransfer);
+            $this->attachUnzerPrivateKey($unzerConfigTransfer);
         }
 
         return $unzerConfigCollectionTransfer;
@@ -169,17 +173,15 @@ class UnzerReader implements UnzerReaderInterface
      *
      * @return \Generated\Shared\Transfer\UnzerConfigTransfer
      */
-    protected function attachUnzerKeypairTransfer(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigTransfer
+    protected function attachUnzerPrivateKey(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigTransfer
     {
         $unzerPrivateKey = $this->unzerVaultReader->retrieveUnzerPrivateKey($unzerConfigTransfer->getKeypairId());
         if ($unzerPrivateKey === null) {
             return $unzerConfigTransfer;
         }
 
-        $unzerKeyPairTransfer = (new UnzerKeypairTransfer())
-            ->setPublicKey($unzerConfigTransfer->getPublicKey())
-            ->setPrivateKey($unzerPrivateKey)
-            ->setKeypairId($unzerConfigTransfer->getKeypairId());
+        $unzerKeyPairTransfer = $unzerConfigTransfer->getUnzerKeypairOrFail();
+        $unzerKeyPairTransfer->setPrivateKey($unzerPrivateKey);
 
         return $unzerConfigTransfer->setUnzerKeypair($unzerKeyPairTransfer);
     }

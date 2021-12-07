@@ -87,9 +87,11 @@ class UnzerConfigUpdater implements UnzerConfigUpdaterInterface
             $unzerConfigTransfer->getUnzerKeypairOrFail()->getPrivateKey(),
         );
 
-        $storeRelationTransfer = $unzerConfigTransfer->getStoreRelation()
-            ->setIdEntity($unzerConfigTransfer->getIdUnzerConfigOrFail());
-        $this->unzerConfigStoreRelationUpdater->update($storeRelationTransfer);
+        if ($unzerConfigTransfer->getStoreRelation() !== null) {
+            $storeRelationTransfer = $unzerConfigTransfer->getStoreRelation()
+                ->setIdEntity($unzerConfigTransfer->getIdUnzerConfigOrFail());
+            $this->unzerConfigStoreRelationUpdater->update($storeRelationTransfer);
+        }
 
         return (new UnzerConfigResponseTransfer())
             ->setIsSuccessful(true)

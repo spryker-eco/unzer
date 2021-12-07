@@ -16,6 +16,7 @@ use Generated\Shared\Transfer\StoreTransfer;
 use Generated\Shared\Transfer\UnzerConfigCollectionTransfer;
 use Generated\Shared\Transfer\UnzerConfigTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem;
@@ -32,9 +33,10 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
      */
     public function mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
-        ObjectCollection $paymentUnzerOrderItemEntities,
+        ObjectCollection                        $paymentUnzerOrderItemEntities,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
-    ): PaymentUnzerOrderItemCollectionTransfer {
+    ): PaymentUnzerOrderItemCollectionTransfer
+    {
         foreach ($paymentUnzerOrderItemEntities as $paymentUnzerOrderItemEntity) {
             $paymentUnzerOrderItemCollectionTransfer->addPaymentUnzerOrderItem(
                 $this->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
@@ -54,9 +56,10 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer
      */
     public function mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
-        SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity,
+        SpyPaymentUnzerOrderItem      $paymentUnzerOrderItemEntity,
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
-    ): PaymentUnzerOrderItemTransfer {
+    ): PaymentUnzerOrderItemTransfer
+    {
         return $paymentUnzerOrderItemTransfer
             ->fromArray($paymentUnzerOrderItemEntity->toArray(), true)
             ->setIdPaymentUnzer($paymentUnzerOrderItemEntity->getFkPaymentUnzer())
@@ -70,12 +73,14 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
      */
     public function mapPaymentUnzerEntityToPaymentUnzerTransfer(
-        SpyPaymentUnzer $paymentUnzerEntity,
+        SpyPaymentUnzer      $paymentUnzerEntity,
         PaymentUnzerTransfer $paymentUnzerTransfer
-    ): PaymentUnzerTransfer {
+    ): PaymentUnzerTransfer
+    {
         return $paymentUnzerTransfer
             ->fromArray($paymentUnzerEntity->toArray(), true)
-            ->setIdSalesOrder($paymentUnzerEntity->getFkSalesOrder());
+            ->setIdSalesOrder($paymentUnzerEntity->getFkSalesOrder())
+            ->setKeypairId($paymentUnzerEntity->getUnzerKeypairId());
     }
 
     /**
@@ -86,8 +91,9 @@ class UnzerPersistenceMapper
      */
     public function mapPaymentUnzerTransferToPaymentUnzerEntity(
         PaymentUnzerTransfer $paymentUnzerTransfer,
-        SpyPaymentUnzer $paymentUnzerEntity
-    ): SpyPaymentUnzer {
+        SpyPaymentUnzer      $paymentUnzerEntity
+    ): SpyPaymentUnzer
+    {
         return $paymentUnzerEntity
             ->fromArray($paymentUnzerTransfer->toArray())
             ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder())
@@ -102,8 +108,9 @@ class UnzerPersistenceMapper
      */
     public function mapPaymentUnzerOrderItemTransferToPaymentUnzerOrderItemEntity(
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer,
-        SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity
-    ): SpyPaymentUnzerOrderItem {
+        SpyPaymentUnzerOrderItem      $paymentUnzerOrderItemEntity
+    ): SpyPaymentUnzerOrderItem
+    {
         return $paymentUnzerOrderItemEntity
             ->fromArray($paymentUnzerOrderItemTransfer->toArray())
             ->setFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItem())
@@ -118,8 +125,9 @@ class UnzerPersistenceMapper
      */
     public function mapPaymentUnzerTransactionTransferToPaymentUnzerTransactionEntity(
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer,
-        SpyPaymentUnzerTransaction $paymentUnzerTransactionEntity
-    ): SpyPaymentUnzerTransaction {
+        SpyPaymentUnzerTransaction      $paymentUnzerTransactionEntity
+    ): SpyPaymentUnzerTransaction
+    {
         return $paymentUnzerTransactionEntity
             ->fromArray($paymentUnzerTransactionTransfer->toArray())
             ->setFkPaymentUnzer($paymentUnzerTransactionTransfer->getIdPaymentUnzer());
@@ -132,9 +140,10 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer
      */
     public function mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
-        SpyPaymentUnzerTransaction $paymentUnzerTransactionEntity,
+        SpyPaymentUnzerTransaction      $paymentUnzerTransactionEntity,
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer
-    ): PaymentUnzerTransactionTransfer {
+    ): PaymentUnzerTransactionTransfer
+    {
         return $paymentUnzerTransactionTransfer
             ->fromArray($paymentUnzerTransactionEntity->toArray(), true)
             ->setIdPaymentUnzer($paymentUnzerTransactionEntity->getFkPaymentUnzer());
@@ -148,8 +157,9 @@ class UnzerPersistenceMapper
      */
     public function mapPaymentUnzerCustomerEntityToUnzerCustomerTransfer(
         SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity,
-        UnzerCustomerTransfer $unzerCustomerTransfer
-    ): UnzerCustomerTransfer {
+        UnzerCustomerTransfer   $unzerCustomerTransfer
+    ): UnzerCustomerTransfer
+    {
         return $unzerCustomerTransfer->setId($paymentUnzerCustomerEntity->getUnzerCustomerId());
     }
 
@@ -161,8 +171,9 @@ class UnzerPersistenceMapper
      */
     public function mapUnzerConfigTransferToUnzerConfigEntity(
         UnzerConfigTransfer $unzerConfigTransfer,
-        SpyUnzerConfig $unzerConfigEntity
-    ): SpyUnzerConfig {
+        SpyUnzerConfig      $unzerConfigEntity
+    ): SpyUnzerConfig
+    {
         return $unzerConfigEntity->fromArray($unzerConfigTransfer->toArray())
             ->setPublicKey($unzerConfigTransfer->getUnzerKeypair()->getPublicKey());
     }
@@ -174,10 +185,26 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\UnzerConfigTransfer
      */
     public function mapUnzerConfigEntityToUnzerConfigTransfer(
-        SpyUnzerConfig $unzerConfigEntity,
+        SpyUnzerConfig      $unzerConfigEntity,
         UnzerConfigTransfer $unzerConfigTransfer
-    ): UnzerConfigTransfer {
-        return $unzerConfigTransfer->fromArray($unzerConfigEntity->toArray(), true);
+    ): UnzerConfigTransfer
+    {
+        $unzerConfigTransfer = $unzerConfigTransfer
+            ->fromArray($unzerConfigEntity->toArray(), true);
+
+        if ($unzerConfigTransfer->getUnzerKeypair()) {
+            $unzerConfigTransfer->getUnzerKeypair()
+                ->setPublicKey($unzerConfigEntity->getPublicKey())
+                ->setKeypairId($unzerConfigEntity->getKeypairId());
+
+            return $unzerConfigTransfer;
+        }
+
+        return $unzerConfigTransfer->setUnzerKeypair(
+            (new UnzerKeypairTransfer())
+                ->setPublicKey($unzerConfigEntity->getPublicKey())
+                ->setKeypairId($unzerConfigEntity->getKeypairId())
+        );
     }
 
     /**
@@ -187,9 +214,10 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
     public function mapUnzerConfigStoreEntitiesToStoreRelationTransfer(
-        ObjectCollection $unzerConfigStoreEntities,
+        ObjectCollection      $unzerConfigStoreEntities,
         StoreRelationTransfer $storeRelationTransfer
-    ): StoreRelationTransfer {
+    ): StoreRelationTransfer
+    {
         foreach ($unzerConfigStoreEntities as $unzerConfigStoreEntity) {
             $storeRelationTransfer->addStores($this->mapStoreEntityToStoreTransfer($unzerConfigStoreEntity->getSpyStore(), new StoreTransfer()));
             $storeRelationTransfer->addIdStores($unzerConfigStoreEntity->getFkStore());
@@ -216,9 +244,10 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
      */
     public function mapUnzerConfigEntityCollectionToUnzerConfigTransferCollection(
-        ObjectCollection $unzerConfigEntities,
+        ObjectCollection              $unzerConfigEntities,
         UnzerConfigCollectionTransfer $unzerConfigCollectionTransfer
-    ): UnzerConfigCollectionTransfer {
+    ): UnzerConfigCollectionTransfer
+    {
         foreach ($unzerConfigEntities as $unzerConfigEntity) {
             $unzerConfigCollectionTransfer->addUnzerConfig(
                 $this->mapUnzerConfigEntityToUnzerConfigTransfer($unzerConfigEntity, new UnzerConfigTransfer()),

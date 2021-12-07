@@ -127,7 +127,6 @@
         <property name="keypairId" type="string"/>
         <property name="configName" type="string"/>
         <property name="type" type="int"/>
-        <property name="publicKey" type="string"/>
         <property name="participantId" type="string"/>
         <property name="merchantReference" type="string"/>
         <property name="idUnzerConfig" type="int"/>

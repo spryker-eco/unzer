@@ -376,6 +376,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerReader(),
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentSaver(),
+            $this->createUnzerKeypairResolver()
         );
     }
 

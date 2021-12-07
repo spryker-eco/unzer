@@ -8,7 +8,6 @@
         <property name="keypairId" dataBuilderRule="word"/>
         <property name="configName" dataBuilderRule="word"/>
         <property name="type" dataBuilderRule="randomDigit(20)"/>
-        <property name="publicKey" dataBuilderRule="word"/>
         <property name="participantId" dataBuilderRule="word"/>
         <property name="merchantReference" dataBuilderRule="word"/>
         <property name="idUnzerConfig" dataBuilderRule="randomDigit(20)"/>
@@ -19,6 +18,17 @@
         <property name="keypairId" dataBuilderRule="word"/>
         <property name="publicKey" dataBuilderRule="word"/>
         <property name="privateKey" dataBuilderRule="word"/>
+    </transfer>
+
+    <transfer name="UnzerPayment">
+        <property name="amountTotal" dataBuilderRule="randomDigit(200)"/>
+        <property name="amountCharged" dataBuilderRule="randomDigit(200)"/>
+        <property name="amountCanceled" dataBuilderRule="randomDigit(200)"/>
+        <property name="amountRemaining" dataBuilderRule="randomDigit(200)"/>
+        <property name="currency" dataBuilderRule="currencyCode()"/>
+        <property name="orderId" dataBuilderRule="word()"/>
+        <property name="invoiceId" dataBuilderRule="word()"/>
+        <property name="redirectUrl" dataBuilderRule="url()"/>
     </transfer>
 
 </transfers>

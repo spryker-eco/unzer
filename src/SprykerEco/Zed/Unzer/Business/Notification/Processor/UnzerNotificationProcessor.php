@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\Notification\Processor;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
@@ -43,24 +44,32 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
     protected $unzerPaymentSaver;
 
     /**
+     * @var UnzerKeypairResolverInterface
+     */
+    protected $unzerKeypairResolver;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
+     * @param UnzerKeypairResolverInterface $unzerKeypairResolver
      */
     public function __construct(
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
         UnzerConfig $unzerConfig,
         UnzerReaderInterface $unzerReader,
         UnzerPaymentMapperInterface $unzerPaymentMapper,
-        UnzerPaymentSaverInterface $unzerPaymentSaver
+        UnzerPaymentSaverInterface $unzerPaymentSaver,
+        UnzerKeypairResolverInterface $unzerKeypairResolver
     ) {
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerConfig = $unzerConfig;
         $this->unzerReader = $unzerReader;
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerPaymentSaver = $unzerPaymentSaver;
+        $this->unzerKeypairResolver = $unzerKeypairResolver;
     }
 
     /**
@@ -93,6 +102,8 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
             $paymentUnzerTransfer,
             new UnzerPaymentTransfer(),
         );
+
+        $unzerPaymentTransfer = $this->setUnzerKeypair($unzerPaymentTransfer, $paymentUnzerTransfer->getKeypairIdOrFail());
         $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
 
         $orderItemStatus = $this->unzerConfig->mapUnzerEventToOmsStatus(
@@ -103,5 +114,19 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
         $unzerNotificationTransfer->setIsProcessed(true);
 
         return $unzerNotificationTransfer;
+    }
+
+    /**
+     * @param UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param string $keypairId
+     *
+     * @return UnzerPaymentTransfer
+     */
+    protected function setUnzerKeypair(UnzerPaymentTransfer $unzerPaymentTransfer, string $keypairId): UnzerPaymentTransfer
+    {
+        $unzerKeypairTransfer = $this->unzerKeypairResolver->getUnzerKeypairByKeypairId($keypairId);
+        $unzerPaymentTransfer->setUnzerKeypair($unzerKeypairTransfer);
+
+        return $unzerPaymentTransfer;
     }
 }

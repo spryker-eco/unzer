@@ -12,7 +12,7 @@ class CreateUnzerConfigFacadeTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
-    public function testCreateUnzerConfigSuccess(): void
+    public function testCreateUnzerConfig(): void
     {
         //Arrange
         $unzerConfigTransfer = $this->tester->createUnzerConfigTransfer();
