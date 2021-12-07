@@ -12,8 +12,8 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\StoreRelationTransfer;
-use Generated\Shared\Transfer\UnzerConfigCollectionTransfer;
-use Generated\Shared\Transfer\UnzerConfigCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 
 interface UnzerRepositoryInterface
@@ -68,16 +68,16 @@ interface UnzerRepositoryInterface
     public function findUnzerCustomerByIdCustomer(int $idCustomer): ?UnzerCustomerTransfer;
 
     /**
-     * @param int $idUnzerConfig
+     * @param int $idUnzerCredentials
      *
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
-    public function getStoreRelationByIdPaymentMethod(int $idUnzerConfig): StoreRelationTransfer;
+    public function getStoreRelationByIdPaymentMethod(int $idUnzerCredentials): StoreRelationTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
-    public function findUnzerConfigsByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): UnzerConfigCollectionTransfer;
+    public function findUnzerCredentialssByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): UnzerCredentialsCollectionTransfer;
 }

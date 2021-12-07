@@ -7,7 +7,7 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
-class UpdateUnzerConfigFacadeTest extends UnzerFacadeBaseTest
+class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
     protected const ANOTHER_PUBLIC_KEY = 'key2';
     const ANOTHER_PARTICIPANT_ID = 'part2';
@@ -16,28 +16,28 @@ class UpdateUnzerConfigFacadeTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
-    public function testUpdateUnzerConfigSuccess(): void
+    public function testUpdateUnzerCredentialsSuccess(): void
     {
         //Arrange
-        $unzerConfigTransfer = $this->tester->haveUnzerConfig()->getUnzerConfig();
-        $unzerConfigTransfer->setParticipantId(static::ANOTHER_PARTICIPANT_ID);
-        $unzerConfigTransfer->getUnzerKeypairOrFail()->setPublicKey(static::ANOTHER_PUBLIC_KEY);
-        $unzerConfigTransfer->getUnzerKeypairOrFail()->setPrivateKey(static::ANOTHER_PRIVATE_KEY);
+        $unzerCredentialsTransfer = $this->tester->haveUnzerCredentials()->getUnzerCredentials();
+        $unzerCredentialsTransfer->setParticipantId(static::ANOTHER_PARTICIPANT_ID);
+        $unzerCredentialsTransfer->getUnzerKeypairOrFail()->setPublicKey(static::ANOTHER_PUBLIC_KEY);
+        $unzerCredentialsTransfer->getUnzerKeypairOrFail()->setPrivateKey(static::ANOTHER_PRIVATE_KEY);
 
         //Act
-        $unzerConfigResponseTransfer = $this->facade->updateUnzerConfig($unzerConfigTransfer);
+        $unzerCredentialsResponseTransfer = $this->facade->updateUnzerCredentials($unzerCredentialsTransfer);
 
         //Assert
-        $this->assertTrue($unzerConfigResponseTransfer->getIsSuccessful());
-        $this->assertSame(static::ANOTHER_PUBLIC_KEY, $unzerConfigResponseTransfer->getUnzerConfigOrFail()->getUnzerKeypairOrFail()->getPublicKey());
-        $this->assertSame(static::ANOTHER_PRIVATE_KEY, $unzerConfigResponseTransfer->getUnzerConfigOrFail()->getUnzerKeypairOrFail()->getPrivateKey());
-        $this->assertSame(static::ANOTHER_PARTICIPANT_ID, $unzerConfigResponseTransfer->getUnzerConfigOrFail()->getParticipantId());
+        $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
+        $this->assertSame(static::ANOTHER_PUBLIC_KEY, $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPublicKey());
+        $this->assertSame(static::ANOTHER_PRIVATE_KEY, $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPrivateKey());
+        $this->assertSame(static::ANOTHER_PARTICIPANT_ID, $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail()->getParticipantId());
     }
 
     /**
      * @return void
      */
-    public function testUpdateUnzerConfigThrowsException(): void
+    public function testUpdateUnzerCredentialsThrowsException(): void
     {
     }
 }

@@ -10,7 +10,7 @@ namespace SprykerEco\Zed\Unzer\Persistence;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
-use Generated\Shared\Transfer\UnzerConfigTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 
 interface UnzerEntityManagerInterface
 {
@@ -40,32 +40,32 @@ interface UnzerEntityManagerInterface
     ): PaymentUnzerTransactionTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function createUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigTransfer;
+    public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer;
 
     /**
      * @param array $idStores
-     * @param int $idUnzerConfig
+     * @param int $idUnzerCredentials
      *
      * @return void
      */
-    public function addUnzerConfigStoreRelationsForStores(array $idStores, int $idUnzerConfig): void;
+    public function addUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void;
 
     /**
      * @param array $idStores
-     * @param int $idUnzerConfig
+     * @param int $idUnzerCredentials
      *
      * @return void
      */
-    public function removeUnzerConfigStoreRelationsForStores(array $idStores, int $idUnzerConfig): void;
+    public function removeUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void;
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer|null
      */
-    public function updateUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): ?UnzerConfigTransfer;
+    public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): ?UnzerCredentialsTransfer;
 }

@@ -13,8 +13,8 @@ use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
-use Generated\Shared\Transfer\UnzerConfigResponseTransfer;
-use Generated\Shared\Transfer\UnzerConfigTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
@@ -255,13 +255,13 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    public function createUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigResponseTransfer
+    public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        return $this->getFactory()->createUnzerConfigCreator()->createUnzerConfig($unzerConfigTransfer);
+        return $this->getFactory()->createUnzerCredentialsCreator()->createUnzerCredentials($unzerCredentialsTransfer);
     }
 
     /**
@@ -269,12 +269,12 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    public function updateUnzerConfig(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigResponseTransfer
+    public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        return $this->getFactory()->createUnzerConfigUpdater()->updateUnzerConfig($unzerConfigTransfer);
+        return $this->getFactory()->createUnzerCredentialsUpdater()->updateUnzerCredentials($unzerCredentialsTransfer);
     }
 }

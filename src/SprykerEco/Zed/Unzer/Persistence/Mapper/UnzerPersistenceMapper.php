@@ -13,15 +13,15 @@ use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
-use Generated\Shared\Transfer\UnzerConfigCollectionTransfer;
-use Generated\Shared\Transfer\UnzerConfigTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction;
-use Orm\Zed\Unzer\Persistence\SpyUnzerConfig;
+use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
 use Propel\Runtime\Collection\ObjectCollection;
 
 class UnzerPersistenceMapper
@@ -164,63 +164,63 @@ class UnzerPersistenceMapper
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
-     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerConfig $unzerConfigEntity
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentials $unzerCredentialsEntity
      *
-     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerConfig
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentials
      */
-    public function mapUnzerConfigTransferToUnzerConfigEntity(
-        UnzerConfigTransfer $unzerConfigTransfer,
-        SpyUnzerConfig      $unzerConfigEntity
-    ): SpyUnzerConfig
+    public function mapUnzerCredentialsTransferToUnzerCredentialsEntity(
+        UnzerCredentialsTransfer $unzerCredentialsTransfer,
+        SpyUnzerCredentials      $unzerCredentialsEntity
+    ): SpyUnzerCredentials
     {
-        return $unzerConfigEntity->fromArray($unzerConfigTransfer->toArray())
-            ->setPublicKey($unzerConfigTransfer->getUnzerKeypair()->getPublicKey());
+        return $unzerCredentialsEntity->fromArray($unzerCredentialsTransfer->toArray())
+            ->setPublicKey($unzerCredentialsTransfer->getUnzerKeypair()->getPublicKey());
     }
 
     /**
-     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerConfig $unzerConfigEntity
-     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
+     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentials $unzerCredentialsEntity
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function mapUnzerConfigEntityToUnzerConfigTransfer(
-        SpyUnzerConfig      $unzerConfigEntity,
-        UnzerConfigTransfer $unzerConfigTransfer
-    ): UnzerConfigTransfer
+    public function mapUnzerCredentialsEntityToUnzerCredentialsTransfer(
+        SpyUnzerCredentials      $unzerCredentialsEntity,
+        UnzerCredentialsTransfer $unzerCredentialsTransfer
+    ): UnzerCredentialsTransfer
     {
-        $unzerConfigTransfer = $unzerConfigTransfer
-            ->fromArray($unzerConfigEntity->toArray(), true);
+        $unzerCredentialsTransfer = $unzerCredentialsTransfer
+            ->fromArray($unzerCredentialsEntity->toArray(), true);
 
-        if ($unzerConfigTransfer->getUnzerKeypair()) {
-            $unzerConfigTransfer->getUnzerKeypair()
-                ->setPublicKey($unzerConfigEntity->getPublicKey())
-                ->setKeypairId($unzerConfigEntity->getKeypairId());
+        if ($unzerCredentialsTransfer->getUnzerKeypair()) {
+            $unzerCredentialsTransfer->getUnzerKeypair()
+                ->setPublicKey($unzerCredentialsEntity->getPublicKey())
+                ->setKeypairId($unzerCredentialsEntity->getKeypairId());
 
-            return $unzerConfigTransfer;
+            return $unzerCredentialsTransfer;
         }
 
-        return $unzerConfigTransfer->setUnzerKeypair(
+        return $unzerCredentialsTransfer->setUnzerKeypair(
             (new UnzerKeypairTransfer())
-                ->setPublicKey($unzerConfigEntity->getPublicKey())
-                ->setKeypairId($unzerConfigEntity->getKeypairId())
+                ->setPublicKey($unzerCredentialsEntity->getPublicKey())
+                ->setKeypairId($unzerCredentialsEntity->getKeypairId())
         );
     }
 
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection $unzerConfigStoreEntities
+     * @param \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsStoreEntities
      * @param \Generated\Shared\Transfer\StoreRelationTransfer $storeRelationTransfer
      *
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
-    public function mapUnzerConfigStoreEntitiesToStoreRelationTransfer(
-        ObjectCollection      $unzerConfigStoreEntities,
+    public function mapUnzerCredentialsStoreEntitiesToStoreRelationTransfer(
+        ObjectCollection      $unzerCredentialsStoreEntities,
         StoreRelationTransfer $storeRelationTransfer
     ): StoreRelationTransfer
     {
-        foreach ($unzerConfigStoreEntities as $unzerConfigStoreEntity) {
-            $storeRelationTransfer->addStores($this->mapStoreEntityToStoreTransfer($unzerConfigStoreEntity->getSpyStore(), new StoreTransfer()));
-            $storeRelationTransfer->addIdStores($unzerConfigStoreEntity->getFkStore());
+        foreach ($unzerCredentialsStoreEntities as $unzerCredentialsStoreEntity) {
+            $storeRelationTransfer->addStores($this->mapStoreEntityToStoreTransfer($unzerCredentialsStoreEntity->getSpyStore(), new StoreTransfer()));
+            $storeRelationTransfer->addIdStores($unzerCredentialsStoreEntity->getFkStore());
         }
 
         return $storeRelationTransfer;
@@ -238,22 +238,22 @@ class UnzerPersistenceMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection $unzerConfigEntities
-     * @param \Generated\Shared\Transfer\UnzerConfigCollectionTransfer $unzerConfigCollectionTransfer
+     * @param \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsEntities
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
-    public function mapUnzerConfigEntityCollectionToUnzerConfigTransferCollection(
-        ObjectCollection              $unzerConfigEntities,
-        UnzerConfigCollectionTransfer $unzerConfigCollectionTransfer
-    ): UnzerConfigCollectionTransfer
+    public function mapUnzerCredentialsEntityCollectionToUnzerCredentialsTransferCollection(
+        ObjectCollection              $unzerCredentialsEntities,
+        UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
+    ): UnzerCredentialsCollectionTransfer
     {
-        foreach ($unzerConfigEntities as $unzerConfigEntity) {
-            $unzerConfigCollectionTransfer->addUnzerConfig(
-                $this->mapUnzerConfigEntityToUnzerConfigTransfer($unzerConfigEntity, new UnzerConfigTransfer()),
+        foreach ($unzerCredentialsEntities as $unzerCredentialsEntity) {
+            $unzerCredentialsCollectionTransfer->addUnzerCredentials(
+                $this->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, new UnzerCredentialsTransfer()),
             );
         }
 
-        return $unzerConfigCollectionTransfer;
+        return $unzerCredentialsCollectionTransfer;
     }
 }

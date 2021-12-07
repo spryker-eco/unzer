@@ -12,9 +12,9 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
-use Generated\Shared\Transfer\UnzerConfigCollectionTransfer;
-use Generated\Shared\Transfer\UnzerConfigCriteriaTransfer;
-use Generated\Shared\Transfer\UnzerConfigTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 
 interface UnzerReaderInterface
@@ -69,16 +69,16 @@ interface UnzerReaderInterface
     public function getUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer|null
      */
-    public function getUnzerConfigByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): ?UnzerConfigTransfer;
+    public function getUnzerCredentialsByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): ?UnzerCredentialsTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
-    public function getUnzerConfigCollectionByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): UnzerConfigCollectionTransfer;
+    public function getUnzerCredentialsCollectionByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): UnzerCredentialsCollectionTransfer;
 }

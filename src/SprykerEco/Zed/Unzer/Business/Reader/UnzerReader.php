@@ -12,10 +12,10 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
-use Generated\Shared\Transfer\UnzerConfigCollectionTransfer;
-use Generated\Shared\Transfer\UnzerConfigConditionsTransfer;
-use Generated\Shared\Transfer\UnzerConfigCriteriaTransfer;
-use Generated\Shared\Transfer\UnzerConfigTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
@@ -72,18 +72,18 @@ class UnzerReader implements UnzerReaderInterface
      */
     public function getPaymentUnzerByPaymentIdAndPublicKey(string $unzerPaymentId, string $publicKey): ?PaymentUnzerTransfer
     {
-        $unzerConfigCriteriaTransfer = (new UnzerConfigCriteriaTransfer())->setUnzerConfigConditions(
-            (new UnzerConfigConditionsTransfer())->addPublicKey($publicKey),
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
+            (new UnzerCredentialsConditionsTransfer())->addPublicKey($publicKey),
         );
-        $unzerConfigCollectionTransfer = $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
-        if ($unzerConfigCollectionTransfer->getUnzerConfigs()->count() === 0) {
+        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
+        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
             return null;
         }
-        $unzerConfigTransfer = $unzerConfigCollectionTransfer->getUnzerConfigs()[0];
+        $unzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()[0];
 
         return $this->unzerRepository->findPaymentUnzerByPaymentIdAndKeypairId(
             $unzerPaymentId,
-            $unzerConfigTransfer->getKeypairId()
+            $unzerCredentialsTransfer->getKeypairId()
         );
     }
 
@@ -126,63 +126,53 @@ class UnzerReader implements UnzerReaderInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer|null
      */
-    public function getUnzerConfigByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): ?UnzerConfigTransfer
+    public function getUnzerCredentialsByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): ?UnzerCredentialsTransfer
     {
-        $unzerConfigCollectionTransfer = $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
-        if ($unzerConfigCollectionTransfer->getUnzerConfigs()->count() === 0) {
+        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
+        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
             return null;
         }
 
-        $unzerConfigTransfer = $unzerConfigCollectionTransfer->getUnzerConfigs()[0];
-        $this->attachUnzerPrivateKey($unzerConfigTransfer);
+        $unzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()[0];
+        $this->attachUnzerPrivateKey($unzerCredentialsTransfer);
 
-        return $unzerConfigTransfer;
+        return $unzerCredentialsTransfer;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
-    public function getUnzerConfigCollectionByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): UnzerConfigCollectionTransfer
+    public function getUnzerCredentialsCollectionByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): UnzerCredentialsCollectionTransfer
     {
-        $unzerConfigCollectionTransfer = $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
-        foreach ($unzerConfigCollectionTransfer->getUnzerConfigs() as $unzerConfigTransfer) {
-            $this->attachUnzerPrivateKey($unzerConfigTransfer);
+        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
+        foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
+            $this->attachUnzerPrivateKey($unzerCredentialsTransfer);
         }
 
-        return $unzerConfigCollectionTransfer;
+        return $unzerCredentialsCollectionTransfer;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerConfigCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function getUnzerConfigsByCriteria(UnzerConfigCriteriaTransfer $unzerConfigCriteriaTransfer): UnzerConfigCollectionTransfer
+    protected function attachUnzerPrivateKey(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
     {
-        return $this->unzerRepository->findUnzerConfigsByCriteria($unzerConfigCriteriaTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerConfigTransfer $unzerConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerConfigTransfer
-     */
-    protected function attachUnzerPrivateKey(UnzerConfigTransfer $unzerConfigTransfer): UnzerConfigTransfer
-    {
-        $unzerPrivateKey = $this->unzerVaultReader->retrieveUnzerPrivateKey($unzerConfigTransfer->getKeypairId());
+        $unzerPrivateKey = $this->unzerVaultReader->retrieveUnzerPrivateKey($unzerCredentialsTransfer->getKeypairId());
         if ($unzerPrivateKey === null) {
-            return $unzerConfigTransfer;
+            return $unzerCredentialsTransfer;
         }
 
-        $unzerKeyPairTransfer = $unzerConfigTransfer->getUnzerKeypairOrFail();
+        $unzerKeyPairTransfer = $unzerCredentialsTransfer->getUnzerKeypairOrFail();
         $unzerKeyPairTransfer->setPrivateKey($unzerPrivateKey);
 
-        return $unzerConfigTransfer->setUnzerKeypair($unzerKeyPairTransfer);
+        return $unzerCredentialsTransfer->setUnzerKeypair($unzerKeyPairTransfer);
     }
 }

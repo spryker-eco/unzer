@@ -10,7 +10,7 @@ namespace SprykerEcoTest\Zed\Unzer;
 use Codeception\Actor;
 use Codeception\Scenario;
 use Generated\Shared\DataBuilder\QuoteBuilder;
-use Generated\Shared\DataBuilder\UnzerConfigBuilder;
+use Generated\Shared\DataBuilder\UnzerCredentialsBuilder;
 use Generated\Shared\DataBuilder\UnzerPaymentBuilder;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -24,8 +24,8 @@ use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiSetWebhookResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiUpdateCustomerResponseTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
-use Generated\Shared\Transfer\UnzerConfigResponseTransfer;
-use Generated\Shared\Transfer\UnzerConfigTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
@@ -425,11 +425,11 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return \Generated\Shared\Transfer\UnzerConfigTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function createUnzerConfigTransfer(): UnzerConfigTransfer
+    public function createUnzerCredentialsTransfer(): UnzerCredentialsTransfer
     {
-        return (new UnzerConfigBuilder())->build()
+        return (new UnzerCredentialsBuilder())->build()
             ->setKeypairId(static::UNZER_KEYPAIR_ID)
             ->setUnzerKeypair($this->createUnzerKeyPair());
     }
@@ -447,11 +447,11 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @return UnzerConfigResponseTransfer
+     * @return UnzerCredentialsResponseTransfer
      */
-    public function haveUnzerConfig(): UnzerConfigResponseTransfer
+    public function haveUnzerCredentials(): UnzerCredentialsResponseTransfer
     {
-       return $this->getUnzerFacade()->createUnzerConfig($this->createUnzerConfigTransfer());
+       return $this->getUnzerFacade()->createUnzerCredentials($this->createUnzerCredentialsTransfer());
     }
 
     /**

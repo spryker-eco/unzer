@@ -5,14 +5,14 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Business\Config;
+namespace SprykerEco\Zed\Unzer\Business\Credentials;
 
 use Generated\Shared\Transfer\StoreRelationTransfer;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 
-class UnzerConfigStoreRelationUpdater implements UnzerConfigStoreRelationUpdaterInterface
+class UnzerCredentialsStoreRelationUpdater implements UnzerCredentialsStoreRelationUpdaterInterface
 {
     use TransactionTrait;
 
@@ -59,24 +59,24 @@ class UnzerConfigStoreRelationUpdater implements UnzerConfigStoreRelationUpdater
     {
         $storeRelationTransfer->requireIdEntity();
 
-        $currentIdStores = $this->getIdStoresByIdUnzerConfig($storeRelationTransfer->getIdEntity());
+        $currentIdStores = $this->getIdStoresByIdUnzerCredentials($storeRelationTransfer->getIdEntity());
         $requestedIdStores = $storeRelationTransfer->getIdStores() ?? [];
 
         $saveIdStores = array_diff($requestedIdStores, $currentIdStores);
         $deleteIdStores = array_diff($currentIdStores, $requestedIdStores);
 
-        $this->unzerEntityManager->addUnzerConfigStoreRelationsForStores($saveIdStores, $storeRelationTransfer->getIdEntity());
-        $this->unzerEntityManager->removeUnzerConfigStoreRelationsForStores($deleteIdStores, $storeRelationTransfer->getIdEntity());
+        $this->unzerEntityManager->addUnzerCredentialsStoreRelationsForStores($saveIdStores, $storeRelationTransfer->getIdEntity());
+        $this->unzerEntityManager->removeUnzerCredentialsStoreRelationsForStores($deleteIdStores, $storeRelationTransfer->getIdEntity());
     }
 
     /**
-     * @param int $idUnzerConfig
+     * @param int $idUnzerCredentials
      *
      * @return array<int>
      */
-    protected function getIdStoresByIdUnzerConfig(int $idUnzerConfig): array
+    protected function getIdStoresByIdUnzerCredentials(int $idUnzerCredentials): array
     {
-        $storeRelation = $this->unzerRepository->getStoreRelationByIdPaymentMethod($idUnzerConfig);
+        $storeRelation = $this->unzerRepository->getStoreRelationByIdPaymentMethod($idUnzerCredentials);
 
         return $storeRelation->getIdStores();
     }

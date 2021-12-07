@@ -7,20 +7,20 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
-class CreateUnzerConfigFacadeTest extends UnzerFacadeBaseTest
+class CreateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
     /**
      * @return void
      */
-    public function testCreateUnzerConfig(): void
+    public function testCreateUnzerCredentials(): void
     {
         //Arrange
-        $unzerConfigTransfer = $this->tester->createUnzerConfigTransfer();
+        $unzerCredentialsTransfer = $this->tester->createUnzerCredentialsTransfer();
 
         //Act
-        $unzerConfigResponseTransfer = $this->facade->createUnzerConfig($unzerConfigTransfer);
+        $unzerCredentialsResponseTransfer = $this->facade->createUnzerCredentials($unzerCredentialsTransfer);
 
         //Assert
-        $this->assertTrue($unzerConfigResponseTransfer->getIsSuccessful());
+        $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
     }
 }

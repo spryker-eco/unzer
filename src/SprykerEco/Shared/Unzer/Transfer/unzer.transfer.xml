@@ -123,14 +123,14 @@
         <property name="privateKey" type="string"/>
     </transfer>
 
-    <transfer name="UnzerConfig">
+    <transfer name="UnzerCredentials">
         <property name="keypairId" type="string"/>
         <property name="configName" type="string"/>
         <property name="type" type="int"/>
         <property name="participantId" type="string"/>
         <property name="merchantReference" type="string"/>
-        <property name="idUnzerConfig" type="int"/>
-        <property name="parentIdUnzerConfig" type="int"/>
+        <property name="idUnzerCredentials" type="int"/>
+        <property name="parentIdUnzerCredentials" type="int"/>
         <property name="storeRelation" type="StoreRelation"/>
         <property name="unzerKeypair" type="UnzerKeypair"/>
     </transfer>
@@ -150,8 +150,8 @@
         <property name="value" type="string"/>
     </transfer>
 
-    <transfer name="UnzerConfigResponse">
-        <property name="unzerConfig" type="UnzerConfig"/>
+    <transfer name="UnzerCredentialsResponse">
+        <property name="unzerCredentials" type="UnzerCredentials"/>
         <property name="isSuccessful" type="bool"/>
         <property name="messages" type="Message[]" singular="message"/>
     </transfer>
@@ -271,13 +271,13 @@
         <property name="customerMessage" type="string"/>
     </transfer>
 
-    <transfer name="UnzerConfigCriteria">
-        <property name="unzerConfigConditions" type="UnzerConfigConditions" />
+    <transfer name="UnzerCredentialsCriteria">
+        <property name="unzerCredentialsConditions" type="UnzerCredentialsConditions" />
         <property name="sortCollection" type="Sort[]" singular="sort"/>
         <property name="pagination" type="Pagination" />
     </transfer>
 
-    <transfer name="UnzerConfigConditions">
+    <transfer name="UnzerCredentialsConditions">
         <property name="merchantReferences" type="string[]" singular="merchantReference"/>
         <property name="storeNames" type="string[]" singular="storeName"/>
         <property name="publicKeys" type="string[]" singular="publicKey"/>
@@ -285,8 +285,8 @@
         <property name="types" type="int[]" singular="type"/>
     </transfer>
 
-    <transfer name="UnzerConfigCollection">
-        <property name="unzerConfigs" type="UnzerConfig[]" singular="unzerConfig"/>
+    <transfer name="UnzerCredentialsCollection">
+        <property name="unzerCredentials" type="UnzerCredentials[]" singular="unzerCredentials"/>
         <property name="pagination" type="Pagination"/>
     </transfer>
 

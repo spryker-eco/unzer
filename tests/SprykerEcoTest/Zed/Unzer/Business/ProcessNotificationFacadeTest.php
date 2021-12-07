@@ -16,7 +16,7 @@ class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest
     {
         //Arrange
         $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer();
-        $this->tester->haveUnzerConfig();
+        $this->tester->haveUnzerCredentials();
         $this->tester->haveUnzerEntities(
             $this->tester->createQuoteTransfer(),
             $this->tester->createOrder()

@@ -8,8 +8,8 @@
 namespace SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver;
 
 use Generated\Shared\Transfer\StoreTransfer;
-use Generated\Shared\Transfer\UnzerConfigConditionsTransfer;
-use Generated\Shared\Transfer\UnzerConfigCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
@@ -39,15 +39,15 @@ class UnzerKeypairResolver implements UnzerKeypairResolverInterface
      */
     public function getUnzerKeypairByMerchantReferenceAndStore(string $merchantReference, StoreTransfer $storeTransfer): UnzerKeypairTransfer
     {
-        $unzerConfigCriteriaTransfer = (new UnzerConfigCriteriaTransfer())
-            ->setUnzerConfigConditions(
-                (new UnzerConfigConditionsTransfer())
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions(
+                (new UnzerCredentialsConditionsTransfer())
                     ->addMerchantReference($merchantReference)
                     ->addStoreName($storeTransfer->getName()),
             );
 
-        $unzerConfigTransfer = $this->unzerReader->getUnzerConfigByCriteria($unzerConfigCriteriaTransfer);
-        if ($unzerConfigTransfer === null || $unzerConfigTransfer->getUnzerKeypair() === null) {
+        $unzerCredentialsTransfer = $this->unzerReader->getUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+        if ($unzerCredentialsTransfer === null || $unzerCredentialsTransfer->getUnzerKeypair() === null) {
             throw new UnzerException(
                 sprintf(
                     'UnzerKeypair not found for merchant reference %s and store %s',
@@ -57,7 +57,7 @@ class UnzerKeypairResolver implements UnzerKeypairResolverInterface
             );
         }
 
-        return $unzerConfigTransfer->getUnzerKeypair();
+        return $unzerCredentialsTransfer->getUnzerKeypair();
     }
 
     /**
@@ -69,14 +69,14 @@ class UnzerKeypairResolver implements UnzerKeypairResolverInterface
      */
     public function getUnzerKeypairByKeypairId(string $unzerKeypairId): UnzerKeypairTransfer
     {
-        $unzerConfigCriteriaTransfer = (new UnzerConfigCriteriaTransfer())
-            ->setUnzerConfigConditions((new UnzerConfigConditionsTransfer())->addKeypairId($unzerKeypairId));
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions((new UnzerCredentialsConditionsTransfer())->addKeypairId($unzerKeypairId));
 
-        $unzerConfigTransfer = $this->unzerReader->getUnzerConfigByCriteria($unzerConfigCriteriaTransfer);
-        if ($unzerConfigTransfer === null || $unzerConfigTransfer->getUnzerKeypair() === null) {
+        $unzerCredentialsTransfer = $this->unzerReader->getUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+        if ($unzerCredentialsTransfer === null || $unzerCredentialsTransfer->getUnzerKeypair() === null) {
             throw new UnzerException(sprintf('UnzerKeypair not found by the key %s', $unzerKeypairId));
         }
 
-        return $unzerConfigTransfer->getUnzerKeypair();
+        return $unzerCredentialsTransfer->getUnzerKeypair();
     }
 }

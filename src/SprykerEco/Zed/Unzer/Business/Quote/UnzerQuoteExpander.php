@@ -10,8 +10,8 @@ namespace SprykerEco\Zed\Unzer\Business\Quote;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
-use Generated\Shared\Transfer\UnzerConfigConditionsTransfer;
-use Generated\Shared\Transfer\UnzerConfigCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants;
@@ -158,18 +158,18 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      */
     protected function setMerchantParticipantIdByType(ItemTransfer $itemTransfer, StoreTransfer $storeTransfer, int $type): ItemTransfer
     {
-        $unzerConfigCriteriaTransfer = (new UnzerConfigCriteriaTransfer())
-            ->setUnzerConfigConditions(
-                (new UnzerConfigConditionsTransfer())
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions(
+                (new UnzerCredentialsConditionsTransfer())
                     ->addStoreName($storeTransfer->getName())
                     ->addType($type),
             );
 
-        $unzerConfigTransfer = $this->unzerReader->getUnzerConfigByCriteria($unzerConfigCriteriaTransfer);
-        if ($unzerConfigTransfer === null) {
+        $unzerCredentialsTransfer = $this->unzerReader->getUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+        if ($unzerCredentialsTransfer === null) {
             return $itemTransfer;
         }
 
-        return $itemTransfer->setUnzerParticipantId($unzerConfigTransfer->getParticipantIdOrFail());
+        return $itemTransfer->setUnzerParticipantId($unzerCredentialsTransfer->getParticipantIdOrFail());
     }
 }

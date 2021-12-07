@@ -5,11 +5,11 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Business\Config;
+namespace SprykerEco\Zed\Unzer\Business\Credentials;
 
 use Generated\Shared\Transfer\StoreRelationTransfer;
 
-interface UnzerConfigStoreRelationUpdaterInterface
+interface UnzerCredentialsStoreRelationUpdaterInterface
 {
     /**
      * @param \Generated\Shared\Transfer\StoreRelationTransfer $storeRelationTransfer

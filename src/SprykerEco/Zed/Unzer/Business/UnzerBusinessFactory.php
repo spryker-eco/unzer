@@ -47,12 +47,12 @@ use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutPostSaveMapper;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
-use SprykerEco\Zed\Unzer\Business\Config\UnzerConfigCreator;
-use SprykerEco\Zed\Unzer\Business\Config\UnzerConfigCreatorInterface;
-use SprykerEco\Zed\Unzer\Business\Config\UnzerConfigStoreRelationUpdater;
-use SprykerEco\Zed\Unzer\Business\Config\UnzerConfigStoreRelationUpdaterInterface;
-use SprykerEco\Zed\Unzer\Business\Config\UnzerConfigUpdater;
-use SprykerEco\Zed\Unzer\Business\Config\UnzerConfigUpdaterInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreator;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreatorInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdater;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdater;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfigurator;
 use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface;
 use SprykerEco\Zed\Unzer\Business\Notification\Processor\UnzerNotificationProcessor;
@@ -681,35 +681,35 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Config\UnzerConfigCreatorInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreatorInterface
      */
-    public function createUnzerConfigCreator(): UnzerConfigCreatorInterface
+    public function createUnzerCredentialsCreator(): UnzerCredentialsCreatorInterface
     {
-        return new UnzerConfigCreator(
+        return new UnzerCredentialsCreator(
             $this->getEntityManager(),
-            $this->createUnzerConfigStoreRelationUpdater(),
+            $this->createUnzerCredentialsStoreRelationUpdater(),
             $this->createUnzerVaultWriter(),
         );
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Config\UnzerConfigUpdaterInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdaterInterface
      */
-    public function createUnzerConfigUpdater(): UnzerConfigUpdaterInterface
+    public function createUnzerCredentialsUpdater(): UnzerCredentialsUpdaterInterface
     {
-        return new UnzerConfigUpdater(
+        return new UnzerCredentialsUpdater(
             $this->getEntityManager(),
-            $this->createUnzerConfigStoreRelationUpdater(),
+            $this->createUnzerCredentialsStoreRelationUpdater(),
             $this->createUnzerVaultWriter(),
         );
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Config\UnzerConfigStoreRelationUpdaterInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface
      */
-    public function createUnzerConfigStoreRelationUpdater(): UnzerConfigStoreRelationUpdaterInterface
+    public function createUnzerCredentialsStoreRelationUpdater(): UnzerCredentialsStoreRelationUpdaterInterface
     {
-        return new UnzerConfigStoreRelationUpdater(
+        return new UnzerCredentialsStoreRelationUpdater(
             $this->getEntityManager(),
             $this->getRepository(),
         );

@@ -88,16 +88,16 @@
         <id-method-parameter value="spy_payment_unzer_customer_pk_seq"/>
     </table>
 
-    <table name="spy_unzer_config" idMethod="native" allowPkInsert="true" isCrossRef="true">
-        <column name="id_unzer_config" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="parent_id_unzer_config" type="INTEGER"/>
+    <table name="spy_unzer_credentials" idMethod="native" allowPkInsert="true" isCrossRef="true">
+        <column name="id_unzer_credentials" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="parent_id_unzer_credentials" type="INTEGER"/>
         <column name="keypair_id" type="VARCHAR" size="255" required="true"/>
         <column name="config_name" type="VARCHAR" size="255"/>
         <column name="type" type="INTEGER"/>
         <column name="public_key" type="VARCHAR" size="255" required="true"/>
         <column name="participant_id" type="VARCHAR" size="255" />
         <column name="merchant_reference" type="VARCHAR" size="255" />
-        <id-method-parameter value="spy_unzer_config_pk_seq"/>
+        <id-method-parameter value="spy_unzer_credentials_pk_seq"/>
         <unique name="un_keypair_id">
             <unique-column name="keypair_id"/>
         </unique>
@@ -107,21 +107,21 @@
 
     </table>
 
-    <table name="spy_unzer_config_store" idMethod="native" allowPkInsert="true" isCrossRef="true">
-        <column name="id_unzer_config_store" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="fk_unzer_config" type="INTEGER" required="true"/>
+    <table name="spy_unzer_credentials_store" idMethod="native" allowPkInsert="true" isCrossRef="true">
+        <column name="id_unzer_credentials_store" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="fk_unzer_credentials" type="INTEGER" required="true"/>
         <column name="fk_store" type="INTEGER" required="true"/>
 
-        <foreign-key name="spy_unzer_config_store-fk_store" foreignTable="spy_store" phpName="Store" refPhpName="UnzerConfigStore">
+        <foreign-key name="spy_unzer_credentials_store-fk_store" foreignTable="spy_store" phpName="Store" refPhpName="UnzerCredentialsStore">
             <reference local="fk_store" foreign="id_store"/>
         </foreign-key>
-        <foreign-key name="spy_unzer_config_store-fk_unzer_config" foreignTable="spy_unzer_config" phpName="UnzerConfig" refPhpName="UnzerConfigStore">
-            <reference local="fk_unzer_config" foreign="id_unzer_config"/>
+        <foreign-key name="spy_unzer_credentials_store-fk_unzer_credentials" foreignTable="spy_unzer_credentials" phpName="UnzerCredentials" refPhpName="UnzerCredentialsStore">
+            <reference local="fk_unzer_credentials" foreign="id_unzer_credentials"/>
         </foreign-key>
 
-        <id-method-parameter value="spy_unzer_config_store_pk_seq"/>
-        <unique name="fk_unzer_config-fk_store">
-            <unique-column name="fk_unzer_config"/>
+        <id-method-parameter value="spy_unzer_credentials_store_pk_seq"/>
+        <unique name="fk_unzer_credentials-fk_store">
+            <unique-column name="fk_unzer_credentials"/>
             <unique-column name="fk_store"/>
         </unique>
     </table>
