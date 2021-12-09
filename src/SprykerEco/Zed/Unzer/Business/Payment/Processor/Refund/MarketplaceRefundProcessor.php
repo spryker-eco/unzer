@@ -16,7 +16,6 @@ use Generated\Shared\Transfer\UnzerRefundItemTransfer;
 use Generated\Shared\Transfer\UnzerRefundTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
@@ -50,32 +49,24 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     protected $unzerPaymentSaver;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface
-     */
-    protected $unzerKeypairResolver;
-
-    /**
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface $unzerRefundAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface $unzerKeypairResolver
      */
     public function __construct(
         UnzerReaderInterface $unzerReader,
         UnzerRefundAdapterInterface $unzerRefundAdapter,
         UnzerPaymentMapperInterface $unzerPaymentMapper,
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
-        UnzerPaymentSaverInterface $unzerPaymentSaver,
-        UnzerKeypairResolverInterface $unzerKeypairResolver
+        UnzerPaymentSaverInterface $unzerPaymentSaver
     ) {
         $this->unzerReader = $unzerReader;
         $this->unzerRefundAdapter = $unzerRefundAdapter;
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerPaymentSaver = $unzerPaymentSaver;
-        $this->unzerKeypairResolver = $unzerKeypairResolver;
     }
 
     /**
@@ -89,6 +80,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
         foreach ($unzerRefundTransfers as $unzerRefundTransfer) {
             $this->unzerRefundAdapter->refundPayment(
                 $unzerRefundTransfer,
+                //add keypairTransfer
             );
         }
 

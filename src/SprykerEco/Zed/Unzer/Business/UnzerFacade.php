@@ -15,7 +15,6 @@ use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
@@ -241,13 +240,13 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return void
      */
-    public function setUnzerNotificationUrl(UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer): void
+    public function setUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): void
     {
-        $this->getFactory()->createUnzerNotificationConfigurator()->setNotificationUrl($unzerNotificationConfigTransfer);
+        $this->getFactory()->createUnzerNotificationConfigurator()->setNotificationUrl($unzerCredentialsTransfer);
     }
 
     /**

@@ -76,10 +76,10 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
         if ($unzerCredentialsTransfer === null) {
             return (new UnzerCredentialsResponseTransfer())
                 ->setIsSuccessful(false)
-                ->setMessages([
+                ->addMessage(
                     (new MessageTransfer())
                     ->setValue(static::MESSAGE_UPDATE_ERROR),
-                ]);
+                );
         }
 
         $this->unzerVaultWriter->storeUnzerPrivateKey(

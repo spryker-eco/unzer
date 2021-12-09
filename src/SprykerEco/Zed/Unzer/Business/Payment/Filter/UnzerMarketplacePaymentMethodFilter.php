@@ -9,7 +9,6 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
 use ArrayObject;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
-use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 

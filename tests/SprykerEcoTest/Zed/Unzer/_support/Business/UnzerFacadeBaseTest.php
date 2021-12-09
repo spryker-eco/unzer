@@ -8,8 +8,13 @@
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use Codeception\TestCase\Test;
+use Generated\Shared\Transfer\LocaleTransfer;
+use Spryker\Client\Quote\QuoteClient;
+use Spryker\Zed\Locale\Business\LocaleFacade;
 use Spryker\Zed\Vault\Business\VaultFacade;
 use SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade;
@@ -50,12 +55,11 @@ class UnzerFacadeBaseTest extends Test
                 'getEntityManager',
                 'getUnzerApiFacade',
                 'getVaultFacade',
-            //                'getCalculationFacade',
-            //                'getQuoteClient',
-            //                'getRefundFacade',
-            //                'getStoreFacade',
-            //                'getLocaleFacade',
-            //                'getSalesFacade',
+                //                'getCalculationFacade',
+                'getQuoteClient',
+                'getLocaleFacade',
+                //                'getRefundFacade',
+                //                'getSalesFacade',
             ],
         );
 
@@ -70,11 +74,13 @@ class UnzerFacadeBaseTest extends Test
             ->willReturn($this->getUnzerApiFacade());
         $stub->method('getVaultFacade')
             ->willReturn($this->getVaultFacade());
+        $stub->method('getLocaleFacade')
+            ->willReturn($this->getLocaleFacade());
 
 //        $stub->method('getCalculationFacade')
 //            ->willReturn($this->createCalculationFacade());
-//        $stub->method('getQuoteClient')
-//            ->willReturn($this->createQuoteClient());
+        $stub->method('getQuoteClient')
+            ->willReturn($this->getQuoteClient());
 //        $stub->method('getRefundFacade')
 //            ->willReturn($this->createRefundFacade());
 
@@ -136,6 +142,35 @@ class UnzerFacadeBaseTest extends Test
                 'store' => true,
                 'retrieve' => UnzerZedTester::UNZER_PRIVATE_KEY,
             ],
+        );
+    }
+
+    /**
+     * @return UnzerToQuoteClientBridge
+     */
+    protected function getQuoteClient(): UnzerToQuoteClientBridge
+    {
+        return new UnzerToQuoteClientBridge($this->makeEmpty(QuoteClient::class));
+    }
+
+    /**
+     * @return UnzerToLocaleFacadeBridge
+     */
+    protected function getLocaleFacade(): UnzerToLocaleFacadeBridge
+    {
+        return new UnzerToLocaleFacadeBridge($this->createLocaleFacadeMock());
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|LocaleFacade
+     */
+    protected function createLocaleFacadeMock(): LocaleFacade
+    {
+        return $this->makeEmpty(
+            LocaleFacade::class,
+            [
+                'getCurrentLocale' => (new LocaleTransfer())
+            ]
         );
     }
 }

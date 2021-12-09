@@ -7,14 +7,14 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Notification\Configurator;
 
-use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 
 interface UnzerNotificationConfiguratorInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return void
      */
-    public function setNotificationUrl(UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer): void;
+    public function setNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): void;
 }

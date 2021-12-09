@@ -7,10 +7,12 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Notification\Processor;
 
+use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
@@ -44,9 +46,9 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
     protected $unzerPaymentSaver;
 
     /**
-     * @var UnzerKeypairResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
      */
-    protected $unzerKeypairResolver;
+    protected $unzerCredentialsResolver;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
@@ -54,7 +56,7 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
-     * @param UnzerKeypairResolverInterface $unzerKeypairResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
      */
     public function __construct(
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
@@ -62,14 +64,14 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
         UnzerReaderInterface $unzerReader,
         UnzerPaymentMapperInterface $unzerPaymentMapper,
         UnzerPaymentSaverInterface $unzerPaymentSaver,
-        UnzerKeypairResolverInterface $unzerKeypairResolver
+        UnzerCredentialsResolverInterface $unzerCredentialsResolver
     ) {
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerConfig = $unzerConfig;
         $this->unzerReader = $unzerReader;
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerPaymentSaver = $unzerPaymentSaver;
-        $this->unzerKeypairResolver = $unzerKeypairResolver;
+        $this->unzerCredentialsResolver = $unzerCredentialsResolver;
     }
 
     /**
@@ -117,15 +119,20 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
     }
 
     /**
-     * @param UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      * @param string $keypairId
      *
-     * @return UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
     protected function setUnzerKeypair(UnzerPaymentTransfer $unzerPaymentTransfer, string $keypairId): UnzerPaymentTransfer
     {
-        $unzerKeypairTransfer = $this->unzerKeypairResolver->getUnzerKeypairByKeypairId($keypairId);
-        $unzerPaymentTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions(
+                (new UnzerCredentialsConditionsTransfer())->addKeypairId($keypairId),
+            );
+
+        $unzerCredentialsTransfer = $this->unzerCredentialsResolver->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
+        $unzerPaymentTransfer->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
 
         return $unzerPaymentTransfer;
     }

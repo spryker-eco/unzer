@@ -17,7 +17,6 @@ use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
-use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 
 class UnzerReader implements UnzerReaderInterface
@@ -83,7 +82,7 @@ class UnzerReader implements UnzerReaderInterface
 
         return $this->unzerRepository->findPaymentUnzerByPaymentIdAndKeypairId(
             $unzerPaymentId,
-            $unzerCredentialsTransfer->getKeypairId()
+            $unzerCredentialsTransfer->getKeypairId(),
         );
     }
 
@@ -148,8 +147,9 @@ class UnzerReader implements UnzerReaderInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
-    public function getUnzerCredentialsCollectionByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): UnzerCredentialsCollectionTransfer
-    {
+    public function getUnzerCredentialsCollectionByCriteria(
+        UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+    ): UnzerCredentialsCollectionTransfer {
         $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
         foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
             $this->attachUnzerPrivateKey($unzerCredentialsTransfer);

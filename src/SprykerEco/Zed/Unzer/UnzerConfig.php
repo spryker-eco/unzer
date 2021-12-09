@@ -298,4 +298,14 @@ class UnzerConfig extends AbstractBundleConfig
     {
         return $this->get(UnzerSharedConstants::VAULT_DATA_TYPE);
     }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getWebhookEventType(): string
+    {
+        return UnzerConstants::WEBHOOK_EVENT_TYPE;
+    }
 }

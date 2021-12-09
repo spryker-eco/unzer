@@ -80,5 +80,7 @@ interface UnzerReaderInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
-    public function getUnzerCredentialsCollectionByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): UnzerCredentialsCollectionTransfer;
+    public function getUnzerCredentialsCollectionByCriteria(
+        UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+    ): UnzerCredentialsCollectionTransfer;
 }

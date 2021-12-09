@@ -7,6 +7,8 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
+use SprykerEco\Shared\Unzer\UnzerConstants;
+
 class CreateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -15,7 +17,7 @@ class CreateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     public function testCreateUnzerCredentials(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->createUnzerCredentialsTransfer();
+        $unzerCredentialsTransfer = $this->tester->createUnzerCredentialsTransfer(UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE);
 
         //Act
         $unzerCredentialsResponseTransfer = $this->facade->createUnzerCredentials($unzerCredentialsTransfer);

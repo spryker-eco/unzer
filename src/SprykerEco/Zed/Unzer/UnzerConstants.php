@@ -163,4 +163,9 @@ interface UnzerConstants
      * @var int
      */
     public const INT_TO_FLOAT_DIVIDER = 100;
+
+    /**
+     * @var string
+     */
+    public const WEBHOOK_EVENT_TYPE = 'all';
 }

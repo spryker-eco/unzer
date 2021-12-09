@@ -8,41 +8,24 @@
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeInterface;
-use SprykerEco\Zed\Unzer\UnzerConfig;
+use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
+use SprykerEco\Shared\Unzer\UnzerConstants;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
 
 class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
 {
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
      */
-    protected $unzerKeypairResolver;
+    protected $unzerCredentialsResolver;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\UnzerConfig
+     * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
      */
-    protected $unzerConfig;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeInterface
-     */
-    protected $storeFacade;
-
-    /**
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface $unzerKeypairResolver
-     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
-     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeInterface $storeFacade
-     */
-    public function __construct(
-        UnzerKeypairResolverInterface $unzerKeypairResolver,
-        UnzerConfig $unzerConfig,
-        UnzerToStoreFacadeInterface $storeFacade
-    ) {
-        $this->unzerKeypairResolver = $unzerKeypairResolver;
-        $this->unzerConfig = $unzerConfig;
-        $this->storeFacade = $storeFacade;
+    public function __construct(UnzerCredentialsResolverInterface $unzerCredentialsResolver)
+    {
+        $this->unzerCredentialsResolver = $unzerCredentialsResolver;
     }
 
     /**
@@ -52,18 +35,17 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
      */
     public function expandQuoteWithUnzerKeypair(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail();
-
         $uniqueMerchantReferences = $this->extractUniqueMerchantReferences($quoteTransfer);
-        if (!$unzerPaymentTransfer->getIsMarketplace() && count($uniqueMerchantReferences) === 1) {
-            $unzerPaymentTransfer = $this->setMerchantUnzerKeypair($unzerPaymentTransfer, $uniqueMerchantReferences[0]);
-        } else {
-            $unzerPaymentTransfer = $this->setPrimaryUnzerKeypair($unzerPaymentTransfer);
+
+        if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplaceOrFail()) {
+            return $this->setMainMarketplaceUnzerKeypair($quoteTransfer);
         }
 
-        $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
+        if (count($uniqueMerchantReferences) === 1) {
+            return $this->setMarketplaceMerchantUnzerKeypair($quoteTransfer, $uniqueMerchantReferences[0]);
+        }
 
-        return $quoteTransfer;
+        return $this->setRegularUnzerKeypair($quoteTransfer);
     }
 
     /**
@@ -85,30 +67,64 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
-     * @param string $merchantReference
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\QuoteTransfer
      */
-    protected function setMerchantUnzerKeypair(UnzerPaymentTransfer $unzerPaymentTransfer, string $merchantReference): UnzerPaymentTransfer
+    protected function setRegularUnzerKeypair(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $unzerKeypairTransfer = $this->unzerKeypairResolver->getUnzerKeypairByMerchantReferenceAndStore(
-            $merchantReference,
-            $this->storeFacade->getCurrentStore(),
-        );
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions(
+                (new UnzerCredentialsConditionsTransfer())
+                    ->addType(UnzerConstants::UNZER_CONFIG_TYPE_STANDARD)
+                    ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail()),
+            );
 
-        return $unzerPaymentTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        $unzerCredentialsTransfer = $this->unzerCredentialsResolver->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
+        $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+
+        return $quoteTransfer;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\QuoteTransfer
      */
-    protected function setPrimaryUnzerKeypair(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
+    protected function setMainMarketplaceUnzerKeypair(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $unzerKeypairTransfer = $this->unzerKeypairResolver->getUnzerKeypairByKeypairId($this->unzerConfig->getUnzerPrimaryKeypairId());
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions(
+                (new UnzerCredentialsConditionsTransfer())
+                    ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE)
+                    ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail()),
+            );
 
-        return $unzerPaymentTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        $unzerCredentialsTransfer = $this->unzerCredentialsResolver->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
+        $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+
+        return $quoteTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param string $merchantReference
+     *
+     * @return \Generated\Shared\Transfer\QuoteTransfer
+     */
+    protected function setMarketplaceMerchantUnzerKeypair(QuoteTransfer $quoteTransfer, string $merchantReference): QuoteTransfer
+    {
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions(
+                (new UnzerCredentialsConditionsTransfer())
+                    ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT)
+                    ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
+                    ->addMerchantReference($merchantReference),
+            );
+
+        $unzerCredentialsTransfer = $this->unzerCredentialsResolver->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
+        $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+
+        return $quoteTransfer;
     }
 }

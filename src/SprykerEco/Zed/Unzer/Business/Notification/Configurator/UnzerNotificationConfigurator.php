@@ -7,18 +7,13 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Notification\Configurator;
 
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerNotificationConfigurator implements UnzerNotificationConfiguratorInterface
 {
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface
-     */
-    protected $unzerKeypairResolver;
-
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
@@ -30,33 +25,28 @@ class UnzerNotificationConfigurator implements UnzerNotificationConfiguratorInte
     protected $unzerNotificationAdapter;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface $unzerKeypairResolver
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapterInterface $unzerNotificationAdapter
      */
     public function __construct(
-        UnzerKeypairResolverInterface $unzerKeypairResolver,
         UnzerConfig $unzerConfig,
         UnzerNotificationAdapterInterface $unzerNotificationAdapter
     ) {
-        $this->unzerKeypairResolver = $unzerKeypairResolver;
         $this->unzerConfig = $unzerConfig;
         $this->unzerNotificationAdapter = $unzerNotificationAdapter;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return void
      */
-    public function setNotificationUrl(UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer): void
+    public function setNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): void
     {
-        $unzerKeypairTransfer = $unzerNotificationConfigTransfer->getUnzerKeyPair();
-        if ($unzerKeypairTransfer === null) {
-            $unzerKeyPairId = $this->unzerConfig->getUnzerPrimaryKeypairId();
-            $unzerKeypairTransfer = $this->unzerKeypairResolver->getUnzerKeypairByKeypairId($unzerKeyPairId);
-            $unzerNotificationConfigTransfer->setUnzerKeyPair($unzerKeypairTransfer);
-        }
+        $unzerNotificationConfigTransfer = (new UnzerNotificationConfigTransfer())
+            ->setUrl($this->unzerConfig->getWebhookRetrieveUrl())
+            ->setEvent($this->unzerConfig->getWebhookEventType())
+            ->setUnzerKeyPair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
 
         $this->unzerNotificationAdapter->setNotificationUrl($unzerNotificationConfigTransfer);
     }

@@ -49,6 +49,8 @@ use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreatorInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolver;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdater;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdater;
@@ -71,8 +73,6 @@ use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsPaymentCompletedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\UnzerConditionInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolver;
-use SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
@@ -107,7 +107,6 @@ use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
@@ -376,7 +375,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerReader(),
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentSaver(),
-            $this->createUnzerKeypairResolver()
+            $this->createUnzerCredentialsResolver(),
         );
     }
 
@@ -566,7 +565,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentSaver(),
-            $this->createUnzerKeypairResolver(),
         );
     }
 
@@ -623,20 +621,11 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToStoreFacadeInterface
-     */
-    public function getStoreFacade(): UnzerToStoreFacadeInterface
-    {
-        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_STORE);
-    }
-
-    /**
      * @return \SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface
      */
     public function createUnzerNotificationConfigurator(): UnzerNotificationConfiguratorInterface
     {
         return new UnzerNotificationConfigurator(
-            $this->createUnzerKeypairResolver(),
             $this->getConfig(),
             $this->createUnzerNotificationAdapter(),
         );
@@ -648,19 +637,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerKeypairQuoteExpander(): UnzerKeypairQuoteExpanderInterface
     {
         return new UnzerKeypairQuoteExpander(
-            $this->createUnzerKeypairResolver(),
-            $this->getConfig(),
-            $this->getStoreFacade(),
-        );
-    }
-
-    /**
-     * @return \SprykerEco\Zed\Unzer\Business\Payment\KeypairResolver\UnzerKeypairResolverInterface
-     */
-    public function createUnzerKeypairResolver(): UnzerKeypairResolverInterface
-    {
-        return new UnzerKeypairResolver(
-            $this->createUnzerReader(),
+            $this->createUnzerCredentialsResolver(),
         );
     }
 
@@ -735,5 +712,13 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->getVaultFacade(),
             $this->getConfig(),
         );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
+     */
+    public function createUnzerCredentialsResolver(): UnzerCredentialsResolverInterface
+    {
+        return new UnzerCredentialsResolver($this->createUnzerReader());
     }
 }

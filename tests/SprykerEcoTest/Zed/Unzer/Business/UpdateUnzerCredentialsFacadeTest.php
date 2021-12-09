@@ -9,9 +9,25 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 
 class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
+    /**
+     * @string
+     */
     protected const ANOTHER_PUBLIC_KEY = 'key2';
-    const ANOTHER_PARTICIPANT_ID = 'part2';
-    const ANOTHER_PRIVATE_KEY = 'key3';
+
+    /**
+     * @string
+     */
+    protected const ANOTHER_PARTICIPANT_ID = 'part2';
+
+    /**
+     * @string
+     */
+    protected const ANOTHER_PRIVATE_KEY = 'key3';
+
+    /**
+     * @string
+     */
+    protected const UNKNOWN_ID = 'unknown';
 
     /**
      * @return void
@@ -19,7 +35,7 @@ class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     public function testUpdateUnzerCredentialsSuccess(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->haveUnzerCredentials()->getUnzerCredentials();
+        $unzerCredentialsTransfer = $this->tester->haveUnzerCredentials($this->tester->haveStore())->getUnzerCredentials();
         $unzerCredentialsTransfer->setParticipantId(static::ANOTHER_PARTICIPANT_ID);
         $unzerCredentialsTransfer->getUnzerKeypairOrFail()->setPublicKey(static::ANOTHER_PUBLIC_KEY);
         $unzerCredentialsTransfer->getUnzerKeypairOrFail()->setPrivateKey(static::ANOTHER_PRIVATE_KEY);
@@ -37,7 +53,16 @@ class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
-    public function testUpdateUnzerCredentialsThrowsException(): void
+    public function testUpdateUnzerCredentialsFail(): void
     {
+        //Arrange
+        $unzerCredentialsTransfer = $this->tester->haveUnzerCredentials($this->tester->haveStore())->getUnzerCredentials();
+        $unzerCredentialsTransfer->setIdUnzerCredentials(static::UNKNOWN_ID);
+
+        //Act
+        $unzerCredentialsResponseTransfer = $this->facade->updateUnzerCredentials($unzerCredentialsTransfer);
+
+        //Assert
+        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
     }
 }

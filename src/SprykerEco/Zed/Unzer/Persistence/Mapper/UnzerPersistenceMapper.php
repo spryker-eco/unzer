@@ -33,10 +33,9 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
      */
     public function mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
-        ObjectCollection                        $paymentUnzerOrderItemEntities,
+        ObjectCollection $paymentUnzerOrderItemEntities,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
-    ): PaymentUnzerOrderItemCollectionTransfer
-    {
+    ): PaymentUnzerOrderItemCollectionTransfer {
         foreach ($paymentUnzerOrderItemEntities as $paymentUnzerOrderItemEntity) {
             $paymentUnzerOrderItemCollectionTransfer->addPaymentUnzerOrderItem(
                 $this->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
@@ -56,10 +55,9 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer
      */
     public function mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
-        SpyPaymentUnzerOrderItem      $paymentUnzerOrderItemEntity,
+        SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity,
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
-    ): PaymentUnzerOrderItemTransfer
-    {
+    ): PaymentUnzerOrderItemTransfer {
         return $paymentUnzerOrderItemTransfer
             ->fromArray($paymentUnzerOrderItemEntity->toArray(), true)
             ->setIdPaymentUnzer($paymentUnzerOrderItemEntity->getFkPaymentUnzer())
@@ -73,10 +71,9 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
      */
     public function mapPaymentUnzerEntityToPaymentUnzerTransfer(
-        SpyPaymentUnzer      $paymentUnzerEntity,
+        SpyPaymentUnzer $paymentUnzerEntity,
         PaymentUnzerTransfer $paymentUnzerTransfer
-    ): PaymentUnzerTransfer
-    {
+    ): PaymentUnzerTransfer {
         return $paymentUnzerTransfer
             ->fromArray($paymentUnzerEntity->toArray(), true)
             ->setIdSalesOrder($paymentUnzerEntity->getFkSalesOrder())
@@ -91,9 +88,8 @@ class UnzerPersistenceMapper
      */
     public function mapPaymentUnzerTransferToPaymentUnzerEntity(
         PaymentUnzerTransfer $paymentUnzerTransfer,
-        SpyPaymentUnzer      $paymentUnzerEntity
-    ): SpyPaymentUnzer
-    {
+        SpyPaymentUnzer $paymentUnzerEntity
+    ): SpyPaymentUnzer {
         return $paymentUnzerEntity
             ->fromArray($paymentUnzerTransfer->toArray())
             ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder())
@@ -108,9 +104,8 @@ class UnzerPersistenceMapper
      */
     public function mapPaymentUnzerOrderItemTransferToPaymentUnzerOrderItemEntity(
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer,
-        SpyPaymentUnzerOrderItem      $paymentUnzerOrderItemEntity
-    ): SpyPaymentUnzerOrderItem
-    {
+        SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity
+    ): SpyPaymentUnzerOrderItem {
         return $paymentUnzerOrderItemEntity
             ->fromArray($paymentUnzerOrderItemTransfer->toArray())
             ->setFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItem())
@@ -125,9 +120,8 @@ class UnzerPersistenceMapper
      */
     public function mapPaymentUnzerTransactionTransferToPaymentUnzerTransactionEntity(
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer,
-        SpyPaymentUnzerTransaction      $paymentUnzerTransactionEntity
-    ): SpyPaymentUnzerTransaction
-    {
+        SpyPaymentUnzerTransaction $paymentUnzerTransactionEntity
+    ): SpyPaymentUnzerTransaction {
         return $paymentUnzerTransactionEntity
             ->fromArray($paymentUnzerTransactionTransfer->toArray())
             ->setFkPaymentUnzer($paymentUnzerTransactionTransfer->getIdPaymentUnzer());
@@ -140,10 +134,9 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer
      */
     public function mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
-        SpyPaymentUnzerTransaction      $paymentUnzerTransactionEntity,
+        SpyPaymentUnzerTransaction $paymentUnzerTransactionEntity,
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer
-    ): PaymentUnzerTransactionTransfer
-    {
+    ): PaymentUnzerTransactionTransfer {
         return $paymentUnzerTransactionTransfer
             ->fromArray($paymentUnzerTransactionEntity->toArray(), true)
             ->setIdPaymentUnzer($paymentUnzerTransactionEntity->getFkPaymentUnzer());
@@ -157,9 +150,8 @@ class UnzerPersistenceMapper
      */
     public function mapPaymentUnzerCustomerEntityToUnzerCustomerTransfer(
         SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity,
-        UnzerCustomerTransfer   $unzerCustomerTransfer
-    ): UnzerCustomerTransfer
-    {
+        UnzerCustomerTransfer $unzerCustomerTransfer
+    ): UnzerCustomerTransfer {
         return $unzerCustomerTransfer->setId($paymentUnzerCustomerEntity->getUnzerCustomerId());
     }
 
@@ -171,9 +163,8 @@ class UnzerPersistenceMapper
      */
     public function mapUnzerCredentialsTransferToUnzerCredentialsEntity(
         UnzerCredentialsTransfer $unzerCredentialsTransfer,
-        SpyUnzerCredentials      $unzerCredentialsEntity
-    ): SpyUnzerCredentials
-    {
+        SpyUnzerCredentials $unzerCredentialsEntity
+    ): SpyUnzerCredentials {
         return $unzerCredentialsEntity->fromArray($unzerCredentialsTransfer->toArray())
             ->setPublicKey($unzerCredentialsTransfer->getUnzerKeypair()->getPublicKey());
     }
@@ -185,10 +176,9 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
     public function mapUnzerCredentialsEntityToUnzerCredentialsTransfer(
-        SpyUnzerCredentials      $unzerCredentialsEntity,
+        SpyUnzerCredentials $unzerCredentialsEntity,
         UnzerCredentialsTransfer $unzerCredentialsTransfer
-    ): UnzerCredentialsTransfer
-    {
+    ): UnzerCredentialsTransfer {
         $unzerCredentialsTransfer = $unzerCredentialsTransfer
             ->fromArray($unzerCredentialsEntity->toArray(), true);
 
@@ -203,7 +193,7 @@ class UnzerPersistenceMapper
         return $unzerCredentialsTransfer->setUnzerKeypair(
             (new UnzerKeypairTransfer())
                 ->setPublicKey($unzerCredentialsEntity->getPublicKey())
-                ->setKeypairId($unzerCredentialsEntity->getKeypairId())
+                ->setKeypairId($unzerCredentialsEntity->getKeypairId()),
         );
     }
 
@@ -214,12 +204,11 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
     public function mapUnzerCredentialsStoreEntitiesToStoreRelationTransfer(
-        ObjectCollection      $unzerCredentialsStoreEntities,
+        ObjectCollection $unzerCredentialsStoreEntities,
         StoreRelationTransfer $storeRelationTransfer
-    ): StoreRelationTransfer
-    {
+    ): StoreRelationTransfer {
         foreach ($unzerCredentialsStoreEntities as $unzerCredentialsStoreEntity) {
-            $storeRelationTransfer->addStores($this->mapStoreEntityToStoreTransfer($unzerCredentialsStoreEntity->getSpyStore(), new StoreTransfer()));
+            $storeRelationTransfer->addStores($this->mapStoreEntityToStoreTransfer($unzerCredentialsStoreEntity->getStore(), new StoreTransfer()));
             $storeRelationTransfer->addIdStores($unzerCredentialsStoreEntity->getFkStore());
         }
 
@@ -244,10 +233,9 @@ class UnzerPersistenceMapper
      * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
     public function mapUnzerCredentialsEntityCollectionToUnzerCredentialsTransferCollection(
-        ObjectCollection              $unzerCredentialsEntities,
+        ObjectCollection $unzerCredentialsEntities,
         UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
-    ): UnzerCredentialsCollectionTransfer
-    {
+    ): UnzerCredentialsCollectionTransfer {
         foreach ($unzerCredentialsEntities as $unzerCredentialsEntity) {
             $unzerCredentialsCollectionTransfer->addUnzerCredentials(
                 $this->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, new UnzerCredentialsTransfer()),

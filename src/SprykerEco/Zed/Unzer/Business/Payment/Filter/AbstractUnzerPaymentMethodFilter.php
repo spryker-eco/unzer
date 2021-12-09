@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
 use Generated\Shared\Transfer\PaymentMethodTransfer;
@@ -11,11 +16,11 @@ abstract class AbstractUnzerPaymentMethodFilter
      * @var string
      */
     protected const MARKETPLACE_PLACEHOLDER = 'Marketplace';
+
     /**
      * @var string
      */
     protected const MAIN_SELLER_KEY = 'main';
-
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer

@@ -7,6 +7,6 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
-class FilterMarketplacePaymentMethodsFacadeTest
+class FilterMarketplacePaymentMethodsFacadeTest extends UnzerFacadeBaseTest
 {
 }

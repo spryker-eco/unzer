@@ -7,38 +7,22 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
+use SprykerEco\Shared\Unzer\UnzerConstants;
 
 class SetUnzerNotificationUrlFacadeTest extends UnzerFacadeBaseTest
 {
     /**
      * @return void
      */
-    public function testSetUnzerNotificationUrlSuccess(): void
+    public function testSetUnzerNotificationUrl(): void
     {
         //Arrange
-        $unzerNotificationConfigTransfer = $this->tester->createUnzerNotificationConfigTransfer();
+        $unzerCredentialsTransfer = $this->tester->createUnzerCredentialsTransfer(UnzerConstants::UNZER_CONFIG_TYPE_STANDARD);
 
         //Act
-        $this->facade->setUnzerNotificationUrl($unzerNotificationConfigTransfer);
+        $this->facade->setUnzerNotificationUrl($unzerCredentialsTransfer);
 
         //Assert
         $this->assertTrue(true);
-    }
-
-    /**
-     * @return void
-     */
-    public function testSetUnzerNotificationUrlThrowsException(): void
-    {
-        //Arrange
-        $unzerNotificationConfigTransfer = $this->tester->createUnzerNotificationConfigTransfer();
-        $unzerNotificationConfigTransfer->setUnzerKeyPair(null);
-
-        //Assert
-        $this->expectException(UnzerException::class);
-
-        //Act
-        $this->facade->setUnzerNotificationUrl($unzerNotificationConfigTransfer);
     }
 }

@@ -15,7 +15,6 @@ use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 
 interface UnzerFacadeInterface
@@ -223,13 +222,13 @@ interface UnzerFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
      * @return void
      */
-    public function setUnzerNotificationUrl(UnzerNotificationConfigTransfer $unzerNotificationConfigTransfer): void;
+    public function setUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): void;
 
     /**
      * Specification:
