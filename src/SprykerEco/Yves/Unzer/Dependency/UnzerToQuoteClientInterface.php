@@ -14,12 +14,12 @@ interface UnzerToQuoteClientInterface
     /**
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
-    public function getQuote(): QuoteTransfer;
+    public function getQuote();
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
      * @return void
      */
-    public function setQuote(QuoteTransfer $quoteTransfer): void;
+    public function setQuote(QuoteTransfer $quoteTransfer);
 }

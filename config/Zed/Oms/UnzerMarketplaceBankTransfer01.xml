@@ -8,14 +8,11 @@
 
         <states>
             <state name="new" reserved="true"/>
-
             <state name="payment pending" reserved="true"/>
             <state name="payment completed" reserved="true"/>
             <state name="charge failed"/>
-
             <state name="refunded"/>
             <state name="payment chargeback"/>
-
             <state name="shipped"/>
             <state name="closed"/>
         </states>

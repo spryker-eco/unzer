@@ -12,14 +12,11 @@
             <state name="authorize succeeded" reserved="true"/>
             <state name="authorize failed"/>
             <state name="authorize canceled"/>
-
             <state name="charge pending" reserved="true"/>
             <state name="payment completed" reserved="true"/>
             <state name="charge failed"/>
-
             <state name="refunded"/>
             <state name="payment chargeback"/>
-
             <state name="shipped"/>
             <state name="closed"/>
         </states>
