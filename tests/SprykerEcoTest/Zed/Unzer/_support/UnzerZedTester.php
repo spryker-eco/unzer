@@ -10,6 +10,8 @@ namespace SprykerEcoTest\Zed\Unzer;
 use Codeception\Actor;
 use Codeception\Scenario;
 use Generated\Shared\DataBuilder\CheckoutResponseBuilder;
+use Generated\Shared\DataBuilder\PaymentMethodBuilder;
+use Generated\Shared\DataBuilder\PaymentMethodsBuilder;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\SaveOrderBuilder;
 use Generated\Shared\DataBuilder\TotalsBuilder;
@@ -39,6 +41,7 @@ use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Vault\VaultConstants;
+use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManager;
@@ -179,6 +182,15 @@ class UnzerZedTester extends Actor
      * @var int
      */
     public const UNZER_ORDER_STATE_ID = 1;
+
+    /**
+     * @var array<string>
+     */
+    public const UNZER_MARKETPLACE_PAYMENT_METHODS = [
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER,
+        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT,
+    ];
 
     /**
      * @param \Codeception\Scenario $scenario
@@ -600,5 +612,20 @@ class UnzerZedTester extends Actor
             ->setRedirectUrl(static::UNZER_REDIRECT_URL)
             ->setCustomerId(static::UNZER_API_RESPONSE_CUSTOMER_ID)
             ->setBasketId(static::UNZER_API_RESPONSE_BASKET_ID);
+    }
+
+    public function createPaymentMethodsTransfer()
+    {
+        $paymentMethodsBuilder = (new PaymentMethodsBuilder())->withMethod();
+        foreach (static::UNZER_MARKETPLACE_PAYMENT_METHODS as $paymentMethod) {
+            $paymentMethodsBuilder->withAnotherMethod(
+                (new PaymentMethodBuilder([
+                    'paymentProvider' => UnzerSharedConfig::PAYMENT_PROVIDER_NAME,
+                    'methodName' => $paymentMethod,
+                ])),
+            );
+        }
+
+        return $paymentMethodsBuilder->build();
     }
 }

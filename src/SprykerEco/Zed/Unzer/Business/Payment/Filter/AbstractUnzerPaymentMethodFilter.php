@@ -34,6 +34,8 @@ abstract class AbstractUnzerPaymentMethodFilter
             $merchantReference = $itemTransfer->getMerchantReference();
             if ($merchantReference === null) {
                 $merchantReferences[] = static::MAIN_SELLER_KEY;
+
+                continue;
             }
 
             if (!in_array($merchantReference, $merchantReferences, true)) {

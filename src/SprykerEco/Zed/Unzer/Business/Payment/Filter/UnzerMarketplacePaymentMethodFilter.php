@@ -40,12 +40,12 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
         $filteredPaymentMethodTransferCollection = new ArrayObject();
 
         $hasMultipleMerchants = $this->hasMultipleMerchants($quoteTransfer);
-        if ($hasMultipleMerchants === false) {
+        if ($hasMultipleMerchants === true) {
             return $paymentMethodsTransfer;
         }
 
         foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
-            if ($this->isUnzerPaymentProvider($paymentMethodTransfer) && !$this->isMarketplace($paymentMethodTransfer)) {
+            if ($this->isUnzerPaymentProvider($paymentMethodTransfer) && $this->isMarketplace($paymentMethodTransfer)) {
                 continue;
             }
 
