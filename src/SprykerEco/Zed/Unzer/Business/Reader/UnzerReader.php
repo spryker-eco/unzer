@@ -69,7 +69,7 @@ class UnzerReader implements UnzerReaderInterface
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer|null
      */
-    public function getPaymentUnzerByPaymentIdAndPublicKey(string $unzerPaymentId, string $publicKey): ?PaymentUnzerTransfer
+    public function findPaymentUnzerByPaymentIdAndPublicKey(string $unzerPaymentId, string $publicKey): ?PaymentUnzerTransfer
     {
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())->addPublicKey($publicKey),
@@ -119,7 +119,7 @@ class UnzerReader implements UnzerReaderInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null
      */
-    public function getUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer
+    public function findUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer
     {
         return $this->unzerRepository->findUnzerCustomerByIdCustomer($customerTransfer->getIdCustomer());
     }
@@ -129,7 +129,7 @@ class UnzerReader implements UnzerReaderInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer|null
      */
-    public function getUnzerCredentialsByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): ?UnzerCredentialsTransfer
+    public function findUnzerCredentialsByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): ?UnzerCredentialsTransfer
     {
         $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
         if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {

@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 class UnzerHandlerPlugin extends AbstractPlugin implements StepHandlerPluginInterface
 {
     /**
+     * @api
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *

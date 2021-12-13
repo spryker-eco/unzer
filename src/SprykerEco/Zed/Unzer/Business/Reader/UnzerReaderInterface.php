@@ -39,7 +39,7 @@ interface UnzerReaderInterface
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer|null
      */
-    public function getPaymentUnzerByPaymentIdAndPublicKey(string $unzerPaymentId, string $publicKey): ?PaymentUnzerTransfer;
+    public function findPaymentUnzerByPaymentIdAndPublicKey(string $unzerPaymentId, string $publicKey): ?PaymentUnzerTransfer;
 
     /**
      * @param int $idSalesOrderItem
@@ -66,14 +66,14 @@ interface UnzerReaderInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null
      */
-    public function getUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer;
+    public function findUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer;
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer|null
      */
-    public function getUnzerCredentialsByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): ?UnzerCredentialsTransfer;
+    public function findUnzerCredentialsByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): ?UnzerCredentialsTransfer;
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer

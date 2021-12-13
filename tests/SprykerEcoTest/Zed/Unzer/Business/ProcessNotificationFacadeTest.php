@@ -20,7 +20,7 @@ class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest
         $unzerNotificationTransfer->setPublicKey($unzerCredentialsTransfer->getUnzerKeypair()->getPublicKey());
         $this->tester->haveUnzerEntities(
             $this->tester->createQuoteTransfer(),
-            $this->tester->createOrder()
+            $this->tester->createOrder(),
         );
 
         //Act

@@ -52,7 +52,7 @@ interface UnzerEntityManagerInterface
      *
      * @return void
      */
-    public function addUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void;
+    public function createUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void;
 
     /**
      * @param array $idStores
@@ -60,7 +60,7 @@ interface UnzerEntityManagerInterface
      *
      * @return void
      */
-    public function removeUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void;
+    public function deleteUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void;
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer

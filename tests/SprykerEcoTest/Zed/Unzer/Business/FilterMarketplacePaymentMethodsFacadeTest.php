@@ -9,4 +9,17 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 
 class FilterMarketplacePaymentMethodsFacadeTest extends UnzerFacadeBaseTest
 {
+    /**
+     * @return void
+     */
+    public function testFilterMarketplacePaymentMethodsRegularOnly()
+    {
+    }
+
+    /**
+     * @return void
+     */
+    public function testFilterMarketplacePaymentMethodsMarketplaceOnly()
+    {
+    }
 }

@@ -36,7 +36,7 @@ class UnzerCredentialsResolver implements UnzerCredentialsResolverInterface
      */
     public function resolveUnzerCredentialsByCriteriaTransfer(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): UnzerCredentialsTransfer
     {
-        $unzerCredentialsTransfer = $this->unzerReader->getUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+        $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
         if ($unzerCredentialsTransfer === null) {
             throw new UnzerException(
                 sprintf(

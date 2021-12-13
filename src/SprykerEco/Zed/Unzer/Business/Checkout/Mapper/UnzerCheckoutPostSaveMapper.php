@@ -13,6 +13,7 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerBasketItemTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
@@ -29,11 +30,20 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
     protected $unzerConfig;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface
      */
-    public function __construct(UnzerConfig $unzerConfig)
-    {
+    protected $utilTextService;
+
+    /**
+     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
+     */
+    public function __construct(
+        UnzerConfig $unzerConfig,
+        UnzerToUtilTextServiceInterface $utilTextService
+    ) {
         $this->unzerConfig = $unzerConfig;
+        $this->utilTextService = $utilTextService;
     }
 
     /**
@@ -101,7 +111,9 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         UnzerBasketItemTransfer $unzerBasketItemTransfer
     ): UnzerBasketItemTransfer {
         return $unzerBasketItemTransfer
-            ->setBasketItemReferenceId(uniqid($itemTransfer->getSku(), true))
+            ->setBasketItemReferenceId(
+                $this->utilTextService->generateUniqueId($itemTransfer->getSku(), true),
+            )
             ->setQuantity($itemTransfer->getQuantity())
             ->setAmountGross($itemTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountVat($itemTransfer->getSumTaxAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)

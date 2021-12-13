@@ -165,7 +165,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
                     ->addType($type),
             );
 
-        $unzerCredentialsTransfer = $this->unzerReader->getUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+        $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
         if ($unzerCredentialsTransfer === null) {
             return $itemTransfer;
         }

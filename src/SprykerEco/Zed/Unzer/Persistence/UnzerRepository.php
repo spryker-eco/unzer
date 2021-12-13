@@ -69,16 +69,16 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
-     * @param string $unzerPaymentId
-     * @param string $keypairId
+     * @param string $paymentId
+     * @param string $unzerKeypairId
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer|null
      */
-    public function findPaymentUnzerByPaymentIdAndKeypairId(string $unzerPaymentId, string $keypairId): ?PaymentUnzerTransfer
+    public function findPaymentUnzerByPaymentIdAndKeypairId(string $paymentId, string $unzerKeypairId): ?PaymentUnzerTransfer
     {
         $paymentUnzerEntity = $this->getFactory()->createPaymentUnzerQuery()
-            ->filterByPaymentId($unzerPaymentId)
-            ->filterByUnzerKeypairId($keypairId)
+            ->filterByPaymentId($paymentId)
+            ->filterByUnzerKeypairId($unzerKeypairId)
             ->findOne();
 
         if ($paymentUnzerEntity === null) {
@@ -201,7 +201,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      *
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
-    public function getStoreRelationByIdPaymentMethod(int $idUnzerCredentials): StoreRelationTransfer
+    public function getStoreRelationByIdUnzerCredentials(int $idUnzerCredentials): StoreRelationTransfer
     {
         $unzerCredentialsStoreEntities = $this->getFactory()
             ->createUnzerCredentialsStoreQuery()

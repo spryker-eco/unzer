@@ -65,8 +65,8 @@ class UnzerCredentialsStoreRelationUpdater implements UnzerCredentialsStoreRelat
         $saveIdStores = array_diff($requestedIdStores, $currentIdStores);
         $deleteIdStores = array_diff($currentIdStores, $requestedIdStores);
 
-        $this->unzerEntityManager->addUnzerCredentialsStoreRelationsForStores($saveIdStores, $storeRelationTransfer->getIdEntity());
-        $this->unzerEntityManager->removeUnzerCredentialsStoreRelationsForStores($deleteIdStores, $storeRelationTransfer->getIdEntity());
+        $this->unzerEntityManager->createUnzerCredentialsStoreRelationsForStores($saveIdStores, $storeRelationTransfer->getIdEntity());
+        $this->unzerEntityManager->deleteUnzerCredentialsStoreRelationsForStores($deleteIdStores, $storeRelationTransfer->getIdEntity());
     }
 
     /**
@@ -76,7 +76,7 @@ class UnzerCredentialsStoreRelationUpdater implements UnzerCredentialsStoreRelat
      */
     protected function getIdStoresByIdUnzerCredentials(int $idUnzerCredentials): array
     {
-        $storeRelation = $this->unzerRepository->getStoreRelationByIdPaymentMethod($idUnzerCredentials);
+        $storeRelation = $this->unzerRepository->getStoreRelationByIdUnzerCredentials($idUnzerCredentials);
 
         return $storeRelation->getIdStores();
     }

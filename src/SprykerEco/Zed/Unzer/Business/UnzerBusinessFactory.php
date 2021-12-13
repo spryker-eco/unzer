@@ -108,6 +108,7 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
 
@@ -151,6 +152,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerCheckoutPostSaveMapper(
             $this->getConfig(),
+            $this->getUtilTextService(),
         );
     }
 
@@ -720,5 +722,13 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerCredentialsResolver(): UnzerCredentialsResolverInterface
     {
         return new UnzerCredentialsResolver($this->createUnzerReader());
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface
+     */
+    public function getUtilTextService(): UnzerToUtilTextServiceInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::SERVICE_UTIL_TEXT);
     }
 }

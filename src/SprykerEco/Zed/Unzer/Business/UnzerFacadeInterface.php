@@ -21,11 +21,11 @@ interface UnzerFacadeInterface
 {
     /**
      * Specification:
-     *  - Expands QuoteTransfer with UnzerPaymentTransfer.
-     *  - Expands QuoteTransfer with UnzerKeypairTransfer.
-     *  - Expands QuoteTransfer with UnzerCustomerTransfer.
-     *  - Expands QuoteTransfer with UnzerMetadataTransfer.
-     *  - If QuoteTransfer contains marketplace items - expands ItemTransfers with Unzer Participant ID.
+     *  - Expands `QuoteTransfer` with `UnzerPaymentTransfer`.
+     *  - Expands `QuoteTransfer` with `UnzerKeypairTransfer`.
+     *  - Expands `QuoteTransfer` with `UnzerCustomerTransfer`.
+     *  - Expands `QuoteTransfer` with `UnzerMetadataTransfer`.
+     *  - If `QuoteTransfer` contains marketplace items - expands ItemTransfers with Unzer Participant ID.
      *  - Performs Unzer Create Customer API call.
      *  - Performs Unzer Update Customer API call.
      *  - Performs Unzer Create Metadata API call.
@@ -67,8 +67,8 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Expands QuoteTransfer with UnzerBasketTransfer.
-     *  - Expands QuoteTransfer with UnzerPaymentResourceTransfer.
+     *  - Expands `QuoteTransfer` with `UnzerBasketTransfer`.
+     *  - Expands `QuoteTransfer` with `UnzerPaymentResourceTransfer`.
      *  - Performs Unzer Create Basket API call.
      *  - Performs Unzer Create payment resource API call.
      *  - Performs Unzer Authorize or Change API call depending on payment type.
@@ -218,7 +218,7 @@ interface UnzerFacadeInterface
      * Specification:
      *  - Prepares UnzerApi request and set Unzer keypair.
      *  - Performs Unzer Set Notification URL Api all.
-     *  - Throws UnzerException if API call failed.
+     *  - Throws `UnzerException` if API call failed.
      *
      * @api
      *
@@ -232,8 +232,8 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Saves UnzerCredentialsTransfer to Persistence.
-     *  - If UnzerCredentialsTransfer contains store relations - also saves it to Persistence.
+     *  - Saves `UnzerCredentialsTransfer` to Persistence.
+     *  - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.
      *
      * @api
      *
@@ -245,8 +245,8 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Updates UnzerCredentialsTransfer to Persistence.
-     *  - If UnzerCredentialsTransfer contains store relations - also updates it to Persistence.
+     *  - Updates `UnzerCredentialsTransfer` to Persistence.
+     *  - If `UnzerCredentialsTransfer` contains store relations - also updates it to Persistence.
      *
      * @api
      *

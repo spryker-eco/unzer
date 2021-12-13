@@ -39,7 +39,7 @@ class SaveOrderPaymentFacadeTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
-    public function testSaveOrderPaymentFail(): void
+    public function testSaveOrderPaymentShouldThrowAnExceptionWhenOrderAlreadyExists(): void
     {
         //Arrange
         $quoteTransfer = $this->tester->createQuoteTransfer();

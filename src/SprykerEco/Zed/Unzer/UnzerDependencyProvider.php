@@ -15,6 +15,7 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 
 /**
@@ -58,6 +59,11 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public const FACADE_VAULT = 'FACADE_VAULT';
 
     /**
+     * @var string
+     */
+    public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -86,6 +92,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addRefundFacade($container);
         $container = $this->addLocaleFacade($container);
         $container = $this->addVaultFacade($container);
+        $container = $this->addUtilTextService($container);
 
         return $container;
     }
@@ -183,6 +190,20 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_VAULT, function (Container $container) {
             return new UnzerToVaultFacadeBridge($container->getLocator()->vault()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addUtilTextService(Container $container): Container
+    {
+        $container->set(static::SERVICE_UTIL_TEXT, function (Container $container) {
+            return new UnzerToUtilTextServiceBridge($container->getLocator()->utilText()->service());
         });
 
         return $container;

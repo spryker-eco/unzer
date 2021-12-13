@@ -114,7 +114,7 @@
         <property name="isMarketplace" type="bool"/>
         <property name="isAuthorizable" type="bool"/>
         <property name="redirectUrl" type="string"/>
-        <property name="unzerKeypair" type="UnzerKeypair" />
+        <property name="unzerKeypair" type="UnzerKeypair"/>
     </transfer>
 
     <transfer name="UnzerKeypair">
@@ -250,7 +250,7 @@
     </transfer>
 
     <transfer name="UnzerApiResponse">
-        <property name="isSuccess" type="bool"/>
+        <property name="isSuccessful" type="bool"/>
         <property name="errorResponse" type="UnzerApiErrorResponse"/>
     </transfer>
 
@@ -267,9 +267,9 @@
     </transfer>
 
     <transfer name="UnzerCredentialsCriteria">
-        <property name="unzerCredentialsConditions" type="UnzerCredentialsConditions" />
+        <property name="unzerCredentialsConditions" type="UnzerCredentialsConditions"/>
         <property name="sortCollection" type="Sort[]" singular="sort"/>
-        <property name="pagination" type="Pagination" />
+        <property name="pagination" type="Pagination"/>
     </transfer>
 
     <transfer name="UnzerCredentialsConditions">
@@ -291,8 +291,8 @@
     </transfer>
 
     <transfer name="Pagination">
-        <property name="limit" type="int" />
-        <property name="offset" type="int" />
+        <property name="limit" type="int"/>
+        <property name="offset" type="int"/>
         <property name="page" type="int"/>
         <property name="maxPerPage" type="int"/>
         <property name="nbResults" type="int"/>

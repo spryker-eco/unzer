@@ -89,7 +89,7 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
 
         //If payment not found - let Unzer try later
         $paymentUnzerTransfer = $this->unzerReader
-            ->getPaymentUnzerByPaymentIdAndPublicKey(
+            ->findPaymentUnzerByPaymentIdAndPublicKey(
                 $unzerNotificationTransfer->getPaymentId(),
                 $unzerNotificationTransfer->getPublicKey(),
             );

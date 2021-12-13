@@ -156,12 +156,12 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
-     * @param array $idStores
+     * @param array<int> $idStores
      * @param int $idUnzerCredentials
      *
      * @return void
      */
-    public function addUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void
+    public function createUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void
     {
         foreach ($idStores as $idStore) {
             $shipmentMethodStoreEntity = new SpyUnzerCredentialsStore();
@@ -172,12 +172,12 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
-     * @param array $idStores
+     * @param array<int> $idStores
      * @param int $idUnzerCredentials
      *
      * @return void
      */
-    public function removeUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void
+    public function deleteUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void
     {
         if ($idStores === []) {
             return;

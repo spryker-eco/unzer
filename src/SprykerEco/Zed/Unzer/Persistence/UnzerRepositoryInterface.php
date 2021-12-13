@@ -33,12 +33,12 @@ interface UnzerRepositoryInterface
     public function getPaymentUnzerOrderItemCollectionByOrderId(string $orderId): PaymentUnzerOrderItemCollectionTransfer;
 
     /**
-     * @param string $unzerPaymentId
-     * @param string $keypairId
+     * @param string $paymentId
+     * @param string $unzerKeypairId
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer|null
      */
-    public function findPaymentUnzerByPaymentIdAndKeypairId(string $unzerPaymentId, string $keypairId): ?PaymentUnzerTransfer;
+    public function findPaymentUnzerByPaymentIdAndKeypairId(string $paymentId, string $unzerKeypairId): ?PaymentUnzerTransfer;
 
     /**
      * @param int $idSalesOrderItem
@@ -72,7 +72,7 @@ interface UnzerRepositoryInterface
      *
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
-    public function getStoreRelationByIdPaymentMethod(int $idUnzerCredentials): StoreRelationTransfer;
+    public function getStoreRelationByIdUnzerCredentials(int $idUnzerCredentials): StoreRelationTransfer;
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer

@@ -10,12 +10,15 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 use Codeception\TestCase\Test;
 use Generated\Shared\Transfer\LocaleTransfer;
 use Spryker\Client\Quote\QuoteClient;
+use Spryker\Service\UtilText\UtilTextService;
 use Spryker\Zed\Locale\Business\LocaleFacade;
 use Spryker\Zed\Vault\Business\VaultFacade;
 use SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade;
 use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
@@ -55,11 +58,9 @@ class UnzerFacadeBaseTest extends Test
                 'getEntityManager',
                 'getUnzerApiFacade',
                 'getVaultFacade',
-                //                'getCalculationFacade',
                 'getQuoteClient',
                 'getLocaleFacade',
-                //                'getRefundFacade',
-                //                'getSalesFacade',
+                'getUtilTextService',
             ],
         );
 
@@ -76,13 +77,10 @@ class UnzerFacadeBaseTest extends Test
             ->willReturn($this->getVaultFacade());
         $stub->method('getLocaleFacade')
             ->willReturn($this->getLocaleFacade());
-
-//        $stub->method('getCalculationFacade')
-//            ->willReturn($this->createCalculationFacade());
         $stub->method('getQuoteClient')
             ->willReturn($this->getQuoteClient());
-//        $stub->method('getRefundFacade')
-//            ->willReturn($this->createRefundFacade());
+        $stub->method('getUtilTextService')
+            ->willReturn($this->getUtilTextService());
 
         return $stub;
     }
@@ -96,7 +94,7 @@ class UnzerFacadeBaseTest extends Test
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|\SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade|mixed
+     * @return \PHPUnit\Framework\MockObject\MockObject|\SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade
      */
     protected function createUnzerApiFacadeMock(): UnzerApiFacade
     {
@@ -146,7 +144,7 @@ class UnzerFacadeBaseTest extends Test
     }
 
     /**
-     * @return UnzerToQuoteClientBridge
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge
      */
     protected function getQuoteClient(): UnzerToQuoteClientBridge
     {
@@ -154,7 +152,7 @@ class UnzerFacadeBaseTest extends Test
     }
 
     /**
-     * @return UnzerToLocaleFacadeBridge
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge
      */
     protected function getLocaleFacade(): UnzerToLocaleFacadeBridge
     {
@@ -162,15 +160,36 @@ class UnzerFacadeBaseTest extends Test
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|LocaleFacade
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface
+     */
+    protected function getUtilTextService(): UnzerToUtilTextServiceInterface
+    {
+        return new UnzerToUtilTextServiceBridge($this->createUtilTextServiceMock());
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Zed\Locale\Business\LocaleFacade
      */
     protected function createLocaleFacadeMock(): LocaleFacade
     {
         return $this->makeEmpty(
             LocaleFacade::class,
             [
-                'getCurrentLocale' => (new LocaleTransfer())
-            ]
+                'getCurrentLocale' => (new LocaleTransfer()),
+            ],
+        );
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Service\UtilText\UtilTextService|mixed
+     */
+    protected function createUtilTextServiceMock()
+    {
+        return $this->makeEmpty(
+            UtilTextService::class,
+            [
+            'generateUniqueId' => uniqid('', true),
+            ],
         );
     }
 }
