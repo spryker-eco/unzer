@@ -188,7 +188,7 @@ class UnzerFacadeBaseTest extends Test
         return $this->makeEmpty(
             UtilTextService::class,
             [
-            'generateUniqueId' => uniqid('', true),
+                'generateUniqueId' => uniqid('', true),
             ],
         );
     }

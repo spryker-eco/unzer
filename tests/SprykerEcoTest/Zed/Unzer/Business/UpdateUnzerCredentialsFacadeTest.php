@@ -10,29 +10,21 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
     /**
-     * @string
-     *
      * @var string
      */
     protected const ANOTHER_PUBLIC_KEY = 'key2';
 
     /**
-     * @string
-     *
      * @var string
      */
     protected const ANOTHER_PARTICIPANT_ID = 'part2';
 
     /**
-     * @string
-     *
      * @var string
      */
     protected const ANOTHER_PRIVATE_KEY = 'key3';
 
     /**
-     * @string
-     *
      * @var string
      */
     protected const UNKNOWN_ID = 'unknown';

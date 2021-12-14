@@ -157,6 +157,7 @@
     </transfer>
 
     <transfer name="Payment">
+        <property name="unzerPayment" type="UnzerPayment"/>
         <property name="unzerMarketplaceBankTransfer" type="UnzerPayment"/>
     </transfer>
 
@@ -181,10 +182,6 @@
         <property name="retrieveUrl" type="string"/>
         <property name="paymentId" type="string"/>
         <property name="isProcessed" type="bool"/>
-    </transfer>
-
-    <transfer name="Payment">
-        <property name="unzerPayment" type="UnzerPayment"/>
     </transfer>
 
     <transfer name="Item">

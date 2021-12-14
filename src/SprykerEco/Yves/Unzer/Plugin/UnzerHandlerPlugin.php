@@ -19,6 +19,10 @@ use Symfony\Component\HttpFoundation\Request;
 class UnzerHandlerPlugin extends AbstractPlugin implements StepHandlerPluginInterface
 {
     /**
+     * {@inheritDoc}
+     * - Adds `UnzerPaymentTransfer` to `QuoteTransfer`.
+     * - Sets payment provider and payment method based on payment selection.
+     *
      * @api
      *
      * @param \Symfony\Component\HttpFoundation\Request $request

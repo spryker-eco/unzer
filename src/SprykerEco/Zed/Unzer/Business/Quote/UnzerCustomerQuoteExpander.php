@@ -70,10 +70,8 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
      */
     public function expandQuoteWithUnzerCustomer(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        if (
-            $quoteTransfer->getPaymentOrFail()->getUnzerPayment() !== null &&
-            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getCustomer() !== null
-        ) {
+        $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();
+        if ($unzerPaymentTransfer !== null && $unzerPaymentTransfer->getCustomer() !== null) {
             return $quoteTransfer;
         }
 
