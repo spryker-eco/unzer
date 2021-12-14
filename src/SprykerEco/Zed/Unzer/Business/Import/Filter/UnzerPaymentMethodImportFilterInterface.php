@@ -8,14 +8,15 @@
 namespace SprykerEco\Zed\Unzer\Business\Import\Filter;
 
 use ArrayObject;
+use Generated\Shared\Transfer\PaymentMethodsTransfer;
 
 interface UnzerPaymentMethodImportFilterInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer|\ArrayObject $paymentMethodTransfers
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer|\ArrayObject $storedPaymentMethodTransfers
+     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
+     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $storedPaymentMethodTransfers
      *
-     * @return \ArrayObject
+     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
      */
     public function filterStoredPaymentMethods(ArrayObject $paymentMethodTransfers, ArrayObject $storedPaymentMethodTransfers): ArrayObject;
 }

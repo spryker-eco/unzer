@@ -10,16 +10,18 @@ namespace SprykerEco\Zed\Unzer\Business\Import\Filter;
 use ArrayObject;
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 
-class UnzerPaymentMethodImportImportFilter implements UnzerPaymentMethodImportFilterInterface
+class UnzerPaymentMethodImportFilter implements UnzerPaymentMethodImportFilterInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer|\ArrayObject $paymentMethodTransfers
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer|\ArrayObject $storedPaymentMethodTransfers
+     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
+     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $storedPaymentMethodTransfers
      *
-     * @return \ArrayObject
+     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
      */
-    public function filterStoredPaymentMethods(ArrayObject $paymentMethodTransfers, ArrayObject $storedPaymentMethodTransfers): ArrayObject
-    {
+    public function filterStoredPaymentMethods(
+        ArrayObject $paymentMethodTransfers,
+        ArrayObject $storedPaymentMethodTransfers,
+    ): ArrayObject {
         $filteredPaymentMethodTransfers = new ArrayObject();
 
         foreach ($paymentMethodTransfers as $paymentMethodTransfer) {
@@ -33,7 +35,7 @@ class UnzerPaymentMethodImportImportFilter implements UnzerPaymentMethodImportFi
 
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer|\ArrayObject $storedPaymentMethodTransfers
+     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $storedPaymentMethodTransfers
      *
      * @return bool
      */
