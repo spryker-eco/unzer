@@ -21,6 +21,7 @@ use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
@@ -289,38 +290,12 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\UnzerApiRequestTransfer $unzerApiRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
-     */
-    public function performGetPaymentTypesApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer
-    {
-        return $this->getFactory()->getUnzerApiFacade()->performGetPaymentTypesApiCall($unzerApiRequestTransfer);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentProviderCollectionTransfer
-     */
-    public function getPaymentProviderCollection(PaymentProviderCriteriaTransfer $paymentProviderCriteriaTransfer): PaymentProviderCollectionTransfer
-    {
-        return $this->getFactory()->getPaymentFacade()->getPaymentProviderCollection($paymentProviderCriteriaTransfer);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return void
      */
-    public function performPaymentMethodImport(): void
+    public function performPaymentMethodsImport(UnzerKeypairTransfer $unzerKeypairTransfer): void
     {
-        $this->getFactory()->createUnzerPaymentMethodImporter()->performPaymentMethodImport();
+        $this->getFactory()->createUnzerPaymentMethodsImporter()->performPaymentMethodsImport($unzerKeypairTransfer);
     }
 }

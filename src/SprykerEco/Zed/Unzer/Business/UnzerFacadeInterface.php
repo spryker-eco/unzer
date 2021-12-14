@@ -23,6 +23,7 @@ use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 
 interface UnzerFacadeInterface
@@ -254,23 +255,13 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Performs Unzer Get Paymenet Types URL API call.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\UnzerApiRequestTransfer $unzerApiRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
-     */
-    public function performGetPaymentTypesApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer;
-
-    /**
-     * Specification:
      * - Imports available Unzer payment methods and stores them in database.
      *
      * @api
      *
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
+     *
      * @return void
      */
-    public function performPaymentMethodImport(): void;
+    public function performPaymentMethodsImport(UnzerKeypairTransfer $unzerKeypairTransfer): void;
 }
