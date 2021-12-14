@@ -200,7 +200,7 @@ class UnzerConfig extends AbstractBundleConfig
             }
         }
 
-        throw new UnzerException('Unknown Unzer payment method key '.$paymentMethodKey.' detected.');
+        throw new UnzerException('Unknown Unzer payment method key ' . $paymentMethodKey . ' detected.');
     }
 
     /**
