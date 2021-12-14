@@ -86,15 +86,42 @@
         </foreign-key>
         <id-method-parameter value="spy_payment_unzer_customer_pk_seq"/></table>
 
-    <table name="spy_merchant_unzer_participant" idMethod="native" allowPkInsert="true" isCrossRef="true">
-        <column name="id_merchant_unzer_participant" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="fk_merchant" type="INTEGER" required="true"/>
-        <column name="participant_id" type="VARCHAR" size="255" required="true"/>
+    <table name="spy_unzer_credentials" idMethod="native" allowPkInsert="true" isCrossRef="true">
+        <column name="id_unzer_credentials" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="parent_id_unzer_credentials" type="INTEGER"/>
+        <column name="keypair_id" type="VARCHAR" size="255" required="true"/>
+        <column name="config_name" type="VARCHAR" size="255"/>
+        <column name="type" type="INTEGER"/>
+        <column name="public_key" type="VARCHAR" size="255" required="true"/>
+        <column name="participant_id" type="VARCHAR" size="255" />
+        <column name="merchant_reference" type="VARCHAR" size="255" />
+        <id-method-parameter value="spy_unzer_credentials_pk_seq"/>
+        <unique name="un_keypair_id">
+            <unique-column name="keypair_id"/>
+        </unique>
+        <unique name="un_public_key">
+            <unique-column name="public_key"/>
+        </unique>
 
-        <foreign-key name="spy_merchant_unzer_participant-fk_merchant" foreignTable="spy_merchant" phpName="Merchant" refPhpName="MerchantUnzerParticipant">
-            <reference local="fk_merchant" foreign="id_merchant"/>
+    </table>
+
+    <table name="spy_unzer_credentials_store" idMethod="native" allowPkInsert="true" isCrossRef="true">
+        <column name="id_unzer_credentials_store" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="fk_unzer_credentials" type="INTEGER" required="true"/>
+        <column name="fk_store" type="INTEGER" required="true"/>
+
+        <foreign-key name="spy_unzer_credentials_store-fk_store" foreignTable="spy_store" phpName="Store" refPhpName="UnzerCredentialsStore">
+            <reference local="fk_store" foreign="id_store"/>
         </foreign-key>
-        <id-method-parameter value="spy_merchant_unzer_participant_pk_seq"/>
+        <foreign-key name="spy_unzer_credentials_store-fk_unzer_credentials" foreignTable="spy_unzer_credentials" phpName="UnzerCredentials" refPhpName="UnzerCredentialsStore">
+            <reference local="fk_unzer_credentials" foreign="id_unzer_credentials"/>
+        </foreign-key>
+
+        <id-method-parameter value="spy_unzer_credentials_store_pk_seq"/>
+        <unique name="fk_unzer_credentials-fk_store">
+            <unique-column name="fk_unzer_credentials"/>
+            <unique-column name="fk_store"/>
+        </unique>
     </table>
 
 </database>
