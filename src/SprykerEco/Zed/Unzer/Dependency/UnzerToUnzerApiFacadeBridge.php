@@ -180,8 +180,8 @@ class UnzerToUnzerApiFacadeBridge implements UnzerToUnzerApiFacadeInterface
      *
      * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
      */
-    public function performGetPaymentTypesApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer
+    public function performGetPaymentMethodsApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer
     {
-        return $this->unzerApiFacade->performGetPaymentTypesApiCall($unzerApiRequestTransfer);
+        return $this->unzerApiFacade->performGetPaymentMethodsApiCall($unzerApiRequestTransfer);
     }
 }
