@@ -73,8 +73,8 @@ abstract class AbstractUnzerPaymentMethodFilter
      *
      * @return bool
      */
-    protected function isMarketplace(PaymentMethodTransfer $paymentMethodTransfer): bool
+    protected function isMarketplaceUnzerPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
-        return strpos($paymentMethodTransfer->getPaymentMethodKey(), SharedUnzerConfig::PLATFORM_MARKETPLACE) !== false;
+        return $this->isUnzerPaymentProvider($paymentMethodTransfer) && strpos($paymentMethodTransfer->getPaymentMethodKey(), SharedUnzerConfig::PLATFORM_MARKETPLACE) !== false;
     }
 }
