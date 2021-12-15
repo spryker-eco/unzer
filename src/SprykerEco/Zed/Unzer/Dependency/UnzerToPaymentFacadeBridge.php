@@ -13,7 +13,6 @@ use Generated\Shared\Transfer\PaymentProviderCollectionRequestTransfer;
 use Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer;
 use Generated\Shared\Transfer\PaymentProviderCollectionTransfer;
 use Generated\Shared\Transfer\PaymentProviderCriteriaTransfer;
-use Spryker\Zed\Payment\Business\PaymentFacadeInterface;
 
 class UnzerToPaymentFacadeBridge implements UnzerToPaymentFacadeInterface
 {
@@ -25,7 +24,7 @@ class UnzerToPaymentFacadeBridge implements UnzerToPaymentFacadeInterface
     /**
      * @param \Spryker\Zed\Payment\Business\PaymentFacadeInterface $paymentFacade
      */
-    public function __construct(PaymentFacadeInterface $paymentFacade)
+    public function __construct($paymentFacade)
     {
         $this->paymentFacade = $paymentFacade;
     }

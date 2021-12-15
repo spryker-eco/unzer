@@ -43,9 +43,9 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
     protected function getMarketplaceUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
     {
         return new ArrayObject(
-            array_filter((array) $paymentMethodsTransfer->getMethods(), function(PaymentMethodTransfer $paymentMethodTransfer) {
+            array_filter((array)$paymentMethodsTransfer->getMethods(), function (PaymentMethodTransfer $paymentMethodTransfer) {
                 return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || $this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer);
-            })
+            }),
         );
     }
 
@@ -57,9 +57,9 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
     protected function getStandardUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
     {
         return new ArrayObject(
-            array_filter((array) $paymentMethodsTransfer->getMethods(), function(PaymentMethodTransfer $paymentMethodTransfer) {
+            array_filter((array)$paymentMethodsTransfer->getMethods(), function (PaymentMethodTransfer $paymentMethodTransfer) {
                 return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || !$this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer);
-            })
+            }),
         );
     }
 }

@@ -29,7 +29,7 @@ interface PaymentImportAdapterInterface
      */
     public function createPaymentProvider(
         string $paymentProviderName,
-        ArrayObject $paymentMethodTransfers,
+        ArrayObject $paymentMethodTransfers
     ): PaymentProviderCollectionResponseTransfer;
 
     /**
@@ -40,6 +40,6 @@ interface PaymentImportAdapterInterface
      */
     public function createPaymentMethods(
         PaymentProviderTransfer $paymentProviderTransfer,
-        ArrayObject $paymentMethodTransfers,
+        ArrayObject $paymentMethodTransfers
     ): PaymentMethodCollectionResponseTransfer;
 }

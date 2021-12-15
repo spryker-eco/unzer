@@ -7,8 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Dependency;
 
-use Generated\Shared\Transfer\OrderTransfer;
-
 interface UnzerToSalesFacadeInterface
 {
     /**

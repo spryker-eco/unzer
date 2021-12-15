@@ -59,6 +59,8 @@ class UnzerGetPaymentMethodsMapper implements UnzerGetPaymentMethodsMapperInterf
             $paymentMethodTransfer = $this->createPaymentMethodTransfer($paymentMethodKey);
             $paymentMethodsTransfer->addMethod($paymentMethodTransfer);
         }
+
+        return $paymentMethodsTransfer;
     }
 
     /**

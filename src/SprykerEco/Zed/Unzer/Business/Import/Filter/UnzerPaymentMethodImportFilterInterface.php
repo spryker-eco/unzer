@@ -8,7 +8,6 @@
 namespace SprykerEco\Zed\Unzer\Business\Import\Filter;
 
 use ArrayObject;
-use Generated\Shared\Transfer\PaymentMethodsTransfer;
 
 interface UnzerPaymentMethodImportFilterInterface
 {

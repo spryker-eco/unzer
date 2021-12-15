@@ -20,12 +20,13 @@ class UnzerPaymentMethodImportFilter implements UnzerPaymentMethodImportFilterIn
      */
     public function filterStoredPaymentMethods(
         ArrayObject $paymentMethodTransfers,
-        ArrayObject $storedPaymentMethodTransfers,
+        ArrayObject $storedPaymentMethodTransfers
     ): ArrayObject {
         $filteredPaymentMethodTransfers = new ArrayObject();
+        $storedPaymentMethodKeys = $this->getStoredPaymentMethodKeys($storedPaymentMethodTransfers);
 
         foreach ($paymentMethodTransfers as $paymentMethodTransfer) {
-            if (!$this->isAlreadyStored($paymentMethodTransfer, $storedPaymentMethodTransfers)) {
+            if (!in_array($paymentMethodTransfer->getPaymentMethodKey(), $storedPaymentMethodKeys)) {
                 $filteredPaymentMethodTransfers->append($paymentMethodTransfer);
             }
         }
@@ -34,19 +35,14 @@ class UnzerPaymentMethodImportFilter implements UnzerPaymentMethodImportFilterIn
     }
 
     /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $storedPaymentMethodTransfers
+     * @param \ArrayObject $storedPaymentMethodTransfers
      *
-     * @return bool
+     * @return array<int, string>
      */
-    protected function isAlreadyStored(PaymentMethodTransfer $paymentMethodTransfer, ArrayObject $storedPaymentMethodTransfers): bool
+    protected function getStoredPaymentMethodKeys(ArrayObject $storedPaymentMethodTransfers): array
     {
-        foreach ($storedPaymentMethodTransfers as $storedPaymentMethodTransfer) {
-            if ($paymentMethodTransfer->getPaymentMethodKey() === $storedPaymentMethodTransfer->getPaymentMethodKey()) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_map(function (PaymentMethodTransfer $paymentMethodTransfer) {
+            return $paymentMethodTransfer->getPaymentMethodKey();
+        }, (array)$storedPaymentMethodTransfers);
     }
 }

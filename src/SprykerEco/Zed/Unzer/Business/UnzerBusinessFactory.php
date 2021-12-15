@@ -47,8 +47,8 @@ use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
 use SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapter;
 use SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilterInterface;
 use SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilter;
+use SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilterInterface;
 use SprykerEco\Zed\Unzer\Business\Import\UnzerPaymentMethodImporter;
 use SprykerEco\Zed\Unzer\Business\Import\UnzerPaymentMethodImporterInterface;
 use SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessor;
@@ -65,8 +65,8 @@ use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsChargebackOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsChargeFailedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsPaymentCompletedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\UnzerConditionInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerIntersectionPaymentMethodFilter;
+use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
@@ -594,9 +594,10 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerIntersectionPaymentMethodFilter(
             $this->getConfig(),
             $this->createUnzerReader(),
-            $this->createUnzerPaymentMethodsAdapter()
+            $this->createUnzerPaymentMethodsAdapter(),
         );
     }
+
     /**
      * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMethodsMapperInterface
      */

@@ -68,12 +68,12 @@ class PaymentImportAdapter implements PaymentImportAdapterInterface
      * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
      * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
      *
-     * @throws \Spryker\Shared\Kernel\Transfer\Exception\NullValueException
-     *
      * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
      */
-    public function createPaymentMethods(PaymentProviderTransfer $paymentProviderTransfer, ArrayObject $paymentMethodTransfers): PaymentMethodCollectionResponseTransfer
-    {
+    public function createPaymentMethods(
+        PaymentProviderTransfer $paymentProviderTransfer,
+        ArrayObject $paymentMethodTransfers
+    ): PaymentMethodCollectionResponseTransfer {
         foreach ($paymentMethodTransfers as $paymentMethodTransfer) {
             $paymentMethodTransfer->setIdPaymentProvider($paymentProviderTransfer->getIdPaymentProviderOrFail());
         }
