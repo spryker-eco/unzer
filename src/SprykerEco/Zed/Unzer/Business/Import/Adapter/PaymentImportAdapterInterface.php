@@ -12,7 +12,7 @@ use Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer;
 use Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer;
 use Generated\Shared\Transfer\PaymentProviderTransfer;
 
-interface PaymentAdapterInterface
+interface PaymentImportAdapterInterface
 {
     /**
      * @param string $paymentProviderName

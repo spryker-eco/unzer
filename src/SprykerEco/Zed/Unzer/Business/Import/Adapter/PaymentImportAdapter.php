@@ -17,7 +17,7 @@ use Generated\Shared\Transfer\PaymentProviderCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentProviderTransfer;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeInterface;
 
-class PaymentAdapter implements PaymentAdapterInterface
+class PaymentImportAdapter implements PaymentImportAdapterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeInterface
