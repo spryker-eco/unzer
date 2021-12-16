@@ -17,6 +17,7 @@ use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
+use Orm\Zed\Store\Persistence\SpyStore;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem;
@@ -166,7 +167,7 @@ class UnzerPersistenceMapper
         SpyUnzerCredentials $unzerCredentialsEntity
     ): SpyUnzerCredentials {
         return $unzerCredentialsEntity->fromArray($unzerCredentialsTransfer->toArray())
-            ->setPublicKey($unzerCredentialsTransfer->getUnzerKeypair()->getPublicKey());
+            ->setPublicKey($unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey());
     }
 
     /**
@@ -216,12 +217,12 @@ class UnzerPersistenceMapper
     }
 
     /**
-     * @param $storeEntity
+     * @param \Orm\Zed\Store\Persistence\SpyStore $storeEntity
      * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
      *
      * @return \Generated\Shared\Transfer\StoreTransfer
      */
-    protected function mapStoreEntityToStoreTransfer($storeEntity, StoreTransfer $storeTransfer): StoreTransfer
+    protected function mapStoreEntityToStoreTransfer(SpyStore $storeEntity, StoreTransfer $storeTransfer): StoreTransfer
     {
         return $storeTransfer->fromArray($storeEntity->toArray(), true);
     }

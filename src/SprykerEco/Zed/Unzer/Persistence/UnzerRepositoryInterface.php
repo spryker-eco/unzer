@@ -79,5 +79,7 @@ interface UnzerRepositoryInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
-    public function findUnzerCredentialssByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): UnzerCredentialsCollectionTransfer;
+    public function findUnzerCredentialsCollectionByCriteria(
+        UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+    ): UnzerCredentialsCollectionTransfer;
 }

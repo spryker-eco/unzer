@@ -9,6 +9,7 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
+use SprykerEco\Zed\Unzer\UnzerConfig;
 
 abstract class AbstractUnzerPaymentMethodFilter
 {
@@ -21,6 +22,19 @@ abstract class AbstractUnzerPaymentMethodFilter
      * @var string
      */
     protected const MAIN_SELLER_KEY = 'main';
+
+    /**
+     * @var \SprykerEco\Zed\Unzer\UnzerConfig
+     */
+    protected $unzerConfig;
+
+    /**
+     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     */
+    public function __construct(UnzerConfig $unzerConfig)
+    {
+        $this->unzerConfig = $unzerConfig;
+    }
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -53,7 +67,7 @@ abstract class AbstractUnzerPaymentMethodFilter
      */
     protected function isUnzerPaymentProvider(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
-        return strpos($paymentMethodTransfer->getMethodName(), $this->config->getProviderName()) !== false;
+        return strpos($paymentMethodTransfer->getMethodName(), $this->unzerConfig->getProviderName()) !== false;
     }
 
     /**
@@ -61,7 +75,7 @@ abstract class AbstractUnzerPaymentMethodFilter
      *
      * @return bool
      */
-    protected function isMarketplace(PaymentMethodTransfer $paymentMethodTransfer): bool
+    protected function isMarketplaceUnzerPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
         return strpos($paymentMethodTransfer->getMethodName(), static::MARKETPLACE_PLACEHOLDER) !== false;
     }

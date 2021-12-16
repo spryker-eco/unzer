@@ -7,8 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Dependency;
 
-use Generated\Shared\Transfer\OrderTransfer;
-
 interface UnzerToSalesFacadeInterface
 {
     /**
@@ -18,5 +16,5 @@ interface UnzerToSalesFacadeInterface
      *
      * @return \Generated\Shared\Transfer\OrderTransfer
      */
-    public function getOrderByIdSalesOrder($idSalesOrder): OrderTransfer;
+    public function getOrderByIdSalesOrder($idSalesOrder);
 }

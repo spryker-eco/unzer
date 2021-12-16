@@ -31,7 +31,7 @@ class UnzerToRefundFacadeBridge implements UnzerToRefundFacadeInterface
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
-    public function calculateRefund(array $salesOrderItems, SpySalesOrder $salesOrderEntity): RefundTransfer
+    public function calculateRefund(array $salesOrderItems, SpySalesOrder $salesOrderEntity)
     {
         return $this->refundFacade->calculateRefund($salesOrderItems, $salesOrderEntity);
     }
@@ -41,7 +41,7 @@ class UnzerToRefundFacadeBridge implements UnzerToRefundFacadeInterface
      *
      * @return bool
      */
-    public function saveRefund(RefundTransfer $refundTransfer): bool
+    public function saveRefund(RefundTransfer $refundTransfer)
     {
         return $this->refundFacade->saveRefund($refundTransfer);
     }

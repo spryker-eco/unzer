@@ -82,7 +82,7 @@ class UnzerZedTester extends Actor
     /**
      * @var string
      */
-    public const ORDER_REFERENCE = 'DE--19';
+    public const ORDER_REFERENCE = 'DE--1';
 
     /**
      * @var string

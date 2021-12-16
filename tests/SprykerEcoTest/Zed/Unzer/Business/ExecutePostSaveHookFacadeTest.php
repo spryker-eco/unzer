@@ -15,7 +15,7 @@ class ExecutePostSaveHookFacadeTest extends UnzerFacadeBaseTest
     /**
      * @var array
      */
-    protected const UNZER_REGULAR_PAYMENT_METHODS = [
+    protected const UNZER_STANDARD_PAYMENT_METHODS = [
         // will be implemented along with regular payments
     ];
 

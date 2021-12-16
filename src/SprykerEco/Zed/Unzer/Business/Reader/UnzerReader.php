@@ -74,7 +74,7 @@ class UnzerReader implements UnzerReaderInterface
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())->addPublicKey($publicKey),
         );
-        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
+        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
         if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
             return null;
         }
@@ -131,7 +131,7 @@ class UnzerReader implements UnzerReaderInterface
      */
     public function findUnzerCredentialsByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): ?UnzerCredentialsTransfer
     {
-        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
+        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
         if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
             return null;
         }
@@ -150,7 +150,7 @@ class UnzerReader implements UnzerReaderInterface
     public function getUnzerCredentialsCollectionByCriteria(
         UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
     ): UnzerCredentialsCollectionTransfer {
-        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
+        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
         foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
             $this->attachUnzerPrivateKey($unzerCredentialsTransfer);
         }

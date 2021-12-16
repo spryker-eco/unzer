@@ -590,7 +590,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerMetadataQuoteExpander(): UnzerMetadataQuoteExpanderInterface
     {
         return new UnzerMetadataQuoteExpander(
-            $this->createUnzerMetadataAdapterInterface(),
+            $this->createUnzerMetadataAdapter(),
             $this->getLocaleFacade(),
         );
     }
@@ -598,7 +598,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapterInterface
      */
-    public function createUnzerMetadataAdapterInterface(): UnzerMetadataAdapterInterface
+    public function createUnzerMetadataAdapter(): UnzerMetadataAdapterInterface
     {
         return new UnzerMetadataAdapter(
             $this->getUnzerApiFacade(),

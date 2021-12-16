@@ -221,8 +221,9 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
-    public function findUnzerCredentialssByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): UnzerCredentialsCollectionTransfer
-    {
+    public function findUnzerCredentialsCollectionByCriteria(
+        UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+    ): UnzerCredentialsCollectionTransfer {
         $unzerConfigQuery = $this->getFactory()->createUnzerCredentialsQuery();
         $unzerConfigQuery = $this->setUnzerConfigFilters(
             $unzerConfigQuery,

@@ -21,6 +21,9 @@ interface UnzerFacadeInterface
 {
     /**
      * Specification:
+     *  - Requires QuoteTransfer::payment to be set.
+     *  - Requires PaymentTransfer::unzerPayment to be set.
+     *  - Requires QuoteTransfer::store to be set.
      *  - Expands `QuoteTransfer` with `UnzerPaymentTransfer`.
      *  - Expands `QuoteTransfer` with `UnzerKeypairTransfer`.
      *  - Expands `QuoteTransfer` with `UnzerCustomerTransfer`.
@@ -40,6 +43,11 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     * - Requires QuoteTransfer::payment to be set.
+     * - Requires PaymentTransfer::unzerPayment to be set.
+     * - Requires UnzerPaymentTransfer::unzerCustomer to be set.
+     * - Requires UnzerPaymentTransfer::unzerKeypair to be set.
+     * - Requires UnzerKeypairTransfer::keypairId to be set.
      * - Saves Unzer payment details to Persistence.
      *
      * @api
@@ -67,6 +75,9 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     *  - Requires QuoteTransfer::payment to be set.
+     *  - Requires PaymentTransfer::unzerPayment to be set.
+     *  - Requires UnzerPaymentTransfer::unzerKeypair to be set.
      *  - Expands `QuoteTransfer` with `UnzerBasketTransfer`.
      *  - Expands `QuoteTransfer` with `UnzerPaymentResourceTransfer`.
      *  - Performs Unzer Create Basket API call.
@@ -216,6 +227,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     *  - Requires UnzerCredentialsTransfer::unzerKeypair to be set.
      *  - Prepares UnzerApi request and set Unzer keypair.
      *  - Performs Unzer Set Notification URL Api all.
      *  - Throws `UnzerException` if API call failed.
@@ -232,6 +244,8 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     *  - Requires UnzerCredentialsTransfer::unzerKeypair to be set.
+     *  - Requires UnzerCredentialsTransfer::idUnzerCredentials to be set.
      *  - Saves `UnzerCredentialsTransfer` to Persistence.
      *  - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.
      *
@@ -245,6 +259,8 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     *  - Requires UnzerCredentialsTransfer::unzerKeypair to be set.
+     *  - Requires UnzerCredentialsTransfer::idUnzerCredentials to be set.
      *  - Updates `UnzerCredentialsTransfer` to Persistence.
      *  - If `UnzerCredentialsTransfer` contains store relations - also updates it to Persistence.
      *

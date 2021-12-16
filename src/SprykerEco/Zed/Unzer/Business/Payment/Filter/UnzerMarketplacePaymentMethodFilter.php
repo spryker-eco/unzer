@@ -9,24 +9,11 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
 use ArrayObject;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
+use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilter implements UnzerPaymentMethodFilterInterface
 {
-    /**
-     * @var \SprykerEco\Zed\Unzer\UnzerConfig
-     */
-    protected $config;
-
-    /**
-     * @param \SprykerEco\Zed\Unzer\UnzerConfig $config
-     */
-    public function __construct(UnzerConfig $config)
-    {
-        $this->config = $config;
-    }
-
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -37,23 +24,42 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        $filteredPaymentMethodTransferCollection = new ArrayObject();
-
         $hasMultipleMerchants = $this->hasMultipleMerchants($quoteTransfer);
+
         if ($hasMultipleMerchants === true) {
-            return $paymentMethodsTransfer;
+            $filteredPaymentMethods = $this->getMarketplaceUnzerPaymentMethods($paymentMethodsTransfer);
+        } else {
+            $filteredPaymentMethods = $this->getStandardUnzerPaymentMethods($paymentMethodsTransfer);
         }
 
-        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
-            if ($this->isUnzerPaymentProvider($paymentMethodTransfer) && $this->isMarketplace($paymentMethodTransfer)) {
-                continue;
-            }
+        return $paymentMethodsTransfer->setMethods($filteredPaymentMethods);
+    }
 
-            $filteredPaymentMethodTransferCollection->append($paymentMethodTransfer);
-        }
+    /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     *
+     * @return \ArrayObject
+     */
+    protected function getMarketplaceUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
+    {
+        return new ArrayObject(
+            array_filter((array)$paymentMethodsTransfer->getMethods(), function (PaymentMethodTransfer $paymentMethodTransfer) {
+                return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || $this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer);
+            }),
+        );
+    }
 
-        $paymentMethodsTransfer->setMethods($filteredPaymentMethodTransferCollection);
-
-        return $paymentMethodsTransfer;
+    /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     *
+     * @return \ArrayObject
+     */
+    protected function getStandardUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
+    {
+        return new ArrayObject(
+            array_filter((array)$paymentMethodsTransfer->getMethods(), function (PaymentMethodTransfer $paymentMethodTransfer) {
+                return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || !$this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer);
+            }),
+        );
     }
 }
