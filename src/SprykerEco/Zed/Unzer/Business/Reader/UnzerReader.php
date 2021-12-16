@@ -75,7 +75,7 @@ class UnzerReader implements UnzerReaderInterface
             (new UnzerCredentialsConditionsTransfer())->addPublicKey($publicKey),
         );
         $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
-        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
+        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() !== 1) {
             return null;
         }
         $unzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()[0];
