@@ -18,7 +18,8 @@
         "spryker/quote": "^2.15.0",
         "spryker/refund": "^5.4.0",
         "spryker/transfer": "^3.25.0",
-        "spryker-eco/unzer-api": "dev-feature/cc-14610/cc-14662/code-migration as 1.0"
+        "spryker/vault": "^1.2.0",
+        "spryker-eco/unzer-api": "dev-feature/cc-14610/cc-14650/unzer-checkout-process as 1.0"
     },
     "require-dev": {
         "phpstan/phpstan": "*",
@@ -31,12 +32,17 @@
             "SprykerEco\\": "src/SprykerEco/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "SprykerEcoTest\\": "tests/SprykerEcoTest/"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
         "test": "vendor/bin/codecept run",
-        "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/",
-        "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/",
+        "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
+        "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
         "stan": "phpstan analyse -c phpstan.neon src/",
         "stan-setup": "cp composer.json composer.backup && COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpstan/phpstan:^0.12 && mv composer.backup composer.json"
     },

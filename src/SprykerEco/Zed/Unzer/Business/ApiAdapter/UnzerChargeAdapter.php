@@ -92,10 +92,9 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
                 new UnzerApiChargeRequestTransfer(),
             );
 
-        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setChargeRequest($unzerApiChargeRequestTransfer);
-
-        return $unzerApiRequestTransfer;
+        return (new UnzerApiRequestTransfer())
+            ->setChargeRequest($unzerApiChargeRequestTransfer)
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
     }
 
     /**

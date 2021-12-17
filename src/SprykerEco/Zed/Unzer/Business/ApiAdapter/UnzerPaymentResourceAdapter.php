@@ -9,6 +9,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerPaymentResourceMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
@@ -39,11 +40,14 @@ class UnzerPaymentResourceAdapter extends UnzerAbstractApiAdapter implements Unz
 
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
      */
-    public function createPaymentResource(UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer): UnzerPaymentResourceTransfer
-    {
+    public function createPaymentResource(
+        UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer,
+        UnzerKeypairTransfer $unzerKeypairTransfer
+    ): UnzerPaymentResourceTransfer {
         $unzerApiCreatePaymentResourceRequestTransfer = $this->unzerPaymentResourceMapper
             ->mapUnzerPaymentResourceTransferToUnzerApiCreatePaymentResourceRequestTransfer(
                 $unzerPaymentResourceTransfer,
@@ -51,7 +55,8 @@ class UnzerPaymentResourceAdapter extends UnzerAbstractApiAdapter implements Unz
             );
 
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setCreatePaymentResourceRequest($unzerApiCreatePaymentResourceRequestTransfer);
+            ->setCreatePaymentResourceRequest($unzerApiCreatePaymentResourceRequestTransfer)
+            ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performCreatePaymentResourceApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);

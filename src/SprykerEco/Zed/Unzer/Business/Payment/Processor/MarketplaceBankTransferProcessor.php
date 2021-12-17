@@ -96,6 +96,9 @@ class MarketplaceBankTransferProcessor extends AbstractPaymentProcessor implemen
                 new UnzerPaymentResourceTransfer(),
             );
 
-        return $this->unzerPaymentResourceAdapter->createPaymentResource($unzerPaymentResourceTransfer);
+        return $this->unzerPaymentResourceAdapter->createPaymentResource(
+            $unzerPaymentResourceTransfer,
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail(),
+        );
     }
 }

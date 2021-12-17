@@ -114,6 +114,51 @@
         <property name="isMarketplace" type="bool"/>
         <property name="isAuthorizable" type="bool"/>
         <property name="redirectUrl" type="string"/>
+        <property name="unzerKeypair" type="UnzerKeypair"/>
+    </transfer>
+
+    <transfer name="UnzerKeypair">
+        <property name="keypairId" type="string"/>
+        <property name="publicKey" type="string"/>
+        <property name="privateKey" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerCredentials">
+        <property name="keypairId" type="string"/>
+        <property name="configName" type="string"/>
+        <property name="type" type="int"/>
+        <property name="participantId" type="string"/>
+        <property name="merchantReference" type="string"/>
+        <property name="idUnzerCredentials" type="int"/>
+        <property name="parentIdUnzerCredentials" type="int"/>
+        <property name="storeRelation" type="StoreRelation"/>
+        <property name="unzerKeypair" type="UnzerKeypair"/>
+    </transfer>
+
+    <transfer name="StoreRelation">
+        <property name="idEntity" type="int"/>
+        <property name="idStores" type="int[]" singular="idStores"/>
+        <property name="stores" type="Store[]" singular="stores"/>
+    </transfer>
+
+    <transfer name="Store">
+        <property name="idStore" type="int"/>
+        <property name="name" type="string"/>
+    </transfer>
+
+    <transfer name="Message">
+        <property name="value" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerCredentialsResponse">
+        <property name="unzerCredentials" type="UnzerCredentials"/>
+        <property name="isSuccessful" type="bool"/>
+        <property name="messages" type="Message[]" singular="message"/>
+    </transfer>
+
+    <transfer name="Payment">
+        <property name="unzerPayment" type="UnzerPayment"/>
+        <property name="unzerMarketplaceBankTransfer" type="UnzerPayment"/>
     </transfer>
 
     <transfer name="UnzerTransaction">
@@ -125,6 +170,12 @@
         <property name="amount" type="float"/>
     </transfer>
 
+    <transfer name="UnzerNotificationConfig">
+        <property name="event" type="string"/>
+        <property name="url" type="string"/>
+        <property name="unzerKeyPair" type="UnzerKeypair"/>
+    </transfer>
+
     <transfer name="UnzerNotification">
         <property name="event" type="string"/>
         <property name="publicKey" type="string"/>
@@ -133,22 +184,8 @@
         <property name="isProcessed" type="bool"/>
     </transfer>
 
-    <transfer name="Payment">
-        <property name="unzerPayment" type="UnzerPayment"/>
-    </transfer>
-
     <transfer name="Item">
         <property name="unzerParticipantId" type="string"/>
-    </transfer>
-
-    <transfer name="Merchant">
-        <property name="merchantUnzerParticipantId" type="string"/>
-    </transfer>
-
-    <transfer name="MerchantUnzerParticipant">
-        <property name="merchantReference" type="string"/>
-        <property name="merchantId" type="int"/>
-        <property name="participantId" type="string"/>
     </transfer>
 
     <transfer name="PaymentUnzer">
@@ -171,6 +208,7 @@
         <property name="payPageId" type="string"/>
         <property name="isMarketplace" type="bool"/>
         <property name="isAuthorizable" type="bool"/>
+        <property name="keypairId" type="string"/>
     </transfer>
 
     <transfer name="PaymentUnzerOrderItem">
@@ -209,7 +247,7 @@
     </transfer>
 
     <transfer name="UnzerApiResponse">
-        <property name="isSuccess" type="bool"/>
+        <property name="isSuccessful" type="bool"/>
         <property name="errorResponse" type="UnzerApiErrorResponse"/>
     </transfer>
 
@@ -225,18 +263,22 @@
         <property name="customerMessage" type="string"/>
     </transfer>
 
-    <transfer name="MerchantUnzerParticipantCriteria">
-        <property name="merchantUnzerParticipantConditions" type="MerchantUnzerParticipantConditions" />
+    <transfer name="UnzerCredentialsCriteria">
+        <property name="unzerCredentialsConditions" type="UnzerCredentialsConditions"/>
         <property name="sortCollection" type="Sort[]" singular="sort"/>
-        <property name="pagination" type="Pagination" />
+        <property name="pagination" type="Pagination"/>
     </transfer>
 
-    <transfer name="MerchantUnzerParticipantConditions">
-        <property name="references" type="string[]" singular="reference"/>
+    <transfer name="UnzerCredentialsConditions">
+        <property name="merchantReferences" type="string[]" singular="merchantReference"/>
+        <property name="storeNames" type="string[]" singular="storeName"/>
+        <property name="publicKeys" type="string[]" singular="publicKey"/>
+        <property name="keypairIds" type="string[]" singular="keypairId"/>
+        <property name="types" type="int[]" singular="type"/>
     </transfer>
 
-    <transfer name="MerchantUnzerParticipantCollection">
-        <property name="merchantUnzerParticipants" type="MerchantUnzerParticipant[]" singular="merchantUnzerParticipant"/>
+    <transfer name="UnzerCredentialsCollection">
+        <property name="unzerCredentials" type="UnzerCredentials[]" singular="unzerCredentials"/>
         <property name="pagination" type="Pagination"/>
     </transfer>
 
@@ -246,8 +288,8 @@
     </transfer>
 
     <transfer name="Pagination">
-        <property name="limit" type="int" />
-        <property name="offset" type="int" />
+        <property name="limit" type="int"/>
+        <property name="offset" type="int"/>
         <property name="page" type="int"/>
         <property name="maxPerPage" type="int"/>
         <property name="nbResults" type="int"/>

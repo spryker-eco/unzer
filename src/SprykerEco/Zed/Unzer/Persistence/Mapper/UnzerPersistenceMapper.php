@@ -7,16 +7,22 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence\Mapper;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
-use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant;
+use Generated\Shared\Transfer\StoreRelationTransfer;
+use Generated\Shared\Transfer\StoreTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
+use Orm\Zed\Store\Persistence\SpyStore;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzer;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction;
+use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
 use Propel\Runtime\Collection\ObjectCollection;
 
 class UnzerPersistenceMapper
@@ -60,58 +66,6 @@ class UnzerPersistenceMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection $merchantUnzerParticipantEntities
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer $merchantUnzerParticipantCollectionTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
-     */
-    public function mapMerchantUnzerParticipantEntityCollectionToMerchantUnzerParticipantTransferCollection(
-        ObjectCollection $merchantUnzerParticipantEntities,
-        MerchantUnzerParticipantCollectionTransfer $merchantUnzerParticipantCollectionTransfer
-    ): MerchantUnzerParticipantCollectionTransfer {
-        foreach ($merchantUnzerParticipantEntities as $merchantUnzerParticipantEntity) {
-            $merchantUnzerParticipantCollectionTransfer->addMerchantUnzerParticipant(
-                $this->mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer(
-                    $merchantUnzerParticipantEntity,
-                    new MerchantUnzerParticipantTransfer(),
-                ),
-            );
-        }
-
-        return $merchantUnzerParticipantCollectionTransfer;
-    }
-
-    /**
-     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer
-     */
-    public function mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer(
-        SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity,
-        MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
-    ): MerchantUnzerParticipantTransfer {
-        return $merchantUnzerParticipantTransfer
-            ->fromArray($merchantUnzerParticipantEntity->toArray(), true)
-            ->setMerchantId($merchantUnzerParticipantEntity->getFkMerchant());
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
-     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
-     *
-     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant
-     */
-    public function mapMerchantUnzerParticipantTransferToEntity(
-        MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer,
-        SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
-    ): SpyMerchantUnzerParticipant {
-        return $merchantUnzerParticipantEntity
-            ->fromArray($merchantUnzerParticipantTransfer->toArray())
-            ->setFkMerchant($merchantUnzerParticipantTransfer->getMerchantId());
-    }
-
-    /**
      * @param \Orm\Zed\Unzer\Persistence\SpyPaymentUnzer $paymentUnzerEntity
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      *
@@ -123,7 +77,8 @@ class UnzerPersistenceMapper
     ): PaymentUnzerTransfer {
         return $paymentUnzerTransfer
             ->fromArray($paymentUnzerEntity->toArray(), true)
-            ->setIdSalesOrder($paymentUnzerEntity->getFkSalesOrder());
+            ->setIdSalesOrder($paymentUnzerEntity->getFkSalesOrder())
+            ->setKeypairId($paymentUnzerEntity->getUnzerKeypairId());
     }
 
     /**
@@ -138,7 +93,8 @@ class UnzerPersistenceMapper
     ): SpyPaymentUnzer {
         return $paymentUnzerEntity
             ->fromArray($paymentUnzerTransfer->toArray())
-            ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder());
+            ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder())
+            ->setUnzerKeypairId($paymentUnzerTransfer->getKeypairIdOrFail());
     }
 
     /**
@@ -185,5 +141,108 @@ class UnzerPersistenceMapper
         return $paymentUnzerTransactionTransfer
             ->fromArray($paymentUnzerTransactionEntity->toArray(), true)
             ->setIdPaymentUnzer($paymentUnzerTransactionEntity->getFkPaymentUnzer());
+    }
+
+    /**
+     * @param \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity
+     * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
+     */
+    public function mapPaymentUnzerCustomerEntityToUnzerCustomerTransfer(
+        SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity,
+        UnzerCustomerTransfer $unzerCustomerTransfer
+    ): UnzerCustomerTransfer {
+        return $unzerCustomerTransfer->setId($paymentUnzerCustomerEntity->getUnzerCustomerId());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentials $unzerCredentialsEntity
+     *
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentials
+     */
+    public function mapUnzerCredentialsTransferToUnzerCredentialsEntity(
+        UnzerCredentialsTransfer $unzerCredentialsTransfer,
+        SpyUnzerCredentials $unzerCredentialsEntity
+    ): SpyUnzerCredentials {
+        return $unzerCredentialsEntity->fromArray($unzerCredentialsTransfer->toArray())
+            ->setPublicKey($unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey());
+    }
+
+    /**
+     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentials $unzerCredentialsEntity
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function mapUnzerCredentialsEntityToUnzerCredentialsTransfer(
+        SpyUnzerCredentials $unzerCredentialsEntity,
+        UnzerCredentialsTransfer $unzerCredentialsTransfer
+    ): UnzerCredentialsTransfer {
+        $unzerCredentialsTransfer = $unzerCredentialsTransfer
+            ->fromArray($unzerCredentialsEntity->toArray(), true);
+
+        if ($unzerCredentialsTransfer->getUnzerKeypair()) {
+            $unzerCredentialsTransfer->getUnzerKeypair()
+                ->setPublicKey($unzerCredentialsEntity->getPublicKey())
+                ->setKeypairId($unzerCredentialsEntity->getKeypairId());
+
+            return $unzerCredentialsTransfer;
+        }
+
+        return $unzerCredentialsTransfer->setUnzerKeypair(
+            (new UnzerKeypairTransfer())
+                ->setPublicKey($unzerCredentialsEntity->getPublicKey())
+                ->setKeypairId($unzerCredentialsEntity->getKeypairId()),
+        );
+    }
+
+    /**
+     * @param \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsStoreEntities
+     * @param \Generated\Shared\Transfer\StoreRelationTransfer $storeRelationTransfer
+     *
+     * @return \Generated\Shared\Transfer\StoreRelationTransfer
+     */
+    public function mapUnzerCredentialsStoreEntitiesToStoreRelationTransfer(
+        ObjectCollection $unzerCredentialsStoreEntities,
+        StoreRelationTransfer $storeRelationTransfer
+    ): StoreRelationTransfer {
+        foreach ($unzerCredentialsStoreEntities as $unzerCredentialsStoreEntity) {
+            $storeRelationTransfer->addStores($this->mapStoreEntityToStoreTransfer($unzerCredentialsStoreEntity->getStore(), new StoreTransfer()));
+            $storeRelationTransfer->addIdStores($unzerCredentialsStoreEntity->getFkStore());
+        }
+
+        return $storeRelationTransfer;
+    }
+
+    /**
+     * @param \Orm\Zed\Store\Persistence\SpyStore $storeEntity
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     *
+     * @return \Generated\Shared\Transfer\StoreTransfer
+     */
+    protected function mapStoreEntityToStoreTransfer(SpyStore $storeEntity, StoreTransfer $storeTransfer): StoreTransfer
+    {
+        return $storeTransfer->fromArray($storeEntity->toArray(), true);
+    }
+
+    /**
+     * @param \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsEntities
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
+     */
+    public function mapUnzerCredentialsEntityCollectionToUnzerCredentialsTransferCollection(
+        ObjectCollection $unzerCredentialsEntities,
+        UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
+    ): UnzerCredentialsCollectionTransfer {
+        foreach ($unzerCredentialsEntities as $unzerCredentialsEntity) {
+            $unzerCredentialsCollectionTransfer->addUnzerCredentials(
+                $this->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, new UnzerCredentialsTransfer()),
+            );
+        }
+
+        return $unzerCredentialsCollectionTransfer;
     }
 }

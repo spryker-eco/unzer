@@ -266,6 +266,46 @@ class UnzerConfig extends AbstractBundleConfig
      */
     public function getProviderName(): string
     {
-        return UnzerSharedConfig::PROVIDER_NAME;
+        return UnzerSharedConfig::PAYMENT_PROVIDER_NAME;
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getMasterMerchantParticipantId(): string
+    {
+        return $this->get(UnzerSharedConstants::MASTER_MERCHANT_PARTICIPANT_ID);
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getUnzerPrimaryKeypairId(): string
+    {
+        return $this->get(UnzerSharedConstants::MAIN_REGULAR_KEYPAIR_ID);
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getVaultDataType(): string
+    {
+        return $this->get(UnzerSharedConstants::VAULT_DATA_TYPE);
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getWebhookEventType(): string
+    {
+        return UnzerConstants::WEBHOOK_EVENT_TYPE;
     }
 }

@@ -8,25 +8,30 @@
 namespace SprykerEco\Zed\Unzer\Business;
 
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
-use Generated\Shared\Transfer\MerchantResponseTransfer;
-use Generated\Shared\Transfer\MerchantTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
-use Generated\Shared\Transfer\UnzerApiRequestTransfer;
-use Generated\Shared\Transfer\UnzerApiResponseTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 
 interface UnzerFacadeInterface
 {
     /**
      * Specification:
+     *  - Requires `QuoteTransfer::payment` to be set.
+     *  - Requires `PaymentTransfer::unzerPayment` to be set.
+     *  - Requires `QuoteTransfer::store` to be set.
+     *  - Expands `QuoteTransfer` with `UnzerPaymentTransfer`.
+     *  - Expands `QuoteTransfer` with `UnzerKeypairTransfer`.
+     *  - Expands `QuoteTransfer` with `UnzerCustomerTransfer`.
+     *  - Expands `QuoteTransfer` with `UnzerMetadataTransfer`.
+     *  - If `QuoteTransfer` contains marketplace items - expands ItemTransfers with Unzer Participant ID.
      *  - Performs Unzer Create Customer API call.
-     *  - Saves Unzer Customer to Quote.
+     *  - Performs Unzer Update Customer API call.
+     *  - Performs Unzer Create Metadata API call.
      *
      * @api
      *
@@ -38,7 +43,12 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Saves order payment method data according to quote and checkout response transfer data.
+     * - Requires `QuoteTransfer::payment` to be set.
+     * - Requires `PaymentTransfer::unzerPayment` to be set.
+     * - Requires `UnzerPaymentTransfer::unzerCustomer` to be set.
+     * - Requires `UnzerPaymentTransfer::unzerKeypair` to be set.
+     * - Requires `UnzerKeypairTransfer::keypairId` to be set.
+     * - Saves Unzer payment details to Persistence.
      *
      * @api
      *
@@ -65,10 +75,15 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     *  - Requires `QuoteTransfer::payment` to be set.
+     *  - Requires `PaymentTransfer::unzerPayment` to be set.
+     *  - Requires `UnzerPaymentTransfer::unzerKeypair` to be set.
+     *  - Expands `QuoteTransfer` with `UnzerBasketTransfer`.
+     *  - Expands `QuoteTransfer` with `UnzerPaymentResourceTransfer`.
      *  - Performs Unzer Create Basket API call.
      *  - Performs Unzer Create payment resource API call.
-     *  - Performs Unzer Authorize or Change API call.
-     *  - Saves payment detailed info to persistence.
+     *  - Performs Unzer Authorize or Change API call depending on payment type.
+     *  - Saves payment detailed info to Persistence.
      *
      * @api
      *
@@ -196,7 +211,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Filters available payment methods.
+     *  - Filters available marketplace payment methods based on quote items.
      *
      * @api
      *
@@ -212,39 +227,48 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Get Merchant Unzer participants collection by criteria.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantCollectionTransfer
-     */
-    public function getMerchantUnzerParticipantCollection(
-        MerchantUnzerParticipantCriteriaTransfer $merchantUnzerParticipantCriteriaTransfer
-    ): MerchantUnzerParticipantCollectionTransfer;
-
-    /**
-     * Specification:
-     *  - Saves Unzer Participant Id for Merchant to DB.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\MerchantTransfer $merchantTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantResponseTransfer
-     */
-    public function saveMerchantUnzerParticipantByMerchant(MerchantTransfer $merchantTransfer): MerchantResponseTransfer;
-
-    /**
-     * Specification:
+     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     *  - Prepares UnzerApi request and set Unzer keypair.
      *  - Performs Unzer Set Notification URL Api all.
+     *  - Throws `UnzerException` if API call failed.
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\UnzerApiRequestTransfer $unzerApiRequestTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return void
      */
-    public function performSetNotificationUrlApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer;
+    public function setUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): void;
+
+    /**
+     * Specification:
+     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     *  - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
+     *  - Saves `UnzerCredentialsTransfer` to Persistence.
+     *  - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
+
+    /**
+     * Specification:
+     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     *  - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
+     *  - Updates `UnzerCredentialsTransfer` to Persistence.
+     *  - If `UnzerCredentialsTransfer` contains store relations - also updates it to Persistence.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
 }

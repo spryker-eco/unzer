@@ -11,23 +11,9 @@ use ArrayObject;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use SprykerEco\Zed\Unzer\UnzerConfig;
 
-class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInterface
+class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilter implements UnzerPaymentMethodFilterInterface
 {
-    /**
-     * @var \SprykerEco\Zed\Unzer\UnzerConfig
-     */
-    protected $config;
-
-    /**
-     * @param \SprykerEco\Zed\Unzer\UnzerConfig $config
-     */
-    public function __construct(UnzerConfig $config)
-    {
-        $this->config = $config;
-    }
-
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -38,61 +24,42 @@ class UnzerMarketplacePaymentMethodFilter implements UnzerPaymentMethodFilterInt
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        $filteredPaymentMethodTransferCollection = new ArrayObject();
-
         $hasMultipleMerchants = $this->hasMultipleMerchants($quoteTransfer);
-        if ($hasMultipleMerchants === false) {
-            return $paymentMethodsTransfer;
+
+        if ($hasMultipleMerchants === true) {
+            $filteredPaymentMethods = $this->getMarketplaceUnzerPaymentMethods($paymentMethodsTransfer);
+        } else {
+            $filteredPaymentMethods = $this->getStandardUnzerPaymentMethods($paymentMethodsTransfer);
         }
 
-        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
-            if ($this->isUnzerPaymentProvider($paymentMethodTransfer) && !$this->isMarketplace($paymentMethodTransfer)) {
-                continue;
-            }
-
-            $filteredPaymentMethodTransferCollection->append($paymentMethodTransfer);
-        }
-
-        $paymentMethodsTransfer->setMethods($filteredPaymentMethodTransferCollection);
-
-        return $paymentMethodsTransfer;
+        return $paymentMethodsTransfer->setMethods($filteredPaymentMethods);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      *
-     * @return bool
+     * @return \ArrayObject
      */
-    protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
+    protected function getMarketplaceUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
     {
-        $merchantReferences = [];
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $merchantReference = $itemTransfer->getMerchantReference();
-            if ($merchantReference !== null && !in_array($merchantReference, $merchantReferences, true)) {
-                $merchantReferences[] = $merchantReference;
-            }
-        }
-
-        return count($merchantReferences) > 1;
+        return new ArrayObject(
+            array_filter((array)$paymentMethodsTransfer->getMethods(), function (PaymentMethodTransfer $paymentMethodTransfer) {
+                return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || $this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer);
+            }),
+        );
     }
 
     /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      *
-     * @return bool
+     * @return \ArrayObject
      */
-    protected function isUnzerPaymentProvider(PaymentMethodTransfer $paymentMethodTransfer): bool
+    protected function getStandardUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
     {
-        return strpos($paymentMethodTransfer->getMethodName(), $this->config->getProviderName()) !== false;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return bool
-     */
-    protected function isMarketplace(PaymentMethodTransfer $paymentMethodTransfer): bool
-    {
-        return strpos($paymentMethodTransfer->getMethodName(), 'Marketplace') !== false;
+        return new ArrayObject(
+            array_filter((array)$paymentMethodsTransfer->getMethods(), function (PaymentMethodTransfer $paymentMethodTransfer) {
+                return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || !$this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer);
+            }),
+        );
     }
 }

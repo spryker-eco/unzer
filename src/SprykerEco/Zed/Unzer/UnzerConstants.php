@@ -17,7 +17,7 @@ interface UnzerConstants
     /**
      * @var string
      */
-    public const UNZER_PAYMENT_METHOD_BANK_TRANSFER = 'pis';
+    public const UNZER_PAYMENT_METHOD_BANK_TRANSFER = 'sofort'; //temporary because of Unzer server config
 
     /**
      * @var string
@@ -163,4 +163,9 @@ interface UnzerConstants
      * @var int
      */
     public const INT_TO_FLOAT_DIVIDER = 100;
+
+    /**
+     * @var string
+     */
+    public const WEBHOOK_EVENT_TYPE = 'all';
 }
