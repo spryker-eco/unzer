@@ -132,7 +132,7 @@ class UnzerReader implements UnzerReaderInterface
     public function findUnzerCredentialsByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): ?UnzerCredentialsTransfer
     {
         $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
-        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
+        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() !== 1) {
             return null;
         }
 
