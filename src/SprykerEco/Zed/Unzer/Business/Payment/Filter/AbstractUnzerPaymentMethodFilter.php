@@ -17,7 +17,7 @@ abstract class AbstractUnzerPaymentMethodFilter
     /**
      * @var string
      */
-    protected const MAIN_SELLER_KEY = 'main';
+    protected const MAIN_SELLER_REFERENCE = 'main';
 
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
@@ -45,7 +45,7 @@ abstract class AbstractUnzerPaymentMethodFilter
             $merchantReference = $itemTransfer->getMerchantReference();
 
             if ($merchantReference === null) {
-                $merchantReferences[] = static::MAIN_SELLER_KEY;
+                $merchantReferences[] = static::MAIN_SELLER_REFERENCE;
 
                 continue;
             }
