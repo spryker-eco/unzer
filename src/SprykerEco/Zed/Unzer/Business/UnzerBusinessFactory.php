@@ -69,8 +69,6 @@ use SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilter;
 use SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilterInterface;
 use SprykerEco\Zed\Unzer\Business\Import\UnzerPaymentMethodImporter;
 use SprykerEco\Zed\Unzer\Business\Import\UnzerPaymentMethodImporterInterface;
-use SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessor;
-use SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\ChargeUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommandInterface;
