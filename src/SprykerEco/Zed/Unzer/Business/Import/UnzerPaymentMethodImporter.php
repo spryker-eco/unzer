@@ -28,7 +28,7 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface
      */
-    private $unzerPaymentMethodsAdapter;
+    protected $unzerPaymentMethodsAdapter;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapterInterface

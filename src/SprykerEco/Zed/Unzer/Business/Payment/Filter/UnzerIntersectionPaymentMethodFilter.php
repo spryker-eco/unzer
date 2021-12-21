@@ -32,7 +32,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface
      */
-    private UnzerPaymentMethodsAdapterInterface $unzerPaymentMethodsAdapter;
+    protected $unzerPaymentMethodsAdapter;
 
     /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
@@ -121,7 +121,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \ArrayObject $filteredPaymentMethods
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer> $filteredPaymentMethods
      *
      * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
      */
@@ -152,7 +152,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
     {
         return array_map(function (PaymentMethodTransfer $paymentMethodTransfer) {
             return $paymentMethodTransfer->getPaymentMethodKey();
-        }, (array)$paymentMethodsTransfer);
+        }, (array)$paymentMethodsTransfer->getMethods());
     }
 
     /**
