@@ -1,11 +1,6 @@
 <?php
 
-/**
- * MIT License
- * For full license information, please view the LICENSE file that was distributed with this source code.
- */
-
-namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
+namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
@@ -13,10 +8,11 @@ use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
-abstract class AbstractPaymentProcessor
+class UnzerPreparePaymentProcessor implements UnzerPreparePaymentProcessorInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
@@ -29,13 +25,23 @@ abstract class AbstractPaymentProcessor
     protected $unzerBasketAdapter;
 
     /**
+     * @var UnzerExpensesDistributorInterface
+     */
+    protected $unzerExpensesDistributor;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface $unzerBasketAdapter
      */
-    public function __construct(UnzerCheckoutMapperInterface $unzerCheckoutMapper, UnzerBasketAdapterInterface $unzerBasketAdapter)
+    public function __construct(
+        UnzerCheckoutMapperInterface $unzerCheckoutMapper,
+        UnzerBasketAdapterInterface $unzerBasketAdapter,
+        UnzerExpensesDistributorInterface $unzerExpensesDistributor
+    )
     {
         $this->unzerCheckoutMapper = $unzerCheckoutMapper;
         $this->unzerBasketAdapter = $unzerBasketAdapter;
+        $this->unzerExpensesDistributor = $unzerExpensesDistributor;
     }
 
     /**
@@ -44,7 +50,7 @@ abstract class AbstractPaymentProcessor
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    protected function prepareUnzerPaymentTransfer(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
+    public function prepareUnzerPaymentTransfer(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
         $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setOrderId($saveOrderTransfer->getOrderReference());
         $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail();
@@ -66,6 +72,7 @@ abstract class AbstractPaymentProcessor
      */
     protected function createUnzerBasket(QuoteTransfer $quoteTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer
     {
+        $quoteTransfer = $this->unzerExpensesDistributor->distributeExpensesBetweenQuoteItems($quoteTransfer);
         $unzerBasketTransfer = $this->unzerCheckoutMapper->mapQuoteTransferToUnzerBasketTransfer($quoteTransfer, new UnzerBasketTransfer());
 
         return $this->unzerBasketAdapter->createBasket($unzerBasketTransfer, $unzerKeypairTransfer);

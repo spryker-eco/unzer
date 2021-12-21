@@ -186,6 +186,8 @@
 
     <transfer name="Item">
         <property name="unzerParticipantId" type="string"/>
+        <property name="calculatedExpensesCost" type="int"/>
+        <property name="expenseId" type="string"/>
     </transfer>
 
     <transfer name="PaymentUnzer">

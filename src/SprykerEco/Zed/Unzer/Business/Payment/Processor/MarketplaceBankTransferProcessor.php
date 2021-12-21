@@ -17,9 +17,10 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
 
-class MarketplaceBankTransferProcessor extends AbstractPaymentProcessor implements UnzerPaymentProcessorInterface
+class MarketplaceBankTransferProcessor implements UnzerPaymentProcessorInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface
@@ -37,24 +38,34 @@ class MarketplaceBankTransferProcessor extends AbstractPaymentProcessor implemen
     protected $unzerRefundProcessor;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface $unzerBasketAdapter
+     * @var UnzerPreparePaymentProcessorInterface
+     */
+    protected $unzerPreparePaymentProcessor;
+
+    /**
+     * @var UnzerCheckoutMapperInterface
+     */
+    protected $unzerCheckoutMapper;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface $unzerChargeAdapter
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
+     * @param UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
+     * @param UnzerCheckoutMapperInterface $unzerCheckoutMapper
      */
     public function __construct(
-        UnzerCheckoutMapperInterface $unzerCheckoutMapper,
-        UnzerBasketAdapterInterface $unzerBasketAdapter,
         UnzerChargeAdapterInterface $unzerChargeAdapter,
         UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter,
-        UnzerRefundProcessorInterface $unzerRefundProcessor
+        UnzerRefundProcessorInterface $unzerRefundProcessor,
+        UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor,
+        UnzerCheckoutMapperInterface $unzerCheckoutMapper
     ) {
-        parent::__construct($unzerCheckoutMapper, $unzerBasketAdapter);
-
         $this->unzerChargeAdapter = $unzerChargeAdapter;
         $this->unzerPaymentResourceAdapter = $unzerPaymentResourceAdapter;
         $this->unzerRefundProcessor = $unzerRefundProcessor;
+        $this->unzerPreparePaymentProcessor = $unzerPreparePaymentProcessor;
+        $this->unzerCheckoutMapper = $unzerCheckoutMapper;
     }
 
     /**
@@ -65,7 +76,7 @@ class MarketplaceBankTransferProcessor extends AbstractPaymentProcessor implemen
      */
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
+        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
 
         return $this->unzerChargeAdapter->chargePayment($unzerPaymentTransfer);

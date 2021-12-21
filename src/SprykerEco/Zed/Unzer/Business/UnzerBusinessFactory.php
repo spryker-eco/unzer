@@ -43,8 +43,10 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributor;
+use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutPostSaveMapper;
+use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapper;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreator;
@@ -79,6 +81,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorI
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerMarketplaceCreditCardChargeProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceBankTransferProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceCreditCardProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\MarketplaceRefundProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface;
@@ -148,9 +152,9 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
      */
-    public function createUnzerCheckoutHookMapper(): UnzerCheckoutMapperInterface
+    public function createUnzerCheckoutMapper(): UnzerCheckoutMapperInterface
     {
-        return new UnzerCheckoutPostSaveMapper(
+        return new UnzerCheckoutMapper(
             $this->getConfig(),
             $this->getUtilTextService(),
         );
@@ -521,11 +525,11 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createMarketplaceBankTransferPaymentProcessor(): UnzerPaymentProcessorInterface
     {
         return new MarketplaceBankTransferProcessor(
-            $this->createUnzerCheckoutHookMapper(),
-            $this->createUnzerBasketAdapter(),
             $this->createUnzerChargeAdapter(),
             $this->createUnzerPaymentResourceAdapter(),
             $this->createUnzerMarketplaceRefundProcessor(),
+            $this->createUnzerPreparePaymentProcessor(),
+            $this->createUnzerCheckoutMapper()
         );
     }
 
@@ -535,12 +539,13 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createMarketplaceCreditCardPaymentProcessor(): UnzerPaymentProcessorInterface
     {
         return new MarketplaceCreditCardProcessor(
-            $this->createUnzerCheckoutHookMapper(),
-            $this->createUnzerBasketAdapter(),
+
             $this->createUnzerAuthorizeAdapter(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerMarketplaceCreditCardChargeProcessor(),
             $this->createUnzerMarketplaceRefundProcessor(),
+            $this->createUnzerPreparePaymentProcessor(),
+            $this->createUnzerCheckoutMapper()
         );
     }
 
@@ -730,5 +735,25 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function getUtilTextService(): UnzerToUtilTextServiceInterface
     {
         return $this->getProvidedDependency(UnzerDependencyProvider::SERVICE_UTIL_TEXT);
+    }
+
+    /**
+     * @return UnzerPreparePaymentProcessorInterface
+     */
+    public function createUnzerPreparePaymentProcessor(): UnzerPreparePaymentProcessorInterface
+    {
+        return new UnzerPreparePaymentProcessor(
+            $this->createUnzerCheckoutMapper(),
+            $this->createUnzerBasketAdapter(),
+            $this->createUnzerExpensesDistributor()
+        );
+    }
+
+    /**
+     * @return UnzerExpensesDistributorInterface
+     */
+    public function createUnzerExpensesDistributor(): UnzerExpensesDistributorInterface
+    {
+        return new UnzerExpensesDistributor();
     }
 }
