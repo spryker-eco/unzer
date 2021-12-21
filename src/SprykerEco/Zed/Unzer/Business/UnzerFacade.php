@@ -241,6 +241,26 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
+     */
+    public function filterIntersectionPaymentMethods(
+        PaymentMethodsTransfer $paymentMethodsTransfer,
+        QuoteTransfer $quoteTransfer
+    ): PaymentMethodsTransfer
+    {
+        return $this->getFactory()
+            ->createUnzerIntersectionPaymentMethodFilter()
+            ->filterPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return void

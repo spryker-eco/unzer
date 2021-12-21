@@ -228,6 +228,22 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     *  - Filters available payment methods and checks intersections based on merchants.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
+     */
+    public function filterIntersectionPaymentMethods(
+        PaymentMethodsTransfer $paymentMethodsTransfer,
+        QuoteTransfer $quoteTransfer
+    ): PaymentMethodsTransfer;
+
+    /**
+     * Specification:
      *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
      *  - Prepares UnzerApi request and set Unzer keypair.
      *  - Performs Unzer Set Notification URL Api all.
