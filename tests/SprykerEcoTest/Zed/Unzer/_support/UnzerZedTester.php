@@ -93,9 +93,9 @@ class UnzerZedTester extends Actor
      * @var array<string>
      */
     public const UNZER_MARKETPLACE_PAYMENT_METHODS = [
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER,
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
     ];
 
     /**
