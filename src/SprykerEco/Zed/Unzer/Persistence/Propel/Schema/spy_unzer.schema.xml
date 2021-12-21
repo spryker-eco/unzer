@@ -93,8 +93,8 @@
         <column name="config_name" type="VARCHAR" size="255"/>
         <column name="type" type="INTEGER"/>
         <column name="public_key" type="VARCHAR" size="255" required="true"/>
-        <column name="participant_id" type="VARCHAR" size="255" />
-        <column name="merchant_reference" type="VARCHAR" size="255" />
+        <column name="participant_id" type="VARCHAR" size="255"/>
+        <column name="merchant_reference" type="VARCHAR" size="255"/>
         <id-method-parameter value="spy_unzer_credentials_pk_seq"/>
         <unique name="un_keypair_id">
             <unique-column name="keypair_id"/>
