@@ -159,6 +159,9 @@
     <transfer name="Payment">
         <property name="unzerPayment" type="UnzerPayment"/>
         <property name="unzerMarketplaceBankTransfer" type="UnzerPayment"/>
+        <property name="paymentProvider" type="string"/>
+        <property name="paymentSelection" type="string"/>
+        <property name="paymentMethod" type="string"/>
     </transfer>
 
     <transfer name="UnzerTransaction">
@@ -197,6 +200,7 @@
         <property name="refundableAmount" type="int"/>
         <property name="merchantReference" type="string"/>
         <property name="idSalesOrderItem" type="int"/>
+        <property name="shipment" type="Shipment"/>
     </transfer>
 
     <transfer name="PaymentUnzer">
@@ -267,6 +271,8 @@
         <property name="getPaymentResponse" type="UnzerApiGetPaymentResponse"/>
         <property name="getPaymentMethodsResponse" type="UnzerApiGetPaymentMethodsResponse"/>
         <property name="createPaymentResourceResponse" type="UnzerApiCreatePaymentResourceResponse"/>
+        <property name="updateCustomerResponse" type="UnzerApiUpdateCustomerResponse"/>
+        <property name="createMetadataResponse" type="UnzerApiCreateMetadataResponse"/>
     </transfer>
 
     <transfer name="UnzerApiErrorResponse">
@@ -346,6 +352,15 @@
     </transfer>
 
     <transfer name="UnzerApiMarketplaceAuthorizeRequest">
+        <property name="amount" type="float"/>
+        <property name="paymentReference" type="string"/>
+        <property name="currency" type="string"/>
+        <property name="returnUrl" type="string"/>
+        <property name="orderId" type="string"/>
+        <property name="invoiceId" type="string"/>
+        <property name="customerId" type="string"/>
+        <property name="typeId" type="string"/>
+        <property name="basketId" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiMarketplaceAuthorizeResponse">
@@ -365,7 +380,17 @@
     </transfer>
 
     <transfer name="UnzerApiChargeRequest">
+        <property name="amount" type="float"/>
+        <property name="currency" type="string"/>
+        <property name="orderId" type="string"/>
+        <property name="invoiceId" type="string"/>
+        <property name="paymentReference" type="string"/>
+        <property name="returnUrl" type="string"/>
+        <property name="typeId" type="string"/>
+        <property name="customerId" type="string"/>
+        <property name="basketId" type="string"/>
         <property name="paymentId" type="string"/>
+<!--        <property name="metadataId" type="string"/>-->
     </transfer>
 
     <transfer name="UnzerApiChargeResponse">
@@ -380,6 +405,7 @@
     </transfer>
 
     <transfer name="UnzerApiCreateCustomerRequest">
+        <property name="customerId" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiCreateCustomerResponse">
@@ -404,6 +430,7 @@
     <transfer name="PaymentMethod">
         <property name="paymentMethodKey" type="string" strict="true"/>
         <property name="idPaymentProvider" type="int"/>
+        <property name="name" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiCreatePaymentResourceRequest">
@@ -414,6 +441,7 @@
     </transfer>
 
     <transfer name="UnzerApiMarketplaceRefundRequest">
+        <property name="canceledBasket" type="UnzerRefundItem[]" singular="canceledBasket"/>
     </transfer>
 
     <transfer name="UnzerApiRequest">
@@ -427,6 +455,9 @@
         <property name="marketplaceRefundRequest" type="UnzerApiMarketplaceRefundRequest"/>
         <property name="refundRequest" type="UnzerApiRefundRequest"/>
         <property name="setWebhookRequest" type="UnzerApiSetWebhookRequest"/>
+        <property name="updateCustomerRequest" type="UnzerApiUpdateCustomerRequest"/>
+        <property name="createMetadataRequest" type="UnzerApiCreateMetadataRequest"/>
+        <property name="getPaymentMethodsRequest" type="UnzerApiGetPaymentMethodsRequest"/>
     </transfer>
 
     <transfer name="Quote">
@@ -439,11 +470,13 @@
         <property name="customer" type="Customer"/>
         <property name="billingAddress" type="Address"/>
         <property name="shippingAddress" type="Address" deprecated="Use item level shipping addresses (item.shipment.shippingAddress) instead."/>
+        <property name="priceMode" type="string"/>
     </transfer>
 
     <transfer name="CheckoutResponse">
         <property name="saveOrder" type="SaveOrder"/>
         <property name="redirectUrl" type="string"/>
+        <property name="isExternalRedirect" type="bool"/>
     </transfer>
 
     <transfer name="PaymentProviderConditions">
@@ -466,6 +499,7 @@
         <property name="idPaymentProvider" type="int"/>
         <property name="name" type="string"/>
         <property name="paymentMethods" singular="paymentMethod" type="PaymentMethod[]"/>
+        <property name="paymentProviderKey" type="string"/>
     </transfer>
 
     <transfer name="PaymentMethodCollectionRequest">
@@ -504,10 +538,19 @@
 
     <transfer name="Customer">
         <property name="idCustomer" type="int"/>
+        <property name="lastName" type="string"/>
+        <property name="firstName" type="string"/>
+        <property name="salutation" type="string"/>
+        <property name="company" type="string"/>
+        <property name="dateOfBirth" type="string"/>
+        <property name="email" type="string"/>
+        <property name="phone" type="string"/>
+        <property name="isGuest" type="bool"/>
     </transfer>
 
     <transfer name="UnzerApiSetWebhookRequest">
         <property name="event" type="string"/>
+        <property name="retrieveUrl" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiRefundRequest">
@@ -520,5 +563,47 @@
     </transfer>
 
     <transfer name="PaymentProviderCollectionResponse">
+    </transfer>
+
+    <transfer name="UnzerApiUpdateCustomerRequest">
+    </transfer>
+
+    <transfer name="UnzerApiUpdateCustomerResponse">
+    </transfer>
+
+    <transfer name="UnzerApiPaymentTransaction">
+        <property name="amount" type="float"/>
+    </transfer>
+
+    <transfer name="UnzerApiPaymentMethod">
+        <property name="paymentMethodKey" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerApiCreateMetadataRequest">
+    </transfer>
+
+    <transfer name="UnzerApiCreateMetadataResponse">
+        <property name="id" type="string"/>
+    </transfer>
+
+    <transfer name="Totals">
+        <property name="grandTotal" type="int"/>
+        <property name="taxTotal" type="TaxTotal"/>
+    </transfer>
+
+    <transfer name="Currency">
+        <property name="code" type="string"/>
+    </transfer>
+
+    <transfer name="Locale">
+        <property name="name" type="string"/>
+    </transfer>
+
+    <transfer name="Shipment">
+        <property name="shippingAddress" type="Address"/>
+    </transfer>
+
+    <transfer name="TaxTotal">
+        <property name="amount" type="int"/>
     </transfer>
 </transfers>
