@@ -25,11 +25,10 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
         $hasMultipleMerchants = $this->hasMultipleMerchants($quoteTransfer);
+        $filteredPaymentMethods = $this->getStandardUnzerPaymentMethods($paymentMethodsTransfer);
 
-        if ($hasMultipleMerchants === true) {
+        if ($hasMultipleMerchants) {
             $filteredPaymentMethods = $this->getMarketplaceUnzerPaymentMethods($paymentMethodsTransfer);
-        } else {
-            $filteredPaymentMethods = $this->getStandardUnzerPaymentMethods($paymentMethodsTransfer);
         }
 
         return $paymentMethodsTransfer->setMethods($filteredPaymentMethods);
@@ -38,7 +37,7 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      *
-     * @return \ArrayObject
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodsTransfer>
      */
     protected function getMarketplaceUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
     {
@@ -52,7 +51,7 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      *
-     * @return \ArrayObject
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodsTransfer>
      */
     protected function getStandardUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
     {
