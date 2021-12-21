@@ -42,7 +42,7 @@ class UnzerPaymentMethodImportFilter implements UnzerPaymentMethodImportFilterIn
     protected function getStoredPaymentMethodKeys(ArrayObject $storedPaymentMethodTransfers): array
     {
         return array_map(function (PaymentMethodTransfer $paymentMethodTransfer) {
-            return $paymentMethodTransfer->getPaymentMethodKey();
+            return $paymentMethodTransfer->getPaymentMethodKeyOrFail();
         }, (array)$storedPaymentMethodTransfers);
     }
 }

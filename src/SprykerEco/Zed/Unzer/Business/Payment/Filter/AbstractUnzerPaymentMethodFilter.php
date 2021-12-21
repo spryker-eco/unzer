@@ -65,7 +65,7 @@ abstract class AbstractUnzerPaymentMethodFilter
      */
     protected function isUnzerPaymentProvider(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
-        return strpos($paymentMethodTransfer->getPaymentMethodKey(), $this->unzerConfig->getPaymentProviderType()) !== false;
+        return strpos($paymentMethodTransfer->getPaymentMethodKeyOrFail(), $this->unzerConfig->getPaymentProviderType()) !== false;
     }
 
     /**
@@ -75,6 +75,6 @@ abstract class AbstractUnzerPaymentMethodFilter
      */
     protected function isMarketplaceUnzerPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
-        return $this->isUnzerPaymentProvider($paymentMethodTransfer) && strpos($paymentMethodTransfer->getPaymentMethodKey(), SharedUnzerConfig::PLATFORM_MARKETPLACE) !== false;
+        return $this->isUnzerPaymentProvider($paymentMethodTransfer) && strpos($paymentMethodTransfer->getPaymentMethodKeyOrFail(), SharedUnzerConfig::PLATFORM_MARKETPLACE) !== false;
     }
 }

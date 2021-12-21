@@ -74,7 +74,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): ArrayObject {
-        $unzerKeypairTransfer = $this->getMainMerchantUnzerKeypair($quoteTransfer->getStore(), UnzerConstants::UNZER_CONFIG_TYPE_STANDARD);
+        $unzerKeypairTransfer = $this->getMainMerchantUnzerKeypair($quoteTransfer->getStoreOrFail(), UnzerConstants::UNZER_CONFIG_TYPE_STANDARD);
         $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
 
         return $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);
@@ -90,7 +90,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): ArrayObject {
-        $unzerKeypairTransfer = $this->getMainMerchantUnzerKeypair($quoteTransfer->getStore(), UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT);
+        $unzerKeypairTransfer = $this->getMainMerchantUnzerKeypair($quoteTransfer->getStoreOrFail(), UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT);
         $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
         $filteredPaymentMethods = $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);
 
@@ -101,7 +101,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $unzerPaymentMethodsTransfer
      *
-     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>
+     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
      */
     protected function filterEnabledPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
@@ -121,7 +121,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer> $filteredPaymentMethods
+     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $filteredPaymentMethods
      *
      * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>
      */
@@ -146,7 +146,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      *
-     * @return array<int, string>
+     * @return array<string|null>
      */
     protected function getPaymentMethodKeys(PaymentMethodsTransfer $paymentMethodsTransfer): array
     {
@@ -167,7 +167,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
     {
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())
-                ->addStoreName($storeTransfer->getName())
+                ->addStoreName($storeTransfer->getNameOrFail())
                 ->addType($type),
         );
 
@@ -191,7 +191,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())
                 ->setMerchantReferences($merchantReferences)
-                ->addStoreName($quoteTransfer->getStoreOrFail()->getName()),
+                ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail()),
         );
 
         return $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);

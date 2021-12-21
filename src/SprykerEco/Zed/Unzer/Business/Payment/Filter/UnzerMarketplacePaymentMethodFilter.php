@@ -37,7 +37,7 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      *
-     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodsTransfer>
+     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
      */
     protected function getMarketplaceUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
     {
@@ -51,7 +51,7 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      *
-     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodsTransfer>
+     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
      */
     protected function getStandardUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): ArrayObject
     {
