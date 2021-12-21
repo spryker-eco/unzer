@@ -68,7 +68,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>
      */
     protected function getStandardFilteredPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
@@ -84,7 +84,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>
      */
     protected function getMarketplaceFilteredPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
@@ -101,7 +101,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $unzerPaymentMethodsTransfer
      *
-     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>
      */
     protected function filterEnabledPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
@@ -123,7 +123,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer> $filteredPaymentMethods
      *
-     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>
      */
     protected function filterMerchantIntersections(QuoteTransfer $quoteTransfer, ArrayObject $filteredPaymentMethods): ArrayObject
     {

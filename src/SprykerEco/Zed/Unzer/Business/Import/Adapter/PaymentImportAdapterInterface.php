@@ -23,7 +23,7 @@ interface PaymentImportAdapterInterface
 
     /**
      * @param string $paymentProviderName
-     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
      *
      * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
      */
@@ -34,7 +34,7 @@ interface PaymentImportAdapterInterface
 
     /**
      * @param \Generated\Shared\Transfer\PaymentProviderTransfer $paymentProviderTransfer
-     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
      *
      * @return \Generated\Shared\Transfer\PaymentMethodCollectionResponseTransfer
      */

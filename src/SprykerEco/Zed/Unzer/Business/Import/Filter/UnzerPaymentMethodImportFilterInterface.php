@@ -12,10 +12,10 @@ use ArrayObject;
 interface UnzerPaymentMethodImportFilterInterface
 {
     /**
-     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
-     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $storedPaymentMethodTransfers
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer> $storedPaymentMethodTransfers
      *
-     * @return \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer>
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>
      */
     public function filterStoredPaymentMethods(ArrayObject $paymentMethodTransfers, ArrayObject $storedPaymentMethodTransfers): ArrayObject;
 }
