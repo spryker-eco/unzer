@@ -401,12 +401,10 @@ class UnzerZedTester extends Actor
     {
         $paymentMethodsBuilder = (new PaymentMethodsBuilder())->withMethod();
         foreach (static::UNZER_MARKETPLACE_PAYMENT_METHODS as $paymentMethod) {
-            $paymentMethodsBuilder->withAnotherMethod(
-                (new PaymentMethodBuilder([
-                    'paymentProvider' => UnzerSharedConfig::PAYMENT_PROVIDER_NAME,
-                    'methodName' => $paymentMethod,
-                ])),
-            );
+            $paymentMethodsBuilder->withAnotherMethod([
+                'paymentProvider' => UnzerSharedConfig::PAYMENT_PROVIDER_NAME,
+                'paymentMethodKey' => $paymentMethod,
+            ]);
         }
 
         return $paymentMethodsBuilder->build();
