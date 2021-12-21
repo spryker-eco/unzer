@@ -104,7 +104,7 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
-     * @var array<array-key, string>
+     * @var array<int, string>
      */
     protected const AUTHORIZE_PAYMENT_METHODS = [
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
@@ -139,7 +139,7 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
-     * @var array<array-key, string>
+     * @var array<int, string>
      */
     protected const MARKETPLACE_READY_PAYMENT_METHODS = [
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
@@ -148,14 +148,16 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
-     * @var array<array-key, string>
+     * @var array<int, string>
      */
     protected const ENABLED_UNZER_NOTIFICATIONS = [
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS,
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_FAILED,
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_CANCELED,
+
         UnzerConstants::NOTIFICATION_TYPE_CHARGE_PENDING,
         UnzerConstants::NOTIFICATION_TYPE_CHARGE_FAILED,
+
         UnzerConstants::NOTIFICATION_TYPE_PAYMENT_COMPLETED,
         UnzerConstants::NOTIFICATION_TYPE_PAYMENT_CANCELED,
         UnzerConstants::NOTIFICATION_TYPE_PAYMENT_CHARGEBACK,
@@ -391,5 +393,45 @@ class UnzerConfig extends AbstractBundleConfig
     public function getPaymentProviderType(): string
     {
         return UnzerSharedConfig::PAYMENT_PROVIDER_TYPE;
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getMasterMerchantParticipantId(): string
+    {
+        return $this->get(UnzerSharedConstants::MASTER_MERCHANT_PARTICIPANT_ID);
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getUnzerPrimaryKeypairId(): string
+    {
+        return $this->get(UnzerSharedConstants::MAIN_REGULAR_KEYPAIR_ID);
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getVaultDataType(): string
+    {
+        return $this->get(UnzerSharedConstants::VAULT_DATA_TYPE);
+    }
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getWebhookEventType(): string
+    {
+        return UnzerConstants::WEBHOOK_EVENT_TYPE;
     }
 }

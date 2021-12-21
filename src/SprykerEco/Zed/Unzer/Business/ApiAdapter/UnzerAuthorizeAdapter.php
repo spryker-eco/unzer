@@ -58,7 +58,8 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
      */
     protected function performMarketplaceAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $unzerApiRequestTransfer = new UnzerApiRequestTransfer();
+        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
 
         $unzerApiMarketplaceAuthorizeRequestTransfer = $this
             ->unzerAuthorizePaymentMapper

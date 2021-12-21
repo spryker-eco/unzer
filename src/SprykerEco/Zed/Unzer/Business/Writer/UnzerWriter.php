@@ -8,15 +8,14 @@
 namespace SprykerEco\Zed\Unzer\Business\Writer;
 
 use Generated\Shared\Transfer\ItemTransfer;
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
+use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
-use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerWriter implements UnzerWriterInterface
@@ -27,9 +26,9 @@ class UnzerWriter implements UnzerWriterInterface
     protected $unzerEntityManager;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
-    protected $unzerRepository;
+    protected $unzerReader;
 
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
@@ -38,27 +37,17 @@ class UnzerWriter implements UnzerWriterInterface
 
     /**
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
-     * @param \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface $unzerRepository
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      */
     public function __construct(
         UnzerEntityManagerInterface $unzerEntityManager,
-        UnzerRepositoryInterface $unzerRepository,
+        UnzerReaderInterface $unzerReader,
         UnzerConfig $unzerConfig
     ) {
         $this->unzerEntityManager = $unzerEntityManager;
-        $this->unzerRepository = $unzerRepository;
+        $this->unzerReader = $unzerReader;
         $this->unzerConfig = $unzerConfig;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
-     *
-     * @return void
-     */
-    public function saveMerchantUnzerParticipant(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): void
-    {
-         $this->unzerEntityManager->saveMerchantUnzerParticipantEntity($merchantUnzerParticipantTransfer);
     }
 
     /**
@@ -110,11 +99,13 @@ class UnzerWriter implements UnzerWriterInterface
         $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();
 
         $paymentUnzerTransfer = (new PaymentUnzerTransfer())
+            ->setPaymentId($unzerPaymentTransfer->getId())
             ->setIdSalesOrder($saveOrderTransfer->getIdSalesOrder())
             ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
             ->setOrderId($saveOrderTransfer->getOrderReference())
             ->setIsMarketplace($unzerPaymentTransfer->getIsMarketplace())
-            ->setIsAuthorizable($unzerPaymentTransfer->getIsAuthorizable());
+            ->setIsAuthorizable($unzerPaymentTransfer->getIsAuthorizable())
+            ->setKeypairId($unzerPaymentTransfer->getUnzerKeypairOrFail()->getKeypairIdOrFail());
 
         return $this->unzerEntityManager->savePaymentUnzerEntity($paymentUnzerTransfer);
     }
@@ -132,25 +123,9 @@ class UnzerWriter implements UnzerWriterInterface
         $paymentUnzerOrderItemTransfer = (new PaymentUnzerOrderItemTransfer())
             ->setIdPaymentUnzer($paymentUnzerTransfer->getIdPaymentUnzer())
             ->setIdSalesOrderItem($itemTransfer->getIdSalesOrderItem())
-            ->setParticipantId($this->getParticipantIdForOrderItem($itemTransfer))
+            ->setParticipantId($itemTransfer->getUnzerParticipantId())
             ->setStatus($this->unzerConfig->getOmsStatusNew());
 
         return $this->unzerEntityManager->savePaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $orderItem
-     *
-     * @return string|null
-     */
-    protected function getParticipantIdForOrderItem(ItemTransfer $orderItem): ?string
-    {
-        $merchantUnzerParticipantTransfer = $this->unzerRepository
-            ->findMerchantUnzerParticipantByCriteria($orderItem->getMerchantReference());
-        if ($merchantUnzerParticipantTransfer !== null) {
-            return $merchantUnzerParticipantTransfer->getParticipantId();
-        }
-
-        return null;
     }
 }

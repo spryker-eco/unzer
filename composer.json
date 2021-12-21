@@ -17,6 +17,7 @@
         "spryker/sales": "^11.27.0",
         "spryker/store": "^1.0.0",
         "spryker/transfer": "^3.25.0",
+        "spryker/vault": "^1.2.0",
         "spryker/util-text": "^1.0.0",
         "spryker/zed-request": "^3.0.0"
     },

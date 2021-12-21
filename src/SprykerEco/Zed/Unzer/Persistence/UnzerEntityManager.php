@@ -7,11 +7,13 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant;
+use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
+use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
 use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 
@@ -108,27 +110,6 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer
-     *
-     * @return \Generated\Shared\Transfer\MerchantUnzerParticipantTransfer
-     */
-    public function saveMerchantUnzerParticipantEntity(MerchantUnzerParticipantTransfer $merchantUnzerParticipantTransfer): MerchantUnzerParticipantTransfer
-    {
-        $merchantUnzerParticipantEntity = $this->getFactory()
-            ->createMerchantUnzerParticipantQuery()
-            ->filterByFkMerchant($merchantUnzerParticipantTransfer->getMerchantId())
-            ->findOneOrCreate();
-
-        $merchantUnzerParticipantEntity = $this->getMapper()
-            ->mapMerchantUnzerParticipantTransferToEntity($merchantUnzerParticipantTransfer, $merchantUnzerParticipantEntity);
-
-        $merchantUnzerParticipantEntity = $this->saveOrDeleteMerchantUnzerParticipantEntity($merchantUnzerParticipantEntity);
-
-        return $this->getMapper()
-            ->mapMerchantUnzerParticipantEntityToMerchantUnzerParticipantTransfer($merchantUnzerParticipantEntity, $merchantUnzerParticipantTransfer);
-    }
-
-    /**
      * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
      */
     protected function getMapper(): UnzerPersistenceMapper
@@ -156,5 +137,78 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
         }
 
         return $merchantUnzerParticipantEntity;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
+    {
+        $unzerCredentialsEntity = $this->getMapper()
+            ->mapUnzerCredentialsTransferToUnzerCredentialsEntity($unzerCredentialsTransfer, new SpyUnzerCredentials());
+
+        $unzerCredentialsEntity->save();
+
+        return $this->getMapper()
+            ->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, $unzerCredentialsTransfer);
+    }
+
+    /**
+     * @param array<int> $idStores
+     * @param int $idUnzerCredentials
+     *
+     * @return void
+     */
+    public function createUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void
+    {
+        foreach ($idStores as $idStore) {
+            $shipmentMethodStoreEntity = new SpyUnzerCredentialsStore();
+            $shipmentMethodStoreEntity->setFkStore($idStore)
+                ->setFkUnzerCredentials($idUnzerCredentials)
+                ->save();
+        }
+    }
+
+    /**
+     * @param array<int> $idStores
+     * @param int $idUnzerCredentials
+     *
+     * @return void
+     */
+    public function deleteUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void
+    {
+        if ($idStores === []) {
+            return;
+        }
+
+        $this->getFactory()
+            ->createUnzerCredentialsStoreQuery()
+            ->filterByFkUnzerCredentials($idUnzerCredentials)
+            ->filterByFkStore_In($idStores)
+            ->delete();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer|null
+     */
+    public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): ?UnzerCredentialsTransfer
+    {
+        $unzerCredentialsEntity = $this->getFactory()
+            ->createUnzerCredentialsQuery()
+            ->filterByIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail())
+            ->findOne();
+
+        if ($unzerCredentialsEntity === null) {
+            return null;
+        }
+
+        $unzerCredentialsEntity = $this->getMapper()->mapUnzerCredentialsTransferToUnzerCredentialsEntity($unzerCredentialsTransfer, $unzerCredentialsEntity);
+        $unzerCredentialsEntity->save();
+
+        return $this->getMapper()->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, $unzerCredentialsTransfer);
     }
 }

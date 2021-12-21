@@ -21,6 +21,8 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMethodsMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMethodsMapperInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapper;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerPaymentResourceMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerPaymentResourceMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerRefundMapper;
@@ -33,6 +35,10 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapter;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapter;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapter;
@@ -45,6 +51,18 @@ use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutPostSaveMapper;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreator;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreatorInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolver;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdater;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdater;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdaterInterface;
+use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfigurator;
+use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface;
+use SprykerEco\Zed\Unzer\Business\Notification\Processor\UnzerNotificationProcessor;
+use SprykerEco\Zed\Unzer\Business\Notification\Processor\UnzerNotificationProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapter;
 use SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilter;
@@ -83,16 +101,29 @@ use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaver;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapper;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpander;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpander;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpander;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerQuoteExpander;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerQuoteExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReader;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
+use SprykerEco\Zed\Unzer\Business\Reader\UnzerVaultReader;
+use SprykerEco\Zed\Unzer\Business\Reader\UnzerVaultReaderInterface;
+use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriter;
+use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriter;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
 
 /**
@@ -108,8 +139,9 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerQuoteExpander(): UnzerQuoteExpanderInterface
     {
         return new UnzerQuoteExpander(
-            $this->createUnzerCustomerAdapter(),
-            $this->createUnzerQuoteExpanderMapper(),
+            $this->createUnzerCustomerQuoteExpander(),
+            $this->createUnzerMetadataQuoteExpander(),
+            $this->createUnzerKeypairQuoteExpander(),
             $this->getQuoteClient(),
             $this->getConfig(),
             $this->createUnzerReader(),
@@ -134,6 +166,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerCheckoutPostSaveMapper(
             $this->getConfig(),
+            $this->getUtilTextService(),
         );
     }
 
@@ -144,13 +177,14 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerReader(
             $this->getRepository(),
+            $this->createUnzerVaultReader(),
         );
     }
 
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface
      */
-    public function createUnzerQuoteExpanderMapper(): UnzerQuoteMapperInterface
+    public function createUnzerQuoteMapper(): UnzerQuoteMapperInterface
     {
         return new UnzerQuoteMapper();
     }
@@ -162,7 +196,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerWriter(
             $this->getEntityManager(),
-            $this->getRepository(),
+            $this->createUnzerReader(),
             $this->getConfig(),
         );
     }
@@ -355,7 +389,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Notification\UnzerNotificationProcessorInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Notification\Processor\UnzerNotificationProcessorInterface
      */
     public function createUnzerNotificationProcessor(): UnzerNotificationProcessorInterface
     {
@@ -365,6 +399,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerReader(),
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentSaver(),
+            $this->createUnzerCredentialsResolver(),
         );
     }
 
@@ -555,6 +590,168 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentSaver(),
         );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface
+     */
+    public function createUnzerCustomerQuoteExpander(): UnzerCustomerQuoteExpanderInterface
+    {
+        return new UnzerCustomerQuoteExpander(
+            $this->createUnzerCustomerAdapter(),
+            $this->createUnzerCustomerMapper(),
+            $this->createUnzerQuoteMapper(),
+            $this->createUnzerReader(),
+            $this->createUnzerWriter(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface
+     */
+    public function createUnzerMetadataQuoteExpander(): UnzerMetadataQuoteExpanderInterface
+    {
+        return new UnzerMetadataQuoteExpander(
+            $this->createUnzerMetadataAdapter(),
+            $this->getLocaleFacade(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerMetadataAdapterInterface
+     */
+    public function createUnzerMetadataAdapter(): UnzerMetadataAdapterInterface
+    {
+        return new UnzerMetadataAdapter(
+            $this->getUnzerApiFacade(),
+            $this->createUnzerMetadataMapper(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface
+     */
+    public function getLocaleFacade(): UnzerToLocaleFacadeInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_LOCALE);
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapperInterface
+     */
+    public function createUnzerMetadataMapper(): UnzerMetadataMapperInterface
+    {
+        return new UnzerMetadataMapper();
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface
+     */
+    public function createUnzerNotificationConfigurator(): UnzerNotificationConfiguratorInterface
+    {
+        return new UnzerNotificationConfigurator(
+            $this->getConfig(),
+            $this->createUnzerNotificationAdapter(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface
+     */
+    public function createUnzerKeypairQuoteExpander(): UnzerKeypairQuoteExpanderInterface
+    {
+        return new UnzerKeypairQuoteExpander(
+            $this->createUnzerCredentialsResolver(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapterInterface
+     */
+    public function createUnzerNotificationAdapter(): UnzerNotificationAdapterInterface
+    {
+        return new UnzerNotificationAdapter($this->getUnzerApiFacade());
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeInterface
+     */
+    public function getVaultFacade(): UnzerToVaultFacadeInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_VAULT);
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreatorInterface
+     */
+    public function createUnzerCredentialsCreator(): UnzerCredentialsCreatorInterface
+    {
+        return new UnzerCredentialsCreator(
+            $this->getEntityManager(),
+            $this->createUnzerCredentialsStoreRelationUpdater(),
+            $this->createUnzerVaultWriter(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdaterInterface
+     */
+    public function createUnzerCredentialsUpdater(): UnzerCredentialsUpdaterInterface
+    {
+        return new UnzerCredentialsUpdater(
+            $this->getEntityManager(),
+            $this->createUnzerCredentialsStoreRelationUpdater(),
+            $this->createUnzerVaultWriter(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface
+     */
+    public function createUnzerCredentialsStoreRelationUpdater(): UnzerCredentialsStoreRelationUpdaterInterface
+    {
+        return new UnzerCredentialsStoreRelationUpdater(
+            $this->getEntityManager(),
+            $this->getRepository(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Reader\UnzerVaultReaderInterface
+     */
+    public function createUnzerVaultReader(): UnzerVaultReaderInterface
+    {
+        return new UnzerVaultReader(
+            $this->getVaultFacade(),
+            $this->getConfig(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface
+     */
+    public function createUnzerVaultWriter(): UnzerVaultWriterInterface
+    {
+        return new UnzerVaultWriter(
+            $this->getVaultFacade(),
+            $this->getConfig(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
+     */
+    public function createUnzerCredentialsResolver(): UnzerCredentialsResolverInterface
+    {
+        return new UnzerCredentialsResolver($this->createUnzerReader());
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface
+     */
+    public function getUtilTextService(): UnzerToUtilTextServiceInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::SERVICE_UTIL_TEXT);
     }
 
     /**

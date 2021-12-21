@@ -22,7 +22,7 @@ abstract class UnzerAbstractApiAdapter
      */
     protected function assertSuccessResponse(UnzerApiResponseTransfer $unzerApiResponseTransfer): void
     {
-        if ($unzerApiResponseTransfer->getIsSuccess()) {
+        if ($unzerApiResponseTransfer->getIsSuccessful()) {
             return;
         }
 

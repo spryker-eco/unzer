@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
@@ -46,9 +47,9 @@ abstract class AbstractPaymentProcessor
     protected function prepareUnzerPaymentTransfer(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
         $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setOrderId($saveOrderTransfer->getOrderReference());
-        $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();
+        $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail();
 
-        $unzerBasket = $this->createUnzerBasket($quoteTransfer);
+        $unzerBasket = $this->createUnzerBasket($quoteTransfer, $unzerPaymentTransfer->getUnzerKeypairOrFail());
         $unzerPaymentTransfer->setBasket($unzerBasket);
 
         $unzerPaymentTransfer->setCurrency($quoteTransfer->getCurrencyOrFail()->getCode());
@@ -59,13 +60,14 @@ abstract class AbstractPaymentProcessor
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
-    protected function createUnzerBasket(QuoteTransfer $quoteTransfer): UnzerBasketTransfer
+    protected function createUnzerBasket(QuoteTransfer $quoteTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer
     {
         $unzerBasketTransfer = $this->unzerCheckoutMapper->mapQuoteTransferToUnzerBasketTransfer($quoteTransfer, new UnzerBasketTransfer());
 
-        return $this->unzerBasketAdapter->createBasket($unzerBasketTransfer);
+        return $this->unzerBasketAdapter->createBasket($unzerBasketTransfer, $unzerKeypairTransfer);
     }
 }

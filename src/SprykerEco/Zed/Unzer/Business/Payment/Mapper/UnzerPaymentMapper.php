@@ -68,7 +68,8 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
             ->setBasketId($unzerPaymentTransfer->getBasketOrFail()->getId())
             ->setPaymentId($unzerPaymentTransfer->getId())
             ->setCurrency($unzerPaymentTransfer->getCurrency())
-            ->setTypeId($unzerPaymentTransfer->getPaymentResourceOrFail()->getId());
+            ->setTypeId($unzerPaymentTransfer->getPaymentResourceOrFail()->getId())
+            ->setKeypairId($unzerPaymentTransfer->getUnzerKeypairOrFail()->getKeypairIdOrFail());
 
         return $paymentUnzerTransfer;
     }

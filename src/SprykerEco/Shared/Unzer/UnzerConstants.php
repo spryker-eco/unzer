@@ -28,6 +28,26 @@ interface UnzerConstants
     public const WEBHOOK_RETRIEVE_URL = 'UNZER:WEBHOOK_RETRIEVE_URL';
 
     /**
+     * @var string
+     */
+    public const MASTER_MERCHANT_PARTICIPANT_ID = 'UNZER:MASTER_MERCHANT_PARTICIPANT_ID';
+
+    /**
+     * @var string
+     */
+    public const MAIN_REGULAR_KEYPAIR_ID = 'UNZER:PRIMARY_KEYPAIR_ID';
+
+    /**
+     * @var string
+     */
+    public const MAIN_MARKETPLACE_KEYPAIR_ID = 'UNZER:PRIMARY_KEYPAIR_ID';
+
+    /**
+     * @var string
+     */
+    public const VAULT_DATA_TYPE = 'UNZER:VAULT_DATA_TYPE';
+
+    /**
      * @var int
      */
     public const UNZER_CONFIG_TYPE_STANDARD = 1;

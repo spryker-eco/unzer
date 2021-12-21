@@ -74,8 +74,8 @@ class UnzerReader implements UnzerReaderInterface
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())->addPublicKey($publicKey),
         );
-        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
-        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
+        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
+        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() !== 1) {
             return null;
         }
         $unzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()[0];
@@ -131,8 +131,8 @@ class UnzerReader implements UnzerReaderInterface
      */
     public function findUnzerCredentialsByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): ?UnzerCredentialsTransfer
     {
-        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
-        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
+        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
+        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() !== 1) {
             return null;
         }
 
@@ -150,7 +150,7 @@ class UnzerReader implements UnzerReaderInterface
     public function getUnzerCredentialsCollectionByCriteria(
         UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
     ): UnzerCredentialsCollectionTransfer {
-        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialssByCriteria($unzerCredentialsCriteriaTransfer);
+        $unzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
         foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
             $this->attachUnzerPrivateKey($unzerCredentialsTransfer);
         }
@@ -170,9 +170,9 @@ class UnzerReader implements UnzerReaderInterface
             return $unzerCredentialsTransfer;
         }
 
-        $unzerKeypairTransfer = $unzerCredentialsTransfer->getUnzerKeypairOrFail();
-        $unzerKeypairTransfer->setPrivateKey($unzerPrivateKey);
+        $unzerKeyPairTransfer = $unzerCredentialsTransfer->getUnzerKeypairOrFail();
+        $unzerKeyPairTransfer->setPrivateKey($unzerPrivateKey);
 
-        return $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        return $unzerCredentialsTransfer->setUnzerKeypair($unzerKeyPairTransfer);
     }
 }

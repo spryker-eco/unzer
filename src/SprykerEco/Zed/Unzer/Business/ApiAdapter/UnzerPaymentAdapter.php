@@ -64,7 +64,8 @@ class UnzerPaymentAdapter extends UnzerAbstractApiAdapter implements UnzerPaymen
                 new UnzerApiGetPaymentRequestTransfer(),
             );
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setGetPaymentRequest($unzerApiGetPaymentRequestTransfer);
+            ->setGetPaymentRequest($unzerApiGetPaymentRequestTransfer)
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceGetPaymentApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);
@@ -90,7 +91,8 @@ class UnzerPaymentAdapter extends UnzerAbstractApiAdapter implements UnzerPaymen
                 new UnzerApiGetPaymentRequestTransfer(),
             );
         $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setGetPaymentRequest($unzerApiPaymentRequestTransfer);
+            ->setGetPaymentRequest($unzerApiPaymentRequestTransfer)
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performGetPaymentApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);

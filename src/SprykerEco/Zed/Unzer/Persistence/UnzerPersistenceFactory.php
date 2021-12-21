@@ -8,9 +8,14 @@
 namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery;
+use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerVaultQuery;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItemQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery;
+use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
+use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStoreQuery;
+use Orm\Zed\Unzer\Persistence\SpyUnzerKeypairQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
 use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 
@@ -54,10 +59,50 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
+     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery
+     */
+    public function createPaymentUnzerCustomerQuery(): SpyPaymentUnzerCustomerQuery
+    {
+        return SpyPaymentUnzerCustomerQuery::create();
+    }
+
+    /**
      * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
      */
     public function createUnzerPersistenceMapper(): UnzerPersistenceMapper
     {
         return new UnzerPersistenceMapper();
+    }
+
+    /**
+     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerVaultQuery
+     */
+    public function createMerchantUnzerVaultQuery(): SpyMerchantUnzerVaultQuery
+    {
+        return SpyMerchantUnzerVaultQuery::create();
+    }
+
+    /**
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerKeypairQuery
+     */
+    public function createUnzerKeypairQuery(): SpyUnzerKeypairQuery
+    {
+        return SpyUnzerKeypairQuery::create();
+    }
+
+    /**
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStoreQuery
+     */
+    public function createUnzerCredentialsStoreQuery(): SpyUnzerCredentialsStoreQuery
+    {
+        return SpyUnzerCredentialsStoreQuery::create();
+    }
+
+    /**
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery
+     */
+    public function createUnzerCredentialsQuery(): SpyUnzerCredentialsQuery
+    {
+        return SpyUnzerCredentialsQuery::create();
     }
 }

@@ -1,10 +1,11 @@
-namespace: PyzTest\Zed\Unzer
+namespace: SprykerEcoTest\Zed\Unzer
 
 paths:
-  tests: .
-  data: _data
-  support: _support
-  log: _output
+    tests: .
+    data: ../../../_data
+    support: _support
+    log: ../../../_output
+    output: ../../../_output
 
 coverage:
   enabled: true
@@ -12,16 +13,26 @@ coverage:
   whitelist: { include: ['../../../../src/*'] }
 
 suites:
-  Business:
-    path: Business
-    class_name: UnzerBusinessTester
+  Zed:
+    path: .
+    class_name: UnzerZedTester
     modules:
       enabled:
         - Asserts
         - \SprykerTest\Shared\Testify\Helper\Environment
+        - \SprykerTest\Shared\Testify\Helper\ConfigHelper
+        - \SprykerTest\Zed\Testify\Helper\Communication\CommunicationHelper
+        - \SprykerTest\Zed\Testify\Helper\Communication\Table\TableHelper
         - \SprykerTest\Shared\Testify\Helper\LocatorHelper:
-            projectNamespaces: ['SprykerEco']
+            projectNamespaces:
+              - 'SprykerEco'
+              - 'SprykerEcoTest'
+        - \SprykerTest\Shared\Testify\Helper\BusinessHelper
         - \SprykerTest\Shared\Testify\Helper\DependencyHelper
         - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
         - \SprykerTest\Shared\Propel\Helper\TransactionHelper
         - \SprykerTest\Shared\Store\Helper\StoreDataHelper
+        - \SprykerTest\Shared\Sales\Helper\SalesDataHelper
+        - \SprykerTest\Shared\Customer\Helper\CustomerDataHelper
+        - \SprykerTest\Zed\StateMachine\Helper\StateMachineHelper
+        - \SprykerTest\Zed\Oms\Helper\OmsHelper

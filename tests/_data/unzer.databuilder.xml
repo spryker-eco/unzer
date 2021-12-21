@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<transfers
+    xmlns="spryker:databuilder-01"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="spryker:databuilder-01 http://static.spryker.com/databuilder-01.xsd"
+>
+    <transfer name="UnzerCredentials">
+        <property name="keypairId" dataBuilderRule="word"/>
+        <property name="configName" dataBuilderRule="word"/>
+        <property name="type" dataBuilderRule="randomDigit(20)"/>
+        <property name="participantId" dataBuilderRule="word"/>
+        <property name="merchantReference" dataBuilderRule="word"/>
+        <property name="idUnzerCredentials" dataBuilderRule="randomDigit(20)"/>
+        <property name="parentIdUnzerCredentials" dataBuilderRule="randomDigit(20)"/>
+    </transfer>
+
+    <transfer name="UnzerKeypair">
+        <property name="keypairId" dataBuilderRule="word"/>
+        <property name="publicKey" dataBuilderRule="word"/>
+        <property name="privateKey" dataBuilderRule="word"/>
+    </transfer>
+
+    <transfer name="UnzerPayment">
+        <property name="amountTotal" dataBuilderRule="randomDigit(200)"/>
+        <property name="amountCharged" dataBuilderRule="randomDigit(200)"/>
+        <property name="amountCanceled" dataBuilderRule="randomDigit(200)"/>
+        <property name="amountRemaining" dataBuilderRule="randomDigit(200)"/>
+        <property name="currency" dataBuilderRule="currencyCode()"/>
+        <property name="orderId" dataBuilderRule="word()"/>
+        <property name="invoiceId" dataBuilderRule="word()"/>
+        <property name="redirectUrl" dataBuilderRule="url()"/>
+    </transfer>
+
+</transfers>

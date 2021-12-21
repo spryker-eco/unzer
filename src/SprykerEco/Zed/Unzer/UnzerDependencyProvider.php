@@ -11,10 +11,13 @@ use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 
 /**
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
@@ -52,6 +55,21 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public const FACADE_PAYMENT = 'FACADE_PAYMENT';
 
     /**
+     * @var string
+     */
+    public const FACADE_LOCALE = 'FACADE_LOCALE';
+
+    /**
+     * @var string
+     */
+    public const FACADE_VAULT = 'FACADE_VAULT';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -79,6 +97,9 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addQuoteClient($container);
         $container = $this->addRefundFacade($container);
         $container = $this->addPaymentFacade($container);
+        $container = $this->addLocaleFacade($container);
+        $container = $this->addVaultFacade($container);
+        $container = $this->addUtilTextService($container);
 
         return $container;
     }
@@ -148,6 +169,48 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_REFUND, function (Container $container) {
             return new UnzerToRefundFacadeBridge($container->getLocator()->refund()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addLocaleFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_LOCALE, function (Container $container) {
+            return new UnzerToLocaleFacadeBridge($container->getLocator()->locale()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addVaultFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_VAULT, function (Container $container) {
+            return new UnzerToVaultFacadeBridge($container->getLocator()->vault()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addUtilTextService(Container $container): Container
+    {
+        $container->set(static::SERVICE_UTIL_TEXT, function (Container $container) {
+            return new UnzerToUtilTextServiceBridge($container->getLocator()->utilText()->service());
         });
 
         return $container;
