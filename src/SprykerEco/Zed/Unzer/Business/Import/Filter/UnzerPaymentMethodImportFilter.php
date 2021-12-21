@@ -35,7 +35,7 @@ class UnzerPaymentMethodImportFilter implements UnzerPaymentMethodImportFilterIn
     }
 
     /**
-     * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>  $storedPaymentMethodTransfers
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer> $storedPaymentMethodTransfers
      *
      * @return array<int, string>
      */
