@@ -52,7 +52,7 @@ class PaymentImportAdapter implements PaymentImportAdapterInterface
 
     /**
      * @param string $paymentProviderName
-     * @param \ArrayObject<\Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer> $paymentMethodTransfers
      *
      * @return \Generated\Shared\Transfer\PaymentProviderCollectionResponseTransfer
      */

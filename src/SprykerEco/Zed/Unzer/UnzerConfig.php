@@ -38,7 +38,7 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
-     * @var array<array-key, array<array-key, string>>
+     * @var array<string, array<int, string>>
      */
     protected const UNZER_PAYMENT_METHOD_KEYS_MAP = [
         UnzerConstants::UNZER_PAYMENT_METHOD_ALIPAY => [
