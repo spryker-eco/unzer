@@ -390,7 +390,7 @@
         <property name="customerId" type="string"/>
         <property name="basketId" type="string"/>
         <property name="paymentId" type="string"/>
-<!--        <property name="metadataId" type="string"/>-->
+        <property name="metadataId" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiChargeResponse">
