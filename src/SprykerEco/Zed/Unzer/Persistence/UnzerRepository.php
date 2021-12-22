@@ -175,28 +175,6 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
-     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery $merchantUnzerParticipantQuery
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer $merchantUnzerParticipantConditionsTransfer
-     *
-     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery
-     */
-    protected function setMerchantUnzerParticipantFilters(
-        SpyMerchantUnzerParticipantQuery $merchantUnzerParticipantQuery,
-        MerchantUnzerParticipantConditionsTransfer $merchantUnzerParticipantConditionsTransfer
-    ): SpyMerchantUnzerParticipantQuery {
-        if ($merchantUnzerParticipantConditionsTransfer->getReferences()) {
-            $merchantUnzerParticipantQuery
-                ->useMerchantQuery()
-                ->filterByMerchantReference_In(
-                    $merchantUnzerParticipantConditionsTransfer->getReferences(),
-                )
-            ->endUse();
-        }
-
-        return $merchantUnzerParticipantQuery;
-    }
-
-    /**
      * @param int $idUnzerCredentials
      *
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
