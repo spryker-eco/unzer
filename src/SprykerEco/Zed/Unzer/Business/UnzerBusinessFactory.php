@@ -760,7 +760,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerPaymentMethodImporter(
             $this->getConfig(),
             $this->createUnzerPaymentMethodImportFilter(),
-            $this->createPaymentAdapter(),
+            $this->createPaymentImportAdapter(),
             $this->createUnzerPaymentMethodsAdapter(),
         );
     }
@@ -768,7 +768,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapterInterface
      */
-    public function createPaymentAdapter(): PaymentImportAdapterInterface
+    public function createPaymentImportAdapter(): PaymentImportAdapterInterface
     {
         return new PaymentImportAdapter($this->getPaymentFacade());
     }
