@@ -43,7 +43,7 @@ class PaymentImportAdapter implements PaymentImportAdapterInterface
         $paymentProviderCriteriaTransfer = (new PaymentProviderCriteriaTransfer())->setPaymentProviderConditions($paymentProviderConditionsTransfer);
         $paymentProviderCollectionTransfer = $this->paymentFacade->getPaymentProviderCollection($paymentProviderCriteriaTransfer);
 
-        if ($paymentProviderCollectionTransfer->getPaymentProviders()->count() === 0) {
+        if ($paymentProviderCollectionTransfer->getPaymentProviders()->count() !== 1) {
             return null;
         }
 
