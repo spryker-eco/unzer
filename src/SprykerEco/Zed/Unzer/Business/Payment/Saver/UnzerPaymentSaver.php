@@ -62,7 +62,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
      */
     public function saveOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): void
     {
-        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== UnzerSharedConfig::PAYMENT_PROVIDER_NAME) {
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== UnzerSharedConfig::PAYMENT_PROVIDER_TYPE) {
             return;
         }
 

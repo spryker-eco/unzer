@@ -86,7 +86,7 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \ArrayObject|array<\Generated\Shared\Transfer\UnzerBasketItemTransfer>
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\UnzerBasketItemTransfer>
      */
     protected function mapQuoteTransferToUnzerBasketItemTransferCollection(QuoteTransfer $quoteTransfer): ArrayObject
     {

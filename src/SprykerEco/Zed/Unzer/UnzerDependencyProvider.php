@@ -11,6 +11,7 @@ use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
@@ -47,6 +48,11 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
      * @var string
      */
     public const CLIENT_QUOTE = 'CLIENT_QUOTE';
+
+    /**
+     * @var string
+     */
+    public const FACADE_PAYMENT = 'FACADE_PAYMENT';
 
     /**
      * @var string
@@ -90,6 +96,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addUnzerApiFacade($container);
         $container = $this->addQuoteClient($container);
         $container = $this->addRefundFacade($container);
+        $container = $this->addPaymentFacade($container);
         $container = $this->addLocaleFacade($container);
         $container = $this->addVaultFacade($container);
         $container = $this->addUtilTextService($container);
@@ -204,6 +211,20 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::SERVICE_UTIL_TEXT, function (Container $container) {
             return new UnzerToUtilTextServiceBridge($container->getLocator()->utilText()->service());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addPaymentFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_PAYMENT, function (Container $container) {
+            return new UnzerToPaymentFacadeBridge($container->getLocator()->payment()->facade());
         });
 
         return $container;
