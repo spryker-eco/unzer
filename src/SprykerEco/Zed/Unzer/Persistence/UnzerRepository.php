@@ -265,6 +265,14 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             $unzerConfigQuery->filterByType_In($unzerCredentialsConditionsTransfer->getTypes());
         }
 
+        if ($unzerCredentialsConditionsTransfer->getIds()) {
+            $unzerConfigQuery->filterByIdUnzerCredentials_In($unzerCredentialsConditionsTransfer->getIds());
+        }
+
+        if ($unzerCredentialsConditionsTransfer->getParentIds()) {
+            $unzerConfigQuery->filterByParentIdUnzerCredentials_In($unzerCredentialsConditionsTransfer->getParentIds());
+        }
+
         if ($unzerCredentialsConditionsTransfer->getStoreNames()) {
             $unzerConfigQuery
                 ->joinWithUnzerCredentialsStore()

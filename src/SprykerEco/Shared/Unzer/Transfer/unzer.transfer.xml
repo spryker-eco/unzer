@@ -133,6 +133,13 @@
         <property name="parentIdUnzerCredentials" type="int"/>
         <property name="storeRelation" type="StoreRelation"/>
         <property name="unzerKeypair" type="UnzerKeypair"/>
+        <property name="childUnzerCredentials" type="UnzerCredentials"/>
+    </transfer>
+
+    <transfer name="UnzerCredentialsContainer">
+        <property name="mainUnzerCredentials" type="UnzerCredentials"/>
+        <property name="marketplaceMainMerchantUnzerCredentials" type="UnzerCredentials"/>
+        <property name="marketplaceMerchantUnzerCredentialsCollection" type="UnzerCredentials"/>
     </transfer>
 
     <transfer name="StoreRelation">
@@ -275,6 +282,8 @@
         <property name="publicKeys" type="string[]" singular="publicKey"/>
         <property name="keypairIds" type="string[]" singular="keypairId"/>
         <property name="types" type="int[]" singular="type"/>
+        <property name="ids" type="int[]" singular="id"/>
+        <property name="parentIds" type="int[]" singular="parentId"/>
     </transfer>
 
     <transfer name="UnzerCredentialsCollection">
