@@ -211,4 +211,19 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
 
         return $this->getMapper()->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, $unzerCredentialsTransfer);
     }
+
+    /**
+     * @param UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return bool
+     */
+    public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
+    {
+        $deletedRowsCount = $this->getFactory()
+            ->createUnzerCredentialsQuery()
+            ->filterByIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials())
+            ->delete();
+
+        return $deletedRowsCount !== 0;
+    }
 }

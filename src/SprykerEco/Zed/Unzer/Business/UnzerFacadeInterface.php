@@ -13,6 +13,8 @@ use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
@@ -271,4 +273,25 @@ interface UnzerFacadeInterface
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
     public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
+
+
+    public function getUnzerCredentialsCollection(
+        UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+    ): UnzerCredentialsCollectionTransfer;
+
+    /**
+     * Specification:
+     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     *  - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
+     *  - Checks ability to delete entity from Persistence.
+     *  - Deletes `UnzerCredentialsTransfer` from Persistence.
+     *  - If `UnzerCredentialsTransfer` contains store relations - also deletes it from Persistence.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
 }

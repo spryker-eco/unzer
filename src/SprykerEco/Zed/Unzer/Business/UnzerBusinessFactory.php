@@ -49,6 +49,8 @@ use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreatorInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsDeleter;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsDeleterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolver;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdater;
@@ -730,5 +732,16 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function getUtilTextService(): UnzerToUtilTextServiceInterface
     {
         return $this->getProvidedDependency(UnzerDependencyProvider::SERVICE_UTIL_TEXT);
+    }
+
+    /**
+     * @return UnzerCredentialsDeleterInterface
+     */
+    public function createUnzerCredentialsEraser(): UnzerCredentialsDeleterInterface
+    {
+        return new UnzerCredentialsDeleter(
+            $this->getRepository(),
+            $this->getEntityManager()
+        );
     }
 }

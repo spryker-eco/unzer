@@ -66,6 +66,9 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
      */
     protected function executeCreateUnzerCredentialsTransaction(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
+        //@TODO
+        $unzerCredentialsTransfer->setKeypairId(uniqid());
+
         $unzerCredentialsTransfer = $this->unzerEntityManager->createUnzerCredentials($unzerCredentialsTransfer);
         $this->unzerVaultWriter->storeUnzerPrivateKey(
             $unzerCredentialsTransfer->getKeypairId(),
