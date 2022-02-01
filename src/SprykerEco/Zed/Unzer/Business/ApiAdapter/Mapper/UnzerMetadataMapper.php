@@ -27,7 +27,7 @@ class UnzerMetadataMapper implements UnzerMetadataMapperInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer $unzerApiCreateMetadataResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiCreateMetadataResponseTransfer $unzerApiCreateMetadataResponseTransfer
      * @param \Generated\Shared\Transfer\UnzerMetadataTransfer $unzerMetadataTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerMetadataTransfer

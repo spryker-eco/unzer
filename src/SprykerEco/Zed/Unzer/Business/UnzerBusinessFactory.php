@@ -19,6 +19,8 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerCustomerMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMapperInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMethodsMapper;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMethodsMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapper;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerPaymentResourceMapper;
@@ -39,6 +41,8 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerNotificationAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapter;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapter;
@@ -57,6 +61,12 @@ use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdat
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdater;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdaterInterface;
+use SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapter;
+use SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilter;
+use SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilterInterface;
+use SprykerEco\Zed\Unzer\Business\Import\UnzerPaymentMethodImporter;
+use SprykerEco\Zed\Unzer\Business\Import\UnzerPaymentMethodImporterInterface;
 use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfigurator;
 use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface;
 use SprykerEco\Zed\Unzer\Business\Notification\Processor\UnzerNotificationProcessor;
@@ -73,6 +83,7 @@ use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsChargebackOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsChargeFailedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsPaymentCompletedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\UnzerConditionInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerIntersectionPaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
@@ -107,6 +118,7 @@ use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriter;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
@@ -347,6 +359,14 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeInterface
+     */
+    public function getPaymentFacade(): UnzerToPaymentFacadeInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_PAYMENT);
+    }
+
+    /**
      * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface
      */
     public function getQuoteClient(): UnzerToQuoteClientInterface
@@ -503,13 +523,13 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createPaymentProcessorResolver(): UnzerPaymentProcessorResolverInterface
     {
         $unzerPaymentProcessorsCollection = [
-            UnzerConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER => function () {
+            UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER => function () {
                 return $this->createMarketplaceBankTransferPaymentProcessor();
             },
-            UnzerConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD => function () {
+            UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD => function () {
                 return $this->createMarketplaceCreditCardPaymentProcessor();
             },
-            UnzerConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT => function () {
+            UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT => function () {
                 return $this->createMarketplaceBankTransferPaymentProcessor();
             },
         ];
@@ -732,6 +752,66 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function getUtilTextService(): UnzerToUtilTextServiceInterface
     {
         return $this->getProvidedDependency(UnzerDependencyProvider::SERVICE_UTIL_TEXT);
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Import\UnzerPaymentMethodImporterInterface
+     */
+    public function createUnzerPaymentMethodsImporter(): UnzerPaymentMethodImporterInterface
+    {
+        return new UnzerPaymentMethodImporter(
+            $this->getConfig(),
+            $this->createUnzerPaymentMethodImportFilter(),
+            $this->createPaymentImportAdapter(),
+            $this->createUnzerPaymentMethodsAdapter(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapterInterface
+     */
+    public function createPaymentImportAdapter(): PaymentImportAdapterInterface
+    {
+        return new PaymentImportAdapter($this->getPaymentFacade());
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilterInterface
+     */
+    public function createUnzerPaymentMethodImportFilter(): UnzerPaymentMethodImportFilterInterface
+    {
+        return new UnzerPaymentMethodImportFilter();
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface
+     */
+    public function createUnzerIntersectionPaymentMethodFilter(): UnzerPaymentMethodFilterInterface
+    {
+        return new UnzerIntersectionPaymentMethodFilter(
+            $this->getConfig(),
+            $this->createUnzerReader(),
+            $this->createUnzerPaymentMethodsAdapter(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMethodsMapperInterface
+     */
+    public function createUnzerGetPaymentMethodsMapper(): UnzerGetPaymentMethodsMapperInterface
+    {
+        return new UnzerGetPaymentMethodsMapper($this->getConfig());
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface
+     */
+    public function createUnzerPaymentMethodsAdapter(): UnzerPaymentMethodsAdapterInterface
+    {
+        return new UnzerPaymentMethodsAdapter(
+            $this->getUnzerApiFacade(),
+            $this->createUnzerGetPaymentMethodsMapper(),
+        );
     }
 
     /**

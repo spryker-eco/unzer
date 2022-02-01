@@ -50,7 +50,7 @@ class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
             return;
         }
 
-        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PAYMENT_PROVIDER_NAME) {
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PAYMENT_PROVIDER_TYPE) {
             return;
         }
 

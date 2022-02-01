@@ -23,9 +23,9 @@ class ExecutePostSaveHookFacadeTest extends UnzerFacadeBaseTest
      * @var array
      */
     protected const UNZER_MARKETPLACE_PAYMENT_METHODS = [
-        UnzerConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER,
-        UnzerConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
-        UnzerConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT,
+        UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER,
+        UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
+        UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
     ];
 
     /**

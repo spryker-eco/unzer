@@ -17,6 +17,7 @@ use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 
 interface UnzerFacadeInterface
@@ -229,6 +230,22 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     *  - Filters available payment methods and checks intersections based on merchants.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
+     */
+    public function filterIntersectionPaymentMethods(
+        PaymentMethodsTransfer $paymentMethodsTransfer,
+        QuoteTransfer $quoteTransfer
+    ): PaymentMethodsTransfer;
+
+    /**
+     * Specification:
      *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
      *  - Prepares UnzerApi request and set Unzer keypair.
      *  - Performs Unzer Set Notification URL Api all.
@@ -273,6 +290,18 @@ interface UnzerFacadeInterface
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
     public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
+
+    /**
+     * Specification:
+     * - Imports available Unzer payment methods and saves them in persistence.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
+     *
+     * @return void
+     */
+    public function performPaymentMethodsImport(UnzerKeypairTransfer $unzerKeypairTransfer): void;
 
 
     public function getUnzerCredentialsCollection(

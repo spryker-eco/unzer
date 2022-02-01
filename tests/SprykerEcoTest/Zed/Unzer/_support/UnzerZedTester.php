@@ -93,9 +93,9 @@ class UnzerZedTester extends Actor
      * @var array<string>
      */
     public const UNZER_MARKETPLACE_PAYMENT_METHODS = [
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_CREDIT_CARD,
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_BANK_TRANSFER,
-        UnzerSharedConfig::PAYMENT_METHOD_MARKETPLACE_SOFORT,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
     ];
 
     /**
@@ -401,12 +401,10 @@ class UnzerZedTester extends Actor
     {
         $paymentMethodsBuilder = (new PaymentMethodsBuilder())->withMethod();
         foreach (static::UNZER_MARKETPLACE_PAYMENT_METHODS as $paymentMethod) {
-            $paymentMethodsBuilder->withAnotherMethod(
-                (new PaymentMethodBuilder([
-                    'paymentProvider' => UnzerSharedConfig::PAYMENT_PROVIDER_NAME,
-                    'methodName' => $paymentMethod,
-                ])),
-            );
+            $paymentMethodsBuilder->withAnotherMethod([
+                'paymentProvider' => UnzerSharedConfig::PAYMENT_PROVIDER_NAME,
+                'paymentMethodKey' => $paymentMethod,
+            ]);
         }
 
         return $paymentMethodsBuilder->build();
