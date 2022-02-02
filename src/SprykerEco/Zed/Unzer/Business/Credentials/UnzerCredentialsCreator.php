@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
 
 class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
@@ -33,18 +34,26 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     protected $unzerVaultWriter;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface
+     */
+    protected $utilTextService;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface $unzerCredentialsStoreRelationUpdater
      * @param \SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface $unzerVaultWriter
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
      */
     public function __construct(
         UnzerEntityManagerInterface $unzerEntityManager,
         UnzerCredentialsStoreRelationUpdaterInterface $unzerCredentialsStoreRelationUpdater,
-        UnzerVaultWriterInterface $unzerVaultWriter
+        UnzerVaultWriterInterface $unzerVaultWriter,
+        UnzerToUtilTextServiceInterface $utilTextService
     ) {
         $this->unzerEntityManager = $unzerEntityManager;
         $this->unzerCredentialsStoreRelationUpdater = $unzerCredentialsStoreRelationUpdater;
         $this->unzerVaultWriter = $unzerVaultWriter;
+        $this->utilTextService = $utilTextService;
     }
 
     /**
@@ -66,8 +75,8 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
      */
     protected function executeCreateUnzerCredentialsTransaction(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        //@TODO
-        $unzerCredentialsTransfer->setKeypairId(uniqid());
+        $uniqueId = $this->utilTextService->generateUniqueId('', true);
+        $unzerCredentialsTransfer->setKeypairId($uniqueId);
 
         $unzerCredentialsTransfer = $this->unzerEntityManager->createUnzerCredentials($unzerCredentialsTransfer);
         $this->unzerVaultWriter->storeUnzerPrivateKey(

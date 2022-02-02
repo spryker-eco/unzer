@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Credentials;
 
 use Generated\Shared\Transfer\MessageTransfer;
@@ -25,32 +30,31 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     protected const MESSAGE_DELETE_FAILED = 'Unzer Credentials deletion failed.';
 
     /**
-     * @var UnzerRepositoryInterface
+     * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
      */
     protected $unzerRepository;
 
     /**
-     * @var UnzerEntityManagerInterface
+     * @var \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface
      */
     protected $unzerEntityManager;
 
     /**
-     * @param UnzerRepositoryInterface $unzerRepository
-     * @param UnzerEntityManagerInterface $unzerEntityManager
+     * @param \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface $unzerRepository
+     * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
      */
     public function __construct(
         UnzerRepositoryInterface $unzerRepository,
         UnzerEntityManagerInterface $unzerEntityManager
-    )
-    {
+    ) {
         $this->unzerRepository = $unzerRepository;
         $this->unzerEntityManager = $unzerEntityManager;
     }
 
     /**
-     * @param UnzerCredentialsTransfer $unzerCredentialsTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @return UnzerCredentialsResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
     public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
@@ -77,7 +81,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     }
 
     /**
-     * @param UnzerCredentialsTransfer $unzerCredentialsTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return bool
      */
@@ -92,7 +96,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
         }
 
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
-            (new UnzerCredentialsConditionsTransfer())->addParentId($unzerCredentialsTransfer->getIdUnzerCredentials())
+            (new UnzerCredentialsConditionsTransfer())->addParentId($unzerCredentialsTransfer->getIdUnzerCredentials()),
         );
         $childUnzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
 
@@ -100,7 +104,9 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     }
 
     /**
-     * @param UnzerCredentialsTransfer $unzerCredentialsTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
      * @return bool
      */
@@ -109,7 +115,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())
                 ->addParentId($unzerCredentialsTransfer->getIdUnzerCredentials())
-                ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT)
+                ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT),
         );
 
         $unzerCredentialsCollectionTransfer = $this->unzerRepository
@@ -125,12 +131,13 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     }
 
     /**
-     * @param UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
      *
-     * @return UnzerCredentialsResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    protected function buildFailedUnzerCredentialsResponseTransfer(UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer): UnzerCredentialsResponseTransfer
-    {
+    protected function buildFailedUnzerCredentialsResponseTransfer(
+        UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+    ): UnzerCredentialsResponseTransfer {
         $unzerCredentialsResponseTransfer->addMessage((new MessageTransfer())->setMessage(static::MESSAGE_DELETE_FAILED));
 
         return $unzerCredentialsResponseTransfer->setIsSuccessful(false);

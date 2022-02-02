@@ -690,6 +690,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->getEntityManager(),
             $this->createUnzerCredentialsStoreRelationUpdater(),
             $this->createUnzerVaultWriter(),
+            $this->getUtilTextService(),
         );
     }
 
@@ -815,13 +816,13 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return UnzerCredentialsDeleterInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsDeleterInterface
      */
     public function createUnzerCredentialsEraser(): UnzerCredentialsDeleterInterface
     {
         return new UnzerCredentialsDeleter(
             $this->getRepository(),
-            $this->getEntityManager()
+            $this->getEntityManager(),
         );
     }
 }

@@ -251,8 +251,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
     public function filterIntersectionPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
-    ): PaymentMethodsTransfer
-    {
+    ): PaymentMethodsTransfer {
         return $this->getFactory()
             ->createUnzerIntersectionPaymentMethodFilter()
             ->filterPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
@@ -319,14 +318,13 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
-     * @param UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
      *
-     * @return UnzerCredentialsCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
     public function getUnzerCredentialsCollection(
         UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
-    ): UnzerCredentialsCollectionTransfer
-    {
+    ): UnzerCredentialsCollectionTransfer {
         return $this->getFactory()->createUnzerReader()->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
     }
 

@@ -303,7 +303,18 @@ interface UnzerFacadeInterface
      */
     public function performPaymentMethodsImport(UnzerKeypairTransfer $unzerKeypairTransfer): void;
 
-
+    /**
+     * Specification:
+     *  - Fetches `UnzerCredentialsCollectionTransfer` by given criteria from Persistence.
+     *  - Expands each `UnzerCredentialsTransfer` with `UnzerKeypairTransfer`.
+     *  - Builds `UnzerKeypairTransfer` using private key from `Vault`.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
+     */
     public function getUnzerCredentialsCollection(
         UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
     ): UnzerCredentialsCollectionTransfer;
