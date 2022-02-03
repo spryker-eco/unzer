@@ -136,12 +136,6 @@
         <property name="childUnzerCredentials" type="UnzerCredentials"/>
     </transfer>
 
-    <transfer name="UnzerCredentialsContainer">
-        <property name="mainUnzerCredentials" type="UnzerCredentials"/>
-        <property name="marketplaceMainMerchantUnzerCredentials" type="UnzerCredentials"/>
-        <property name="marketplaceMerchantUnzerCredentialsCollection" type="UnzerCredentials"/>
-    </transfer>
-
     <transfer name="StoreRelation">
         <property name="idEntity" type="int"/>
         <property name="idStores" type="int[]" singular="idStores"/>

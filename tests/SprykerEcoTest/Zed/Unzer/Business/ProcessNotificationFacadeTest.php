@@ -15,11 +15,14 @@ class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest
     public function testProcessNotificationSuccessful(): void
     {
         //Arrange
-        $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer();
-        $unzerCredentialsTransfer = $this->tester->haveUnzerCredentials($this->tester->haveStore())->getUnzerCredentials();
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials($this->tester->haveStore());
+        $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer($unzerCredentialsTransfer->getUnzerKeypair()->getPublicKey());
         $unzerNotificationTransfer->setPublicKey($unzerCredentialsTransfer->getUnzerKeypair()->getPublicKey());
+
+        $quoteTransfer = $this->tester->createQuoteTransfer();
+        $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypair());
         $this->tester->haveUnzerEntities(
-            $this->tester->createQuoteTransfer(),
+            $quoteTransfer,
             $this->tester->createOrder(),
         );
 
@@ -36,7 +39,8 @@ class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest
     public function testProcessNotificationSkip(): void
     {
         //Arrange
-        $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer();
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials($this->tester->haveStore());
+        $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer($unzerCredentialsTransfer->getUnzerKeypair()->getPublicKey());
         $unzerNotificationTransfer->setEvent('disabled.event');
 
         //Act
@@ -52,7 +56,7 @@ class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest
     public function testProcessNotificationTooEarly(): void
     {
         //Arrange
-        $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer();
+        $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer('');
 
         //Act
         $unzerNotificationTransfer = $this->facade->processNotification($unzerNotificationTransfer);
