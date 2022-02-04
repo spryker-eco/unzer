@@ -23,7 +23,7 @@ abstract class AbstractUnzerOmsCommand
     protected function getPaymentMethodName(OrderTransfer $orderTransfer): string
     {
         foreach ($orderTransfer->getPayments() as $paymentTransfer) {
-            if ($paymentTransfer->getPaymentProviderOrFail() === UnzerConfig::PAYMENT_PROVIDER_NAME) {
+            if ($paymentTransfer->getPaymentProviderOrFail() === UnzerConfig::PAYMENT_PROVIDER_TYPE) {
                 return $paymentTransfer->getPaymentMethodOrFail();
             }
         }

@@ -9,6 +9,7 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
+use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
 abstract class AbstractUnzerPaymentMethodFilter
@@ -16,12 +17,7 @@ abstract class AbstractUnzerPaymentMethodFilter
     /**
      * @var string
      */
-    protected const MARKETPLACE_PLACEHOLDER = 'Marketplace';
-
-    /**
-     * @var string
-     */
-    protected const MAIN_SELLER_KEY = 'main';
+    protected const MAIN_SELLER_REFERENCE = 'main';
 
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
@@ -44,10 +40,12 @@ abstract class AbstractUnzerPaymentMethodFilter
     protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
     {
         $merchantReferences = [];
+
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
             $merchantReference = $itemTransfer->getMerchantReference();
+
             if ($merchantReference === null) {
-                $merchantReferences[] = static::MAIN_SELLER_KEY;
+                $merchantReferences[] = static::MAIN_SELLER_REFERENCE;
 
                 continue;
             }
@@ -67,7 +65,7 @@ abstract class AbstractUnzerPaymentMethodFilter
      */
     protected function isUnzerPaymentProvider(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
-        return strpos($paymentMethodTransfer->getMethodName(), $this->unzerConfig->getProviderName()) !== false;
+        return strpos($paymentMethodTransfer->getPaymentMethodKeyOrFail(), $this->unzerConfig->getPaymentProviderType()) !== false;
     }
 
     /**
@@ -77,6 +75,6 @@ abstract class AbstractUnzerPaymentMethodFilter
      */
     protected function isMarketplaceUnzerPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
-        return strpos($paymentMethodTransfer->getMethodName(), static::MARKETPLACE_PLACEHOLDER) !== false;
+        return $this->isUnzerPaymentProvider($paymentMethodTransfer) && strpos($paymentMethodTransfer->getPaymentMethodKeyOrFail(), SharedUnzerConfig::PLATFORM_MARKETPLACE) !== false;
     }
 }

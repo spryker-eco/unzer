@@ -49,7 +49,7 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer
      *
-     * @return \ArrayObject|array<\Generated\Shared\Transfer\UnzerTransactionTransfer>
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\UnzerTransactionTransfer>
      */
     protected function mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers(
         UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer

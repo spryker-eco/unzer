@@ -82,7 +82,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      */
     public function expand(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PAYMENT_PROVIDER_NAME) {
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PAYMENT_PROVIDER_TYPE) {
             return $quoteTransfer;
         }
 

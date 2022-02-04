@@ -15,6 +15,7 @@ use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
@@ -240,6 +241,26 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @api
      *
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
+     */
+    public function filterIntersectionPaymentMethods(
+        PaymentMethodsTransfer $paymentMethodsTransfer,
+        QuoteTransfer $quoteTransfer
+    ): PaymentMethodsTransfer
+    {
+        return $this->getFactory()
+            ->createUnzerIntersectionPaymentMethodFilter()
+            ->filterPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return void
@@ -275,5 +296,19 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
     public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         return $this->getFactory()->createUnzerCredentialsUpdater()->updateUnzerCredentials($unzerCredentialsTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
+     *
+     * @return void
+     */
+    public function performPaymentMethodsImport(UnzerKeypairTransfer $unzerKeypairTransfer): void
+    {
+        $this->getFactory()->createUnzerPaymentMethodsImporter()->performPaymentMethodsImport($unzerKeypairTransfer);
     }
 }
