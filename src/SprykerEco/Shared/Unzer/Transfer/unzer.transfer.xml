@@ -301,6 +301,8 @@
         <property name="publicKeys" type="string[]" singular="publicKey"/>
         <property name="keypairIds" type="string[]" singular="keypairId"/>
         <property name="types" type="int[]" singular="type"/>
+        <property name="ids" type="int[]" singular="id"/>
+        <property name="parentIds" type="int[]" singular="parentId"/>
     </transfer>
 
     <transfer name="UnzerCredentialsCollection">

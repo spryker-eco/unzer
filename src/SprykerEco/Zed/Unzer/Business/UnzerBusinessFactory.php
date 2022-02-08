@@ -109,6 +109,8 @@ use SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpander;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpander;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerParticipantIdQuoteExpander;
+use SprykerEco\Zed\Unzer\Business\Quote\UnzerParticipantIdQuoteExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerQuoteExpander;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerQuoteExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReader;
@@ -144,9 +146,9 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerCustomerQuoteExpander(),
             $this->createUnzerMetadataQuoteExpander(),
             $this->createUnzerKeypairQuoteExpander(),
+            $this->createUnzerParticipantIdQuoteExpander(),
             $this->getQuoteClient(),
-            $this->getConfig(),
-            $this->createUnzerReader(),
+            $this->getConfig()
         );
     }
 
@@ -835,5 +837,13 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerExpensesDistributor(): UnzerExpensesDistributorInterface
     {
         return new UnzerExpensesDistributor();
+    }
+
+    /**
+     * @return UnzerParticipantIdQuoteExpanderInterface
+     */
+    public function createUnzerParticipantIdQuoteExpander(): UnzerParticipantIdQuoteExpanderInterface
+    {
+        return new UnzerParticipantIdQuoteExpander($this->createUnzerReader());
     }
 }

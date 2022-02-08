@@ -37,6 +37,11 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected $unzerKeypairQuoteExpander;
 
     /**
+     * @var UnzerParticipantIdQuoteExpanderInterface
+     */
+    protected $unzerParticipantIdQuoteExpander;
+
+    /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface
      */
     protected $quoteClient;
@@ -55,24 +60,24 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface $unzerKeypairQuoteExpander
+     * @param UnzerParticipantIdQuoteExpanderInterface $unzerParticipantIdQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
-     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
     public function __construct(
         UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander,
         UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander,
         UnzerKeypairQuoteExpanderInterface $unzerKeypairQuoteExpander,
+        UnzerParticipantIdQuoteExpanderInterface $unzerParticipantIdQuoteExpander,
         UnzerToQuoteClientInterface $quoteClient,
-        UnzerConfig $unzerConfig,
-        UnzerReaderInterface $unzerReader
+        UnzerConfig $unzerConfig
     ) {
         $this->unzerCustomerQuoteExpander = $unzerCustomerQuoteExpander;
         $this->unzerMetadataQuoteExpander = $unzerMetadataQuoteExpander;
+        $this->unzerKeypairQuoteExpander = $unzerKeypairQuoteExpander;
+        $this->unzerParticipantIdQuoteExpander = $unzerParticipantIdQuoteExpander;
         $this->quoteClient = $quoteClient;
         $this->unzerConfig = $unzerConfig;
-        $this->unzerReader = $unzerReader;
-        $this->unzerKeypairQuoteExpander = $unzerKeypairQuoteExpander;
     }
 
     /**
@@ -82,7 +87,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      */
     public function expand(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PAYMENT_PROVIDER_TYPE) {
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PAYMENT_PROVIDER_NAME) {
             return $quoteTransfer;
         }
 
@@ -92,7 +97,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
         $quoteTransfer = $this->unzerMetadataQuoteExpander->expandQuoteWithUnzerMetadata($quoteTransfer);
 
         if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
-            $quoteTransfer = $this->expandQuoteItemsWithUnzerParticipants($quoteTransfer);
+            $quoteTransfer = $this->unzerParticipantIdQuoteExpander->expandQuoteItemsWithParticipantIds($quoteTransfer);
         }
 
         $this->quoteClient->setQuote($quoteTransfer);
@@ -118,58 +123,5 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
 
         return $quoteTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return \Generated\Shared\Transfer\QuoteTransfer
-     */
-    protected function expandQuoteItemsWithUnzerParticipants(QuoteTransfer $quoteTransfer): QuoteTransfer
-    {
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $this->setParticipantId($itemTransfer, $quoteTransfer->getStoreOrFail());
-        }
-
-        return $quoteTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     *
-     * @return \Generated\Shared\Transfer\ItemTransfer
-     */
-    protected function setParticipantId(ItemTransfer $itemTransfer, StoreTransfer $storeTransfer): ItemTransfer
-    {
-        if (!$itemTransfer->getMerchantReference()) {
-            return $this->setMerchantParticipantIdByType($itemTransfer, $storeTransfer, UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT);
-        }
-
-        return $this->setMerchantParticipantIdByType($itemTransfer, $storeTransfer, UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param int $type
-     *
-     * @return \Generated\Shared\Transfer\ItemTransfer
-     */
-    protected function setMerchantParticipantIdByType(ItemTransfer $itemTransfer, StoreTransfer $storeTransfer, int $type): ItemTransfer
-    {
-        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
-            ->setUnzerCredentialsConditions(
-                (new UnzerCredentialsConditionsTransfer())
-                    ->addStoreName($storeTransfer->getName())
-                    ->addType($type),
-            );
-
-        $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
-        if ($unzerCredentialsTransfer === null) {
-            return $itemTransfer;
-        }
-
-        return $itemTransfer->setUnzerParticipantId($unzerCredentialsTransfer->getParticipantIdOrFail());
     }
 }

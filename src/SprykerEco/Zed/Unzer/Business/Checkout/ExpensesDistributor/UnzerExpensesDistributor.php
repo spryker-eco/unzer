@@ -22,6 +22,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
         }
 
         $itemCountersPerExpense = [];
+        $leftoversPerExpenses = [];
 
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
             $shipmentTransfer = $itemTransfer->getShipment();
@@ -34,6 +35,8 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
                     $itemTransfer->setExpenseId($expenseId);
                     $this->raiseExpenseIdCounter($itemCountersPerExpense, $expenseId);
                 }
+
+                $leftoversPerExpenses[$expenseId] = $expenseTransfer->getSumGrossPrice();
             }
         }
 
@@ -48,6 +51,12 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
             }
 
             $calculatedExpenseCost = intdiv($expenseTransfer->getSumGrossPrice(), $itemCountersPerExpense[$itemTransfer->getExpenseId()]);
+
+            $leftoversPerExpenses[$itemTransfer->getExpenseId()] -= $calculatedExpenseCost;
+            if ($leftoversPerExpenses[$itemTransfer->getExpenseId()] < $calculatedExpenseCost) {
+                $calculatedExpenseCost += $leftoversPerExpenses[$itemTransfer->getExpenseId()];
+            }
+
             $itemTransfer->setCalculatedExpensesCost($calculatedExpenseCost);
         }
 
@@ -69,11 +78,11 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
 
     /**
      * @param array $itemCountersPerExpense
-     * @param int $expenseId
+     * @param string $expenseId
      *
      * @return void
      */
-    protected function raiseExpenseIdCounter(array &$itemCountersPerExpense, int $expenseId): void
+    protected function raiseExpenseIdCounter(array &$itemCountersPerExpense, string $expenseId): void
     {
         isset($itemCountersPerExpense[$expenseId]) ? $itemCountersPerExpense[$expenseId] += 1 : $itemCountersPerExpense[$expenseId] = 1;
     }
