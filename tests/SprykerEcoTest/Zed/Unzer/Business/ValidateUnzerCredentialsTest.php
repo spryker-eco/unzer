@@ -36,11 +36,10 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsSuccessfulUnzerCredentialsResponse(): void
     {
         // Arrange
-        $unzerKeypairTransfer = (new UnzerKeypairBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-        ]))->build();
-        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        ]))->withUnzerKeypair()
+            ->build();
 
         // Act
         $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
@@ -56,12 +55,11 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileConfigNameUndefined(): void
     {
         // Arrange
-        $unzerKeypairTransfer = (new UnzerKeypairBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
             UnzerCredentialsTransfer::CONFIG_NAME => '',
-        ]))->build();
-        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        ]))->withUnzerKeypair()
+            ->build();
 
         // Act
         $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
@@ -79,12 +77,11 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileConfigNameTooLong(): void
     {
         // Arrange
-        $unzerKeypairTransfer = (new UnzerKeypairBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
             UnzerCredentialsTransfer::CONFIG_NAME => static::TOO_LONG_STRING,
-        ]))->build();
-        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        ]))->withUnzerKeypair()
+            ->build();
 
         // Act
         $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
@@ -123,39 +120,11 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPrivateKeyTooLong(): void
     {
         // Arrange
-        $unzerKeypairTransfer = (new UnzerKeypairBuilder([
-            UnzerKeypairTransfer::PRIVATE_KEY => null,
-        ]))->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-            UnzerCredentialsTransfer::UNZER_KEYPAIR => null,
-        ]))->build();
-        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[unzerKeypair][privateKey]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('This value should not be blank.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
-    }
-
-    /**
-     * @return void
-     */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPrivateKeyUndefined(): void
-    {
-        // Arrange
-        $unzerKeypairTransfer = (new UnzerKeypairBuilder([
+        ]))->withUnzerKeypair([
             UnzerKeypairTransfer::PRIVATE_KEY => static::TOO_LONG_STRING,
-        ]))->build();
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-            UnzerCredentialsTransfer::UNZER_KEYPAIR => null,
-        ]))->build();
-        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        ])->build();
 
         // Act
         $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
@@ -170,17 +139,36 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
+    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPrivateKeyUndefined(): void
+    {
+        // Arrange
+        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
+            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
+        ]))->withUnzerKeypair([
+            UnzerKeypairTransfer::PRIVATE_KEY => null,
+        ])->build();
+
+        // Act
+        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
+
+        // Assert
+        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
+        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
+        $this->assertSame('[unzerKeypair][privateKey]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
+        $this->assertSame('This value should not be blank.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
+    }
+
+    /**
+     * @return void
+     */
     public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPublicKeyUndefined(): void
     {
         // Arrange
-        $unzerKeypairTransfer = (new UnzerKeypairBuilder([
-            UnzerKeypairTransfer::PUBLIC_KEY => null,
-        ]))->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-            UnzerCredentialsTransfer::UNZER_KEYPAIR => null,
-        ]))->build();
-        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        ]))->withUnzerKeypair([
+            UnzerKeypairTransfer::PUBLIC_KEY => null,
+        ])->build();
 
         // Act
         $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
@@ -198,14 +186,11 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPublicKeyTooLong(): void
     {
         // Arrange
-        $unzerKeypairTransfer = (new UnzerKeypairBuilder([
-            UnzerKeypairTransfer::PUBLIC_KEY => static::TOO_LONG_STRING,
-        ]))->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-            UnzerCredentialsTransfer::UNZER_KEYPAIR => null,
-        ]))->build();
-        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        ]))->withUnzerKeypair([
+            UnzerKeypairTransfer::PUBLIC_KEY => static::TOO_LONG_STRING,
+        ])->build();
 
         // Act
         $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
@@ -229,8 +214,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
             UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
         ]))->withUnzerKeypair([
             UnzerKeypairTransfer::PUBLIC_KEY => $standardUnzerCredentialsTransfer->getUnzerKeypair()->getPublicKey(),
-        ])
-            ->build();
+        ])->build();
 
         // Act
         $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
