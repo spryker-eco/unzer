@@ -13,7 +13,7 @@ use Generated\Shared\Transfer\MerchantTransfer;
 class UnzerToMerchantFacadeBridge implements UnzerToMerchantFacadeInterface
 {
     /**
-     * @var \Spryker\Zed\Merchant\Business\MerchantFacade
+     * @var \Spryker\Zed\Merchant\Business\MerchantFacadeInterface
      */
     protected $merchantFacade;
 

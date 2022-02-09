@@ -21,9 +21,9 @@ class UnzerHandler implements UnzerHandlerInterface
      */
     public function addPaymentToQuote(Request $request, QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $paymentSelection = $quoteTransfer->getPayment()->getPaymentSelection();
+        $paymentSelection = $quoteTransfer->getPaymentOrFail()->getPaymentSelection();
 
-        $quoteTransfer->getPayment()
+        $quoteTransfer->getPaymentOrFail()
             ->setPaymentProvider(UnzerConfig::PAYMENT_PROVIDER_NAME)
             ->setPaymentMethod($paymentSelection);
 

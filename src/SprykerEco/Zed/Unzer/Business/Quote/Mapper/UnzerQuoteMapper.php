@@ -34,7 +34,7 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
             ->setCompany($quoteTransfer->getCustomerOrFail()->getCompany())
             ->setBirthDate($quoteTransfer->getCustomerOrFail()->getDateOfBirth())
             ->setEmail($quoteTransfer->getCustomerOrFail()->getEmail())
-            ->setPhone($shippingAddress->getPhone())
+            ->setPhone($shippingAddress->getPhoneOrFail())
             ->setMobile($quoteTransfer->getCustomerOrFail()->getPhone())
             ->setShippingAddress(
                 $this->mapAddressTransferToUnzerAddressTransfer($shippingAddress, new UnzerAddressTransfer()),
