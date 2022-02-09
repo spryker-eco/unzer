@@ -9,7 +9,6 @@ namespace SprykerEco\Zed\Unzer\Dependency;
 
 use Generated\Shared\Transfer\MerchantCriteriaTransfer;
 use Generated\Shared\Transfer\MerchantTransfer;
-use Spryker\Zed\Merchant\Business\MerchantFacade;
 
 class UnzerToMerchantFacadeBridge implements UnzerToMerchantFacadeInterface
 {
@@ -19,9 +18,9 @@ class UnzerToMerchantFacadeBridge implements UnzerToMerchantFacadeInterface
     protected $merchantFacade;
 
     /**
-     * @param \Spryker\Zed\Merchant\Business\MerchantFacade $merchantFacade
+     * @param \Spryker\Zed\Merchant\Business\MerchantFacadeInterface $merchantFacade
      */
-    public function __construct(MerchantFacade $merchantFacade)
+    public function __construct($merchantFacade)
     {
         $this->merchantFacade = $merchantFacade;
     }

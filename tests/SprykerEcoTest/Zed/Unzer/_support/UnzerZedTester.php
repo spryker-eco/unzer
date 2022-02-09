@@ -40,8 +40,6 @@ use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use Orm\Zed\Store\Persistence\SpyStoreQuery;
-use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
 use Spryker\Shared\Vault\VaultConstants;
 use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants;

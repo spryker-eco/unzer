@@ -339,6 +339,8 @@ interface UnzerFacadeInterface
      * Specification:
      * - @todo: write specification ...
      *
+     * @api
+     *
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer

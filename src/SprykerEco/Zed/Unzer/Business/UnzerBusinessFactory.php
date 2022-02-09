@@ -840,7 +840,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerCredentialsConstraintsValidator(
             $this->getValidatorAdapter(),
             $this->createUnzerCredentialsConstraintsProvider(),
-
         );
     }
 

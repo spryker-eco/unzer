@@ -8,13 +8,10 @@
 namespace SprykerEco\Zed\Unzer\Business\Credentials\Validator;
 
 use Generated\Shared\Transfer\MessageTransfer;
-use Generated\Shared\Transfer\UnzerCredentialsParameterMessageTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Lcobucci\JWT\Validation\ConstraintViolation;
 use SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UnzerCredentialsConstraintsProviderInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 
 class UnzerCredentialsConstraintsValidator implements UnzerCredentialsConstraintsValidatorInterface
 {
@@ -58,11 +55,10 @@ class UnzerCredentialsConstraintsValidator implements UnzerCredentialsConstraint
             ->setIsSuccessful($constraintViolationList->count() === 0);
 
         foreach ($constraintViolationList as $constraintViolation) {
-            /** @var ConstraintViolationInterface $constraintViolation */
+            /** @var \Symfony\Component\Validator\ConstraintViolationInterface $constraintViolation */
             $unzerCredentialsResponseTransfer->addMessage((new MessageTransfer())
                 ->setValue($constraintViolation->getPropertyPath())
-                ->setMessage($constraintViolation->getMessage())
-            );
+                ->setMessage($constraintViolation->getMessage()));
         }
 
         return $unzerCredentialsResponseTransfer;

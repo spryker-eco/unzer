@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
- * Use of this software requires acceptance of the Spryker Marketplace License Agreement. See LICENSE file.
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
 namespace SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints;
@@ -19,11 +19,11 @@ class ValidMerchantReferenceConstraint extends Constraint
 
     /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface $merchantFacade
-     * @param null $options
-     * @param array|null $groups
-     * @param null $payload
+     * @param mixed $options
+     * @param array<int, string>|null $groups
+     * @param mixed $payload
      */
-    public function __construct(UnzerToMerchantFacadeInterface $merchantFacade, $options = null, array $groups = null, $payload = null)
+    public function __construct(UnzerToMerchantFacadeInterface $merchantFacade, $options = null, ?array $groups = null, $payload = null)
     {
         parent::__construct($options, $groups, $payload);
         $this->merchantFacade = $merchantFacade;
@@ -68,4 +68,3 @@ class ValidMerchantReferenceConstraint extends Constraint
         return $this->merchantFacade;
     }
 }
-

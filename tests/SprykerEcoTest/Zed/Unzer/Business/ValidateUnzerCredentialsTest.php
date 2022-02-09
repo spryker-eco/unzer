@@ -28,7 +28,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     /**
      * @var string
      */
-    const TOO_LONG_STRING = '6sVhY4A8ny34pBoZZG69uqAmJfH8ZrcvrhbLMrEFg10XyF0Km4sifwDBvHLyxkdh8VkDuc4wQgsRFfgDH5SkzmlUghzkGa8YPHCBvy4iV9QM6QTcYliVxspnaRBdoL5MQBdUmyxAh4u9LldnUgURa8Np9GxdPUx557VL35HUntQYsCSjnjdndpGcuRuT0QHxmkPIBYGee58MTAL6Cgawdp5aseF1eOMwDUQyM713vMW8lvlKNbOGttPJIleweUwnWjMt';
+    public const TOO_LONG_STRING = '6sVhY4A8ny34pBoZZG69uqAmJfH8ZrcvrhbLMrEFg10XyF0Km4sifwDBvHLyxkdh8VkDuc4wQgsRFfgDH5SkzmlUghzkGa8YPHCBvy4iV9QM6QTcYliVxspnaRBdoL5MQBdUmyxAh4u9LldnUgURa8Np9GxdPUx557VL35HUntQYsCSjnjdndpGcuRuT0QHxmkPIBYGee58MTAL6Cgawdp5aseF1eOMwDUQyM713vMW8lvlKNbOGttPJIleweUwnWjMt';
 
     /**
      * @return void
@@ -232,7 +232,6 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
         ])
             ->build();
 
-
         // Act
         $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
 
@@ -317,5 +316,3 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
         $this->assertSame('Invalid parent Unzer credentials detected.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
     }
 }
-
-

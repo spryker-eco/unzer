@@ -9,12 +9,10 @@ namespace SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints;
 
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
-use Spryker\Zed\MerchantRelationship\Business\Validator\ValidatorRule\MerchantReferenceExistsValidatorRule;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeInterface;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -34,6 +32,7 @@ class UnzerCredentialsConstraintsProvider implements UnzerCredentialsConstraints
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface $merchantFacade
      */
     public function __construct(UnzerReaderInterface $unzerReader, UnzerToMerchantFacadeInterface $merchantFacade)
     {
@@ -106,7 +105,6 @@ class UnzerCredentialsConstraintsProvider implements UnzerCredentialsConstraints
             'allowExtraFields' => true,
         ]);
     }
-
 
     /**
      * @return array
