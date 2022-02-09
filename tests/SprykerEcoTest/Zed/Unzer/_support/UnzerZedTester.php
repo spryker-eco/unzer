@@ -40,6 +40,8 @@ use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
+use Orm\Zed\Store\Persistence\SpyStoreQuery;
+use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
 use Spryker\Shared\Vault\VaultConstants;
 use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants;
@@ -376,6 +378,22 @@ class UnzerZedTester extends Actor
                 static::MERCHANT_REFERENCE,
             ),
         );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function haveMainMarketplaceUnzerCredentials(StoreTransfer $storeTransfer): UnzerCredentialsTransfer
+    {
+        return $this->getUnzerFacade()->createUnzerCredentials(
+            $this->createUnzerCredentialsCustomTransfer(
+                $storeTransfer,
+                static::UNZER_MAIN_MARKETPLACE_KEYPAIR_ID,
+                UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
+            ),
+        )->getUnzerCredentials();
     }
 
     /**
