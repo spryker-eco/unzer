@@ -7,7 +7,8 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
-use SprykerEco\Shared\Unzer\UnzerConstants;
+use Generated\Shared\DataBuilder\UnzerCredentialsBuilder;
+use Generated\Shared\DataBuilder\UnzerKeypairBuilder;
 
 class CreateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
@@ -17,7 +18,9 @@ class CreateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     public function testCreateUnzerCredentials(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->createUnzerCredentialsTransfer(UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE);
+        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder())->build();
+        $unzerKeypairTransfer = (new UnzerKeypairBuilder())->build();
+        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
 
         //Act
         $unzerCredentialsResponseTransfer = $this->facade->createUnzerCredentials($unzerCredentialsTransfer);

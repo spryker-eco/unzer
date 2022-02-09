@@ -11,7 +11,6 @@ use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerMetadataTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
 
 class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
 {
@@ -22,7 +21,7 @@ class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
     {
         //Arrange
         $quoteTransfer = $this->tester->createMarketplaceQuoteTransfer();
-        $this->tester->haveMarketplaceUnzerCredentials($quoteTransfer->getStoreOrFail());
+        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials($quoteTransfer->getStoreOrFail());
 
         //Act
         $quoteTransfer = $this->facade->performPreSaveOrderStack($quoteTransfer);
@@ -35,7 +34,7 @@ class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
         $this->assertInstanceOf(UnzerMetadataTransfer::class, $unzerPayment->getMetadata());
         $this->assertInstanceOf(UnzerKeypairTransfer::class, $unzerPayment->getUnzerKeypair());
 
-        $this->assertSame(UnzerZedTester::UNZER_MAIN_MARKETPLACE_KEYPAIR_ID, $unzerPayment->getUnzerKeypair()->getKeypairId());
+        $this->assertSame($unzerCredentialsTransfer->getUnzerKeypair()->getKeypairId(), $unzerPayment->getUnzerKeypair()->getKeypairId());
     }
 
     /**
@@ -46,8 +45,8 @@ class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
         //Arrange
         $quoteTransfer = $this->tester->createQuoteTransfer();
         $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setIsMarketplace(false);
-        $this->tester->haveMarketplaceUnzerCredentials($quoteTransfer->getStoreOrFail());
-        $this->tester->haveUnzerCredentials($quoteTransfer->getStoreOrFail());
+        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials($quoteTransfer->getStoreOrFail());
+        $this->tester->haveStandardUnzerCredentials($quoteTransfer->getStoreOrFail());
 
         //Act
         $quoteTransfer = $this->facade->performPreSaveOrderStack($quoteTransfer);
@@ -60,6 +59,6 @@ class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
         $this->assertInstanceOf(UnzerMetadataTransfer::class, $unzerPayment->getMetadata());
         $this->assertInstanceOf(UnzerKeypairTransfer::class, $unzerPayment->getUnzerKeypair());
 
-        $this->assertSame(UnzerZedTester::UNZER_MAIN_MARKETPLACE_KEYPAIR_ID, $unzerPayment->getUnzerKeypair()->getKeypairId());
+        $this->assertSame($unzerCredentialsTransfer->getKeypairId(), $unzerPayment->getUnzerKeypair()->getKeypairId());
     }
 }

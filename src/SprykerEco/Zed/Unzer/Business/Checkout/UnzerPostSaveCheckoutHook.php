@@ -46,7 +46,7 @@ class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
      */
     public function execute(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): void
     {
-        if ($quoteTransfer->getPaymentOrFail() === null) {
+        if ($quoteTransfer->getPayment() === null) {
             return;
         }
 

@@ -10,7 +10,6 @@
         <property name="type" dataBuilderRule="randomDigit(20)"/>
         <property name="participantId" dataBuilderRule="word"/>
         <property name="merchantReference" dataBuilderRule="word"/>
-        <property name="idUnzerCredentials" dataBuilderRule="randomDigit(20)"/>
         <property name="parentIdUnzerCredentials" dataBuilderRule="randomDigit(20)"/>
     </transfer>
 
