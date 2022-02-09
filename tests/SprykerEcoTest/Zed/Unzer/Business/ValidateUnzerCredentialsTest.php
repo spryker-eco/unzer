@@ -8,7 +8,6 @@
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use Generated\Shared\DataBuilder\UnzerCredentialsBuilder;
-use Generated\Shared\DataBuilder\UnzerKeypairBuilder;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
