@@ -61,6 +61,10 @@ use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdat
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdater;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdaterInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UnzerCredentialsConstraintsProvider;
+use SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UnzerCredentialsConstraintsProviderInterface;
+use SprykerEco\Zed\Unzer\Business\Credentials\Validator\UnzerCredentialsConstraintsValidator;
+use SprykerEco\Zed\Unzer\Business\Credentials\Validator\UnzerCredentialsConstraintsValidatorInterface;
 use SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapter;
 use SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Import\Filter\UnzerPaymentMethodImportFilter;
@@ -118,11 +122,13 @@ use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriter;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
 
@@ -824,5 +830,43 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->getRepository(),
             $this->getEntityManager(),
         );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\Validator\UnzerCredentialsConstraintsValidatorInterface
+     */
+    public function createUnzerCredentialsConstraintsValidator(): UnzerCredentialsConstraintsValidatorInterface
+    {
+        return new UnzerCredentialsConstraintsValidator(
+            $this->getValidatorAdapter(),
+            $this->createUnzerCredentialsConstraintsProvider(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface
+     */
+    public function getValidatorAdapter(): UnzerToValidationAdapterInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::ADAPTER_VALIDATION);
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UnzerCredentialsConstraintsProviderInterface
+     */
+    public function createUnzerCredentialsConstraintsProvider(): UnzerCredentialsConstraintsProviderInterface
+    {
+        return new UnzerCredentialsConstraintsProvider(
+            $this->createUnzerReader(),
+            $this->getMerchantFacade(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface
+     */
+    public function getMerchantFacade(): UnzerToMerchantFacadeInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_MERCHANT);
     }
 }
