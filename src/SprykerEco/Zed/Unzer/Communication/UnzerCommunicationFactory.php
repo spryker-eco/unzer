@@ -15,6 +15,7 @@ use SprykerEco\Zed\Unzer\Communication\Oms\Command\RefundUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\UnzerOmsCommandInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapper;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
 
@@ -72,14 +73,11 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
     }
 
     /**
-     * @return \Spryker\Zed\Calculation\Business\CalculationFacadeInterface
+     * @return UnzerToCalculationFacadeInterface
      */
-    public function getCalculationFacade(): CalculationFacadeInterface
+    public function getCalculationFacade(): UnzerToCalculationFacadeInterface
     {
-        /** @var \Spryker\Zed\Calculation\Business\CalculationFacadeInterface $calculationFacade */
-        $calculationFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_CALCULATION);
-
-        return $calculationFacade;
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_CALCULATION);
     }
 
     /**

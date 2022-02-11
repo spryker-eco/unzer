@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Generated\Shared\Transfer\UnzerTransactionTransfer;
@@ -42,7 +43,8 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
             ->setBasket((new UnzerBasketTransfer())->setId($paymentUnzerTransfer->getBasketId()))
             ->setPaymentResource((new UnzerPaymentResourceTransfer())->setId($paymentUnzerTransfer->getTypeId()))
             ->setIsAuthorizable($paymentUnzerTransfer->getIsAuthorizable())
-            ->setIsMarketplace($paymentUnzerTransfer->getIsMarketplace());
+            ->setIsMarketplace($paymentUnzerTransfer->getIsMarketplace())
+            ->setUnzerKeypair((new UnzerKeypairTransfer())->setKeypairId($paymentUnzerTransfer->getKeypairId()));
 
         return $unzerPaymentTransfer;
     }

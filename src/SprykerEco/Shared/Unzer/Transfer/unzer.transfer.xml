@@ -117,6 +117,16 @@
         <property name="unzerKeypair" type="UnzerKeypair"/>
     </transfer>
 
+    <transfer name="UnzerCharge">
+        <property name="unzerKeypair" type="UnzerKeypair"/>
+        <property name="paymentId" type="string"/>
+        <property name="authorizeId" type="string"/>
+        <property name="amount" type="int"/>
+        <property name="orderId" type="string"/>
+        <property name="invoiceId" type="string"/>
+        <property name="paymentReference" type="string"/>
+    </transfer>
+
     <transfer name="UnzerKeypair">
         <property name="keypairId" type="string"/>
         <property name="publicKey" type="string"/>
@@ -251,6 +261,20 @@
 
     <transfer name="PaymentUnzerTransactionCollection">
         <property name="paymentUnzerTransactions" type="PaymentUnzerTransaction[]" singular="paymentUnzerTransaction"/>
+    </transfer>
+
+    <transfer name="PaymentUnzerTransactionCriteria">
+        <property name="paymentUnzerTransactionConditions" type="PaymentUnzerTransactionConditions"/>
+        <property name="sortCollection" type="Sort[]" singular="sort"/>
+        <property name="pagination" type="Pagination"/>
+    </transfer>
+
+    <transfer name="PaymentUnzerTransactionConditions">
+        <property name="ids" type="int[]" singular="id"/>
+        <property name="participantIds" type="string[]" singular="participantId"/>
+        <property name="fkPaymentUnzerIds" type="int[]" singular="fkPaymentUnzerId"/>
+        <property name="types" type="string[]" singular="type"/>
+        <property name="statuses" type="string[]" singular="status"/>
     </transfer>
 
     <transfer name="PaymentUnzerOrderItemCollection">

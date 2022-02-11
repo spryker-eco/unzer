@@ -9,6 +9,8 @@ namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\StoreRelationTransfer;
@@ -82,4 +84,13 @@ interface UnzerRepositoryInterface
     public function findUnzerCredentialsCollectionByCriteria(
         UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
     ): UnzerCredentialsCollectionTransfer;
+
+    /**
+     * @param PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
+     *
+     * @return PaymentUnzerTransactionCollectionTransfer
+     */
+    public function findPaymentUnzerTransactionCollectionByCriteria(
+        PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
+    ): PaymentUnzerTransactionCollectionTransfer;
 }
