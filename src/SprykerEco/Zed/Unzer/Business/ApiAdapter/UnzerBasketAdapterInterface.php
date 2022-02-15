@@ -19,4 +19,12 @@ interface UnzerBasketAdapterInterface
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
     public function createBasket(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerBasketTransfer
+     */
+    public function createMarketplaceBasket(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer;
 }

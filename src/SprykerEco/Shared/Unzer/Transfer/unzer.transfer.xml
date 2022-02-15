@@ -118,7 +118,6 @@
     </transfer>
 
     <transfer name="UnzerCharge">
-        <property name="unzerKeypair" type="UnzerKeypair"/>
         <property name="paymentId" type="string"/>
         <property name="authorizeId" type="string"/>
         <property name="amount" type="int"/>
@@ -214,6 +213,10 @@
         <property name="shipment" type="Shipment"/>
         <property name="calculatedExpensesCost" type="int"/>
         <property name="expenseId" type="string"/>
+    </transfer>
+
+    <transfer name="Expense">
+        <property name="unzerParticipantId" type="string"/>
     </transfer>
 
     <transfer name="PaymentUnzer">

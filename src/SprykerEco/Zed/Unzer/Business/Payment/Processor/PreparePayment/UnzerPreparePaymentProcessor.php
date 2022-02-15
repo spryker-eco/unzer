@@ -72,8 +72,14 @@ class UnzerPreparePaymentProcessor implements UnzerPreparePaymentProcessorInterf
      */
     protected function createUnzerBasket(QuoteTransfer $quoteTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer
     {
-        $quoteTransfer = $this->unzerExpensesDistributor->distributeExpensesBetweenQuoteItems($quoteTransfer);
         $unzerBasketTransfer = $this->unzerCheckoutMapper->mapQuoteTransferToUnzerBasketTransfer($quoteTransfer, new UnzerBasketTransfer());
+        if ($quoteTransfer->getExpenses()->count() > 0) {
+            $unzerBasketTransfer = $this->unzerExpensesDistributor->distributeExpensesBetweenQuoteItems($quoteTransfer, $unzerBasketTransfer);
+        }
+
+        if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
+            return $this->unzerBasketAdapter->createMarketplaceBasket($unzerBasketTransfer, $unzerKeypairTransfer);
+        }
 
         return $this->unzerBasketAdapter->createBasket($unzerBasketTransfer, $unzerKeypairTransfer);
     }

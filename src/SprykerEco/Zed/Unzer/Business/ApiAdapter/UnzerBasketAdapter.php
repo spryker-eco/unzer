@@ -9,6 +9,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiCreateBasketRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerBasketMapperInterface;
@@ -46,17 +47,53 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
      */
     public function createBasket(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer
     {
+        $unzerApiRequestTransfer = $this->prepareUnzerApiRequestTransfer($unzerBasketTransfer, $unzerKeypairTransfer);
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateBasketApiCall($unzerApiRequestTransfer);
+
+        return $this->parseUnzerApiResponseTransfer($unzerApiResponseTransfer, $unzerBasketTransfer);
+    }
+
+    /**
+     * @param UnzerBasketTransfer $unzerBasketTransfer
+     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     *
+     * @return UnzerBasketTransfer
+     */
+    public function createMarketplaceBasket(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer
+    {
+        $unzerApiRequestTransfer = $this->prepareUnzerApiRequestTransfer($unzerBasketTransfer, $unzerKeypairTransfer);
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateMarketplaceBasketApiCall($unzerApiRequestTransfer);
+
+        return $this->parseUnzerApiResponseTransfer($unzerApiResponseTransfer, $unzerBasketTransfer);
+    }
+
+    /**
+     * @param UnzerBasketTransfer $unzerBasketTransfer
+     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     *
+     * @return UnzerApiRequestTransfer
+     */
+    protected function prepareUnzerApiRequestTransfer(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerApiRequestTransfer
+    {
         $unzerApiCreateBasketRequestTransfer = $this->unzerBasketMapper
             ->mapUnzerBasketTransferToUnzerApiCreateBasketRequestTransfer(
                 $unzerBasketTransfer,
                 new UnzerApiCreateBasketRequestTransfer(),
             );
 
-        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+        return (new UnzerApiRequestTransfer())
             ->setCreateBasketRequest($unzerApiCreateBasketRequestTransfer)
             ->setUnzerKeypair($unzerKeypairTransfer);
+    }
 
-        $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateBasketApiCall($unzerApiRequestTransfer);
+    /**
+     * @param UnzerApiResponseTransfer $unzerApiResponseTransfer
+     * @param UnzerBasketTransfer $unzerBasketTransfer
+     *
+     * @return UnzerBasketTransfer
+     */
+    protected function parseUnzerApiResponseTransfer(UnzerApiResponseTransfer $unzerApiResponseTransfer, UnzerBasketTransfer $unzerBasketTransfer): UnzerBasketTransfer
+    {
         $this->assertSuccessResponse($unzerApiResponseTransfer);
         $createBasketResponseTransfer = $unzerApiResponseTransfer->getCreateBasketResponseOrFail();
 

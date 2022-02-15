@@ -170,7 +170,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerCheckoutMapper(
             $this->getConfig(),
-            $this->getUtilTextService(),
         );
     }
 
@@ -577,9 +576,10 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerMarketplaceCreditCardChargeProcessor(): UnzerChargeProcessorInterface
     {
         return new UnzerMarketplaceCreditCardChargeProcessor(
-            $this->createUnzerReader(),
             $this->createUnzerPaymentMapper(),
             $this->createUnzerChargeAdapter(),
+            $this->createUnzerCredentialsResolver(),
+            $this->getRepository(),
         );
     }
 

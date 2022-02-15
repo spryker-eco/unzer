@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 use Generated\Shared\Transfer\UnzerApiChargeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
+use Generated\Shared\Transfer\UnzerChargeTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
@@ -85,5 +86,21 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
             ->setBasket((new UnzerBasketTransfer())->setId($unzerApiChargeResponseTransfer->getBasketId()))
             ->setPaymentResource((new UnzerPaymentResourceTransfer())->setId($unzerApiChargeResponseTransfer->getTypeId()))
             ->setRedirectUrl($unzerApiChargeResponseTransfer->getRedirectUrl());
+    }
+
+    /**
+     * @param UnzerChargeTransfer $unzerChargeTransfer
+     * @param UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
+     *
+     * @return UnzerApiChargeRequestTransfer
+     */
+    public function mapUnzerChargeTransferToUnzerApiChargeRequestTransfer(
+        UnzerChargeTransfer $unzerChargeTransfer,
+        UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
+    ): UnzerApiChargeRequestTransfer
+    {
+        return $unzerApiChargeRequestTransfer
+            ->fromArray($unzerChargeTransfer->toArray(), true)
+            ->setAmount($unzerChargeTransfer->getAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER);
     }
 }
