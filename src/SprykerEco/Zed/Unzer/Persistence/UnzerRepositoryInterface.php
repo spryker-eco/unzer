@@ -86,9 +86,9 @@ interface UnzerRepositoryInterface
     ): UnzerCredentialsCollectionTransfer;
 
     /**
-     * @param PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
      *
-     * @return PaymentUnzerTransactionCollectionTransfer
+     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
      */
     public function findPaymentUnzerTransactionCollectionByCriteria(
         PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer

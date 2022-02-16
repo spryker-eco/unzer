@@ -10,7 +10,6 @@ namespace SprykerEcoTest\Zed\Unzer;
 use Codeception\Actor;
 use Codeception\Scenario;
 use Generated\Shared\DataBuilder\CheckoutResponseBuilder;
-use Generated\Shared\DataBuilder\PaymentMethodBuilder;
 use Generated\Shared\DataBuilder\PaymentMethodsBuilder;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\SaveOrderBuilder;

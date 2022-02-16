@@ -13,7 +13,6 @@ use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
@@ -38,12 +37,12 @@ class MarketplaceBankTransferProcessor implements UnzerPaymentProcessorInterface
     protected $unzerRefundProcessor;
 
     /**
-     * @var UnzerPreparePaymentProcessorInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
      */
     protected $unzerPreparePaymentProcessor;
 
     /**
-     * @var UnzerCheckoutMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
      */
     protected $unzerCheckoutMapper;
 
@@ -51,8 +50,8 @@ class MarketplaceBankTransferProcessor implements UnzerPaymentProcessorInterface
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface $unzerChargeAdapter
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
-     * @param UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
-     * @param UnzerCheckoutMapperInterface $unzerCheckoutMapper
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
+     * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
      */
     public function __construct(
         UnzerChargeAdapterInterface $unzerChargeAdapter,

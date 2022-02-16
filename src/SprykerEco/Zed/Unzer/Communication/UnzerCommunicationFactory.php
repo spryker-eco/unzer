@@ -7,15 +7,14 @@
 
 namespace SprykerEco\Zed\Unzer\Communication;
 
-use Spryker\Zed\Calculation\Business\CalculationFacadeInterface;
 use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
-use Spryker\Zed\Refund\Business\RefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\ChargeUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\RefundUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\UnzerOmsCommandInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapper;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
 
@@ -73,7 +72,7 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
     }
 
     /**
-     * @return UnzerToCalculationFacadeInterface
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface
      */
     public function getCalculationFacade(): UnzerToCalculationFacadeInterface
     {
@@ -81,11 +80,11 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
     }
 
     /**
-     * @return \Spryker\Zed\Refund\Business\RefundFacadeInterface
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface
      */
-    public function getRefundFacade(): RefundFacadeInterface
+    public function getRefundFacade(): UnzerToRefundFacadeInterface
     {
-        /** @var \Spryker\Zed\Refund\Business\RefundFacadeInterface $refundFacade */
+        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade */
         $refundFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_REFUND);
 
         return $refundFacade;

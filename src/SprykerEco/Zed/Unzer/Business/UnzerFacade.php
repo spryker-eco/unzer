@@ -249,8 +249,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
     public function filterIntersectionPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
-    ): PaymentMethodsTransfer
-    {
+    ): PaymentMethodsTransfer {
         return $this->getFactory()
             ->createUnzerIntersectionPaymentMethodFilter()
             ->filterPaymentMethods($paymentMethodsTransfer, $quoteTransfer);

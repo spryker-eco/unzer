@@ -7,15 +7,9 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
-use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\StoreTransfer;
-use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
-use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
-use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
@@ -37,7 +31,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected $unzerKeypairQuoteExpander;
 
     /**
-     * @var UnzerParticipantIdQuoteExpanderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Quote\UnzerParticipantIdQuoteExpanderInterface
      */
     protected $unzerParticipantIdQuoteExpander;
 
@@ -60,7 +54,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface $unzerKeypairQuoteExpander
-     * @param UnzerParticipantIdQuoteExpanderInterface $unzerParticipantIdQuoteExpander
+     * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerParticipantIdQuoteExpanderInterface $unzerParticipantIdQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      */
