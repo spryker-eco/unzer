@@ -9,9 +9,9 @@ namespace SprykerEco\Zed\Unzer\Communication\Oms\Command;
 
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
-use Spryker\Zed\Refund\Business\RefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 
 class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsCommandInterface
 {
@@ -21,7 +21,7 @@ class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
     protected $unzerFacade;
 
     /**
-     * @var \Spryker\Zed\Refund\Business\RefundFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface
      */
     protected $refundFacade;
 
@@ -32,12 +32,12 @@ class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface $unzerFacade
-     * @param \Spryker\Zed\Refund\Business\RefundFacadeInterface $refundFacade
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade
      * @param \SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface $unzerOmsMapper
      */
     public function __construct(
         UnzerFacadeInterface $unzerFacade,
-        RefundFacadeInterface $refundFacade,
+        UnzerToRefundFacadeInterface $refundFacade,
         UnzerOmsMapperInterface $unzerOmsMapper
     ) {
         $this->unzerFacade = $unzerFacade;
