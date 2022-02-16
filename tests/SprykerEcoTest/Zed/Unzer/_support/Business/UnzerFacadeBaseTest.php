@@ -9,13 +9,11 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use Codeception\TestCase\Test;
 use Generated\Shared\Transfer\LocaleTransfer;
-use Spryker\Client\Quote\QuoteClient;
 use Spryker\Service\UtilText\UtilTextService;
 use Spryker\Zed\Locale\Business\LocaleFacade;
 use Spryker\Zed\Vault\Business\VaultFacade;
 use SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
@@ -58,7 +56,6 @@ class UnzerFacadeBaseTest extends Test
                 'getEntityManager',
                 'getUnzerApiFacade',
                 'getVaultFacade',
-                'getQuoteClient',
                 'getLocaleFacade',
                 'getUtilTextService',
             ],
@@ -77,8 +74,6 @@ class UnzerFacadeBaseTest extends Test
             ->willReturn($this->getVaultFacade());
         $stub->method('getLocaleFacade')
             ->willReturn($this->getLocaleFacade());
-        $stub->method('getQuoteClient')
-            ->willReturn($this->getQuoteClient());
         $stub->method('getUtilTextService')
             ->willReturn($this->getUtilTextService());
 
@@ -141,14 +136,6 @@ class UnzerFacadeBaseTest extends Test
                 'retrieve' => UnzerZedTester::UNZER_PRIVATE_KEY,
             ],
         );
-    }
-
-    /**
-     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge
-     */
-    protected function getQuoteClient(): UnzerToQuoteClientBridge
-    {
-        return new UnzerToQuoteClientBridge($this->makeEmpty(QuoteClient::class));
     }
 
     /**

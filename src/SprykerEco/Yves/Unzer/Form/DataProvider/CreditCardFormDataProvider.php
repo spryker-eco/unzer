@@ -11,9 +11,9 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
-use SprykerEco\Yves\Unzer\Form\MarketplaceCreditCardSubForm;
+use SprykerEco\Yves\Unzer\Form\CreditCardSubForm;
 
-class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
+class CreditCardFormDataProvider extends AbstractFormDataProvider
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -23,7 +23,7 @@ class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
     public function getOptions(AbstractTransfer $quoteTransfer): array
     {
         return [
-            MarketplaceCreditCardSubForm::OPTION_PUBLIC_KEY => $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
+            CreditCardSubForm::OPTION_PUBLIC_KEY => $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
         ];
     }
 
@@ -36,9 +36,9 @@ class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
     {
         $quoteTransfer = $this->updateQuoteWithPaymentData($quoteTransfer);
         // TODO cleanup after FE implementation
-        $quoteTransfer->getPaymentOrFail()->setUnzerMarketplaceCreditCard(
+        $quoteTransfer->getPaymentOrFail()->setUnzerCreditCard(
             (new UnzerPaymentTransfer())->setPaymentResource(
-                (new UnzerPaymentResourceTransfer())->setId('s-crd-dcjcn4ing7a2'),
+                (new UnzerPaymentResourceTransfer())->setId('s-crd-6l77uorpsbju'),
             ),
         );
 

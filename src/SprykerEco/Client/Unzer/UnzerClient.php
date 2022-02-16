@@ -7,7 +7,9 @@
 
 namespace SprykerEco\Client\Unzer;
 
+use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Client\Kernel\AbstractClient;
 
 /**
@@ -27,5 +29,19 @@ class UnzerClient extends AbstractClient implements UnzerClientInterface
     public function processNotification(UnzerNotificationTransfer $unzerNotificationTransfer): UnzerNotificationTransfer
     {
         return $this->getFactory()->createZedStub()->processNotification($unzerNotificationTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     */
+    public function findUpdatedUnzerPaymentForOrderAction(OrderTransfer $orderTransfer): UnzerPaymentTransfer
+    {
+        return $this->getFactory()->createZedStub()->findUpdatedUnzerPaymentForOrderAction($orderTransfer);
     }
 }

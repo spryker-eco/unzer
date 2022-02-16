@@ -5,21 +5,16 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Yves\Unzer\Dependency;
+namespace SprykerEco\Zed\Unzer\Business\Checker;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 
-interface UnzerToQuoteClientInterface
+interface QuoteMerchantCheckerInterface
 {
-    /**
-     * @return \Generated\Shared\Transfer\QuoteTransfer
-     */
-    public function getQuote();
-
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return void
+     * @return bool
      */
-    public function setQuote(QuoteTransfer $quoteTransfer);
+    public function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool;
 }

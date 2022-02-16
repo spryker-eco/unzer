@@ -18,6 +18,7 @@ use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
@@ -36,12 +37,17 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
 
     /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @param \SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface $quoteMerchantChecker
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface $unzerPaymentMethodsAdapter
      */
-    public function __construct(UnzerConfig $unzerConfig, UnzerReaderInterface $unzerReader, UnzerPaymentMethodsAdapterInterface $unzerPaymentMethodsAdapter)
-    {
-        parent::__construct($unzerConfig);
+    public function __construct(
+        UnzerConfig $unzerConfig,
+        QuoteMerchantCheckerInterface $quoteMerchantChecker,
+        UnzerReaderInterface $unzerReader,
+        UnzerPaymentMethodsAdapterInterface $unzerPaymentMethodsAdapter
+    ) {
+        parent::__construct($unzerConfig, $quoteMerchantChecker);
 
         $this->unzerReader = $unzerReader;
         $this->unzerPaymentMethodsAdapter = $unzerPaymentMethodsAdapter;
@@ -57,7 +63,7 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        $filteredPaymentMethodTransfers = $this->hasMultipleMerchants($quoteTransfer)
+        $filteredPaymentMethodTransfers = $this->quoteMerchantChecker->hasMultipleMerchants($quoteTransfer)
             ? $this->getMarketplaceFilteredPaymentMethods($paymentMethodsTransfer, $quoteTransfer)
             : $this->getStandardFilteredPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
 

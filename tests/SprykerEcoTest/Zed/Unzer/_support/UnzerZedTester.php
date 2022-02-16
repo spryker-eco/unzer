@@ -10,7 +10,6 @@ namespace SprykerEcoTest\Zed\Unzer;
 use Codeception\Actor;
 use Codeception\Scenario;
 use Generated\Shared\DataBuilder\CheckoutResponseBuilder;
-use Generated\Shared\DataBuilder\PaymentMethodBuilder;
 use Generated\Shared\DataBuilder\PaymentMethodsBuilder;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\SaveOrderBuilder;
@@ -18,6 +17,7 @@ use Generated\Shared\DataBuilder\TotalsBuilder;
 use Generated\Shared\DataBuilder\UnzerCredentialsBuilder;
 use Generated\Shared\DataBuilder\UnzerPaymentBuilder;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
+use Generated\Shared\Transfer\CurrencyTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -41,6 +41,8 @@ use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
+use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
+use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStoreQuery;
 use Spryker\Shared\Vault\VaultConstants;
 use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants;
@@ -62,6 +64,7 @@ use SprykerEco\Zed\Unzer\UnzerConfig;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
  * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = NULL)
+ * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
  *
  * @SuppressWarnings(PHPMD)
  */
@@ -90,6 +93,11 @@ class UnzerZedTester extends Actor
     public const UNZER_REDIRECT_URL = 'https://spryker.com';
 
     /**
+     * @var string
+     */
+    public const MERCHANT_REFERENCE = 'merchant1';
+
+    /**
      * @var array<string>
      */
     public const UNZER_MARKETPLACE_PAYMENT_METHODS = [
@@ -104,9 +112,11 @@ class UnzerZedTester extends Actor
     protected const TOTALS_PRICE_TO_PAY = 72350;
 
     /**
+     * @uses \SprykerEco\Shared\Unzer\UnzerConfig::PAYMENT_PROVIDER_NAME
+     *
      * @var string
      */
-    protected const PAYMENT_PROVIDER = 'unzer';
+    protected const PAYMENT_PROVIDER = 'Unzer';
 
     /**
      * @var string
@@ -156,11 +166,6 @@ class UnzerZedTester extends Actor
     /**
      * @var string
      */
-    protected const MERCHANT_REFERENCE = 'merchant1';
-
-    /**
-     * @var string
-     */
     protected const UNZER_PUBLIC_KEY = 's-pub';
 
     /**
@@ -187,6 +192,11 @@ class UnzerZedTester extends Actor
      * @var string
      */
     protected const PAYMENT_METHOD = 'unzerMarketplaceBankTransfer';
+
+    /**
+     * @var string
+     */
+    protected const CURRENCY_CODE = 'EUR';
 
     /**
      * @param \Codeception\Scenario $scenario
@@ -257,7 +267,7 @@ class UnzerZedTester extends Actor
                 (new TotalsBuilder())
                 ->withTaxTotal(),
             )
-            ->withCurrency()
+            ->withCurrency([CurrencyTransfer::CODE => static::CURRENCY_CODE])
             ->withShippingAddress()
             ->withBillingAddress()
             ->build();
@@ -408,6 +418,15 @@ class UnzerZedTester extends Actor
         }
 
         return $paymentMethodsBuilder->build();
+    }
+
+    /**
+     * @return void
+     */
+    public function ensureUnzerCredentialsTableIsEmpty(): void
+    {
+        SpyUnzerCredentialsStoreQuery::create()->deleteAll();
+        SpyUnzerCredentialsQuery::create()->deleteAll();
     }
 
     /**

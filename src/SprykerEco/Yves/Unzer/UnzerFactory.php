@@ -10,7 +10,11 @@ namespace SprykerEco\Yves\Unzer;
 use Spryker\Yves\Kernel\AbstractFactory;
 use Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface;
 use Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface;
-use SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface;
+use SprykerEco\Client\Unzer\UnzerClientInterface;
+use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
+use SprykerEco\Yves\Unzer\Dependency\Service\UnzerToUtilEncodingServiceInterface;
+use SprykerEco\Yves\Unzer\Form\CreditCardSubForm;
+use SprykerEco\Yves\Unzer\Form\DataProvider\CreditCardFormDataProvider;
 use SprykerEco\Yves\Unzer\Form\DataProvider\MarketplaceBankTransferFormDataProvider;
 use SprykerEco\Yves\Unzer\Form\DataProvider\MarketplaceCreditCardFormDataProvider;
 use SprykerEco\Yves\Unzer\Form\MarketplaceBankTransferSubForm;
@@ -41,11 +45,13 @@ class UnzerFactory extends AbstractFactory
     }
 
     /**
-     * @return \SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface
+     * @return \Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface
      */
-    public function getQuoteClient(): UnzerToQuoteClientInterface
+    public function createCreditCardFormDataProvider(): StepEngineFormDataProviderInterface
     {
-        return $this->getProvidedDependency(UnzerDependencyProvider::CLIENT_QUOTE);
+        return new CreditCardFormDataProvider(
+            $this->getQuoteClient(),
+        );
     }
 
     /**
@@ -65,10 +71,42 @@ class UnzerFactory extends AbstractFactory
     }
 
     /**
+     * @return \Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface
+     */
+    public function createCreditCardSubForm(): SubFormInterface
+    {
+        return new CreditCardSubForm();
+    }
+
+    /**
      * @return \SprykerEco\Yves\Unzer\Handler\UnzerHandlerInterface
      */
     public function createUnzerHandler(): UnzerHandlerInterface
     {
         return new UnzerHandler();
+    }
+
+    /**
+     * @return \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface
+     */
+    public function getQuoteClient(): UnzerToQuoteClientInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::CLIENT_QUOTE);
+    }
+
+    /**
+     * @return \SprykerEco\Client\Unzer\UnzerClientInterface
+     */
+    public function getUnzerClient(): UnzerClientInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::CLIENT_UNZER);
+    }
+
+    /**
+     * @return \SprykerEco\Yves\Unzer\Dependency\Service\UnzerToUtilEncodingServiceInterface
+     */
+    public function getUtilEncodingService(): UnzerToUtilEncodingServiceInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::SERVICE_UTIL_ENCODING);
     }
 }

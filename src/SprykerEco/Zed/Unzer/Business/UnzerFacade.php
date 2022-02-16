@@ -17,6 +17,7 @@ use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -249,8 +250,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
     public function filterIntersectionPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
-    ): PaymentMethodsTransfer
-    {
+    ): PaymentMethodsTransfer {
         return $this->getFactory()
             ->createUnzerIntersectionPaymentMethodFilter()
             ->filterPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
@@ -310,5 +310,37 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
     public function performPaymentMethodsImport(UnzerKeypairTransfer $unzerKeypairTransfer): void
     {
         $this->getFactory()->createUnzerPaymentMethodsImporter()->performPaymentMethodsImport($unzerKeypairTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\QuoteTransfer
+     */
+    public function expandQuoteWithUnzerCredentials(QuoteTransfer $quoteTransfer): QuoteTransfer
+    {
+        return $this->getFactory()
+            ->createUnzerQuoteExpander()
+            ->expandQuoteWithUnzerCredentials($quoteTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
+     */
+    public function findUpdatedUnzerPaymentForOrder(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer
+    {
+        return $this->getFactory()
+            ->createUnzerNotificationProcessor()
+            ->findUpdatedUnzerPaymentForOrder($orderTransfer);
     }
 }

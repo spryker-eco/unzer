@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Notification\Processor;
 
+use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
@@ -116,6 +117,36 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
         $unzerNotificationTransfer->setIsProcessed(true);
 
         return $unzerNotificationTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
+     */
+    public function findUpdatedUnzerPaymentForOrder(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer
+    {
+        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReferenceOrFail());
+        if (!$paymentUnzerTransfer->getKeypairId()) {
+            return null;
+        }
+
+        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())->addKeypairId($paymentUnzerTransfer->getKeypairIdOrFail());
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
+
+        $unzerCredentialsCollectionTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+        if (!$unzerCredentialsCollectionTransfer) {
+            return null;
+        }
+
+        $unzerPaymentTransfer = $this->unzerPaymentMapper->mapPaymentUnzerTransferToUnzerPaymentTransfer(
+            $paymentUnzerTransfer,
+            new UnzerPaymentTransfer(),
+        );
+
+        $unzerPaymentTransfer = $this->setUnzerKeypair($unzerPaymentTransfer, $paymentUnzerTransfer->getKeypairIdOrFail());
+
+        return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
     }
 
     /**

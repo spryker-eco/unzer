@@ -1,18 +1,15 @@
 <?php
 
 /**
- * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
- * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
 namespace SprykerEco\Yves\Unzer\Form;
 
-use Generated\Shared\Transfer\PaymentTransfer;
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MarketplaceCreditCardSubForm extends AbstractUnzerSubForm
+class MarketplaceCreditCardSubForm extends CreditCardSubForm
 {
     /**
      * @var string
@@ -32,7 +29,7 @@ class MarketplaceCreditCardSubForm extends AbstractUnzerSubForm
      */
     public function getPropertyPath(): string
     {
-        return PaymentTransfer::UNZER_MARKETPLACE_CREDIT_CARD;
+        return 'unzerMarketplaceCreditCard';
     }
 
     /**
@@ -40,18 +37,6 @@ class MarketplaceCreditCardSubForm extends AbstractUnzerSubForm
      */
     public function getName(): string
     {
-        return PaymentTransfer::UNZER_MARKETPLACE_CREDIT_CARD;
-    }
-
-    /**
-     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
-     *
-     * @return void
-     */
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => UnzerPaymentTransfer::class,
-        ])->setRequired(static::OPTIONS_FIELD_NAME);
+        return 'unzerMarketplaceCreditCard';
     }
 }

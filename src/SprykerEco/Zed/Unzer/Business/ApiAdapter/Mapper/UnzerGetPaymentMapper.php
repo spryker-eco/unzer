@@ -39,11 +39,18 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
-        return $unzerPaymentTransfer
-            ->fromArray($unzerApiGetPaymentResponseTransfer->toArray(), true)
-            ->setTransactions(
-                $this->mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers($unzerApiGetPaymentResponseTransfer),
-            );
+        // do not change to fromArray-toArray because Unzer send some already known fields as empty!
+        $unzerPaymentTransfer = $unzerPaymentTransfer
+            ->setStateId($unzerApiGetPaymentResponseTransfer->getStateId())
+            ->setStateName($unzerApiGetPaymentResponseTransfer->getStateName())
+            ->setAmountTotal($unzerApiGetPaymentResponseTransfer->getAmountTotal())
+            ->setAmountCharged($unzerApiGetPaymentResponseTransfer->getAmountCharged())
+            ->setAmountCanceled($unzerApiGetPaymentResponseTransfer->getAmountCanceled())
+            ->setAmountRemaining($unzerApiGetPaymentResponseTransfer->getAmountRemaining());
+
+        $unzerPaymentTransactions = $this->mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers($unzerApiGetPaymentResponseTransfer);
+
+        return $unzerPaymentTransfer->setTransactions($unzerPaymentTransactions);
     }
 
     /**

@@ -8,8 +8,8 @@
 namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
 use Generated\Shared\Transfer\PaymentMethodTransfer;
-use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
+use SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
 abstract class AbstractUnzerPaymentMethodFilter
@@ -25,37 +25,18 @@ abstract class AbstractUnzerPaymentMethodFilter
     protected $unzerConfig;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @var \SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface
      */
-    public function __construct(UnzerConfig $unzerConfig)
-    {
-        $this->unzerConfig = $unzerConfig;
-    }
+    protected $quoteMerchantChecker;
 
     /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return bool
+     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @param \SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface $quoteMerchantChecker
      */
-    protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
+    public function __construct(UnzerConfig $unzerConfig, QuoteMerchantCheckerInterface $quoteMerchantChecker)
     {
-        $merchantReferences = [];
-
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $merchantReference = $itemTransfer->getMerchantReference();
-
-            if ($merchantReference === null) {
-                $merchantReferences[] = static::MAIN_SELLER_REFERENCE;
-
-                continue;
-            }
-
-            if (!in_array($merchantReference, $merchantReferences, true)) {
-                $merchantReferences[] = $merchantReference;
-            }
-        }
-
-        return count($merchantReferences) > 1;
+        $this->unzerConfig = $unzerConfig;
+        $this->quoteMerchantChecker = $quoteMerchantChecker;
     }
 
     /**

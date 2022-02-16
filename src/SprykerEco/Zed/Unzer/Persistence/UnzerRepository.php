@@ -57,7 +57,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         $paymentUnzerOrderItemEntities = $this->getFactory()
             ->createPaymentUnzerOrderItemQuery()
             ->usePaymentUnzerQuery()
-            ->filterByOrderId($orderId)
+                ->filterByOrderId($orderId)
             ->endUse()
             ->find();
 
@@ -149,6 +149,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
+     * @module Customer
+     *
      * @param int $idCustomer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null

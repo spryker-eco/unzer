@@ -12,7 +12,6 @@ use Spryker\Zed\Kernel\Container;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeBridge;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
@@ -43,11 +42,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
      * @var string
      */
     public const FACADE_REFUND = 'FACADE_REFUND';
-
-    /**
-     * @var string
-     */
-    public const CLIENT_QUOTE = 'CLIENT_QUOTE';
 
     /**
      * @var string
@@ -94,7 +88,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = parent::provideBusinessLayerDependencies($container);
 
         $container = $this->addUnzerApiFacade($container);
-        $container = $this->addQuoteClient($container);
         $container = $this->addRefundFacade($container);
         $container = $this->addPaymentFacade($container);
         $container = $this->addLocaleFacade($container);
@@ -113,20 +106,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_UNZER_API, function (Container $container) {
             return new UnzerToUnzerApiFacadeBridge($container->getLocator()->unzerApi()->facade());
-        });
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addQuoteClient(Container $container): Container
-    {
-        $container->set(static::CLIENT_QUOTE, function (Container $container) {
-            return new UnzerToQuoteClientBridge($container->getLocator()->quote()->client());
         });
 
         return $container;

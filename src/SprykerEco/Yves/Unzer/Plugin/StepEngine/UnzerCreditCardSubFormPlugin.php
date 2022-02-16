@@ -15,11 +15,11 @@ use Spryker\Yves\StepEngine\Dependency\Plugin\Form\SubFormPluginInterface;
 /**
  * @method \SprykerEco\Yves\Unzer\UnzerFactory getFactory()
  */
-class UnzerMarketplaceCreditCardSubFormPlugin extends AbstractPlugin implements SubFormPluginInterface
+class UnzerCreditCardSubFormPlugin extends AbstractPlugin implements SubFormPluginInterface
 {
     /**
      * {@inheritDoc}
-     * - Creates `MarketplaceCreditCard` subform.
+     * - Creates `CreditCard` subform.
      *
      * @api
      *
@@ -27,12 +27,12 @@ class UnzerMarketplaceCreditCardSubFormPlugin extends AbstractPlugin implements 
      */
     public function createSubForm(): SubFormInterface
     {
-        return $this->getFactory()->createMarketplaceCreditCardSubForm();
+        return $this->getFactory()->createCreditCardSubForm();
     }
 
     /**
      * {@inheritDoc}
-     * - Creates `MarketplaceCreditCard` subform data provider.
+     * - Creates `CreditCard` subform data provider.
      *
      * @api
      *
@@ -40,6 +40,6 @@ class UnzerMarketplaceCreditCardSubFormPlugin extends AbstractPlugin implements 
      */
     public function createSubFormDataProvider(): StepEngineFormDataProviderInterface
     {
-        return $this->getFactory()->createMarketplaceCreditCardFormDataProvider();
+        return $this->getFactory()->createCreditCardFormDataProvider();
     }
 }

@@ -17,6 +17,7 @@ use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
 interface UnzerFacadeInterface
 {
@@ -300,4 +301,34 @@ interface UnzerFacadeInterface
      * @return void
      */
     public function performPaymentMethodsImport(UnzerKeypairTransfer $unzerKeypairTransfer): void;
+
+    /**
+     * Specification:
+     * - Requires `Quote.store`, `Quote.store.name` transfer propertis to be set.
+     * - Expands `QuoteTransfer` with `UnzerCredentialsTransfer` according to added items.
+     * - Does nothing if quote doesn't have items.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\QuoteTransfer
+     */
+    public function expandQuoteWithUnzerCredentials(QuoteTransfer $quoteTransfer): QuoteTransfer;
+
+    /**
+     * Specification:
+     * - Requires `OrderTransfer.orderReference` transfer property to be set.
+     * - Gets Unzer payment data from database by `OrderTransfer.orderReference`.
+     * - Performs Unzer Get payment resource API call.
+     * - Returns `UnzerPaymentTransfer` with updated state data.
+     * - Returns `null` if unzer payment for provided order is not found.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
+     */
+    public function findUpdatedUnzerPaymentForOrder(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer;
 }
