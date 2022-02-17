@@ -39,7 +39,7 @@ class CallbackController extends AbstractController
      *
      * @var string
      */
-    public const ROUTE_NAME_CHECKOUT_SUCCESS = 'checkout-success';
+    protected const ROUTE_NAME_CHECKOUT_SUCCESS = 'checkout-success';
 
     /**
      * @return \Symfony\Component\HttpFoundation\RedirectResponse

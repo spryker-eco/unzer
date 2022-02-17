@@ -1,58 +1,159 @@
 name: CI
 
+env:
+  APPLICATION_ENV: 'development'
+  APPLICATION_STORE: 'DE'
+  PROJECT: 'Unzer'
+  DATABASE_VERSION: 10.2
+  DATABASE_HOST: 127.0.0.1
+  DATABASE_PORT: 3306
+  DATABASE_NAME: eu-docker
+  DATABASE_USERNAME: root
+  DATABASE_PASSWORD: secret
+  DATABASE_ROOT_PASSWORD: secret
+  DATABASE_ALLOW_EMPTY_PASSWORD: false
+  DATABASE_CHARACTER_SET: utf8
+  DATABASE_COLLATE: utf8_general_ci
+  MYSQL_ALLOW_EMPTY_PASSWORD: false
+  MYSQL_ROOT_PASSWORD: secret
+  MYSQL_DATABASE: eu-docker
+
 on:
-    push:
-        branches:
-            - 'master'
-    pull_request:
-    workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
 
 jobs:
-    validation:
-        name: Validation
-        runs-on: ubuntu-20.04
+  setup:
+    name: Setup MariaDB
+    runs-on: ubuntu-18.04
 
-        steps:
-            - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
+      - uses: getong/mariadb-action@v1.1
+        with:
+          host port: ${{ env.DATABASE_PORT }}
+          container port: ${{ env.DATABASE_PORT }}
+          character set server: ${{ env.DATABASE_CHARACTER_SET }}
+          collation server: ${{ env.DATABASE_COLLATE }}
+          mariadb version: ${{ env.DATABASE_VERSION }}
+          mysql database: ${{ env.DATABASE_NAME }}
+          mysql root password: ${{ env.DATABASE_ROOT_PASSWORD }}
+          mysql user: ${{ env.DATABASE_USERNAME }}
+          mysql password: ${{ env.DATABASE_PASSWORD }}
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '7.4'
-                  extensions: mbstring, intl, bcmath
-                  coverage: none
+  ci:
+    name: Unzer
+    needs: setup
+    runs-on: ubuntu-18.04
 
-            - name: Composer Install
-              run: composer install --prefer-dist --no-interaction --profile
+    services:
+      mariadb:
+        image: mariadb:10.2
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_DATABASE: eu-docker
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-            - name: Run validation
-              run: composer validate
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions:
+          - '7.4'
+          - '8.1'
 
-            - name: Syntax check
-              run: find ./src -path src -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+    steps:
+      - name: Checkout@v2
+        uses: actions/checkout@v2
 
-    lowest:
-        name: Prefer Lowest
-        runs-on: ubuntu-20.04
+      - name: Setup PHP ${{ matrix.php-versions }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, intl, bcmath, pdo_mysql
 
-        steps:
-            - uses: actions/checkout@v2
+      - name: Configure sysctl limits
+        run: |
+          sudo swapoff -a
+          sudo sysctl -w vm.swappiness=1
+          sudo sysctl -w fs.file-max=262144
+          sudo sysctl -w vm.max_map_count=262144
+      - name: Composer get cache directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Composer cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '7.4'
-                  extensions: mbstring, intl, bcmath
-                  coverage: none
+      - name: Composer validate
+        run: composer validate
 
-            - name: Composer Install
-              run: composer install --prefer-dist --no-interaction --profile
+      - name: Composer version
+        run: composer --version
 
-            - name: Composer Update
-              run: composer update --prefer-lowest --prefer-dist --no-interaction --profile -vvv
+      - name: Composer install
+        run: composer install --prefer-dist --no-interaction --optimize-autoloader
 
-            - name: Composer Install prefer lowest tool
-              run: composer require --dev dereuromark/composer-prefer-lowest;
+      - name: PHP syntax validation
+        run: find ./src -path src -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
 
-            - name: Run validation
-              run: vendor/bin/validate-prefer-lowest -m
+      - name: Run codeception tests
+        run: composer test
+
+      - name: Run PHPStan checks
+        run: composer stan
+
+      - name: Check codestyle checks
+        run: composer cs-check
+
+  prefer-lowest:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [
+          '7.4'
+        ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, pdo_mysql
+
+      - name: Composer prefer lowest
+        run: composer lowest-setup
+
+      - name: Run PHPStan (currently not running properly)
+        run: composer stan || true
+
+      - name: Validate prefer lowest
+        run: vendor/bin/validate-prefer-lowest -m

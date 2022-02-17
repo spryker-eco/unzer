@@ -14,7 +14,6 @@ use Generated\Shared\Transfer\StoreTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
 
-
 class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -63,9 +62,11 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     }
 
     /**
+     * @group test
+     *
      * @return void
      */
-    public function testWillExpandQuoteWithUnzerCredentialForMerchantSeller(): void
+    public function testWillExpandQuoteWithUnzerCredentialForQuoteWithDifferentSellers(): void
     {
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
@@ -82,5 +83,28 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
         // Assert
         $this->assertNotNull($quoteTransfer->getUnzerCredentials());
         $this->assertSame(UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE, $quoteTransfer->getUnzerCredentials()->getType());
+    }
+
+    /**
+     * @return void
+     */
+    public function testWillExpandQuoteWithUnzerCredentialForQuoteMerchantSellers(): void
+    {
+        // Arrange
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $storeTransfer = $this->tester->haveStore([StoreTransfer::NAME => static::STORE_NAME]);
+        $this->tester->haveMarketplaceUnzerCredentials($storeTransfer);
+        $quoteTransfer = (new QuoteTransfer())
+            ->setStore($storeTransfer)
+            ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE]))->build())
+            ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE]))->build());
+
+        // Act
+        $quoteTransfer = $this->facade->expandQuoteWithUnzerCredentials($quoteTransfer);
+
+        // Assert
+        $this->assertNotNull($quoteTransfer->getUnzerCredentials());
+        $this->assertSame(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT, $quoteTransfer->getUnzerCredentials()->getType());
+        $this->assertSame(UnzerZedTester::MERCHANT_REFERENCE, $quoteTransfer->getUnzerCredentials()->getMerchantReference());
     }
 }

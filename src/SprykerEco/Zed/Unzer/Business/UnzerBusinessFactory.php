@@ -47,8 +47,6 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantChecker;
-use SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutPostSaveMapper;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
@@ -144,7 +142,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerKeypairQuoteExpander(),
             $this->getConfig(),
             $this->createUnzerReader(),
-            $this->createQuoteMerchantChecker(),
         );
     }
 
@@ -457,7 +454,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createMarketplacePaymentMethodFilter(): UnzerPaymentMethodFilterInterface
     {
-        return new UnzerMarketplacePaymentMethodFilter($this->getConfig(), $this->createQuoteMerchantChecker());
+        return new UnzerMarketplacePaymentMethodFilter($this->getConfig());
     }
 
     /**
@@ -746,7 +743,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerIntersectionPaymentMethodFilter(
             $this->getConfig(),
-            $this->createQuoteMerchantChecker(),
             $this->createUnzerReader(),
             $this->createUnzerPaymentMethodsAdapter(),
         );
@@ -769,14 +765,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->getUnzerApiFacade(),
             $this->createUnzerGetPaymentMethodsMapper(),
         );
-    }
-
-    /**
-     * @return \SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface
-     */
-    public function createQuoteMerchantChecker(): QuoteMerchantCheckerInterface
-    {
-        return new QuoteMerchantChecker();
     }
 
     /**
@@ -808,10 +796,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function getRefundFacade(): UnzerToRefundFacadeInterface
     {
-        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade */
-        $refundFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_REFUND);
-
-        return $refundFacade;
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_REFUND);
     }
 
     /**

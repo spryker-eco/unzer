@@ -324,7 +324,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
     public function expandQuoteWithUnzerCredentials(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
         return $this->getFactory()
-            ->createUnzerQuoteExpander()
+            ->createUnzerKeypairQuoteExpander()
             ->expandQuoteWithUnzerCredentials($quoteTransfer);
     }
 

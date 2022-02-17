@@ -20,9 +20,9 @@ class UnzerCredentialsCartOperationPostSavePlugin extends AbstractPlugin impleme
 {
     /**
      * {@inheritDoc}
-     * - Requires `Quote.store`, `Quote.store.name` propertis to be set.
+     * - Requires `Quote.store`, `Quote.store.name` properties to be set.
      * - Expands `QuoteTransfer` with `UnzerCredentialsTransfer` according to added items.
-     * - Does nothing if quote doesn't have items.
+     * - Does nothing if quote has no items.
      *
      * @api
      *

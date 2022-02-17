@@ -1,14 +1,16 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use Generated\Shared\Transfer\OrderTransfer;
 use Spryker\Shared\Kernel\Transfer\Exception\NullValueException;
 use SprykerEco\Zed\Unzer\Communication\Plugin\Checkout\UnzerCheckoutDoSaveOrderPlugin;
 
-/**
- * @group test
- */
 class FindUpdatedUnzerPaymentForOrderFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -46,7 +48,7 @@ class FindUpdatedUnzerPaymentForOrderFacadeTest extends UnzerFacadeBaseTest
             static::STATE_MACHINE_PROCESS_NAME,
             [
                 new UnzerCheckoutDoSaveOrderPlugin(),
-            ]
+            ],
         );
         $orderTransfer = (new OrderTransfer())->setOrderReference($saveOrderTransfer->getOrderReference());
 

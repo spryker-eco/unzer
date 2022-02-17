@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Yves\Unzer\Form;
 
+use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface;
 use SprykerEco\Shared\Unzer\UnzerConfig;
@@ -40,17 +41,9 @@ class CreditCardSubForm extends AbstractUnzerSubForm
     /**
      * @return string
      */
-    protected function getTemplatePath(): string
-    {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::PAYMENT_METHOD_NAME;
-    }
-
-    /**
-     * @return string
-     */
     public function getPropertyPath(): string
     {
-        return 'unzerCreditCard';
+        return PaymentTransfer::UNZER_CREDIT_CARD;
     }
 
     /**
@@ -58,7 +51,7 @@ class CreditCardSubForm extends AbstractUnzerSubForm
      */
     public function getName(): string
     {
-        return 'unzerCreditCard';
+        return PaymentTransfer::UNZER_CREDIT_CARD;
     }
 
     /**
@@ -118,5 +111,13 @@ class CreditCardSubForm extends AbstractUnzerSubForm
         ]);
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTemplatePath(): string
+    {
+        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::PAYMENT_METHOD_NAME;
     }
 }

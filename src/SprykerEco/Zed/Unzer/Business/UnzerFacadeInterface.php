@@ -304,9 +304,9 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `Quote.store`, `Quote.store.name` transfer propertis to be set.
+     * - Requires `Quote.store`, `Quote.store.name` transfer properties to be set.
      * - Expands `QuoteTransfer` with `UnzerCredentialsTransfer` according to added items.
-     * - Does nothing if quote doesn't have items.
+     * - Does nothing if quote has no items.
      *
      * @api
      *
@@ -322,7 +322,7 @@ interface UnzerFacadeInterface
      * - Gets Unzer payment data from database by `OrderTransfer.orderReference`.
      * - Performs Unzer Get payment resource API call.
      * - Returns `UnzerPaymentTransfer` with updated state data.
-     * - Returns `null` if unzer payment for provided order is not found.
+     * - Returns `null` if Unzer payment for provided order is not found.
      *
      * @api
      *

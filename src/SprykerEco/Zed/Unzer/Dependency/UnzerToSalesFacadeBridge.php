@@ -7,6 +7,8 @@
 
 namespace SprykerEco\Zed\Unzer\Dependency;
 
+use Generated\Shared\Transfer\OrderTransfer;
+
 class UnzerToSalesFacadeBridge implements UnzerToSalesFacadeInterface
 {
     /**
@@ -27,7 +29,7 @@ class UnzerToSalesFacadeBridge implements UnzerToSalesFacadeInterface
      *
      * @return \Generated\Shared\Transfer\OrderTransfer
      */
-    public function getOrderByIdSalesOrder($idSalesOrder)
+    public function getOrderByIdSalesOrder($idSalesOrder): OrderTransfer
     {
         return $this->salesFacade->getOrderByIdSalesOrder($idSalesOrder);
     }

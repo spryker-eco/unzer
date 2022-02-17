@@ -27,7 +27,7 @@ class UnzerToQuoteClientBridge implements UnzerToQuoteClientInterface
     /**
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
-    public function getQuote()
+    public function getQuote(): QuoteTransfer
     {
         return $this->quoteClient->getQuote();
     }
@@ -37,7 +37,7 @@ class UnzerToQuoteClientBridge implements UnzerToQuoteClientInterface
      *
      * @return void
      */
-    public function setQuote(QuoteTransfer $quoteTransfer)
+    public function setQuote(QuoteTransfer $quoteTransfer): void
     {
         $this->quoteClient->setQuote($quoteTransfer);
     }

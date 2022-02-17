@@ -15,7 +15,6 @@ use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
@@ -47,32 +46,24 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected $unzerReader;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface
-     */
-    protected $quoteMerchantChecker;
-
-    /**
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface $unzerKeypairQuoteExpander
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
-     * @param \SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface $quoteMerchantChecker
      */
     public function __construct(
         UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander,
         UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander,
         UnzerKeypairQuoteExpanderInterface $unzerKeypairQuoteExpander,
         UnzerConfig $unzerConfig,
-        UnzerReaderInterface $unzerReader,
-        QuoteMerchantCheckerInterface $quoteMerchantChecker
+        UnzerReaderInterface $unzerReader
     ) {
         $this->unzerCustomerQuoteExpander = $unzerCustomerQuoteExpander;
         $this->unzerMetadataQuoteExpander = $unzerMetadataQuoteExpander;
         $this->unzerKeypairQuoteExpander = $unzerKeypairQuoteExpander;
         $this->unzerConfig = $unzerConfig;
         $this->unzerReader = $unzerReader;
-        $this->quoteMerchantChecker = $quoteMerchantChecker;
     }
 
     /**
@@ -96,31 +87,6 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
         }
 
         return $quoteTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return \Generated\Shared\Transfer\QuoteTransfer
-     */
-    public function expandQuoteWithUnzerCredentials(QuoteTransfer $quoteTransfer): QuoteTransfer
-    {
-        if ($quoteTransfer->getItems()->count() === 0) {
-            return $quoteTransfer;
-        }
-
-        $credentialsType = $this->quoteMerchantChecker->hasMultipleMerchants($quoteTransfer)
-            ? UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE
-            : UnzerConstants::UNZER_CONFIG_TYPE_STANDARD;
-        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
-            ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
-            ->addType($credentialsType);
-        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
-            ->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
-
-        $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
-
-        return $quoteTransfer->setUnzerCredentials($unzerCredentialsTransfer);
     }
 
     /**

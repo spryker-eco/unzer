@@ -8,8 +8,8 @@
 namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
 use Generated\Shared\Transfer\PaymentMethodTransfer;
+use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
-use SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
 abstract class AbstractUnzerPaymentMethodFilter
@@ -25,18 +25,11 @@ abstract class AbstractUnzerPaymentMethodFilter
     protected $unzerConfig;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface
-     */
-    protected $quoteMerchantChecker;
-
-    /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
-     * @param \SprykerEco\Zed\Unzer\Business\Checker\QuoteMerchantCheckerInterface $quoteMerchantChecker
      */
-    public function __construct(UnzerConfig $unzerConfig, QuoteMerchantCheckerInterface $quoteMerchantChecker)
+    public function __construct(UnzerConfig $unzerConfig)
     {
         $this->unzerConfig = $unzerConfig;
-        $this->quoteMerchantChecker = $quoteMerchantChecker;
     }
 
     /**
@@ -57,5 +50,31 @@ abstract class AbstractUnzerPaymentMethodFilter
     protected function isMarketplaceUnzerPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
         return $this->isUnzerPaymentProvider($paymentMethodTransfer) && strpos($paymentMethodTransfer->getPaymentMethodKeyOrFail(), SharedUnzerConfig::PLATFORM_MARKETPLACE) !== false;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return bool
+     */
+    protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
+    {
+        $merchantReferences = [];
+
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            $merchantReference = $itemTransfer->getMerchantReference();
+
+            if (!$merchantReference && !in_array(static::MAIN_SELLER_REFERENCE, $merchantReferences, true)) {
+                $merchantReferences[] = static::MAIN_SELLER_REFERENCE;
+
+                continue;
+            }
+
+            if ($merchantReference && !in_array($merchantReference, $merchantReferences, true)) {
+                $merchantReferences[] = $merchantReference;
+            }
+        }
+
+        return count($merchantReferences) > 1;
     }
 }
