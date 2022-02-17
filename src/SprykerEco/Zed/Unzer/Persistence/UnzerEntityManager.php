@@ -110,36 +110,6 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
-     */
-    protected function getMapper(): UnzerPersistenceMapper
-    {
-        return $this->getFactory()->createUnzerPersistenceMapper();
-    }
-
-    /**
-     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
-     *
-     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant
-     */
-    protected function saveOrDeleteMerchantUnzerParticipantEntity(SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity): SpyMerchantUnzerParticipant
-    {
-        if ($merchantUnzerParticipantEntity->getParticipantId()) {
-            $merchantUnzerParticipantEntity->save();
-
-            return $merchantUnzerParticipantEntity;
-        }
-
-        if ($merchantUnzerParticipantEntity->getIdMerchantUnzerParticipant()) {
-            $merchantUnzerParticipantEntity->delete();
-
-            return $merchantUnzerParticipantEntity;
-        }
-
-        return $merchantUnzerParticipantEntity;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
@@ -210,5 +180,13 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
         $unzerCredentialsEntity->save();
 
         return $this->getMapper()->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, $unzerCredentialsTransfer);
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
+     */
+    protected function getMapper(): UnzerPersistenceMapper
+    {
+        return $this->getFactory()->createUnzerPersistenceMapper();
     }
 }

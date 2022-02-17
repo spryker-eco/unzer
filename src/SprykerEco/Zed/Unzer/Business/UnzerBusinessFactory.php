@@ -580,6 +580,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerChargeAdapter(),
             $this->createUnzerCredentialsResolver(),
             $this->getRepository(),
+            $this->getEntityManager()
         );
     }
 
