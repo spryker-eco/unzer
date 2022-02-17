@@ -33,9 +33,9 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      */
     public function __construct(
-        UnzerConfig                     $unzerConfig
-    )
-    {
+        UnzerConfig $unzerConfig,
+        UnzerToUtilTextServiceInterface $utilTextService
+    ) {
         $this->unzerConfig = $unzerConfig;
     }
 
@@ -46,10 +46,9 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
     public function mapQuoteTransferToUnzerBasketTransfer(
-        QuoteTransfer       $quoteTransfer,
+        QuoteTransfer $quoteTransfer,
         UnzerBasketTransfer $unzerBasketTransfer
-    ): UnzerBasketTransfer
-    {
+    ): UnzerBasketTransfer {
         return $unzerBasketTransfer
             ->setAmountTotalGross($quoteTransfer->getTotalsOrFail()->getGrandTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountTotalVat($quoteTransfer->getTotalsOrFail()->getTaxTotalOrFail()->getAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
@@ -66,10 +65,9 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
      * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
      */
     public function mapQuoteTransferToUnzerPaymentResourceTransfer(
-        QuoteTransfer                $quoteTransfer,
+        QuoteTransfer $quoteTransfer,
         UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
-    ): UnzerPaymentResourceTransfer
-    {
+    ): UnzerPaymentResourceTransfer {
         return $unzerPaymentResourceTransfer->setType(
             $this->unzerConfig
                 ->getUnzerPaymentMethodKey(
@@ -111,10 +109,9 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
      * @return \Generated\Shared\Transfer\UnzerBasketItemTransfer
      */
     protected function mapQuoteItemTransferToUnzerBasketItemTransfer(
-        ItemTransfer            $itemTransfer,
+        ItemTransfer $itemTransfer,
         UnzerBasketItemTransfer $unzerBasketItemTransfer
-    ): UnzerBasketItemTransfer
-    {
+    ): UnzerBasketItemTransfer {
         return $unzerBasketItemTransfer
             ->setBasketItemReferenceId($itemTransfer->getGroupKey())
             ->setQuantity($itemTransfer->getQuantity())

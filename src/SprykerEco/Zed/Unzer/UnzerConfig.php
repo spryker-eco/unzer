@@ -14,6 +14,7 @@ use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
 class UnzerConfig extends AbstractBundleConfig
 {
+
     /**
      * @var array<int, string>
      */

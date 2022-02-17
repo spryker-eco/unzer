@@ -13,7 +13,6 @@ use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
@@ -43,12 +42,12 @@ class MarketplaceCreditCardProcessor implements UnzerChargeablePaymentProcessorI
     protected $unzerRefundProcessor;
 
     /**
-     * @var UnzerPreparePaymentProcessorInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
      */
     protected $unzerPreparePaymentProcessor;
 
     /**
-     * @var UnzerCheckoutMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
      */
     protected $unzerCheckoutMapper;
 
@@ -57,8 +56,8 @@ class MarketplaceCreditCardProcessor implements UnzerChargeablePaymentProcessorI
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface $unzerChargeProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
-     * @param UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
-     * @param UnzerCheckoutMapperInterface $unzerCheckoutMapper
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
+     * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
      */
     public function __construct(
         UnzerAuthorizeAdapterInterface $unzerAuthorizeAdapter,

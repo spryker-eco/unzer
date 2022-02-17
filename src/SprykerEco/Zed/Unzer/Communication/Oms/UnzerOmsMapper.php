@@ -20,13 +20,13 @@ class UnzerOmsMapper implements UnzerOmsMapperInterface
     protected $salesFacade;
 
     /**
-     * @var UnzerToCalculationFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface
      */
     protected $calculationFacade;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface $salesFacade
-     * @param UnzerToCalculationFacadeInterface $calculationFacade
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface $calculationFacade
      */
     public function __construct(
         UnzerToSalesFacadeInterface $salesFacade,

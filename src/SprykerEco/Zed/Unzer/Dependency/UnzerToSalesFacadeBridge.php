@@ -36,9 +36,9 @@ class UnzerToSalesFacadeBridge implements UnzerToSalesFacadeInterface
     }
 
     /**
-     * @param OrderItemFilterTransfer $orderItemFilterTransfer
+     * @param \Generated\Shared\Transfer\OrderItemFilterTransfer $orderItemFilterTransfer
      *
-     * @return ItemCollectionTransfer
+     * @return \Generated\Shared\Transfer\ItemCollectionTransfer
      */
     public function getOrderItems(OrderItemFilterTransfer $orderItemFilterTransfer): ItemCollectionTransfer
     {

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
 use Generated\Shared\Transfer\ExpenseTransfer;
@@ -15,23 +20,22 @@ use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpanderInterface
 {
     /**
-     * @var UnzerReaderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
 
     /**
-     * @param UnzerReaderInterface $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
-    public function __construct(
-        UnzerReaderInterface $unzerReader
-    )
+    public function __construct(UnzerReaderInterface $unzerReader)
     {
         $this->unzerReader = $unzerReader;
     }
 
     /**
-     * @param QuoteTransfer $quoteTransfer
-     * @return QuoteTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function expandQuoteItemsWithParticipantIds(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
@@ -61,12 +65,12 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
     {
         if (!$itemTransfer->getMerchantReference()) {
             return $itemTransfer->setUnzerParticipantId(
-                $this->getMainMerchantParticipantId($unzerCredentialsTransfer->getIdUnzerCredentials())
-                );
+                $this->getMainMerchantParticipantId($unzerCredentialsTransfer->getIdUnzerCredentials()),
+            );
         }
 
         return $itemTransfer->setUnzerParticipantId(
-            $this->getMerchantParticipantId($unzerCredentialsTransfer->getIdUnzerCredentials(), $itemTransfer->getMerchantReference())
+            $this->getMerchantParticipantId($unzerCredentialsTransfer->getIdUnzerCredentials(), $itemTransfer->getMerchantReference()),
         );
     }
 
@@ -138,7 +142,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
     }
 
     /**
-     * @param StoreTransfer $storeTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer|null
      */
