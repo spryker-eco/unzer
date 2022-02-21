@@ -66,7 +66,7 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
      */
     public function chargePartialAuthorizablePayment(UnzerPaymentTransfer $unzerPaymentTransfer, UnzerChargeTransfer $unzerChargeTransfer): UnzerPaymentTransfer
     {
-        $unzerApiRequestTransfer = $this->prepareChargeRequest($unzerPaymentTransfer, $unzerChargeTransfer);
+        $unzerApiRequestTransfer = $this->prepareAuthorizableChargeRequest($unzerPaymentTransfer, $unzerChargeTransfer);
 
         $unzerApiResponseTransfer = $this->performAuthorizableCharge($unzerApiRequestTransfer, $unzerPaymentTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);
@@ -81,11 +81,30 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
 
     /**
      * @param UnzerPaymentTransfer $unzerPaymentTransfer
+     *
+     * @return UnzerApiRequestTransfer
+     */
+    protected function prepareChargeRequest(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiRequestTransfer
+    {
+        $unzerApiChargeRequestTransfer = $this
+            ->unzerChargeMapper
+            ->mapUnzerPaymentTransferToUnzerApiChargeRequestTransfer(
+                $unzerPaymentTransfer,
+                new UnzerApiChargeRequestTransfer(),
+            );
+
+        return (new UnzerApiRequestTransfer())
+            ->setChargeRequest($unzerApiChargeRequestTransfer)
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
+    }
+
+    /**
+     * @param UnzerPaymentTransfer $unzerPaymentTransfer
      * @param UnzerChargeTransfer $unzerChargeTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerApiRequestTransfer
      */
-    protected function prepareChargeRequest(UnzerPaymentTransfer $unzerPaymentTransfer, UnzerChargeTransfer $unzerChargeTransfer): UnzerApiRequestTransfer
+    protected function prepareAuthorizableChargeRequest(UnzerPaymentTransfer $unzerPaymentTransfer, UnzerChargeTransfer $unzerChargeTransfer): UnzerApiRequestTransfer
     {
         $unzerApiChargeRequestTransfer = $this
             ->unzerChargeMapper
