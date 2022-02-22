@@ -1,17 +1,12 @@
 <?php
 
-/**
- * MIT License
- * For full license information, please view the LICENSE file that was distributed with this source code.
- */
-
 namespace SprykerEco\Yves\Unzer\Form\DataProvider;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 
-class MarketplaceBankTransferFormDataProvider extends AbstractFormDataProvider
+class SofortFormDataProvider extends AbstractFormDataProvider
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -21,7 +16,7 @@ class MarketplaceBankTransferFormDataProvider extends AbstractFormDataProvider
     public function getData(AbstractTransfer $quoteTransfer): QuoteTransfer
     {
         $quoteTransfer = $this->updateQuoteWithPaymentData($quoteTransfer);
-        $quoteTransfer->getPaymentOrFail()->setUnzerMarketplaceBankTransfer(new UnzerPaymentTransfer());
+        $quoteTransfer->getPaymentOrFail()->setUnzerSofort(new UnzerPaymentTransfer());
 
         $this->quoteClient->setQuote($quoteTransfer);
 

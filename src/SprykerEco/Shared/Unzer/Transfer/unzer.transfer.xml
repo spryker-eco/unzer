@@ -160,6 +160,9 @@
         <property name="unzerPayment" type="UnzerPayment"/>
         <property name="unzerMarketplaceBankTransfer" type="UnzerPayment"/>
         <property name="unzerMarketplaceCreditCard" type="UnzerPayment"/>
+        <property name="unzerMarketplaceSofort" type="UnzerPayment"/>
+        <property name="unzerBankTransfer" type="UnzerPayment"/>
+        <property name="unzerSofort" type="UnzerPayment"/>
         <property name="paymentProvider" type="string"/>
         <property name="paymentSelection" type="string"/>
         <property name="paymentMethod" type="string"/>

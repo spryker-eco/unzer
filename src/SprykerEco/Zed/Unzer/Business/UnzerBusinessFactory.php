@@ -90,7 +90,7 @@ use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerMarketplaceCreditCardChargeProcessor;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceBankTransferProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\ChargePaymentProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceCreditCardProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
@@ -528,13 +528,19 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         $unzerPaymentProcessorsCollection = [
             UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER => function () {
-                return $this->createMarketplaceBankTransferPaymentProcessor();
+                return $this->createChargePaymentProcessor();
+            },
+            UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT => function () {
+                return $this->createChargePaymentProcessor();
             },
             UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD => function () {
                 return $this->createMarketplaceCreditCardPaymentProcessor();
             },
-            UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT => function () {
-                return $this->createMarketplaceBankTransferPaymentProcessor();
+            UnzerConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER => function () {
+                return $this->createChargePaymentProcessor();
+            },
+            UnzerConfig::PAYMENT_METHOD_KEY_SOFORT => function () {
+                return $this->createChargePaymentProcessor();
             },
         ];
 
@@ -544,14 +550,14 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface
      */
-    public function createMarketplaceBankTransferPaymentProcessor(): UnzerPaymentProcessorInterface
+    public function createChargePaymentProcessor(): UnzerPaymentProcessorInterface
     {
-        return new MarketplaceBankTransferProcessor(
+        return new ChargePaymentProcessor(
             $this->createUnzerChargeAdapter(),
             $this->createUnzerPaymentResourceAdapter(),
             $this->createUnzerMarketplaceRefundProcessor(),
             $this->createUnzerPreparePaymentProcessor(),
-            $this->createUnzerCheckoutMapper()
+            $this->createUnzerCheckoutMapper(),
         );
     }
 

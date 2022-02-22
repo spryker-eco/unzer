@@ -77,13 +77,79 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
         UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
+        $unzerCustomerTransfer = $this->mapUnzerApiChargeResponseTransferToUnzerCustomerTransfer(
+            $unzerApiChargeResponseTransfer,
+            $unzerPaymentTransfer->getCustomer() ?? new UnzerCustomerTransfer(),
+        );
+
+        $unzerBasketTransfer = $this->mapUnzerApiChargeResponseTransferToUnzerBasketTransfer(
+            $unzerApiChargeResponseTransfer,
+            $unzerPaymentTransfer->getBasket() ?? new UnzerBasketTransfer(),
+        );
+
+        $unzerPaymentResourceTransfer = $this->mapUnzerApiChargeResponseTransferToUnzerPaymentResourceTransfer(
+            $unzerApiChargeResponseTransfer,
+            $unzerPaymentTransfer->getPaymentResource() ?? new UnzerPaymentResourceTransfer(),
+        );
+
         return $unzerPaymentTransfer->setId($unzerApiChargeResponseTransfer->getPaymentId())
             ->setAmountTotal((int)$unzerApiChargeResponseTransfer->getAmount() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setCurrency($unzerApiChargeResponseTransfer->getCurrency())
             ->setRedirectUrl($unzerApiChargeResponseTransfer->getRedirectUrl())
-            ->setCustomer((new UnzerCustomerTransfer())->setId($unzerApiChargeResponseTransfer->getCustomerId()))
-            ->setBasket((new UnzerBasketTransfer())->setId($unzerApiChargeResponseTransfer->getBasketId()))
-            ->setPaymentResource((new UnzerPaymentResourceTransfer())->setId($unzerApiChargeResponseTransfer->getTypeId()))
+            ->setCustomer($unzerCustomerTransfer)
+            ->setBasket($unzerBasketTransfer)
+            ->setPaymentResource($unzerPaymentResourceTransfer)
             ->setRedirectUrl($unzerApiChargeResponseTransfer->getRedirectUrl());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCustomerTransfer
+     */
+    protected function mapUnzerApiChargeResponseTransferToUnzerCustomerTransfer(
+        UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
+        UnzerCustomerTransfer $unzerCustomerTransfer
+    ): UnzerCustomerTransfer {
+        if (!$unzerApiChargeResponseTransfer->getCustomerId()) {
+            return $unzerCustomerTransfer;
+        }
+
+        return $unzerCustomerTransfer->setId($unzerApiChargeResponseTransfer->getCustomerIdOrFail());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerBasketTransfer
+     */
+    protected function mapUnzerApiChargeResponseTransferToUnzerBasketTransfer(
+        UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
+        UnzerBasketTransfer $unzerBasketTransfer
+    ): UnzerBasketTransfer {
+        if (!$unzerApiChargeResponseTransfer->getBasketId()) {
+            return $unzerBasketTransfer;
+        }
+
+        return $unzerBasketTransfer->setId($unzerApiChargeResponseTransfer->getBasketIdOrFail());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
+     */
+    protected function mapUnzerApiChargeResponseTransferToUnzerPaymentResourceTransfer(
+        UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
+        UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
+    ): UnzerPaymentResourceTransfer {
+        if (!$unzerApiChargeResponseTransfer->getTypeId()) {
+            return $unzerPaymentResourceTransfer;
+        }
+
+        return $unzerPaymentResourceTransfer->setId($unzerApiChargeResponseTransfer->getTypeIdOrFail());
     }
 }

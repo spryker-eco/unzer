@@ -42,13 +42,7 @@ abstract class AbstractUnzerPaymentMethodFilter
         $merchantReferences = [];
 
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $merchantReference = $itemTransfer->getMerchantReference();
-
-            if ($merchantReference === null) {
-                $merchantReferences[] = static::MAIN_SELLER_REFERENCE;
-
-                continue;
-            }
+            $merchantReference = $itemTransfer->getMerchantReference() ?? static::MAIN_SELLER_REFERENCE;
 
             if (!in_array($merchantReference, $merchantReferences, true)) {
                 $merchantReferences[] = $merchantReference;
