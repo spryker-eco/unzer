@@ -52,6 +52,13 @@ interface UnzerToUnzerApiFacadeInterface
      *
      * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
      */
+    public function performCreateMarketplaceBasketApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiRequestTransfer $unzerApiRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
+     */
     public function performCreatePaymentResourceApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer;
 
     /**

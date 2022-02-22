@@ -49,8 +49,8 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributor;
 use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapper;
+use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreator;
@@ -148,7 +148,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerKeypairQuoteExpander(),
             $this->createUnzerParticipantIdQuoteExpander(),
             $this->getQuoteClient(),
-            $this->getConfig()
+            $this->getConfig(),
         );
     }
 
@@ -170,7 +170,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerCheckoutMapper(
             $this->getConfig(),
-            $this->getUtilTextService(),
+            $this->getUtilTextService()
         );
     }
 
@@ -567,13 +567,12 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createMarketplaceCreditCardPaymentProcessor(): UnzerPaymentProcessorInterface
     {
         return new MarketplaceCreditCardProcessor(
-
             $this->createUnzerAuthorizeAdapter(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerMarketplaceCreditCardChargeProcessor(),
             $this->createUnzerMarketplaceRefundProcessor(),
             $this->createUnzerPreparePaymentProcessor(),
-            $this->createUnzerCheckoutMapper()
+            $this->createUnzerCheckoutMapper(),
         );
     }
 
@@ -583,9 +582,11 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerMarketplaceCreditCardChargeProcessor(): UnzerChargeProcessorInterface
     {
         return new UnzerMarketplaceCreditCardChargeProcessor(
-            $this->createUnzerReader(),
             $this->createUnzerPaymentMapper(),
             $this->createUnzerChargeAdapter(),
+            $this->createUnzerCredentialsResolver(),
+            $this->getRepository(),
+            $this->getEntityManager()
         );
     }
 
@@ -600,6 +601,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentSaver(),
+            $this->createUnzerCredentialsResolver(),
         );
     }
 
@@ -826,19 +828,19 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return UnzerPreparePaymentProcessorInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
      */
     public function createUnzerPreparePaymentProcessor(): UnzerPreparePaymentProcessorInterface
     {
         return new UnzerPreparePaymentProcessor(
             $this->createUnzerCheckoutMapper(),
             $this->createUnzerBasketAdapter(),
-            $this->createUnzerExpensesDistributor()
+            $this->createUnzerExpensesDistributor(),
         );
     }
 
     /**
-     * @return UnzerExpensesDistributorInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface
      */
     public function createUnzerExpensesDistributor(): UnzerExpensesDistributorInterface
     {
@@ -846,7 +848,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return UnzerParticipantIdQuoteExpanderInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Quote\UnzerParticipantIdQuoteExpanderInterface
      */
     public function createUnzerParticipantIdQuoteExpander(): UnzerParticipantIdQuoteExpanderInterface
     {

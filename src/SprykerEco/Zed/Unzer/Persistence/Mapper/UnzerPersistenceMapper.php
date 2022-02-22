@@ -9,6 +9,7 @@ namespace SprykerEco\Zed\Unzer\Persistence\Mapper;
 
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\StoreRelationTransfer;
@@ -244,5 +245,27 @@ class UnzerPersistenceMapper
         }
 
         return $unzerCredentialsCollectionTransfer;
+    }
+
+    /**
+     * @param \Propel\Runtime\Collection\ObjectCollection $paymentUnzerTransactionEntities
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
+     */
+    public function mapPaymentUnzerTransactionEntityCollectionToPaymentUnzerTransactionCollectionTransfer(
+        ObjectCollection $paymentUnzerTransactionEntities,
+        PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
+    ): PaymentUnzerTransactionCollectionTransfer {
+        foreach ($paymentUnzerTransactionEntities as $paymentUnzerTransactionEntity) {
+            $paymentUnzerTransactionCollectionTransfer->addPaymentUnzerTransaction(
+                $this->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
+                    $paymentUnzerTransactionEntity,
+                    new PaymentUnzerTransactionTransfer(),
+                ),
+            );
+        }
+
+        return $paymentUnzerTransactionCollectionTransfer;
     }
 }

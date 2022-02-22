@@ -48,8 +48,6 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
             ->setAmountCanceled($unzerApiGetPaymentResponseTransfer->getAmountCanceled())
             ->setAmountRemaining($unzerApiGetPaymentResponseTransfer->getAmountRemaining());
 
-        $unzerPaymentTransfer->fromArray($unzerApiGetPaymentResponseTransfer->modifiedToArray(), true);
-
         $unzerPaymentTransactions = $this->mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers($unzerApiGetPaymentResponseTransfer);
 
         return $unzerPaymentTransfer->setTransactions($unzerPaymentTransactions);

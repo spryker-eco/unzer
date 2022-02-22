@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment;
 
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -25,20 +30,20 @@ class UnzerPreparePaymentProcessor implements UnzerPreparePaymentProcessorInterf
     protected $unzerBasketAdapter;
 
     /**
-     * @var UnzerExpensesDistributorInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface
      */
     protected $unzerExpensesDistributor;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface $unzerBasketAdapter
+     * @param \SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface $unzerExpensesDistributor
      */
     public function __construct(
         UnzerCheckoutMapperInterface $unzerCheckoutMapper,
         UnzerBasketAdapterInterface $unzerBasketAdapter,
         UnzerExpensesDistributorInterface $unzerExpensesDistributor
-    )
-    {
+    ) {
         $this->unzerCheckoutMapper = $unzerCheckoutMapper;
         $this->unzerBasketAdapter = $unzerBasketAdapter;
         $this->unzerExpensesDistributor = $unzerExpensesDistributor;
@@ -72,8 +77,14 @@ class UnzerPreparePaymentProcessor implements UnzerPreparePaymentProcessorInterf
      */
     protected function createUnzerBasket(QuoteTransfer $quoteTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer
     {
-        $quoteTransfer = $this->unzerExpensesDistributor->distributeExpensesBetweenQuoteItems($quoteTransfer);
         $unzerBasketTransfer = $this->unzerCheckoutMapper->mapQuoteTransferToUnzerBasketTransfer($quoteTransfer, new UnzerBasketTransfer());
+        if ($quoteTransfer->getExpenses()->count() > 0) {
+            $unzerBasketTransfer = $this->unzerExpensesDistributor->distributeExpensesBetweenQuoteItems($quoteTransfer, $unzerBasketTransfer);
+        }
+
+        if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
+            return $this->unzerBasketAdapter->createMarketplaceBasket($unzerBasketTransfer, $unzerKeypairTransfer);
+        }
 
         return $this->unzerBasketAdapter->createBasket($unzerBasketTransfer, $unzerKeypairTransfer);
     }

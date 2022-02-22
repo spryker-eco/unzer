@@ -1,89 +1,115 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor;
 
 use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\ShipmentTransfer;
+use Generated\Shared\Transfer\UnzerBasketItemTransfer;
+use Generated\Shared\Transfer\UnzerBasketTransfer;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
 {
     /**
-     * @param QuoteTransfer $quoteTransfer
-     *
-     * @return QuoteTransfer
+     * @var int
      */
-    public function distributeExpensesBetweenQuoteItems(QuoteTransfer $quoteTransfer): QuoteTransfer
+    protected const DEFAULT_QUANTITY = 1;
+
+    /**
+     * @var int
+     */
+    protected const DEFAULT_ZERO_AMOUNT = 0;
+
+    /**
+     * @param QuoteTransfer $quoteTransfer
+     * @param UnzerBasketTransfer $unzerBasketTransfer
+     *
+     * @return UnzerBasketTransfer
+     */
+    public function distributeExpensesBetweenQuoteItems(QuoteTransfer $quoteTransfer, UnzerBasketTransfer $unzerBasketTransfer): UnzerBasketTransfer
     {
         $expensesCollection = $quoteTransfer->getExpenses();
 
         if ($expensesCollection->count() === 0) {
-            return $quoteTransfer;
+            return $unzerBasketTransfer;
         }
 
-        $itemCountersPerExpense = [];
-        $leftoversPerExpenses = [];
-
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $shipmentTransfer = $itemTransfer->getShipment();
-            if ($shipmentTransfer === null) {
-                continue;
-            }
-
-            foreach ($expensesCollection as $expenseId => $expenseTransfer) {
-                if ($this->assertSameShipment($shipmentTransfer, $expenseTransfer)) {
-                    $itemTransfer->setExpenseId($expenseId);
-                    $this->raiseExpenseIdCounter($itemCountersPerExpense, $expenseId);
-                }
-
-                $leftoversPerExpenses[$expenseId] = $expenseTransfer->getSumGrossPrice();
-            }
+        if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
+            return $this->addGroupedExpensesByParticipantId($unzerBasketTransfer, $expensesCollection);
         }
 
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            if ($itemTransfer->getExpenseId() === null) {
-                continue;
-            }
-
-            $expenseTransfer = $expensesCollection[$itemTransfer->getExpenseId()] ?? null;
-            if ($expenseTransfer === null) {
-                continue;
-            }
-
-            $calculatedExpenseCost = intdiv($expenseTransfer->getSumGrossPrice(), $itemCountersPerExpense[$itemTransfer->getExpenseId()]);
-
-            $leftoversPerExpenses[$itemTransfer->getExpenseId()] -= $calculatedExpenseCost;
-            if ($leftoversPerExpenses[$itemTransfer->getExpenseId()] < $calculatedExpenseCost) {
-                $calculatedExpenseCost += $leftoversPerExpenses[$itemTransfer->getExpenseId()];
-            }
-
-            $itemTransfer->setCalculatedExpensesCost($calculatedExpenseCost);
-        }
-
-
-        return $quoteTransfer;
+        return $this->addStandardExpenses($unzerBasketTransfer, $expensesCollection);
     }
 
     /**
-     * @param ShipmentTransfer $shipmentTransfer
-     * @param ExpenseTransfer $expenseTransfer
+     * @param UnzerBasketTransfer $unzerBasketTransfer
+     * @param \ArrayObject|array<ExpenseTransfer> $expenses
      *
-     * @return bool
+     * @return UnzerBasketTransfer
      */
-    protected function assertSameShipment(ShipmentTransfer $shipmentTransfer, ExpenseTransfer $expenseTransfer): bool
+    protected function addGroupedExpensesByParticipantId(UnzerBasketTransfer $unzerBasketTransfer, \ArrayObject $expenses): UnzerBasketTransfer
     {
-        return $shipmentTransfer->getShipmentSelection() === $expenseTransfer->getShipment()->getShipmentSelection() &&
-            $shipmentTransfer->getMerchantReference() === $expenseTransfer->getShipment()->getMerchantReference();
+        $expensesGroupedByParticipantId = [];
+        foreach ($expenses as $expenseTransfer) {
+            $expensesGroupedByParticipantId[$expenseTransfer->getUnzerParticipantId()][] = $expenseTransfer;
+        }
+
+        foreach ($expensesGroupedByParticipantId as $participantId => $expensesCollection) {
+            $referenceId = sprintf(UnzerConstants::UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID, $participantId);
+
+            $unzerBasketItemTransfer = $this
+                ->createUnzerBasketItemTransfer()
+                ->setParticipantId($participantId)
+                ->setBasketItemReferenceId($referenceId);
+
+            /** @var array<ExpenseTransfer> $expensesCollection */
+            foreach ($expensesCollection as $expenseTransfer) {
+                $unzerBasketItemTransfer->setAmountPerUnit(
+                    $unzerBasketItemTransfer->getAmountPerUnit() +
+                    $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER
+                );
+                $unzerBasketItemTransfer->setVat((int)$expenseTransfer->getTaxRate());
+            }
+
+            $unzerBasketTransfer->addBasketItem($unzerBasketItemTransfer);
+        }
+
+        return $unzerBasketTransfer;
     }
 
     /**
-     * @param array $itemCountersPerExpense
-     * @param string $expenseId
+     * @param UnzerBasketTransfer $unzerBasketTransfer
+     * @param \ArrayObject|array<ExpenseTransfer> $expenses
      *
-     * @return void
+     * @return UnzerBasketTransfer
      */
-    protected function raiseExpenseIdCounter(array &$itemCountersPerExpense, string $expenseId): void
+    protected function addStandardExpenses(UnzerBasketTransfer $unzerBasketTransfer, \ArrayObject $expenses): UnzerBasketTransfer
     {
-        isset($itemCountersPerExpense[$expenseId]) ? $itemCountersPerExpense[$expenseId] += 1 : $itemCountersPerExpense[$expenseId] = 1;
+        $unzerBasketItemTransfer = $this->createUnzerBasketItemTransfer()
+            ->setBasketItemReferenceId(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID);
+        foreach ($expenses as $expenseTransfer) {
+            $unzerBasketItemTransfer->setAmountPerUnit(
+                $unzerBasketItemTransfer->getAmountPerUnit() +
+                $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER
+            );
+            $unzerBasketItemTransfer->setVat((int)$expenseTransfer->getTaxRate());
+        }
+
+        return $unzerBasketTransfer->addBasketItem($unzerBasketItemTransfer);
+    }
+
+    protected function createUnzerBasketItemTransfer(): UnzerBasketItemTransfer
+    {
+        return (new UnzerBasketItemTransfer())
+            ->setTitle(UnzerConstants::UNZER_BASKET_SHIPMENT_TITLE)
+            ->setType(UnzerConstants::UNZER_BASKET_TYPE_SHIPMENTS)
+            ->setQuantity(static::DEFAULT_QUANTITY)
+            ->setAmountPerUnit(static::DEFAULT_ZERO_AMOUNT)
+            ->setVat(static::DEFAULT_ZERO_AMOUNT);
     }
 }

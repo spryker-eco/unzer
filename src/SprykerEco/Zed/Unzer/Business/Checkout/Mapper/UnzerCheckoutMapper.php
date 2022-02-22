@@ -22,7 +22,7 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
     /**
      * @var string
      */
-    protected const ITEM_TYPE_WIRE = 'Wire';
+    protected const ITEM_TYPE = 'goods';
 
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
@@ -30,21 +30,13 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
     protected $unzerConfig;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface
-     */
-    protected $utilTextService;
-
-    /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
-     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
      */
     public function __construct(
-        UnzerConfig                     $unzerConfig,
+        UnzerConfig $unzerConfig,
         UnzerToUtilTextServiceInterface $utilTextService
-    )
-    {
+    ) {
         $this->unzerConfig = $unzerConfig;
-        $this->utilTextService = $utilTextService;
     }
 
     /**
@@ -54,10 +46,9 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
     public function mapQuoteTransferToUnzerBasketTransfer(
-        QuoteTransfer       $quoteTransfer,
+        QuoteTransfer $quoteTransfer,
         UnzerBasketTransfer $unzerBasketTransfer
-    ): UnzerBasketTransfer
-    {
+    ): UnzerBasketTransfer {
         return $unzerBasketTransfer
             ->setAmountTotalGross($quoteTransfer->getTotalsOrFail()->getGrandTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountTotalVat($quoteTransfer->getTotalsOrFail()->getTaxTotalOrFail()->getAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
@@ -74,10 +65,9 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
      * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
      */
     public function mapQuoteTransferToUnzerPaymentResourceTransfer(
-        QuoteTransfer                $quoteTransfer,
+        QuoteTransfer $quoteTransfer,
         UnzerPaymentResourceTransfer $unzerPaymentResourceTransfer
-    ): UnzerPaymentResourceTransfer
-    {
+    ): UnzerPaymentResourceTransfer {
         return $unzerPaymentResourceTransfer->setType(
             $this->unzerConfig
                 ->getUnzerPaymentMethodKey(
@@ -93,9 +83,18 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
      */
     protected function mapQuoteTransferToUnzerBasketItemTransferCollection(QuoteTransfer $quoteTransfer): ArrayObject
     {
-        $unzerBasketItemTransferCollection = new ArrayObject();
+        $unzerBasketItemTransferCollection = new \ArrayObject();
         foreach ($quoteTransfer->getItems() as $quoteItemTransfer) {
-            $unzerBasketItemTransferCollection->append(
+            $groupKey = $quoteItemTransfer->getGroupKey();
+            if ($unzerBasketItemTransferCollection->offsetExists($groupKey)) {
+                $unzerBasketItemTransfer = $unzerBasketItemTransferCollection->offsetGet($groupKey);
+                $unzerBasketItemTransfer
+                    ->setQuantity($unzerBasketItemTransfer->getQuantity() + $quoteItemTransfer->getQuantity());
+
+                continue;
+            }
+
+            $unzerBasketItemTransferCollection->offsetSet($groupKey,
                 $this->mapQuoteItemTransferToUnzerBasketItemTransfer($quoteItemTransfer, new UnzerBasketItemTransfer()),
             );
         }
@@ -110,26 +109,19 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
      * @return \Generated\Shared\Transfer\UnzerBasketItemTransfer
      */
     protected function mapQuoteItemTransferToUnzerBasketItemTransfer(
-        ItemTransfer            $itemTransfer,
+        ItemTransfer $itemTransfer,
         UnzerBasketItemTransfer $unzerBasketItemTransfer
-    ): UnzerBasketItemTransfer
-    {
+    ): UnzerBasketItemTransfer {
         return $unzerBasketItemTransfer
-            ->setBasketItemReferenceId(
-                $this->utilTextService->generateUniqueId($itemTransfer->getSku(), true),
-            )
+            ->setBasketItemReferenceId($itemTransfer->getGroupKey())
             ->setQuantity($itemTransfer->getQuantity())
-            ->setAmountGross(
-                ($itemTransfer->getSumPriceToPayAggregation() + $itemTransfer->getCalculatedExpensesCost()) /
-                UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountVat($itemTransfer->getSumTaxAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setVat((int)$itemTransfer->getTaxRate()->toInt())
             ->setAmountDiscount($itemTransfer->getSumDiscountAmountAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountPerUnit(
                 ($itemTransfer->getUnitPriceToPayAggregation() + $itemTransfer->getCalculatedExpensesCost()) /
                 UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountNet($itemTransfer->getSumNetPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
-            ->setType(static::ITEM_TYPE_WIRE);
+            ->setType(static::ITEM_TYPE);
     }
 }

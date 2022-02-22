@@ -248,4 +248,29 @@ interface UnzerConstants
      * @var string
      */
     public const WEBHOOK_EVENT_TYPE = 'all';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_TYPE_GOODS = 'goods';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_TYPE_SHIPMENTS = 'shipments';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_SHIPMENT_TITLE = 'Shipping costs';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_SHIPMENT_REFERENCE_ID = 'shipment_costs';
+
+    /**
+     * @var string
+     */
+    public const UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID = self::UNZER_BASKET_SHIPMENT_REFERENCE_ID . '_%s';
 }
