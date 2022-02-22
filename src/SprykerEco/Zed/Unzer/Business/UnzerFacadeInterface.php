@@ -24,17 +24,17 @@ interface UnzerFacadeInterface
 {
     /**
      * Specification:
-     *  - Requires `QuoteTransfer::payment` to be set.
-     *  - Requires `PaymentTransfer::unzerPayment` to be set.
-     *  - Requires `QuoteTransfer::store` to be set.
-     *  - Expands `QuoteTransfer` with `UnzerPaymentTransfer`.
-     *  - Expands `QuoteTransfer` with `UnzerKeypairTransfer`.
-     *  - Expands `QuoteTransfer` with `UnzerCustomerTransfer`.
-     *  - Expands `QuoteTransfer` with `UnzerMetadataTransfer`.
-     *  - If `QuoteTransfer` contains marketplace items - expands ItemTransfers with Unzer Participant ID.
-     *  - Performs Unzer Create Customer API call.
-     *  - Performs Unzer Update Customer API call.
-     *  - Performs Unzer Create Metadata API call.
+     * - Requires `QuoteTransfer::payment` to be set.
+     * - Requires `PaymentTransfer::unzerPayment` to be set.
+     * - Requires `QuoteTransfer::store` to be set.
+     * - Expands `QuoteTransfer` with `UnzerPaymentTransfer`.
+     * - Expands `QuoteTransfer` with `UnzerKeypairTransfer`.
+     * - Expands `QuoteTransfer` with `UnzerCustomerTransfer`.
+     * - Expands `QuoteTransfer` with `UnzerMetadataTransfer`.
+     * - If `QuoteTransfer` contains marketplace items - expands ItemTransfers with Unzer Participant ID.
+     * - Performs Unzer Create Customer API call.
+     * - Performs Unzer Update Customer API call.
+     * - Performs Unzer Create Metadata API call.
      *
      * @api
      *
@@ -64,9 +64,9 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Checks if provided Unzer notification is enabled.
-     *  - Processes Unzer notification.
-     *  - Updates payment details in DB.
+     * - Checks if provided Unzer notification is enabled.
+     * - Processes Unzer notification.
+     * - Updates payment details in DB.
      *
      * @api
      *
@@ -78,15 +78,15 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Requires `QuoteTransfer::payment` to be set.
-     *  - Requires `PaymentTransfer::unzerPayment` to be set.
-     *  - Requires `UnzerPaymentTransfer::unzerKeypair` to be set.
-     *  - Expands `QuoteTransfer` with `UnzerBasketTransfer`.
-     *  - Expands `QuoteTransfer` with `UnzerPaymentResourceTransfer`.
-     *  - Performs Unzer Create Basket API call.
-     *  - Performs Unzer Create payment resource API call.
-     *  - Performs Unzer Authorize or Change API call depending on payment type.
-     *  - Saves payment detailed info to Persistence.
+     * - Requires `QuoteTransfer::payment` to be set.
+     * - Requires `PaymentTransfer::unzerPayment` to be set.
+     * - Requires `UnzerPaymentTransfer::unzerKeypair` to be set.
+     * - Expands `QuoteTransfer` with `UnzerBasketTransfer`.
+     * - Expands `QuoteTransfer` with `UnzerPaymentResourceTransfer`.
+     * - Performs Unzer Create Basket API call.
+     * - Performs Unzer Create payment resource API call.
+     * - Performs Unzer Authorize or Change API call depending on payment type.
+     * - Saves payment detailed info to Persistence.
      *
      * @api
      *
@@ -99,7 +99,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Checks if Unzer Authorization is pending.
+     * - Checks if Unzer Authorization is pending.
      *
      * @api
      *
@@ -111,7 +111,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Checks if Unzer Authorization is success.
+     * - Checks if Unzer Authorization is success.
      *
      * @api
      *
@@ -123,7 +123,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Checks if Unzer Authorization is failed.
+     * - Checks if Unzer Authorization is failed.
      *
      * @api
      *
@@ -135,7 +135,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Checks if Unzer Authorization is canceled.
+     * - Checks if Unzer Authorization is canceled.
      *
      * @api
      *
@@ -147,7 +147,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Checks if Unzer Payment is completed.
+     * - Checks if Unzer Payment is completed.
      *
      * @api
      *
@@ -159,7 +159,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Checks if Unzer Charge failed.
+     * - Checks if Unzer Charge failed.
      *
      * @api
      *
@@ -171,7 +171,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Checks if Unzer Payment is charged-back.
+     * - Checks if Unzer Payment is charged-back.
      *
      * @api
      *
@@ -183,7 +183,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Executes Unzer API Charge request.
+     * - Executes Unzer API Charge request.
      *
      * @api
      *
@@ -196,7 +196,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Executes Unzer API Refund request.
+     * - Executes Unzer API Refund request.
      *
      * @api
      *
@@ -214,7 +214,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Filters available marketplace payment methods based on quote items.
+     * - Filters available marketplace payment methods based on quote items.
      *
      * @api
      *
@@ -230,7 +230,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Filters available payment methods and checks intersections based on merchants.
+     * - Filters available payment methods and checks intersections based on merchants.
      *
      * @api
      *
@@ -246,10 +246,10 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
-     *  - Prepares UnzerApi request and set Unzer keypair.
-     *  - Performs Unzer Set Notification URL Api call.
-     *  - Throws `UnzerException` if API call failed.
+     * - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     * - Prepares UnzerApi request and set Unzer keypair.
+     * - Performs Unzer Set Notification URL Api call.
+     * - Throws `UnzerException` if API call failed.
      *
      * @api
      *
@@ -263,10 +263,10 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
-     *  - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
-     *  - Saves `UnzerCredentialsTransfer` to Persistence.
-     *  - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.
+     * - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     * - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
+     * - Saves `UnzerCredentialsTransfer` to Persistence.
+     * - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.
      *
      * @api
      *
@@ -278,13 +278,13 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
-     *  - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
-     *  - Saves `UnzerCredentialsTransfer` to Persistence.
-     *  - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.'
-     *  - Prepares UnzerApi request and set Unzer keypair.
-     *  - Performs Unzer Set Notification URL Api call.
-     *  - If Set Notification URL Api call fails - removes saved Unzer credentials.
+     * - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     * - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
+     * - Saves `UnzerCredentialsTransfer` to Persistence.
+     * - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.'
+     * - Prepares UnzerApi request and set Unzer keypair.
+     * - Performs Unzer Set Notification URL Api call.
+     * - If Set Notification URL Api call fails - removes saved Unzer credentials.
      *
      * @api
      *
@@ -296,10 +296,10 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
-     *  - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
-     *  - Updates `UnzerCredentialsTransfer` to Persistence.
-     *  - If `UnzerCredentialsTransfer` contains store relations - also updates it to Persistence.
+     * - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     * - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
+     * - Updates `UnzerCredentialsTransfer` to Persistence.
+     * - If `UnzerCredentialsTransfer` contains store relations - also updates it to Persistence.
      *
      * @api
      *
@@ -323,9 +323,9 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Fetches `UnzerCredentialsCollectionTransfer` by given criteria from Persistence.
-     *  - Expands each `UnzerCredentialsTransfer` with `UnzerKeypairTransfer`.
-     *  - Builds `UnzerKeypairTransfer` using private key from `Vault`.
+     * - Fetches `UnzerCredentialsCollectionTransfer` by given criteria from Persistence.
+     * - Expands each `UnzerCredentialsTransfer` with `UnzerKeypairTransfer`.
+     * - Builds `UnzerKeypairTransfer` using private key from `Vault`.
      *
      * @api
      *
@@ -339,11 +339,11 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
-     *  - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
-     *  - Checks ability to delete entity from Persistence.
-     *  - Deletes `UnzerCredentialsTransfer` from Persistence.
-     *  - If `UnzerCredentialsTransfer` contains store relations - also deletes it from Persistence.
+     * - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     * - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
+     * - Checks ability to delete entity from Persistence.
+     * - Deletes `UnzerCredentialsTransfer` from Persistence.
+     * - If `UnzerCredentialsTransfer` contains store relations - also deletes it from Persistence.
      *
      * @api
      *
@@ -352,4 +352,16 @@ interface UnzerFacadeInterface
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
     public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
+
+    /**
+     * Specification:
+     * - @todo: write specification ...
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    public function validateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
 }

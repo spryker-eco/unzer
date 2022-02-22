@@ -149,6 +149,7 @@
 
     <transfer name="Message">
         <property name="value" type="string"/>
+        <property name="message" type="string"/>
     </transfer>
 
     <transfer name="UnzerCredentialsResponse">
@@ -608,5 +609,14 @@
 
     <transfer name="TaxTotal">
         <property name="amount" type="int"/>
+    </transfer>
+
+    <transfer name="MerchantCriteria">
+        <property name="merchantReference" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerCredentialsParameterMessage">
+        <property name="messages" type="Message[]" singular="message"/>
+        <property name="parameter" type="string"/>
     </transfer>
 </transfers>
