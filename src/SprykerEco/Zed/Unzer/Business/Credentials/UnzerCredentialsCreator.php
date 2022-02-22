@@ -7,9 +7,13 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Credentials;
 
+use Exception;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Propel\Runtime\Propel;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
+use SprykerEco\Shared\Unzer\UnzerConstants;
+use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
@@ -39,21 +43,29 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     protected $utilTextService;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface
+     */
+    protected $unzerNotificationConfigurator;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface $unzerCredentialsStoreRelationUpdater
      * @param \SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface $unzerVaultWriter
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
+     * @param \SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface $unzerNotificationConfigurator
      */
     public function __construct(
         UnzerEntityManagerInterface $unzerEntityManager,
         UnzerCredentialsStoreRelationUpdaterInterface $unzerCredentialsStoreRelationUpdater,
         UnzerVaultWriterInterface $unzerVaultWriter,
-        UnzerToUtilTextServiceInterface $utilTextService
+        UnzerToUtilTextServiceInterface $utilTextService,
+        UnzerNotificationConfiguratorInterface $unzerNotificationConfigurator
     ) {
         $this->unzerEntityManager = $unzerEntityManager;
         $this->unzerCredentialsStoreRelationUpdater = $unzerCredentialsStoreRelationUpdater;
         $this->unzerVaultWriter = $unzerVaultWriter;
         $this->utilTextService = $utilTextService;
+        $this->unzerNotificationConfigurator = $unzerNotificationConfigurator;
     }
 
     /**
@@ -66,6 +78,38 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         return $this->getTransactionHandler()->handleTransaction(function () use ($unzerCredentialsTransfer) {
             return $this->executeCreateUnzerCredentialsTransaction($unzerCredentialsTransfer);
         });
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @throws \Exception
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    public function createUnzerCredentialsAndSetUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
+    {
+        $propelConnection = Propel::getConnection();
+        try {
+            $propelConnection->beginTransaction();
+            $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction($unzerCredentialsTransfer);
+            if ($unzerCredentialsTransfer->getChildUnzerCredentials() !== null) {
+                $unzerCredentialsTransfer = $this->createMainMerchantUnzerCredentials($unzerCredentialsResponseTransfer->getUnzerCredentials());
+                $unzerCredentialsResponseTransfer->setUnzerCredentials($unzerCredentialsTransfer);
+
+                $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
+            }
+
+            $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsResponseTransfer->getUnzerCredentials());
+        } catch (Exception $exception) {
+            $propelConnection->rollBack();
+
+            throw $exception;
+        }
+
+        $propelConnection->commit();
+
+        return $unzerCredentialsResponseTransfer;
     }
 
     /**
@@ -93,5 +137,25 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         return (new UnzerCredentialsResponseTransfer())
             ->setIsSuccessful(true)
             ->setUnzerCredentials($unzerCredentialsTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    protected function createMainMerchantUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
+    {
+        $childUnzerCredentialsTransfer = $unzerCredentialsTransfer->getChildUnzerCredentialsOrFail()
+            ->setParentIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials())
+            ->setType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT);
+
+        $childUnzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction(
+            $childUnzerCredentialsTransfer,
+        );
+
+        return $unzerCredentialsTransfer->setChildUnzerCredentials(
+            $childUnzerCredentialsResponseTransfer->getUnzerCredentialsOrFail(),
+        );
     }
 }

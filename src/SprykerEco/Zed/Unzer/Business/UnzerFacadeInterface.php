@@ -248,7 +248,7 @@ interface UnzerFacadeInterface
      * Specification:
      *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
      *  - Prepares UnzerApi request and set Unzer keypair.
-     *  - Performs Unzer Set Notification URL Api all.
+     *  - Performs Unzer Set Notification URL Api call.
      *  - Throws `UnzerException` if API call failed.
      *
      * @api
@@ -275,6 +275,24 @@ interface UnzerFacadeInterface
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
     public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
+
+    /**
+     * Specification:
+     *  - Requires `UnzerCredentialsTransfer::unzerKeypair` to be set.
+     *  - Requires `UnzerCredentialsTransfer::idUnzerCredentials` to be set.
+     *  - Saves `UnzerCredentialsTransfer` to Persistence.
+     *  - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.'
+     *  - Prepares UnzerApi request and set Unzer keypair.
+     *  - Performs Unzer Set Notification URL Api call.
+     *  - If Set Notification URL Api call fails - removes saved Unzer credentials.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    public function createUnzerCredentialsAndSetUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
 
     /**
      * Specification:

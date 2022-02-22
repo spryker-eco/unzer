@@ -294,6 +294,20 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
+    public function createUnzerCredentialsAndSetUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
+    {
+        return $this->getFactory()->createUnzerCredentialsCreator()->createUnzerCredentialsAndSetUnzerNotificationUrl($unzerCredentialsTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
     public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         return $this->getFactory()->createUnzerCredentialsUpdater()->updateUnzerCredentials($unzerCredentialsTransfer);

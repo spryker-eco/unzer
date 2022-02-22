@@ -691,6 +691,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerCredentialsStoreRelationUpdater(),
             $this->createUnzerVaultWriter(),
             $this->getUtilTextService(),
+            $this->createUnzerNotificationConfigurator(),
         );
     }
 
