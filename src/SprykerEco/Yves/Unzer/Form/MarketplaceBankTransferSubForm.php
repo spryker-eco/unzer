@@ -17,7 +17,7 @@ class MarketplaceBankTransferSubForm extends AbstractUnzerSubForm
     /**
      * @var string
      */
-    public const PAYMENT_METHOD_NAME = 'marketplace_bank_transfer';
+    public const PAYMENT_METHOD_TEMPLATE_NAME = 'marketplace_bank_transfer';
 
     /**
      * @return string
@@ -40,7 +40,7 @@ class MarketplaceBankTransferSubForm extends AbstractUnzerSubForm
      */
     public function getTemplatePath(): string
     {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::PAYMENT_METHOD_NAME;
+        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::PAYMENT_METHOD_TEMPLATE_NAME;
     }
 
     /**
