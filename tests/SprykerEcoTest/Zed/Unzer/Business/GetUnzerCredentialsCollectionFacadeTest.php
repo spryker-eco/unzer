@@ -26,6 +26,7 @@ class GetUnzerCredentialsCollectionFacadeTest extends UnzerFacadeBaseTest
                 ->addType($unzerCredentialsTransfer->getType())
                 ->addPublicKey($unzerCredentialsTransfer->getUnzerKeypair()->getPublicKey()),
         );
+
         //Act
         $unzerCredentialsCollectionTransfer = $this->facade->getUnzerCredentialsCollection($unzerCredentialsCriteriaTransfer);
 
@@ -45,6 +46,7 @@ class GetUnzerCredentialsCollectionFacadeTest extends UnzerFacadeBaseTest
             (new UnzerCredentialsConditionsTransfer())
                 ->addId($unzerCredentialsTransfer->getIdUnzerCredentials() + 1),
         );
+
         //Act
         $unzerCredentialsCollectionTransfer = $this->facade->getUnzerCredentialsCollection($unzerCredentialsCriteriaTransfer);
 

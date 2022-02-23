@@ -825,7 +825,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsDeleterInterface
      */
-    public function createUnzerCredentialsEraser(): UnzerCredentialsDeleterInterface
+    public function createUnzerCredentialsDeleter(): UnzerCredentialsDeleterInterface
     {
         return new UnzerCredentialsDeleter(
             $this->getRepository(),

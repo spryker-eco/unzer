@@ -13,7 +13,6 @@ use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 
@@ -67,8 +66,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
         }
 
         if ($unzerCredentialsTransfer->getType() === UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE) {
-            $isSuccessful = $this->deleteMarketplaceMainMerchantUnzerCredentials($unzerCredentialsTransfer);
-            if (!$isSuccessful) {
+            if (!$this->deleteMarketplaceMainMerchantUnzerCredentials($unzerCredentialsTransfer)) {
                 return $this->buildFailedUnzerCredentialsResponseTransfer($unzerCredentialsResponseTransfer);
             }
         }
@@ -106,8 +104,6 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
-     *
      * @return bool
      */
     protected function deleteMarketplaceMainMerchantUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
@@ -122,7 +118,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
             ->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
 
         if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() !== 1) {
-            throw new UnzerException('Unzer Marketplace credentials should have 1 main merchant credentials!');
+            return false;
         }
 
         $mainMerchantUnzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()[0];

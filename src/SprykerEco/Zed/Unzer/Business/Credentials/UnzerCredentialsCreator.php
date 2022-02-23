@@ -97,10 +97,10 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
                 $unzerCredentialsTransfer = $this->createMainMerchantUnzerCredentials($unzerCredentialsResponseTransfer->getUnzerCredentials());
                 $unzerCredentialsResponseTransfer->setUnzerCredentials($unzerCredentialsTransfer);
 
-                $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
+//                $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
             }
 
-            $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsResponseTransfer->getUnzerCredentials());
+//            $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsResponseTransfer->getUnzerCredentials());
         } catch (Exception $exception) {
             $propelConnection->rollBack();
 

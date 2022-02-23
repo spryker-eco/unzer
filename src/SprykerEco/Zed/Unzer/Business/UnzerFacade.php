@@ -353,7 +353,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      */
     public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        return $this->getFactory()->createUnzerCredentialsEraser()->deleteUnzerCredentials($unzerCredentialsTransfer);
+        return $this->getFactory()->createUnzerCredentialsDeleter()->deleteUnzerCredentials($unzerCredentialsTransfer);
     }
 
     /**
