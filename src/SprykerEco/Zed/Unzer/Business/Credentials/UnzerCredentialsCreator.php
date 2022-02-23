@@ -7,10 +7,8 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Credentials;
 
-use Exception;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Propel\Runtime\Propel;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface;
@@ -89,13 +87,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     {
         return $this->getTransactionHandler()->handleTransaction(function () use ($unzerCredentialsTransfer) {
             $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction($unzerCredentialsTransfer);
-            if ($unzerCredentialsTransfer->getChildUnzerCredentials() !== null) {
-                $unzerCredentialsTransfer = $this->createMainMerchantUnzerCredentials($unzerCredentialsResponseTransfer->getUnzerCredentials());
-                $unzerCredentialsResponseTransfer->setUnzerCredentials($unzerCredentialsTransfer);
-
-                $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
-            }
-
+            $unzerCredentialsResponseTransfer = $this->executeCreateChildUnzerCredentialsTransaction($unzerCredentialsResponseTransfer);
             $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsResponseTransfer->getUnzerCredentials());
 
             return $unzerCredentialsResponseTransfer;
@@ -127,6 +119,27 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         return (new UnzerCredentialsResponseTransfer())
             ->setIsSuccessful(true)
             ->setUnzerCredentials($unzerCredentialsTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    protected function executeCreateChildUnzerCredentialsTransaction(
+        UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+    ): UnzerCredentialsResponseTransfer {
+        $unzerCredentialsTransfer = $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail();
+        if ($unzerCredentialsTransfer->getChildUnzerCredentials() === null) {
+            return $unzerCredentialsResponseTransfer;
+        }
+
+        $unzerCredentialsTransfer = $this->createMainMerchantUnzerCredentials($unzerCredentialsResponseTransfer->getUnzerCredentials());
+        $unzerCredentialsResponseTransfer->setUnzerCredentials($unzerCredentialsTransfer);
+
+        $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
+
+        return $unzerCredentialsResponseTransfer;
     }
 
     /**

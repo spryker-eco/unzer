@@ -355,7 +355,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Validates UnzerCredentialsTransfer properties using internal rules.
+     * - Validates `UnzerCredentialsTransfer` properties using internal rules.
      * - Returns validation errors if validation fails.
      *
      * @api
