@@ -83,33 +83,23 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @throws \Exception
-     *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
     public function createUnzerCredentialsAndSetUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        $propelConnection = Propel::getConnection();
-        try {
-            $propelConnection->beginTransaction();
+        return $this->getTransactionHandler()->handleTransaction(function () use ($unzerCredentialsTransfer) {
             $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction($unzerCredentialsTransfer);
             if ($unzerCredentialsTransfer->getChildUnzerCredentials() !== null) {
                 $unzerCredentialsTransfer = $this->createMainMerchantUnzerCredentials($unzerCredentialsResponseTransfer->getUnzerCredentials());
                 $unzerCredentialsResponseTransfer->setUnzerCredentials($unzerCredentialsTransfer);
 
-//                $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
+                $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
             }
 
-//            $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsResponseTransfer->getUnzerCredentials());
-        } catch (Exception $exception) {
-            $propelConnection->rollBack();
+            $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsResponseTransfer->getUnzerCredentials());
 
-            throw $exception;
-        }
-
-        $propelConnection->commit();
-
-        return $unzerCredentialsResponseTransfer;
+            return $unzerCredentialsResponseTransfer;
+        });
     }
 
     /**
