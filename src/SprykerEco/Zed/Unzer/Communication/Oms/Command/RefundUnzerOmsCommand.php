@@ -12,6 +12,7 @@ use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface;
 
 class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsCommandInterface
 {
@@ -26,6 +27,11 @@ class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
     protected $refundFacade;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface
+     */
+    protected $shipmentFacade;
+
+    /**
      * @var \SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface
      */
     protected $unzerOmsMapper;
@@ -33,15 +39,18 @@ class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
     /**
      * @param \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface $unzerFacade
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface $shipmentFacade
      * @param \SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface $unzerOmsMapper
      */
     public function __construct(
         UnzerFacadeInterface $unzerFacade,
         UnzerToRefundFacadeInterface $refundFacade,
+        UnzerToShipmentFacadeInterface $shipmentFacade,
         UnzerOmsMapperInterface $unzerOmsMapper
     ) {
         $this->unzerFacade = $unzerFacade;
         $this->refundFacade = $refundFacade;
+        $this->shipmentFacade = $shipmentFacade;
         $this->unzerOmsMapper = $unzerOmsMapper;
     }
 
@@ -57,6 +66,7 @@ class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
         $orderTransfer = $this->unzerOmsMapper->mapSpySalesOrderToOrderTransfer($salesOrderEntity);
         $salesOrderItemIds = $this->mapSalesOrderItemsIds($salesOrderItems);
 
+        $orderTransfer = $this->shipmentFacade->hydrateOrderShipment($orderTransfer);
         $refundTransfer = $this->refundFacade
             ->calculateRefund($salesOrderItems, $salesOrderEntity);
 

@@ -16,6 +16,7 @@ use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
 
 /**
@@ -45,6 +46,7 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
         return new RefundUnzerOmsCommand(
             $this->getFacade(),
             $this->getRefundFacade(),
+            $this->getShipmentFacade(),
             $this->createUnzerOmsMapper(),
         );
     }
@@ -88,5 +90,16 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
         $refundFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_REFUND);
 
         return $refundFacade;
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface
+     */
+    public function getShipmentFacade(): UnzerToShipmentFacadeInterface
+    {
+        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface $shipmentFacade */
+        $shipmentFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SHIPMENT);
+
+        return $shipmentFacade;
     }
 }
