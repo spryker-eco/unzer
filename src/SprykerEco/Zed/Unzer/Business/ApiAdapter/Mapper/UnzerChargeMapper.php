@@ -89,16 +89,15 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
     }
 
     /**
-     * @param UnzerChargeTransfer $unzerChargeTransfer
-     * @param UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
      *
-     * @return UnzerApiChargeRequestTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiChargeRequestTransfer
      */
     public function mapUnzerChargeTransferToUnzerApiChargeRequestTransfer(
         UnzerChargeTransfer $unzerChargeTransfer,
         UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
-    ): UnzerApiChargeRequestTransfer
-    {
+    ): UnzerApiChargeRequestTransfer {
         return $unzerApiChargeRequestTransfer
             ->fromArray($unzerChargeTransfer->toArray(), true)
             ->setAmount($unzerChargeTransfer->getAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER);

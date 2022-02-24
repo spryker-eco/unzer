@@ -11,7 +11,6 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;

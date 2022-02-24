@@ -54,10 +54,10 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
     }
 
     /**
-     * @param UnzerBasketTransfer $unzerBasketTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
-     * @return UnzerBasketTransfer
+     * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
     public function createMarketplaceBasket(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer
     {
@@ -68,13 +68,15 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
     }
 
     /**
-     * @param UnzerBasketTransfer $unzerBasketTransfer
-     * @param UnzerKeypairTransfer $unzerKeypairTransfer
+     * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
+     * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
-     * @return UnzerApiRequestTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiRequestTransfer
      */
-    protected function prepareUnzerApiRequestTransfer(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerApiRequestTransfer
-    {
+    protected function prepareUnzerApiRequestTransfer(
+        UnzerBasketTransfer $unzerBasketTransfer,
+        UnzerKeypairTransfer $unzerKeypairTransfer
+    ): UnzerApiRequestTransfer {
         $unzerApiCreateBasketRequestTransfer = $this->unzerBasketMapper
             ->mapUnzerBasketTransferToUnzerApiCreateBasketRequestTransfer(
                 $unzerBasketTransfer,
@@ -87,13 +89,15 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
     }
 
     /**
-     * @param UnzerApiResponseTransfer $unzerApiResponseTransfer
-     * @param UnzerBasketTransfer $unzerBasketTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiResponseTransfer $unzerApiResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
      *
-     * @return UnzerBasketTransfer
+     * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
-    protected function parseUnzerApiResponseTransfer(UnzerApiResponseTransfer $unzerApiResponseTransfer, UnzerBasketTransfer $unzerBasketTransfer): UnzerBasketTransfer
-    {
+    protected function parseUnzerApiResponseTransfer(
+        UnzerApiResponseTransfer $unzerApiResponseTransfer,
+        UnzerBasketTransfer $unzerBasketTransfer
+    ): UnzerBasketTransfer {
         $this->assertSuccessResponse($unzerApiResponseTransfer);
         $createBasketResponseTransfer = $unzerApiResponseTransfer->getCreateBasketResponseOrFail();
 

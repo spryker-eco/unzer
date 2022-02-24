@@ -27,7 +27,11 @@ interface UnzerConstants
     /**
      * @var string
      */
-    public const UNZER_PAYMENT_METHOD_BANK_TRANSFER = 'pis';
+    // public const UNZER_PAYMENT_METHOD_BANK_TRANSFER = 'pis';
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_BANK_TRANSFER = 'sofort';//TEMP
 
     /**
      * @var string

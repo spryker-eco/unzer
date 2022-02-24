@@ -75,8 +75,8 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
     }
 
     /**
-     * @param ExpenseTransfer $expenseTransfer
-     * @param UnzerCredentialsTransfer $unzerCredentialsTransfer
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\ExpenseTransfer
      */
@@ -86,12 +86,12 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
 
         if ($merchantReference === null) {
             return $expenseTransfer->setUnzerParticipantId(
-                $this->getMainMerchantParticipantId($unzerCredentialsTransfer->getIdUnzerCredentials())
+                $this->getMainMerchantParticipantId($unzerCredentialsTransfer->getIdUnzerCredentials()),
             );
         }
 
         return $expenseTransfer->setUnzerParticipantId(
-            $this->getMerchantParticipantId($unzerCredentialsTransfer->getIdUnzerCredentials(), $merchantReference)
+            $this->getMerchantParticipantId($unzerCredentialsTransfer->getIdUnzerCredentials(), $merchantReference),
         );
     }
 

@@ -14,10 +14,9 @@ use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
 class UnzerConfig extends AbstractBundleConfig
 {
-
-    /**
-     * @var array<int, string>
-     */
+ /**
+  * @var array<int, string>
+  */
     protected const UNZER_PAYMENT_STATE_OMS_STATUS_MAP = [
         UnzerConstants::UNZER_PAYMENT_STATUS_PENDING => UnzerConstants::OMS_STATUS_PAYMENT_PENDING,
         UnzerConstants::UNZER_PAYMENT_STATUS_COMPLETED => UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
@@ -95,10 +94,10 @@ class UnzerConfig extends AbstractBundleConfig
         UnzerConstants::UNZER_PAYMENT_METHOD_PRZELEWY24 => [
             UnzerSharedConfig::PAYMENT_METHOD_KEY_PRZELEWY24,
         ],
-        UnzerConstants::UNZER_PAYMENT_METHOD_SOFORT => [
-            UnzerSharedConfig::PAYMENT_METHOD_KEY_SOFORT,
-            UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
-        ],
+        // UnzerConstants::UNZER_PAYMENT_METHOD_SOFORT => [
+        //     UnzerSharedConfig::PAYMENT_METHOD_KEY_SOFORT,
+        //     UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
+        // ],
         UnzerConstants::UNZER_PAYMENT_METHOD_WECHAT_PAY => [
             UnzerSharedConfig::PAYMENT_METHOD_KEY_WECHAT_PAY,
         ],
