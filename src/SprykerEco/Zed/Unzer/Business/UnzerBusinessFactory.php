@@ -170,7 +170,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerCheckoutMapper(
             $this->getConfig(),
-            $this->getUtilTextService()
+            $this->getUtilTextService(),
         );
     }
 
@@ -586,7 +586,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerChargeAdapter(),
             $this->createUnzerCredentialsResolver(),
             $this->getRepository(),
-            $this->getEntityManager()
+            $this->getEntityManager(),
         );
     }
 

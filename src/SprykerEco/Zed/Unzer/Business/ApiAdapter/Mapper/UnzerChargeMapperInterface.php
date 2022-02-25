@@ -48,10 +48,10 @@ interface UnzerChargeMapperInterface
     ): UnzerPaymentTransfer;
 
     /**
-     * @param UnzerChargeTransfer $unzerChargeTransfer
-     * @param UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
      *
-     * @return UnzerApiChargeRequestTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiChargeRequestTransfer
      */
     public function mapUnzerChargeTransferToUnzerApiChargeRequestTransfer(
         UnzerChargeTransfer $unzerChargeTransfer,

@@ -60,7 +60,8 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
     }
 
     /**
-     * @param UnzerChargeTransfer $unzerChargeTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
@@ -80,9 +81,9 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
     }
 
     /**
-     * @param UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
-     * @return UnzerApiRequestTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiRequestTransfer
      */
     protected function prepareChargeRequest(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiRequestTransfer
     {
@@ -99,13 +100,15 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
     }
 
     /**
-     * @param UnzerPaymentTransfer $unzerPaymentTransfer
-     * @param UnzerChargeTransfer $unzerChargeTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerApiRequestTransfer
      */
-    protected function prepareAuthorizableChargeRequest(UnzerPaymentTransfer $unzerPaymentTransfer, UnzerChargeTransfer $unzerChargeTransfer): UnzerApiRequestTransfer
-    {
+    protected function prepareAuthorizableChargeRequest(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        UnzerChargeTransfer $unzerChargeTransfer
+    ): UnzerApiRequestTransfer {
         $unzerApiChargeRequestTransfer = $this
             ->unzerChargeMapper
             ->mapUnzerChargeTransferToUnzerApiChargeRequestTransfer(

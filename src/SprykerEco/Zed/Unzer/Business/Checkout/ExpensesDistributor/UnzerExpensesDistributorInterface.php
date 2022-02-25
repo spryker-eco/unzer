@@ -13,10 +13,10 @@ use Generated\Shared\Transfer\UnzerBasketTransfer;
 interface UnzerExpensesDistributorInterface
 {
     /**
-     * @param QuoteTransfer $quoteTransfer
-     * @param UnzerBasketTransfer $unzerBasketTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
      *
-     * @return UnzerBasketTransfer
+     * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
     public function distributeExpensesBetweenQuoteItems(QuoteTransfer $quoteTransfer, UnzerBasketTransfer $unzerBasketTransfer): UnzerBasketTransfer;
 }

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge;
 
 use Generated\Shared\Transfer\ItemCollectionTransfer;
@@ -14,7 +19,6 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
-use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 use SprykerEco\Zed\Unzer\UnzerConstants;
@@ -22,50 +26,49 @@ use SprykerEco\Zed\Unzer\UnzerConstants;
 class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
 {
     /**
-     * @var UnzerReaderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
 
     /**
-     * @var UnzerPaymentMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface
      */
     protected $unzerPaymentMapper;
 
     /**
-     * @var UnzerChargeAdapterInterface
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface
      */
     protected $unzerChargeAdapter;
 
     /**
-     * @var UnzerCredentialsResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
      */
     protected $unzerCredentialsResolver;
 
     /**
-     * @var UnzerRepositoryInterface
+     * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
      */
     protected $unzerRepository;
 
     /**
-     * @var UnzerEntityManagerInterface
+     * @var \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface
      */
     protected $unzerEntityManager;
 
     /**
-     * @param UnzerPaymentMapperInterface $unzerPaymentMapper
-     * @param UnzerChargeAdapterInterface $unzerChargeAdapter
-     * @param UnzerCredentialsResolverInterface $unzerCredentialsResolver
-     * @param UnzerRepositoryInterface $unzerRepository
-     * @param UnzerEntityManagerInterface $unzerEntityManager
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface $unzerChargeAdapter
+     * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
+     * @param \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface $unzerRepository
+     * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
      */
     public function __construct(
-        UnzerPaymentMapperInterface       $unzerPaymentMapper,
-        UnzerChargeAdapterInterface       $unzerChargeAdapter,
+        UnzerPaymentMapperInterface $unzerPaymentMapper,
+        UnzerChargeAdapterInterface $unzerChargeAdapter,
         UnzerCredentialsResolverInterface $unzerCredentialsResolver,
-        UnzerRepositoryInterface          $unzerRepository,
-        UnzerEntityManagerInterface       $unzerEntityManager
-    )
-    {
+        UnzerRepositoryInterface $unzerRepository,
+        UnzerEntityManagerInterface $unzerEntityManager
+    ) {
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerChargeAdapter = $unzerChargeAdapter;
         $this->unzerCredentialsResolver = $unzerCredentialsResolver;
@@ -74,10 +77,12 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     }
 
     /**
-     * @param OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array<int> $salesOrderItemIds
      *
-     * @throws UnzerException
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return void
      */
     public function charge(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
@@ -106,11 +111,15 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     }
 
     /**
-     * @param PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
      * @param array<int> $salesOrderItemIds
+     *
+     * @return void
      */
-    protected function updatePaymentUnzerOrderItemEntities(PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer, array $salesOrderItemIds): void
-    {
+    protected function updatePaymentUnzerOrderItemEntities(
+        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
+        array $salesOrderItemIds
+    ): void {
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
             if (in_array($paymentUnzerOrderItemTransfer->getIdSalesOrderItem(), $salesOrderItemIds, true)) {
                 $paymentUnzerOrderItemTransfer->setStatus(UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED);
@@ -120,11 +129,11 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     }
 
     /**
-     * @param UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
-     * @return UnzerKeypairTransfer
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
-     * @throws UnzerException
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
      */
     protected function getUnzerKeyPair(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerKeypairTransfer
     {
@@ -132,7 +141,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
 
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions(
-                (new UnzerCredentialsConditionsTransfer())->addKeypairId($keypairId)
+                (new UnzerCredentialsConditionsTransfer())->addKeypairId($keypairId),
             );
 
         $unzerCredentialsTransfer = $this->unzerCredentialsResolver
@@ -146,14 +155,17 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     }
 
     /**
-     * @param UnzerPaymentTransfer $unzerPaymentTransfer
-     * @param ItemCollectionTransfer $itemCollectionTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\ItemCollectionTransfer $itemCollectionTransfer
      * @param string|null $authorizeId
      *
-     * @return UnzerChargeTransfer
+     * @return \Generated\Shared\Transfer\UnzerChargeTransfer
      */
-    protected function createUnzerCharge(UnzerPaymentTransfer $unzerPaymentTransfer, ItemCollectionTransfer $itemCollectionTransfer, string $authorizeId = null): UnzerChargeTransfer
-    {
+    protected function createUnzerCharge(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        ItemCollectionTransfer $itemCollectionTransfer,
+        ?string $authorizeId = null
+    ): UnzerChargeTransfer {
         $totalAmount = 0;
         foreach ($itemCollectionTransfer->getItems() as $itemTransfer) {
             $totalAmount += $itemTransfer->getSumPriceToPayAggregation();
@@ -169,18 +181,17 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     }
 
     /**
-     * @param UnzerChargeTransfer $unzerChargeTransfer
-     * @param OrderTransfer $orderTransfer
-     * @param PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
      *
-     * @return UnzerChargeTransfer
+     * @return \Generated\Shared\Transfer\UnzerChargeTransfer
      */
     protected function addExpensesToUnzerChargeTransfer(
-        UnzerChargeTransfer                     $unzerChargeTransfer,
-        OrderTransfer                           $orderTransfer,
-        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
-    ): UnzerChargeTransfer
-    {
+        UnzerChargeTransfer $unzerChargeTransfer,
+        OrderTransfer $orderTransfer,
+        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+    ): UnzerChargeTransfer {
         if ($orderTransfer->getExpenses()->count() === 0) {
             return $unzerChargeTransfer;
         }
@@ -206,14 +217,13 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     }
 
     /**
-     * @param PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
      *
      * @return int
      */
     protected function countItemsCharged(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
-    ): int
-    {
+    ): int {
         $counter = 0;
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
             if ($paymentUnzerOrderItem->getStatus() === UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED) {

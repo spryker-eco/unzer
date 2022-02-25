@@ -20,10 +20,10 @@ interface UnzerChargeAdapterInterface
     public function chargePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer;
 
     /**
-     * @param UnzerPaymentTransfer $unzerPaymentTransfer
-     * @param UnzerChargeTransfer $unzerChargeTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
      *
-     * @return UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
     public function chargePartialAuthorizablePayment(
         UnzerPaymentTransfer $unzerPaymentTransfer,

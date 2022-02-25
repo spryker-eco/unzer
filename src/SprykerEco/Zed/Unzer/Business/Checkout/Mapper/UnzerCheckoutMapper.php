@@ -31,6 +31,7 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
 
     /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
      */
     public function __construct(
         UnzerConfig $unzerConfig,
@@ -83,7 +84,7 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
      */
     protected function mapQuoteTransferToUnzerBasketItemTransferCollection(QuoteTransfer $quoteTransfer): ArrayObject
     {
-        $unzerBasketItemTransferCollection = new \ArrayObject();
+        $unzerBasketItemTransferCollection = new ArrayObject();
         foreach ($quoteTransfer->getItems() as $quoteItemTransfer) {
             $groupKey = $quoteItemTransfer->getGroupKey();
             if ($unzerBasketItemTransferCollection->offsetExists($groupKey)) {
@@ -94,7 +95,8 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
                 continue;
             }
 
-            $unzerBasketItemTransferCollection->offsetSet($groupKey,
+            $unzerBasketItemTransferCollection->offsetSet(
+                $groupKey,
                 $this->mapQuoteItemTransferToUnzerBasketItemTransfer($quoteItemTransfer, new UnzerBasketItemTransfer()),
             );
         }
@@ -119,7 +121,8 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
             ->setAmountDiscount($itemTransfer->getSumDiscountAmountAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountPerUnit(
                 ($itemTransfer->getUnitPriceToPayAggregation() + $itemTransfer->getCalculatedExpensesCost()) /
-                UnzerConstants::INT_TO_FLOAT_DIVIDER)
+                UnzerConstants::INT_TO_FLOAT_DIVIDER,
+            )
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
             ->setType(static::ITEM_TYPE);
