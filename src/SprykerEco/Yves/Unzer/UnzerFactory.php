@@ -39,7 +39,7 @@ class UnzerFactory extends AbstractFactory
     /**
      * @return \Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface
      */
-    public function createMarketplaceSfortFormDataProvider(): StepEngineFormDataProviderInterface
+    public function createMarketplaceSofortFormDataProvider(): StepEngineFormDataProviderInterface
     {
         return new MarketplaceSofortFormDataProvider(
             $this->getQuoteClient(),
@@ -69,7 +69,7 @@ class UnzerFactory extends AbstractFactory
     /**
      * @return \Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface
      */
-    public function createSfortFormDataProvider(): StepEngineFormDataProviderInterface
+    public function createSofortFormDataProvider(): StepEngineFormDataProviderInterface
     {
         return new SofortFormDataProvider(
             $this->getQuoteClient(),

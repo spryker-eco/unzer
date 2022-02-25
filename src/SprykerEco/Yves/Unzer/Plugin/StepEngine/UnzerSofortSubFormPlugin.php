@@ -19,7 +19,7 @@ class UnzerSofortSubFormPlugin extends AbstractPlugin implements SubFormPluginIn
 {
     /**
      * {@inheritDoc}
-     * - Creates `Marketplace BankTransfer` subform.
+     * - Creates `Sofort` subform.
      *
      * @api
      *
@@ -32,7 +32,7 @@ class UnzerSofortSubFormPlugin extends AbstractPlugin implements SubFormPluginIn
 
     /**
      * {@inheritDoc}
-     * - Creates `Marketplace BankTransfer` subform data provider.
+     * - Creates `Sofort` subform data provider.
      *
      * @api
      *
@@ -40,6 +40,6 @@ class UnzerSofortSubFormPlugin extends AbstractPlugin implements SubFormPluginIn
      */
     public function createSubFormDataProvider(): StepEngineFormDataProviderInterface
     {
-        return $this->getFactory()->createSfortFormDataProvider();
+        return $this->getFactory()->createSofortFormDataProvider();
     }
 }
