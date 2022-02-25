@@ -21,7 +21,9 @@ use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerPersistenceFactory getFactory()
@@ -61,6 +63,28 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             ->usePaymentUnzerQuery()
             ->filterByOrderId($orderId)
             ->endUse()
+            ->find();
+
+        return $this->getFactory()->createUnzerPersistenceMapper()
+            ->mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
+                $paymentUnzerOrderItemEntities,
+                new PaymentUnzerOrderItemCollectionTransfer(),
+            );
+    }
+
+    /**
+     * @param string $orderReference
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
+     */
+    public function getUnrefundedPaymentUnzerOrderItemCollectionByOrderReference(string $orderReference): PaymentUnzerOrderItemCollectionTransfer
+    {
+        $paymentUnzerOrderItemEntities = $this->getFactory()
+            ->createPaymentUnzerOrderItemQuery()
+            ->usePaymentUnzerQuery()
+            ->filterByOrderId($orderReference)
+            ->endUse()
+            ->filterByStatus(UnzerConstants::OMS_STATUS_CHARGE_REFUNDED, Criteria::NOT_EQUAL)
             ->find();
 
         return $this->getFactory()->createUnzerPersistenceMapper()

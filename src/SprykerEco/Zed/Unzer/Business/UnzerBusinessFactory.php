@@ -125,6 +125,7 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeInterface;
@@ -602,6 +603,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentSaver(),
             $this->createUnzerCredentialsResolver(),
+            $this->getSalesFacade(),
         );
     }
 
@@ -647,6 +649,14 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function getLocaleFacade(): UnzerToLocaleFacadeInterface
     {
         return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_LOCALE);
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface
+     */
+    public function getSalesFacade(): UnzerToSalesFacadeInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SALES);
     }
 
     /**

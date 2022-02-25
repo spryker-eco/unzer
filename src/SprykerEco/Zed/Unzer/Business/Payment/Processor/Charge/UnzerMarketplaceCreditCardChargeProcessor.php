@@ -23,7 +23,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
 {
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
@@ -97,9 +97,9 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
-     * @return array<string, \Generated\Shared\Transfer\ItemCollectionTransfer;>
+     * @return array<string, \Generated\Shared\Transfer\ItemCollectionTransfer>
      */
     protected function groupOrderItemsByParticipantId(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,

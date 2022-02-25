@@ -34,6 +34,13 @@ interface UnzerReaderInterface
     public function getPaymentUnzerOrderItemCollectionByOrderId(string $orderId): PaymentUnzerOrderItemCollectionTransfer;
 
     /**
+     * @param string $orderReference
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
+     */
+    public function getUnrefundedPaymentUnzerOrderItemCollectionByOrderReference(string $orderReference): PaymentUnzerOrderItemCollectionTransfer;
+
+    /**
      * @param string $unzerPaymentId
      * @param string $publicKey
      *
