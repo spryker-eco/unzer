@@ -5,7 +5,7 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Communication\Plugin;
+namespace SprykerEco\Zed\Unzer\Communication\Plugin\Payment;
 
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -16,8 +16,6 @@ use Spryker\Zed\PaymentExtension\Dependency\Plugin\PaymentMethodFilterPluginInte
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
  * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
- *
- * @SuppressWarnings(PHPMD.NewPluginExtensionModuleRule)
  */
 class UnzerMarketplacePaymentMethodFilterPlugin extends AbstractPlugin implements PaymentMethodFilterPluginInterface
 {

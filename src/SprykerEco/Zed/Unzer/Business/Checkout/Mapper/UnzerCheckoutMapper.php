@@ -31,6 +31,7 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
 
     /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
      */
     public function __construct(
         UnzerConfig $unzerConfig,
