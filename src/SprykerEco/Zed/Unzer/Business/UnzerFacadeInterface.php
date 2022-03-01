@@ -24,8 +24,8 @@ interface UnzerFacadeInterface
 {
     /**
      * Specification:
-     * - Requires `QuoteTransfer.payment` to be set.
-     * - Requires `PaymentTransfer.unzerPayment` to be set.
+     * - Requires `QuoteTransfer.payment.unzerPayment` to be set.
+     * - Requires `QuoteTransfer.customer` to be set.
      * - Requires `QuoteTransfer.store` to be set.
      * - Expands `QuoteTransfer` with `UnzerPaymentTransfer`.
      * - Expands `QuoteTransfer` with `UnzerKeypairTransfer`.
@@ -46,11 +46,10 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `QuoteTransfer.payment` to be set.
-     * - Requires `PaymentTransfer.unzerPayment` to be set.
-     * - Requires `UnzerPaymentTransfer.unzerCustomer` to be set.
-     * - Requires `UnzerPaymentTransfer.unzerKeypair` to be set.
-     * - Requires `UnzerKeypairTransfer.keypairId` to be set.
+     * - Requires `QuoteTransfer.payment.unzerPayment.idSalesOrder` to be set.
+     * - Requires `QuoteTransfer.payment.unzerPayment.unzerCustomer` to be set.
+     * - Requires `QuoteTransfer.payment.unzerPayment.unzerKeypair.keypairId` to be set.
+     * - Requires `SaveOrderTransfer.orderReference` to bet set.
      * - Saves Unzer payment details to Persistence.
      *
      * @api
@@ -64,6 +63,8 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     * - Requires `PaymentUnzerOrderItemTransfer.idSalesOrderItem` to be set.
+     * - Requires `PaymentUnzerOrderItemTransfer.idPaymentUnzer` to be set.
      * - Checks if provided Unzer notification is enabled.
      * - Processes Unzer notification.
      * - Updates payment details in DB.
@@ -78,9 +79,11 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `QuoteTransfer.payment` to be set.
-     * - Requires `PaymentTransfer.unzerPayment` to be set.
-     * - Requires `UnzerPaymentTransfer.unzerKeypair` to be set.
+     * - Requires `QuoteTransfer.payment.unzerPayment.idSalesOrder` to be set.
+     * - Requires `PaymentTransfer.unzerPayment.keypairId` to be set.
+     * - Requires `PaymentTransfer.unzerPayment.unzerKeypair` to be set.
+     * - Requires `PaymentUnzerOrderItemTransfer.idSalesOrderItem` to be set.
+     * - Requires `PaymentUnzerOrderItemTransfer.idPaymentUnzer` to be set.
      * - Expands `QuoteTransfer` with `UnzerBasketTransfer`.
      * - Expands `QuoteTransfer` with `UnzerPaymentResourceTransfer`.
      * - Performs Unzer Create Basket API call.
@@ -111,7 +114,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Checks if Unzer Authorization is success.
+     * - Checks if Unzer Authorization is successful.
      *
      * @api
      *
@@ -196,6 +199,8 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     * - Requires `PaymentUnzerOrderItemTransfer.idSalesOrderItem` to be set.
+     * - Requires `PaymentUnzerOrderItemTransfer.idPaymentUnzer` to be set.
      * - Executes Unzer API Refund request.
      *
      * @api
@@ -263,10 +268,8 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `UnzerCredentialsTransfer.unzerKeypair` to be set.
-     * - Requires `UnzerCredentialsTransfer.idUnzerCredentials` to be set.
-     * - Saves `UnzerCredentialsTransfer` to Persistence.
-     * - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.
+     * - Saves `UnzerCredentialsTransfer` to persistence.
+     * - Saves `UnzerCredentialsTransfer.storeRelation` to persistence if defined.
      *
      * @api
      *
@@ -278,26 +281,9 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `UnzerCredentialsTransfer.unzerKeypair` to be set.
+     * - Requires `UnzerCredentialsTransfer.unzerKeypair.publicKey` to be set.
      * - Requires `UnzerCredentialsTransfer.idUnzerCredentials` to be set.
-     * - Saves `UnzerCredentialsTransfer` to Persistence.
-     * - If `UnzerCredentialsTransfer` contains store relations - also saves it to Persistence.'
-     * - Prepares UnzerApi request and set Unzer keypair.
-     * - Performs Unzer Set Notification URL Api call.
-     * - If Set Notification URL Api call fails - removes saved Unzer credentials.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
-     */
-    public function createUnzerCredentialsAndSetUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
-
-    /**
-     * Specification:
-     * - Requires `UnzerCredentialsTransfer.unzerKeypair` to be set.
-     * - Requires `UnzerCredentialsTransfer.idUnzerCredentials` to be set.
+     * - Requires `StoreRelationTransfer.idEntity` while updating store relation to be set.
      * - Updates `UnzerCredentialsTransfer` to Persistence.
      * - If `UnzerCredentialsTransfer` contains store relations - also updates it to Persistence.
      *

@@ -18,11 +18,4 @@ interface UnzerCredentialsCreatorInterface
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
     public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
-     */
-    public function createUnzerCredentialsAndSetUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
 }

@@ -59,7 +59,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     {
         $unzerCredentialsResponseTransfer = new UnzerCredentialsResponseTransfer();
 
-        if ($this->haveChildCredentials($unzerCredentialsTransfer)) {
+        if ($this->hasChildCredentials($unzerCredentialsTransfer)) {
             $unzerCredentialsResponseTransfer->addMessage((new MessageTransfer())->setMessage(static::MESSAGE_DELETE_NOT_AVAILABLE));
 
             return $unzerCredentialsResponseTransfer->setIsSuccessful(false);
@@ -83,7 +83,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
      *
      * @return bool
      */
-    protected function haveChildCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
+    protected function hasChildCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
     {
         $unzerCredentialsType = $unzerCredentialsTransfer->getType();
         if (

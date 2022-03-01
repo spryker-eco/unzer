@@ -74,7 +74,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         return $this->getTransactionHandler()->handleTransaction(function () use ($unzerCredentialsTransfer) {
-            return $this->executeCreateUnzerCredentialsTransaction($unzerCredentialsTransfer);
+            return $this->executeCreateUnzerCredentials($unzerCredentialsTransfer);
         });
     }
 
@@ -83,63 +83,39 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    public function createUnzerCredentialsAndSetUnzerNotificationUrl(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
+    protected function executeCreateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        return $this->getTransactionHandler()->handleTransaction(function () use ($unzerCredentialsTransfer) {
-            $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction($unzerCredentialsTransfer);
-            $unzerCredentialsResponseTransfer = $this->executeCreateChildUnzerCredentialsTransaction($unzerCredentialsResponseTransfer);
-            $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsResponseTransfer->getUnzerCredentials());
-
-            return $unzerCredentialsResponseTransfer;
-        });
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
-     */
-    protected function executeCreateUnzerCredentialsTransaction(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
-    {
-        $uniqueId = $this->utilTextService->generateUniqueId('', true);
-        $unzerCredentialsTransfer->setKeypairId($uniqueId);
-
-        $unzerCredentialsTransfer = $this->unzerEntityManager->createUnzerCredentials($unzerCredentialsTransfer);
+        $unzerCredentialsTransfer = $this->unzerEntityManager
+            ->createUnzerCredentials(
+                $unzerCredentialsTransfer->setKeypairId(
+                    $this->utilTextService->generateUniqueId('', true),
+                )
+            );
         $this->unzerVaultWriter->storeUnzerPrivateKey(
             $unzerCredentialsTransfer->getKeypairId(),
             $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPrivateKey(),
         );
 
-        if ($unzerCredentialsTransfer->getStoreRelation() !== null) {
-            $storeRelationTransfer = $unzerCredentialsTransfer->getStoreRelation()
-                ->setIdEntity($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail());
-            $this->unzerCredentialsStoreRelationUpdater->update($storeRelationTransfer);
-        }
+        $unzerCredentialsTransfer = $this->createStoreRelationUnzerCredentials($unzerCredentialsTransfer);
+        $unzerCredentialsTransfer = $this->createChildUnzerCredentials($unzerCredentialsTransfer);
+        $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer);
 
         return (new UnzerCredentialsResponseTransfer())
             ->setIsSuccessful(true)
             ->setUnzerCredentials($unzerCredentialsTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
-     */
-    protected function executeCreateChildUnzerCredentialsTransaction(
-        UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
-    ): UnzerCredentialsResponseTransfer {
-        $unzerCredentialsTransfer = $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail();
-        if ($unzerCredentialsTransfer->getChildUnzerCredentials() === null) {
-            return $unzerCredentialsResponseTransfer;
+    protected function createStoreRelationUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer {
+        if (!$unzerCredentialsTransfer->getStoreRelation()) {
+            return $unzerCredentialsTransfer;
         }
 
-        $unzerCredentialsTransfer = $this->createMainMerchantUnzerCredentials($unzerCredentialsResponseTransfer->getUnzerCredentials());
-        $unzerCredentialsResponseTransfer->setUnzerCredentials($unzerCredentialsTransfer);
+        $storeRelationTransfer = $unzerCredentialsTransfer->getStoreRelationOrFail()
+            ->setIdEntity($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail());
+        $this->unzerCredentialsStoreRelationUpdater->update($storeRelationTransfer);
+        $unzerCredentialsTransfer->setStoreRelation($storeRelationTransfer);
 
-        $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
-
-        return $unzerCredentialsResponseTransfer;
+        return $unzerCredentialsTransfer;
     }
 
     /**
@@ -147,13 +123,32 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    protected function createMainMerchantUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
-    {
+    protected function createChildUnzerCredentials(
+        UnzerCredentialsTransfer $unzerCredentialsTransfer
+    ): UnzerCredentialsTransfer {
+        if (!$unzerCredentialsTransfer->getChildUnzerCredentials()) {
+            return $unzerCredentialsTransfer;
+        }
+
+        $unzerCredentialsTransfer = $this->createMainMerchantUnzerCredentials($unzerCredentialsTransfer);
+        $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
+
+        return $unzerCredentialsTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    protected function createMainMerchantUnzerCredentials(
+        UnzerCredentialsTransfer $unzerCredentialsTransfer
+    ): UnzerCredentialsTransfer {
         $childUnzerCredentialsTransfer = $unzerCredentialsTransfer->getChildUnzerCredentialsOrFail()
             ->setParentIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials())
             ->setType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT);
 
-        $childUnzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction(
+        $childUnzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentials(
             $childUnzerCredentialsTransfer,
         );
 
