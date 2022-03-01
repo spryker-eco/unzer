@@ -89,7 +89,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
             ->createUnzerCredentials(
                 $unzerCredentialsTransfer->setKeypairId(
                     $this->utilTextService->generateUniqueId('', true),
-                )
+                ),
             );
         $this->unzerVaultWriter->storeUnzerPrivateKey(
             $unzerCredentialsTransfer->getKeypairId(),
@@ -105,7 +105,8 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
             ->setUnzerCredentials($unzerCredentialsTransfer);
     }
 
-    protected function createStoreRelationUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer {
+    protected function createStoreRelationUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
+    {
         if (!$unzerCredentialsTransfer->getStoreRelation()) {
             return $unzerCredentialsTransfer;
         }
