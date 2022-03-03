@@ -70,7 +70,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
             /** @phpstan-var array<string, \Generated\Shared\Transfer\ExpenseTransfer> $expensesCollection */
             foreach ($expensesCollection as $expenseTransfer) {
                 $unzerBasketItemTransfer->setAmountPerUnit(
-                    $unzerBasketItemTransfer->getAmountPerUnit(createUnzerBasketItemTransfer) +
+                    $unzerBasketItemTransfer->getAmountPerUnit() +
                     $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
                 );
                 $unzerBasketItemTransfer->setVat((int)$expenseTransfer->getTaxRate());
