@@ -93,8 +93,8 @@ class UnzerPersistenceMapper
     ): SpyPaymentUnzer {
         return $paymentUnzerEntity
             ->fromArray($paymentUnzerTransfer->toArray())
-            ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrderOrFail())
-            ->setUnzerKeypairId($paymentUnzerTransfer->getKeypairIdOrFail());
+            ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder())
+            ->setUnzerKeypairId($paymentUnzerTransfer->getKeypairId());
     }
 
     /**
@@ -109,8 +109,8 @@ class UnzerPersistenceMapper
     ): SpyPaymentUnzerOrderItem {
         return $paymentUnzerOrderItemEntity
             ->fromArray($paymentUnzerOrderItemTransfer->toArray())
-            ->setFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItemOrFail())
-            ->setFkPaymentUnzer($paymentUnzerOrderItemTransfer->getIdPaymentUnzerOrFail());
+            ->setFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItem())
+            ->setFkPaymentUnzer($paymentUnzerOrderItemTransfer->getIdPaymentUnzer());
     }
 
     /**
@@ -125,7 +125,7 @@ class UnzerPersistenceMapper
     ): SpyPaymentUnzerTransaction {
         return $paymentUnzerTransactionEntity
             ->fromArray($paymentUnzerTransactionTransfer->toArray())
-            ->setFkPaymentUnzer($paymentUnzerTransactionTransfer->getIdPaymentUnzerOrFail());
+            ->setFkPaymentUnzer($paymentUnzerTransactionTransfer->getIdPaymentUnzer());
     }
 
     /**

@@ -46,8 +46,8 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `QuoteTransfer.payment.unzerPayment.idSalesOrder` to be set.
-     * - Requires `QuoteTransfer.payment.unzerPayment.unzerCustomer` to be set.
+     * - Requires `SaveOrderTransfer.IdSalesOrder` to be set.
+     * - Requires `QuoteTransfer.payment.unzerPayment.customer` to be set.
      * - Requires `QuoteTransfer.payment.unzerPayment.unzerKeypair.keypairId` to be set.
      * - Requires `SaveOrderTransfer.orderReference` to bet set.
      * - Saves Unzer payment details to Persistence.
@@ -63,8 +63,6 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `PaymentUnzerOrderItemTransfer.idSalesOrderItem` to be set.
-     * - Requires `PaymentUnzerOrderItemTransfer.idPaymentUnzer` to be set.
      * - Checks if provided Unzer notification is enabled.
      * - Processes Unzer notification.
      * - Updates payment details in DB.
@@ -80,10 +78,6 @@ interface UnzerFacadeInterface
     /**
      * Specification:
      * - Requires `QuoteTransfer.payment.unzerPayment.idSalesOrder` to be set.
-     * - Requires `PaymentTransfer.unzerPayment.keypairId` to be set.
-     * - Requires `PaymentTransfer.unzerPayment.unzerKeypair` to be set.
-     * - Requires `PaymentUnzerOrderItemTransfer.idSalesOrderItem` to be set.
-     * - Requires `PaymentUnzerOrderItemTransfer.idPaymentUnzer` to be set.
      * - Expands `QuoteTransfer` with `UnzerBasketTransfer`.
      * - Expands `QuoteTransfer` with `UnzerPaymentResourceTransfer`.
      * - Performs Unzer Create Basket API call.
@@ -199,8 +193,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `PaymentUnzerOrderItemTransfer.idSalesOrderItem` to be set.
-     * - Requires `PaymentUnzerOrderItemTransfer.idPaymentUnzer` to be set.
+     * - Requires `OrderTransfer.payments.paymentProvider.paymentMethod` to be set.
      * - Executes Unzer API Refund request.
      *
      * @api
@@ -283,7 +276,6 @@ interface UnzerFacadeInterface
      * Specification:
      * - Requires `UnzerCredentialsTransfer.unzerKeypair.publicKey` to be set.
      * - Requires `UnzerCredentialsTransfer.idUnzerCredentials` to be set.
-     * - Requires `StoreRelationTransfer.idEntity` while updating store relation to be set.
      * - Updates `UnzerCredentialsTransfer` to Persistence.
      * - If `UnzerCredentialsTransfer` contains store relations - also updates it to Persistence.
      *
