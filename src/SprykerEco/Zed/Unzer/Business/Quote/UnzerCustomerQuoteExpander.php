@@ -92,7 +92,7 @@ class UnzerCustomerQuoteExpander implements UnzerCustomerQuoteExpanderInterface
             return $this->createUnzerCustomer($quoteTransfer);
         }
 
-        $unzerCustomerTransfer = $this->unzerReader->findUnzerCustomerTransferByCustomerTransfer($quoteTransfer->getCustomer());
+        $unzerCustomerTransfer = $this->unzerReader->findUnzerCustomerTransferByCustomerTransfer($quoteTransfer->getCustomerOrFail());
         if ($unzerCustomerTransfer !== null) {
             return $this->updateUnzerCustomer($unzerCustomerTransfer, $quoteTransfer);
         }

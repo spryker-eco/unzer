@@ -66,9 +66,9 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
             return;
         }
 
-        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($saveOrderTransfer->getOrderReference());
+        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($saveOrderTransfer->getOrderReferenceOrFail());
         if ($paymentUnzerTransfer->getIdPaymentUnzer() !== null) {
-            throw new UnzerException(sprintf('Order with reference %s already exists!', $saveOrderTransfer->getOrderReference()));
+            throw new UnzerException(sprintf('Order with reference %s already exists!', $saveOrderTransfer->getOrderReferenceOrFail()));
         }
 
         $this->unzerWriter->createUnzerPaymentDetails($quoteTransfer, $saveOrderTransfer);

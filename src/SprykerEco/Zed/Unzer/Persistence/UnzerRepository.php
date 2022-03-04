@@ -163,7 +163,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             ->endUse()
             ->findOne();
 
-        if ($paymentUnzerCustomerEntity === null) {
+        if (!$paymentUnzerCustomerEntity) {
             return null;
         }
 
@@ -227,7 +227,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         $unzerConfigQuery = $this->getFactory()->createUnzerCredentialsQuery();
         $unzerConfigQuery = $this->setUnzerConfigFilters(
             $unzerConfigQuery,
-            $unzerCredentialsCriteriaTransfer->getUnzerCredentialsConditions(),
+            $unzerCredentialsCriteriaTransfer->getUnzerCredentialsConditionsOrFail(),
         );
 
         $unzerCredentialsEntities = $unzerConfigQuery->find();
@@ -263,6 +263,14 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
 
         if ($unzerCredentialsConditionsTransfer->getTypes()) {
             $unzerConfigQuery->filterByType_In($unzerCredentialsConditionsTransfer->getTypes());
+        }
+
+        if ($unzerCredentialsConditionsTransfer->getIds()) {
+            $unzerConfigQuery->filterByIdUnzerCredentials_In($unzerCredentialsConditionsTransfer->getIds());
+        }
+
+        if ($unzerCredentialsConditionsTransfer->getParentIds()) {
+            $unzerConfigQuery->filterByParentIdUnzerCredentials_In($unzerCredentialsConditionsTransfer->getParentIds());
         }
 
         if ($unzerCredentialsConditionsTransfer->getStoreNames()) {

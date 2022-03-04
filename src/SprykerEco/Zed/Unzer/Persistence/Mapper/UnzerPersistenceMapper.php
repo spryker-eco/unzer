@@ -94,7 +94,7 @@ class UnzerPersistenceMapper
         return $paymentUnzerEntity
             ->fromArray($paymentUnzerTransfer->toArray())
             ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder())
-            ->setUnzerKeypairId($paymentUnzerTransfer->getKeypairIdOrFail());
+            ->setUnzerKeypairId($paymentUnzerTransfer->getKeypairId());
     }
 
     /**
@@ -167,7 +167,7 @@ class UnzerPersistenceMapper
         SpyUnzerCredentials $unzerCredentialsEntity
     ): SpyUnzerCredentials {
         return $unzerCredentialsEntity->fromArray($unzerCredentialsTransfer->toArray())
-            ->setPublicKey($unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey());
+            ->setPublicKey($unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKeyOrFail());
     }
 
     /**

@@ -112,10 +112,10 @@
         <column name="fk_unzer_credentials" type="INTEGER" required="true"/>
         <column name="fk_store" type="INTEGER" required="true"/>
 
-        <foreign-key name="spy_unzer_credentials_store-fk_store" foreignTable="spy_store" phpName="Store" refPhpName="UnzerCredentialsStore">
+        <foreign-key name="spy_unzer_credentials_store-fk_store" foreignTable="spy_store" phpName="Store" refPhpName="UnzerCredentialsStore" onDelete="cascade">
             <reference local="fk_store" foreign="id_store"/>
         </foreign-key>
-        <foreign-key name="spy_unzer_credentials_store-fk_unzer_credentials" foreignTable="spy_unzer_credentials" phpName="UnzerCredentials" refPhpName="UnzerCredentialsStore">
+        <foreign-key name="spy_unzer_credentials_store-fk_unzer_credentials" foreignTable="spy_unzer_credentials" phpName="UnzerCredentials" refPhpName="UnzerCredentialsStore" onDelete="cascade">
             <reference local="fk_unzer_credentials" foreign="id_unzer_credentials"/>
         </foreign-key>
 

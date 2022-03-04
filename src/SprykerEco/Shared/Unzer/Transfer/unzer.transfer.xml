@@ -133,6 +133,7 @@
         <property name="parentIdUnzerCredentials" type="int"/>
         <property name="storeRelation" type="StoreRelation"/>
         <property name="unzerKeypair" type="UnzerKeypair"/>
+        <property name="childUnzerCredentials" type="UnzerCredentials"/>
     </transfer>
 
     <transfer name="StoreRelation">
@@ -148,6 +149,7 @@
 
     <transfer name="Message">
         <property name="value" type="string"/>
+        <property name="message" type="string"/>
     </transfer>
 
     <transfer name="UnzerCredentialsResponse">
@@ -299,6 +301,8 @@
         <property name="publicKeys" type="string[]" singular="publicKey"/>
         <property name="keypairIds" type="string[]" singular="keypairId"/>
         <property name="types" type="int[]" singular="type"/>
+        <property name="ids" type="int[]" singular="id"/>
+        <property name="parentIds" type="int[]" singular="parentId"/>
     </transfer>
 
     <transfer name="UnzerCredentialsCollection">
@@ -605,5 +609,14 @@
 
     <transfer name="TaxTotal">
         <property name="amount" type="int"/>
+    </transfer>
+
+    <transfer name="MerchantCriteria">
+        <property name="merchantReference" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerCredentialsParameterMessage">
+        <property name="messages" type="Message[]" singular="message"/>
+        <property name="parameter" type="string"/>
     </transfer>
 </transfers>
