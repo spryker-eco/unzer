@@ -13,6 +13,11 @@ use Symfony\Component\Validator\Constraint;
 class UniqueStoreRelationConstraint extends Constraint
 {
     /**
+     * @var string
+     */
+    protected const VALIDATION_MESSAGE = 'Another Unzer Credentials has been already defined for chosen Stores.';
+
+    /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
@@ -28,11 +33,6 @@ class UniqueStoreRelationConstraint extends Constraint
         parent::__construct($options, $groups, $payload);
         $this->unzerReader = $unzerReader;
     }
-
-    /**
-     * @var string
-     */
-    protected const VALIDATION_MESSAGE = 'Store relation already defined.';
 
     /**
      * @return string

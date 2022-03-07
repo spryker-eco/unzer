@@ -23,18 +23,18 @@ class UnzerCredentialsConstraintsValidator implements UnzerCredentialsConstraint
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UnzerCredentialsConstraintsProviderInterface
      */
-    protected UnzerCredentialsConstraintsProviderInterface $unzerCredentailsContraintsProvider;
+    protected UnzerCredentialsConstraintsProviderInterface $unzerCredentialsConstraintsProvider;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface $unzerCredentialsValidationAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UnzerCredentialsConstraintsProviderInterface $unzerCredentailsContraintsProvider
+     * @param \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UnzerCredentialsConstraintsProviderInterface $unzerCredentialsConstraintsProvider
      */
     public function __construct(
         UnzerToValidationAdapterInterface $unzerCredentialsValidationAdapter,
-        UnzerCredentialsConstraintsProviderInterface $unzerCredentailsContraintsProvider
+        UnzerCredentialsConstraintsProviderInterface $unzerCredentialsConstraintsProvider
     ) {
         $this->unzerCredentialsValidationAdapter = $unzerCredentialsValidationAdapter;
-        $this->unzerCredentailsContraintsProvider = $unzerCredentailsContraintsProvider;
+        $this->unzerCredentialsConstraintsProvider = $unzerCredentialsConstraintsProvider;
     }
 
     /**
@@ -48,7 +48,7 @@ class UnzerCredentialsConstraintsValidator implements UnzerCredentialsConstraint
             ->createValidator()
             ->validate(
                 $unzerCredentialsTransfer->toArrayRecursiveCamelCased(),
-                $this->unzerCredentailsContraintsProvider->getConstraintsCollectionByConfigType($unzerCredentialsTransfer->getTypeOrFail()),
+                $this->unzerCredentialsConstraintsProvider->getConstraintsCollectionByConfigType($unzerCredentialsTransfer->getTypeOrFail()),
             );
 
         $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())

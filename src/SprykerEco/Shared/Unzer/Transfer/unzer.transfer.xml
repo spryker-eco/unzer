@@ -298,6 +298,7 @@
     <transfer name="UnzerCredentialsConditions">
         <property name="merchantReferences" type="string[]" singular="merchantReference"/>
         <property name="storeNames" type="string[]" singular="storeName"/>
+        <property name="storeIds" type="int[]" singular="storeId"/>
         <property name="publicKeys" type="string[]" singular="publicKey"/>
         <property name="keypairIds" type="string[]" singular="keypairId"/>
         <property name="types" type="int[]" singular="type"/>

@@ -224,13 +224,13 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     public function findUnzerCredentialsCollectionByCriteria(
         UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
     ): UnzerCredentialsCollectionTransfer {
-        $unzerConfigQuery = $this->getFactory()->createUnzerCredentialsQuery();
-        $unzerConfigQuery = $this->setUnzerConfigFilters(
-            $unzerConfigQuery,
+        $unzerCredentialsQuery = $this->getFactory()->createUnzerCredentialsQuery();
+        $unzerCredentialsQuery = $this->setUnzerConfigFilters(
+            $unzerCredentialsQuery,
             $unzerCredentialsCriteriaTransfer->getUnzerCredentialsConditionsOrFail(),
         );
 
-        $unzerCredentialsEntities = $unzerConfigQuery->find();
+        $unzerCredentialsEntities = $unzerCredentialsQuery->find();
 
         return $this->getFactory()->createUnzerPersistenceMapper()
             ->mapUnzerCredentialsEntityCollectionToUnzerCredentialsTransferCollection(
@@ -240,41 +240,41 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
-     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery $unzerConfigQuery
+     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery $unzerCredentialsQuery
      * @param \Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer $unzerCredentialsConditionsTransfer
      *
      * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery
      */
     protected function setUnzerConfigFilters(
-        SpyUnzerCredentialsQuery $unzerConfigQuery,
+        SpyUnzerCredentialsQuery           $unzerCredentialsQuery,
         UnzerCredentialsConditionsTransfer $unzerCredentialsConditionsTransfer
     ): SpyUnzerCredentialsQuery {
         if ($unzerCredentialsConditionsTransfer->getKeypairIds()) {
-            $unzerConfigQuery->filterByKeypairId_In($unzerCredentialsConditionsTransfer->getKeypairIds());
+            $unzerCredentialsQuery->filterByKeypairId_In($unzerCredentialsConditionsTransfer->getKeypairIds());
         }
 
         if ($unzerCredentialsConditionsTransfer->getMerchantReferences()) {
-            $unzerConfigQuery->filterByMerchantReference_In($unzerCredentialsConditionsTransfer->getMerchantReferences());
+            $unzerCredentialsQuery->filterByMerchantReference_In($unzerCredentialsConditionsTransfer->getMerchantReferences());
         }
 
         if ($unzerCredentialsConditionsTransfer->getPublicKeys()) {
-            $unzerConfigQuery->filterByPublicKey_In($unzerCredentialsConditionsTransfer->getPublicKeys());
+            $unzerCredentialsQuery->filterByPublicKey_In($unzerCredentialsConditionsTransfer->getPublicKeys());
         }
 
         if ($unzerCredentialsConditionsTransfer->getTypes()) {
-            $unzerConfigQuery->filterByType_In($unzerCredentialsConditionsTransfer->getTypes());
+            $unzerCredentialsQuery->filterByType_In($unzerCredentialsConditionsTransfer->getTypes());
         }
 
         if ($unzerCredentialsConditionsTransfer->getIds()) {
-            $unzerConfigQuery->filterByIdUnzerCredentials_In($unzerCredentialsConditionsTransfer->getIds());
+            $unzerCredentialsQuery->filterByIdUnzerCredentials_In($unzerCredentialsConditionsTransfer->getIds());
         }
 
         if ($unzerCredentialsConditionsTransfer->getParentIds()) {
-            $unzerConfigQuery->filterByParentIdUnzerCredentials_In($unzerCredentialsConditionsTransfer->getParentIds());
+            $unzerCredentialsQuery->filterByParentIdUnzerCredentials_In($unzerCredentialsConditionsTransfer->getParentIds());
         }
 
         if ($unzerCredentialsConditionsTransfer->getStoreNames()) {
-            $unzerConfigQuery
+            $unzerCredentialsQuery
                 ->joinWithUnzerCredentialsStore()
                 ->useUnzerCredentialsStoreQuery()
                     ->joinWithStore()
@@ -284,6 +284,17 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
                 ->endUse();
         }
 
-        return $unzerConfigQuery;
+        if ($unzerCredentialsConditionsTransfer->getStoreIds()) {
+            $unzerCredentialsQuery
+                ->joinWithUnzerCredentialsStore()
+                ->useUnzerCredentialsStoreQuery()
+                    ->joinWithStore()
+                    ->useStoreQuery()
+                        ->filterByIdStore_In($unzerCredentialsConditionsTransfer->getStoreIds())
+                ->endUse()
+                ->endUse();
+        }
+
+        return $unzerCredentialsQuery;
     }
 }

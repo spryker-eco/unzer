@@ -23,11 +23,13 @@ class UniqueStoreRelationConstraintValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint): void
     {
-        if (!$value) {
+        if (!$value || !is_array($value['idStores'])) {
             return;
         }
 
-        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())->addStoreName($value);
+        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
+            ->setStoreIds($value['idStores'])
+            ->setTypes();
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
         $unzerCredentialsCollectionTransfer = $constraint->getUnzerReader()->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
 

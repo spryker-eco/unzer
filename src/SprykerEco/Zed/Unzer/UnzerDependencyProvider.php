@@ -114,6 +114,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addVaultFacade($container);
         $container = $this->addUtilTextService($container);
         $container = $this->addValidationAdapter($container);
+        $container = $this->addMerchantFacade($container);
 
         return $container;
     }
