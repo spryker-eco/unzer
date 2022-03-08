@@ -81,9 +81,11 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentials($unzerCredentialsTransfer);
         if (!$unzerCredentialsResponseTransfer->getIsSuccessful()) {
             $propelConnection->rollBack();
-        } else {
-            $propelConnection->commit();
+
+            return $unzerCredentialsResponseTransfer;
         }
+
+        $propelConnection->commit();
 
         return $unzerCredentialsResponseTransfer;
     }
@@ -113,9 +115,8 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
             $unzerCredentialsTransfer = $this->createChildUnzerCredentials($unzerCredentialsTransfer);
             $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer);
         } catch (UnzerApiException $exception) {
-            return $unzerCredentialsResponseTransfer
-                ->addMessage(
-                    (new MessageTransfer())->setMessage($exception->getMessage())
+            return $unzerCredentialsResponseTransfer->addMessage(
+                    (new MessageTransfer())->setMessage($exception->getMessage()),
                 );
         }
 
