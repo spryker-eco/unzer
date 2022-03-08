@@ -7,10 +7,13 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Credentials;
 
+use Generated\Shared\Transfer\MessageTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Propel\Runtime\Propel;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
 use SprykerEco\Shared\Unzer\UnzerConstants;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerApiException;
 use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
@@ -73,9 +76,16 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
      */
     public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        return $this->getTransactionHandler()->handleTransaction(function () use ($unzerCredentialsTransfer) {
-            return $this->executeCreateUnzerCredentials($unzerCredentialsTransfer);
-        });
+        $propelConnection = Propel::getConnection();
+        $propelConnection->beginTransaction();
+        $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentials($unzerCredentialsTransfer);
+        if (!$unzerCredentialsResponseTransfer->getIsSuccessful()) {
+            $propelConnection->rollBack();
+        } else {
+            $propelConnection->commit();
+        }
+
+        return $unzerCredentialsResponseTransfer;
     }
 
     /**
@@ -97,10 +107,19 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         );
 
         $unzerCredentialsTransfer = $this->createStoreRelationUnzerCredentials($unzerCredentialsTransfer);
-        $unzerCredentialsTransfer = $this->createChildUnzerCredentials($unzerCredentialsTransfer);
-        $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer);
+        $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(false);
 
-        return (new UnzerCredentialsResponseTransfer())
+        try {
+            $unzerCredentialsTransfer = $this->createChildUnzerCredentials($unzerCredentialsTransfer);
+            $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer);
+        } catch (UnzerApiException $exception) {
+            return $unzerCredentialsResponseTransfer
+                ->addMessage(
+                    (new MessageTransfer())->setMessage($exception->getMessage())
+                );
+        }
+
+        return $unzerCredentialsResponseTransfer
             ->setIsSuccessful(true)
             ->setUnzerCredentials($unzerCredentialsTransfer);
     }
