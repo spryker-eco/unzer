@@ -114,9 +114,9 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         try {
             $unzerCredentialsTransfer = $this->createChildUnzerCredentials($unzerCredentialsTransfer);
             $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer);
-        } catch (UnzerApiException $exception) {
+        } catch (UnzerApiException $unzerApiException) {
             return $unzerCredentialsResponseTransfer->addMessage(
-                    (new MessageTransfer())->setMessage($exception->getMessage()),
+                    (new MessageTransfer())->setMessage($unzerApiException->getMessage()),
                 );
         }
 
