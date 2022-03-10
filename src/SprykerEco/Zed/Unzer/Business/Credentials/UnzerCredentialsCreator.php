@@ -78,9 +78,9 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     {
         $propelConnection = Propel::getConnection();
         $unzerCredentialsResponseTransfer = new UnzerCredentialsResponseTransfer();
+        $propelConnection->beginTransaction();
 
         try {
-            $propelConnection->beginTransaction();
             $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentials($unzerCredentialsTransfer);
             $propelConnection->commit();
         } catch (UnzerApiException $unzerApiException) {

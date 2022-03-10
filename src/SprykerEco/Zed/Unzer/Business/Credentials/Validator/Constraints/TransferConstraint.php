@@ -40,8 +40,6 @@ class TransferConstraint extends Composite
     }
 
     /**
-     * {@inheritDoc}
-     *
      * @throws \Symfony\Component\Validator\Exception\ConstraintDefinitionException
      *
      * @return void

@@ -12,7 +12,7 @@ interface UnzerCredentialsConstraintsProviderInterface
     /**
      * @param int $unzerCredentialsType
      *
-     * @return array
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
     public function getConstraintsCollectionByConfigType(int $unzerCredentialsType): array;
 }
