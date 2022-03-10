@@ -47,7 +47,7 @@ class UnzerCredentialsConstraintsValidator implements UnzerCredentialsConstraint
         $constraintViolationList = $this->unzerCredentialsValidationAdapter
             ->createValidator()
             ->validate(
-                $unzerCredentialsTransfer->toArrayRecursiveCamelCased(),
+                $unzerCredentialsTransfer,
                 $this->unzerCredentialsConstraintsProvider->getConstraintsCollectionByConfigType($unzerCredentialsTransfer->getTypeOrFail()),
             );
 

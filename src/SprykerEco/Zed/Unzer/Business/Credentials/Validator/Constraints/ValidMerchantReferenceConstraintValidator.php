@@ -8,24 +8,32 @@
 namespace SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints;
 
 use Generated\Shared\Transfer\MerchantCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class ValidMerchantReferenceConstraintValidator extends ConstraintValidator
 {
     /**
-     * @param string $value
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $value
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\ValidMerchantReferenceConstraint $constraint
+     *
+     * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
      *
      * @return void
      */
     public function validate($value, Constraint $constraint): void
     {
-        if (!$value) {
-            return;
+        if (!$value instanceof UnzerCredentialsTransfer) {
+            throw new UnexpectedTypeException($value, UnzerCredentialsTransfer::class);
         }
 
-        $merchantCriteriaTransfer = (new MerchantCriteriaTransfer())->setMerchantReference($value);
+        if (!$constraint instanceof ValidMerchantReferenceConstraint) {
+            throw new UnexpectedTypeException($constraint, ValidMerchantReferenceConstraint::class);
+        }
+
+        $merchantCriteriaTransfer = (new MerchantCriteriaTransfer())->setMerchantReference($value->getMerchantReference());
 
         if ($constraint->getMerchantFacade()->findOne($merchantCriteriaTransfer)) {
             return;

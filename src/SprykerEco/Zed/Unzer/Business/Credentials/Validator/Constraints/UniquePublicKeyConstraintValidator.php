@@ -9,8 +9,10 @@ namespace SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints;
 
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class UniquePublicKeyConstraintValidator extends ConstraintValidator
 {
@@ -18,23 +20,42 @@ class UniquePublicKeyConstraintValidator extends ConstraintValidator
      * @param string $value
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UniquePublicKeyConstraint $constraint
      *
+     * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
+     *
      * @return void
      */
     public function validate($value, Constraint $constraint): void
     {
-        if (!$value) {
+        if (!$value instanceof UnzerCredentialsTransfer) {
+            throw new UnexpectedTypeException($value, UnzerCredentialsTransfer::class);
+        }
+
+        if (!$constraint instanceof UniquePublicKeyConstraint) {
+            throw new UnexpectedTypeException($constraint, UniquePublicKeyConstraint::class);
+        }
+
+        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
+            ->addPublicKey($value->getUnzerKeypairOrFail()->getPublicKey());
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
+
+        $unzerCredentialsCollectionTransfer = $constraint->getUnzerReader()
+            ->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
+        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
             return;
         }
 
-        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())->addPublicKey($value);
-        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
+        foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
+            if (
+                $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey() === $value->getUnzerKeypairOrFail()->getPublicKey() &&
+                $unzerCredentialsTransfer->getIdUnzerCredentials() !== (int)$value->getIdUnzerCredentials()
+            ) {
+                $this->context
+                    ->buildViolation($constraint->getMessage())
+                    ->addViolation();
 
-        if (!$constraint->getUnzerReader()->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer)) {
-            return;
+                return;
+            }
         }
-
-        $this->context
-            ->buildViolation($constraint->getMessage())
-            ->addViolation();
     }
 }

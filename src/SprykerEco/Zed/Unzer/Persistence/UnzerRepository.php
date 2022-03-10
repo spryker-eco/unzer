@@ -246,7 +246,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery
      */
     protected function setUnzerConfigFilters(
-        SpyUnzerCredentialsQuery           $unzerCredentialsQuery,
+        SpyUnzerCredentialsQuery $unzerCredentialsQuery,
         UnzerCredentialsConditionsTransfer $unzerCredentialsConditionsTransfer
     ): SpyUnzerCredentialsQuery {
         if ($unzerCredentialsConditionsTransfer->getKeypairIds()) {

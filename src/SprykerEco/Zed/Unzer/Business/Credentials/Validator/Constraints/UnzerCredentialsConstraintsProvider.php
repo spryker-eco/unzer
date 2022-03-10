@@ -13,10 +13,10 @@ use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface;
-use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Sequentially;
 
 class UnzerCredentialsConstraintsProvider implements UnzerCredentialsConstraintsProviderInterface
 {
@@ -45,9 +45,9 @@ class UnzerCredentialsConstraintsProvider implements UnzerCredentialsConstraints
      *
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
-     * @return \Symfony\Component\Validator\Constraints\Collection
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
-    public function getConstraintsCollectionByConfigType(int $unzerCredentialsType): Collection
+    public function getConstraintsCollectionByConfigType(int $unzerCredentialsType): array
     {
         switch ($unzerCredentialsType) {
             case UnzerConstants::UNZER_CONFIG_TYPE_STANDARD:
@@ -63,87 +63,70 @@ class UnzerCredentialsConstraintsProvider implements UnzerCredentialsConstraints
     }
 
     /**
-     * @return \Symfony\Component\Validator\Constraints\Collection
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
-    protected function getDefaultConstraintsCollection(): Collection
+    protected function getDefaultConstraintsCollection(): array
     {
-        return new Collection([
-            'fields' => [
-                UnzerCredentialsTransfer::CONFIG_NAME => $this->getConfigNameConstraints(),
-                UnzerCredentialsTransfer::UNZER_KEYPAIR => $this->getKeypairConstraints(),
-                UnzerCredentialsTransfer::STORE_RELATION => $this->getStoreRelationConstraints(),
-            ],
-            'allowExtraFields' => true,
-        ]);
+        return array_merge(
+            [new TransferConstraint([UnzerCredentialsTransfer::CONFIG_NAME => $this->getConfigNameConstraint()])],
+            [new TransferConstraint([UnzerCredentialsTransfer::UNZER_KEYPAIR => $this->getKeypairConstraints()])],
+            [new UniquePublicKeyConstraint($this->unzerReader)],
+            $this->getStoreRelationConstraints(),
+        );
     }
 
     /**
-     * @return \Symfony\Component\Validator\Constraints\Collection
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
-    protected function getMarketplaceMainMerchantConstraintsCollection(): Collection
+    protected function getMarketplaceMainMerchantConstraintsCollection(): array
     {
-        return new Collection([
-            'fields' => [
-                UnzerCredentialsTransfer::UNZER_KEYPAIR => $this->getKeypairConstraints(),
-                UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $this->getParentIdUnzerCredentialsConstraints(),
-                UnzerCredentialsTransfer::MERCHANT_REFERENCE => $this->getMerchantReferenceConstraints(),
-            ],
-            'allowExtraFields' => true,
-        ]);
+        return array_merge(
+            [new TransferConstraint([UnzerCredentialsTransfer::UNZER_KEYPAIR => $this->getKeypairConstraints()])],
+            [new UniquePublicKeyConstraint($this->unzerReader)],
+            $this->getStoreRelationConstraints(),
+            $this->getMerchantReferenceConstraints(),
+        );
     }
 
     /**
-     * @return \Symfony\Component\Validator\Constraints\Collection
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
-    protected function getMarketplaceMerchantConstraintsCollection(): Collection
+    protected function getMarketplaceMerchantConstraintsCollection(): array
     {
-        return new Collection([
-            'fields' => [
-                UnzerCredentialsTransfer::UNZER_KEYPAIR => $this->getKeypairConstraints(),
-                UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $this->getParentIdUnzerCredentialsConstraints(),
-            ],
-            'allowExtraFields' => true,
-        ]);
+        return array_merge(
+            [new TransferConstraint([UnzerCredentialsTransfer::UNZER_KEYPAIR => $this->getKeypairConstraints()])],
+            [new UniquePublicKeyConstraint($this->unzerReader)],
+            $this->getParentIdUnzerCredentialsConstraints(),
+            $this->getMerchantReferenceConstraints(),
+        );
     }
 
     /**
-     * @return array
+     * @return \Symfony\Component\Validator\Constraint
      */
-    protected function getConfigNameConstraints(): array
+    protected function getConfigNameConstraint(): SymfonyConstraint
     {
-        return [
-            new NotBlank(),
-            new Length(['max' => 255]),
-        ];
+        return new Sequentially([
+                new NotBlank(),
+                new Length(['max' => 255]),
+            ]);
     }
 
     /**
-     * @return array
+     * @return \Symfony\Component\Validator\Constraint
      */
-    protected function getKeypairConstraints(): array
+    protected function getKeypairConstraints(): SymfonyConstraint
     {
-        return [
-            new NotBlank(),
-            new Type('array'),
-            new Collection([
-                'fields' => [
-                    UnzerKeypairTransfer::PRIVATE_KEY => [
-                        new NotBlank(),
-                        new Length(['max' => 255]),
-                    ],
-                    UnzerKeypairTransfer::PUBLIC_KEY => [
-                        new NotBlank(),
-                        new Length(['max' => 255]),
-                        new UniquePublicKeyConstraint($this->unzerReader),
-                    ],
-                ],
-                'allowExtraFields' => true,
+        return new Sequentially([
+            new TransferConstraint([
+                UnzerKeypairTransfer::PRIVATE_KEY => $this->getRegularStringConstraint(),
+                UnzerKeypairTransfer::PUBLIC_KEY => $this->getRegularStringConstraint(),
             ]),
-        ];
+        ]);
     }
 
     /**
-     * @return array
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
     protected function getMerchantReferenceConstraints(): array
     {
@@ -153,7 +136,7 @@ class UnzerCredentialsConstraintsProvider implements UnzerCredentialsConstraints
     }
 
     /**
-     * @return array
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
     protected function getParentIdUnzerCredentialsConstraints(): array
     {
@@ -164,12 +147,23 @@ class UnzerCredentialsConstraintsProvider implements UnzerCredentialsConstraints
     }
 
     /**
-     * @return array<int, \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UniqueStoreRelationConstraint>
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
     protected function getStoreRelationConstraints(): array
     {
         return [
             new UniqueStoreRelationConstraint($this->unzerReader),
         ];
+    }
+
+    /**
+     * @return \Symfony\Component\Validator\Constraint
+     */
+    protected function getRegularStringConstraint(): SymfonyConstraint
+    {
+        return new Sequentially([
+            new NotBlank(),
+            new Length(['max' => 255]),
+        ]);
     }
 }
