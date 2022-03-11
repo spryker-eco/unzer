@@ -27,7 +27,7 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
         $shippingAddress = $this->getShippingAddressFromQuote($quoteTransfer);
 
         return $unzerCustomerTransfer
-            ->setId($quoteTransfer->getCustomerReference() . uniqid('', true))
+            ->setId($quoteTransfer->getCustomerReferenceOrFail() . uniqid('', true))
             ->setLastname($quoteTransfer->getCustomerOrFail()->getLastName())
             ->setFirstname($quoteTransfer->getCustomerOrFail()->getFirstName())
             ->setSalutation($quoteTransfer->getCustomerOrFail()->getSalutation())
@@ -57,7 +57,7 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
         return $unzerAddressTransfer->setCountry($addressTransfer->getIso2Code())
             ->setState($addressTransfer->getState())
             ->setCity($addressTransfer->getCity())
-            ->setName($addressTransfer->getFirstName() . ' ' . $addressTransfer->getLastName())
+            ->setName((string)$addressTransfer->getFirstName() . ' ' . (string)$addressTransfer->getLastName())
             ->setZip($addressTransfer->getZipCode())
             ->setStreet($addressTransfer->getAddress1());
     }

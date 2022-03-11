@@ -88,7 +88,7 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
         );
 
         if ($unzerCredentialsTransfer->getStoreRelation() !== null) {
-            $storeRelationTransfer = $unzerCredentialsTransfer->getStoreRelation()
+            $storeRelationTransfer = $unzerCredentialsTransfer->getStoreRelationOrFail()
                 ->setIdEntity($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail());
             $this->unzerCredentialsStoreRelationUpdater->update($storeRelationTransfer);
         }

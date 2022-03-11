@@ -62,7 +62,7 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
     ): UnzerPaymentTransfer {
         return $unzerPaymentTransfer
             ->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getPaymentId())
-            ->setAmountTotal((int)($unzerApiMarketplaceAuthorizeResponseTransfer->getAmount() * UnzerConstants::INT_TO_FLOAT_DIVIDER))
+            ->setAmountTotal((int)$unzerApiMarketplaceAuthorizeResponseTransfer->getAmount() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setCurrency($unzerApiMarketplaceAuthorizeResponseTransfer->getCurrency())
             ->setRedirectUrl($unzerApiMarketplaceAuthorizeResponseTransfer->getRedirectUrl())
             ->setCustomer((new UnzerCustomerTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getCustomerId()))

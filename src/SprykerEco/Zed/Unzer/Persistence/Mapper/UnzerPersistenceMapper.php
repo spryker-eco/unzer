@@ -184,7 +184,7 @@ class UnzerPersistenceMapper
             ->fromArray($unzerCredentialsEntity->toArray(), true);
 
         if ($unzerCredentialsTransfer->getUnzerKeypair()) {
-            $unzerCredentialsTransfer->getUnzerKeypair()
+            $unzerCredentialsTransfer->getUnzerKeypairOrFail()
                 ->setPublicKey($unzerCredentialsEntity->getPublicKey())
                 ->setKeypairId($unzerCredentialsEntity->getKeypairId());
 
