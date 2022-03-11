@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 class UniqueStoreRelationConstraintValidator extends ConstraintValidator
 {
     /**
-     * @param string $value
+     * @param array $value
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UniqueStoreRelationConstraint $constraint
      *
      * @return void

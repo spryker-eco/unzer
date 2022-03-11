@@ -116,7 +116,7 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
      */
     protected function parseTransactionId(UnzerTransactionTransfer $unzerTransactionTransfer): string
     {
-        $url = $unzerTransactionTransfer->getUrl();
+        $url = $unzerTransactionTransfer->getUrlOrFail();
         $urlParts = explode('/', $url);
 
         return (string)end($urlParts);

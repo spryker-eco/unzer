@@ -104,8 +104,8 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
                 ),
             );
         $this->unzerVaultWriter->storeUnzerPrivateKey(
-            $unzerCredentialsTransfer->getKeypairId(),
-            $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPrivateKey(),
+            $unzerCredentialsTransfer->getKeypairIdOrFail(),
+            $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPrivateKeyOrFail(),
         );
 
         $unzerCredentialsTransfer = $this->createStoreRelationUnzerCredentials($unzerCredentialsTransfer);
@@ -157,7 +157,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         }
 
         $unzerCredentialsTransfer = $this->createMainMerchantUnzerCredentials($unzerCredentialsTransfer);
-        $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
+        $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentialsOrFail());
 
         return $unzerCredentialsTransfer;
     }

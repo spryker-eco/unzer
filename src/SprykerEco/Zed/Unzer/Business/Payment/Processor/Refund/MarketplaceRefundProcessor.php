@@ -74,13 +74,13 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      */
     public function refund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
-        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
+        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReferenceOrFail());
         $unzerRefundTransfers = $this->createUnzerMarketplaceRefundTransfers($refundTransfer, $paymentUnzerTransfer);
 
         foreach ($unzerRefundTransfers as $unzerRefundTransfer) {
             $this->unzerRefundAdapter->refundPayment(
                 $unzerRefundTransfer,
-                //add keypairTransfer
+                // @todo: add keypairTransfer
             );
         }
 
@@ -131,7 +131,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
 
         $paymentUnzerTransactionTransfer = $this->unzerReader
             ->getPaymentUnzerTransactionByPaymentIdAndParticipantId(
-                $paymentUnzerTransfer->getPaymentId(),
+                $paymentUnzerTransfer->getPaymentIdOrFail(),
                 UnzerConstants::TRANSACTION_TYPE_CHARGE,
                 $participantId,
             );
@@ -159,7 +159,7 @@ class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     protected function setParticipantIdForRefundItems(RefundTransfer $refundTransfer): RefundTransfer
     {
         foreach ($refundTransfer->getItems() as $itemTransfer) {
-            $paymentUnzerOrderItemTransfer = $this->unzerReader->getPaymentUnzerOrderItemByIdSalesOrderItem($itemTransfer->getIdSalesOrderItem());
+            $paymentUnzerOrderItemTransfer = $this->unzerReader->getPaymentUnzerOrderItemByIdSalesOrderItem($itemTransfer->getIdSalesOrderItemOrFail());
             if ($paymentUnzerOrderItemTransfer->getParticipantId() === null) {
                 continue;
             }
