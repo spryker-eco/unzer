@@ -116,8 +116,8 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
             $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer);
         } catch (UnzerApiException $unzerApiException) {
             return $unzerCredentialsResponseTransfer->addMessage(
-                    (new MessageTransfer())->setMessage($unzerApiException->getMessage()),
-                );
+                (new MessageTransfer())->setMessage($unzerApiException->getMessage()),
+            );
         }
 
         return $unzerCredentialsResponseTransfer
@@ -125,6 +125,11 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
             ->setUnzerCredentials($unzerCredentialsTransfer);
     }
 
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
     protected function createStoreRelationUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
     {
         if (!$unzerCredentialsTransfer->getStoreRelation()) {
