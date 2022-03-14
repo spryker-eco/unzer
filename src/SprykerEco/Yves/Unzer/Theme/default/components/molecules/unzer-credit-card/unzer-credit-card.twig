@@ -1,0 +1,50 @@
+{% extends model('component') %}
+
+{% define config = {
+    name: 'unzer-credit-card',
+    tag: 'unzer-credit-card',
+} %}
+
+{% define data = {
+    form: required,
+    scriptSrc: 'https://static.unzer.com/v1/heidelpay.js',
+} %}
+
+{% define attributes = {
+    'form-selector': '[name="paymentForm"]',
+    'current-payment-method-selector': '[name="paymentForm[paymentSelection]"]:checked',
+    'card-number-container-id': 'containerUnzerCardNumber',
+    'card-expiry-container-id': 'containerUnzerCardExpiry',
+    'card-cvc-container-id': 'containerUnzerCardCvc',
+    'public-key-form-element-id': 'paymentForm_unzerCreditCard_public_key',
+    'transaction-id-form-element-id': 'paymentForm_unzerCreditCard_id',
+    'locale': app.locale | replace({'_': '-'}),
+} %}
+
+{% block body %}
+    {% include molecule('script-loader') with {
+        class: config.jsName ~ '__script-loader',
+        attributes: {
+            src: data.scriptSrc,
+        },
+    } only %}
+
+    <div class="grid">
+        <div class="form__field col col--sm-12">
+            <div id="containerUnzerCardNumber">
+            </div>
+        </div>
+        <div class="form__field col col--sm-12 col--lg-6">
+            <div id="containerUnzerCardExpiry">
+            </div>
+        </div>
+        <div class="form__field col col--sm-12 col--lg-6">
+            <div id="containerUnzerCardCvc">
+            </div>
+        </div>
+        <div class="form__field col col--sm-12 text-alert {{ config.jsName }}__error-container"></div>
+    </div>
+
+    {{ form_widget(data.form.unzerCreditCard.public_key) }}
+    {{ form_widget(data.form.unzerCreditCard.id) }}
+{% endblock %}
