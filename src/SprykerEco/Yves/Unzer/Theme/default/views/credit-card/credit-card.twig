@@ -7,7 +7,8 @@
 {% block body %}
     {% include molecule('unzer-credit-card', 'Unzer') with {
         data: {
-            form: data.form,
+            publicKey: data.form.unzerCreditCard.public_key,
+            id: data.form.unzerCreditCard.id,
         },
     } only %}
 {% endblock %}

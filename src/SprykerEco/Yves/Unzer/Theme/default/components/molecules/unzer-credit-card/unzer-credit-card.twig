@@ -6,8 +6,9 @@
 } %}
 
 {% define data = {
-    form: required,
-    scriptSrc: 'https://static.unzer.com/v1/heidelpay.js',
+    publicKey: required,
+    id: required,
+    scriptSrc: 'https://static.unzer.com/v1/unzer.js',
 } %}
 
 {% define attributes = {
@@ -45,6 +46,6 @@
         <div class="form__field col col--sm-12 text-alert {{ config.jsName }}__error-container"></div>
     </div>
 
-    {{ form_widget(data.form.unzerCreditCard.public_key) }}
-    {{ form_widget(data.form.unzerCreditCard.id) }}
+    {{ form_widget(data.publicKey) }}
+    {{ form_widget(data.id) }}
 {% endblock %}

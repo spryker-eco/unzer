@@ -1,6 +1,6 @@
-declare var heidelpay: heidelpayInterface;
+declare var unzer: unzerInterface;
 
-interface heidelpayInterface {
+interface unzerInterface {
     (publicKey: string, options: object): void;
 }
 
@@ -70,7 +70,7 @@ export default class UnzerCreditCard extends Component {
     }
 
     protected loadUnzerForm(): void {
-        const unzerInstance = new heidelpay(this.publicKey, { locale: this.locale });
+        const unzerInstance = new unzer(this.publicKey, { locale: this.locale });
 
         this.card = unzerInstance.Card();
 

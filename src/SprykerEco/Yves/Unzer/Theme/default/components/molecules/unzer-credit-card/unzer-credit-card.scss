@@ -1,7 +1,7 @@
 @mixin unzer-unzer-credit-card($name: '.unzer-credit-card') {
     #{$name} {
 
-        .heidelpayUI {
+        .unzerUI {
             display: block;
             width: 100%;
             height: 2rem;
@@ -13,7 +13,7 @@
             }
         }
 
-        .heidelpayUIIframe {
+        .unzerUIIframe {
             width: 100%;
             height: 2rem;
         }
