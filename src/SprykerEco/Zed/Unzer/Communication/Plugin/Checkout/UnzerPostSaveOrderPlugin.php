@@ -9,16 +9,15 @@ namespace SprykerEco\Zed\Unzer\Communication\Plugin\Checkout;
 
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Zed\Checkout\Dependency\Plugin\CheckoutPostSaveHookInterface;
+use Spryker\Zed\CheckoutExtension\Dependency\Plugin\CheckoutPostSaveInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
  * @method \SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory getFactory()
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
- * @method \SprykerEco\Zed\Unzer\Persistence\UnzerQueryContainerInterface getQueryContainer()
  */
-class UnzerPostSaveOrderPlugin extends AbstractPlugin implements CheckoutPostSaveHookInterface
+class UnzerPostSaveOrderPlugin extends AbstractPlugin implements CheckoutPostSaveInterface
 {
     /**
      * {@inheritDoc}
