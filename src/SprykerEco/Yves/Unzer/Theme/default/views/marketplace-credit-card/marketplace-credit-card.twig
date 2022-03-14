@@ -1,20 +1,13 @@
 {% extends model('template') %}
 
 {% define data = {
-    form: form
+    form: form,
 } %}
 
 {% block body %}
-
-    {{ form_widget(form.unzerMarketplaceCreditCard.public_key) }}
-    {{ form_widget(form.unzerMarketplaceCreditCard.id) }}
-
-    <h3>Example Data for Mastercard:</h3>
-    <ul>
-        <li>Number: 5453010000059543</li>
-        <li>Expiry date: Date in the future</li>
-        <li>Cvc: 123</li>
-        <li>Secret: secret3</li>
-    </ul>
-
+    {% include molecule('unzer-credit-card', 'Unzer') with {
+        data: {
+            form: data.form,
+        },
+    } only %}
 {% endblock %}
