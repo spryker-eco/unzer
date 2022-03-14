@@ -23,28 +23,37 @@
 } %}
 
 {% block body %}
-    {% include molecule('script-loader') with {
-        class: config.jsName ~ '__script-loader',
-        attributes: {
-            src: data.scriptSrc,
-        },
-    } only %}
+    {% set gridClassName = 'grid' %}
+    {% set cardNumberClassName = 'form__field col col--sm-12' %}
+    {% set cardExpiryClassName = 'form__field col col--sm-12 col--lg-6' %}
+    {% set cardCvcClassName = 'form__field col col--sm-12 col--lg-6' %}
 
-    <div class="grid">
-        <div class="form__field col col--sm-12">
-            <div id="containerUnzerCardNumber">
+    {% block scriptLoader %}
+        {% include molecule('script-loader') with {
+            class: config.jsName ~ '__script-loader',
+            attributes: {
+                src: data.scriptSrc,
+            },
+        } only %}
+    {% endblock %}
+
+    {% block formHolder %}
+        <div class="{{ gridClassName }}">
+            <div class="{{ cardNumberClassName }}">
+                <div id="containerUnzerCardNumber">
+                </div>
             </div>
-        </div>
-        <div class="form__field col col--sm-12 col--lg-6">
-            <div id="containerUnzerCardExpiry">
+            <div class="{{ cardExpiryClassName }}">
+                <div id="containerUnzerCardExpiry">
+                </div>
             </div>
-        </div>
-        <div class="form__field col col--sm-12 col--lg-6">
-            <div id="containerUnzerCardCvc">
+            <div class="{{ cardCvcClassName }}">
+                <div id="containerUnzerCardCvc">
+                </div>
             </div>
+            <div class="form__field col col--sm-12 text-alert {{ config.jsName }}__error-container"></div>
         </div>
-        <div class="form__field col col--sm-12 text-alert {{ config.jsName }}__error-container"></div>
-    </div>
+    {% endblock %}
 
     {{ form_widget(data.publicKey) }}
     {{ form_widget(data.id) }}
