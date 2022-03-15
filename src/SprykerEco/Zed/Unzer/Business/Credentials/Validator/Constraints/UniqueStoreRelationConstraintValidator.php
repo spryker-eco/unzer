@@ -9,9 +9,10 @@ namespace SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints;
 
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
-use SprykerEco\Shared\Unzer\UnzerConstants;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class UniqueStoreRelationConstraintValidator extends ConstraintValidator
 {
@@ -19,25 +20,33 @@ class UniqueStoreRelationConstraintValidator extends ConstraintValidator
      * @param string $value
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UniqueStoreRelationConstraint $constraint
      *
+     * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
+     *
      * @return void
      */
     public function validate($value, Constraint $constraint): void
     {
-        if (!$value || !is_array($value['idStores'])) {
-            return;
+        if (!$value instanceof UnzerCredentialsTransfer) {
+            throw new UnexpectedTypeException($value, UnzerCredentialsTransfer::class);
+        }
+
+        if (!$constraint instanceof UniqueStoreRelationConstraint) {
+            throw new UnexpectedTypeException($constraint, UniqueStoreRelationConstraint::class);
         }
 
         $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
-            ->setStoreIds($value['idStores'])
-            ->setTypes();
-        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
+            ->setStoreIds($value->getStoreRelationOrFail()->getIdStores());
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
         $unzerCredentialsCollectionTransfer = $constraint->getUnzerReader()->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
 
         foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
-            if (in_array($unzerCredentialsTransfer->getType(), [UnzerConstants::UNZER_CONFIG_TYPE_STANDARD, UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE])) {
+            if ($unzerCredentialsTransfer->getType() === (int)$value->getType() && $unzerCredentialsTransfer->getIdUnzerCredentials() !== (int)$value->getIdUnzerCredentials()) {
                 $this->context
                     ->buildViolation($constraint->getMessage())
                     ->addViolation();
+
+                return;
             }
         }
     }

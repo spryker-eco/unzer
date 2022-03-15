@@ -77,15 +77,21 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         $propelConnection = Propel::getConnection();
+        $unzerCredentialsResponseTransfer = new UnzerCredentialsResponseTransfer();
         $propelConnection->beginTransaction();
-        $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentials($unzerCredentialsTransfer);
-        if (!$unzerCredentialsResponseTransfer->getIsSuccessful()) {
+
+        try {
+            $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentials($unzerCredentialsTransfer);
+            $propelConnection->commit();
+        } catch (UnzerApiException $unzerApiException) {
             $propelConnection->rollBack();
 
-            return $unzerCredentialsResponseTransfer;
+            return $unzerCredentialsResponseTransfer
+                ->setIsSuccessful(false)
+                ->addMessage(
+                    (new MessageTransfer())->setMessage($unzerApiException->getMessage()),
+                );
         }
-
-        $propelConnection->commit();
 
         return $unzerCredentialsResponseTransfer;
     }
@@ -109,22 +115,19 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         );
 
         $unzerCredentialsTransfer = $this->createStoreRelationUnzerCredentials($unzerCredentialsTransfer);
-        $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(false);
+        $unzerCredentialsTransfer = $this->createChildUnzerCredentials($unzerCredentialsTransfer);
+        $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer);
 
-        try {
-            $unzerCredentialsTransfer = $this->createChildUnzerCredentials($unzerCredentialsTransfer);
-            $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer);
-        } catch (UnzerApiException $unzerApiException) {
-            return $unzerCredentialsResponseTransfer->addMessage(
-                    (new MessageTransfer())->setMessage($unzerApiException->getMessage()),
-                );
-        }
-
-        return $unzerCredentialsResponseTransfer
+        return (new UnzerCredentialsResponseTransfer())
             ->setIsSuccessful(true)
             ->setUnzerCredentials($unzerCredentialsTransfer);
     }
 
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
     protected function createStoreRelationUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
     {
         if (!$unzerCredentialsTransfer->getStoreRelation()) {
@@ -151,10 +154,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
             return $unzerCredentialsTransfer;
         }
 
-        $unzerCredentialsTransfer = $this->createMainMerchantUnzerCredentials($unzerCredentialsTransfer);
-        $this->unzerNotificationConfigurator->setNotificationUrl($unzerCredentialsTransfer->getChildUnzerCredentials());
-
-        return $unzerCredentialsTransfer;
+        return $this->createMainMerchantUnzerCredentials($unzerCredentialsTransfer);
     }
 
     /**

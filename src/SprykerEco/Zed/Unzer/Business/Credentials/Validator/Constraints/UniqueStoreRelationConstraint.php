@@ -15,7 +15,7 @@ class UniqueStoreRelationConstraint extends Constraint
     /**
      * @var string
      */
-    protected const VALIDATION_MESSAGE = 'Another Unzer Credentials has been already defined for chosen Stores.';
+    protected const VALIDATION_MESSAGE = 'Another Unzer Credentials has been already defined for chosen Stores: ';
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface

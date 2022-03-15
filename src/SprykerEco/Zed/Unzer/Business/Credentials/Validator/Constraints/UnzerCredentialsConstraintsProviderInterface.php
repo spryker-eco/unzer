@@ -7,14 +7,12 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints;
 
-use Symfony\Component\Validator\Constraints\Collection;
-
 interface UnzerCredentialsConstraintsProviderInterface
 {
     /**
      * @param int $unzerCredentialsType
      *
-     * @return \Symfony\Component\Validator\Constraints\Collection
+     * @return array<\Symfony\Component\Validator\Constraint>
      */
-    public function getConstraintsCollectionByConfigType(int $unzerCredentialsType): Collection;
+    public function getConstraintsCollectionByConfigType(int $unzerCredentialsType): array;
 }
