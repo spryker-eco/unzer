@@ -1,4 +1,4 @@
-declare var unzer: unzerInterface;
+declare const unzer: unzerInterface;
 
 interface unzerInterface {
     (publicKey: string, options: object): void;
@@ -8,7 +8,7 @@ interface cardInterface {
     create: {
         (inputField: string, {
             containerId: string,
-            onlyIframe: boolean
+            onlyIframe: boolean,
         }): void;
     };
     createResource: any;
@@ -31,12 +31,12 @@ export default class UnzerCreditCard extends Component {
     protected readyCallback(): void {}
 
     protected init(): void {
-        this.scriptLoader = <ScriptLoader>Array.from(document.getElementsByClassName(`${this.jsName}__script-loader`))[0];
+        this.scriptLoader = <ScriptLoader>Array.from(this.getElementsByClassName(`${this.jsName}__script-loader`))[0];
         this.form = <HTMLFormElement>document.querySelector(this.formSelector);
         this.publicKeyInput = <HTMLInputElement>document.getElementById(this.publicKeyFormElementId);
         this.publicKey = this.publicKeyInput.value;
         this.transactionIdInput = <HTMLInputElement>document.getElementById(this.transactionIdFormElementId);
-        this.errorElement = <HTMLElement>Array.from(document.getElementsByClassName(`${this.jsName}__error-container`))[0];
+        this.errorElement = <HTMLElement>Array.from(this.getElementsByClassName(`${this.jsName}__error-container`))[0];
 
         this.mapEvents();
     }
@@ -73,58 +73,54 @@ export default class UnzerCreditCard extends Component {
         const unzerInstance = new unzer(this.publicKey, { locale: this.locale });
 
         this.card = unzerInstance.Card();
-
         this.card.create('number', {
             containerId: 'containerUnzerCardNumber',
-            onlyIframe: false
+            onlyIframe: false,
         });
         this.card.create('expiry', {
             containerId: 'containerUnzerCardExpiry',
-            onlyIframe: false
+            onlyIframe: false,
         });
         this.card.create('cvc', {
             containerId: 'containerUnzerCardCvc',
-            onlyIframe: false
+            onlyIframe: false,
         });
     }
 
-    get isCurrentPaymentMethod(): boolean | null {
+    protected get isCurrentPaymentMethod(): boolean {
         const currentPaymentMethodInput = <HTMLInputElement>document.querySelector(this.currentPaymentMethodSelector);
-
-        return currentPaymentMethodInput?.value
-            ? currentPaymentMethodInput.value === CURRENT_PAYMENT_METHOD
-            : null;
+        return currentPaymentMethodInput?.value === CURRENT_PAYMENT_METHOD;
     }
 
-    get formSelector(): string {
+    protected get formSelector(): string {
         return this.getAttribute('form-selector');
     }
 
-    get currentPaymentMethodSelector(): string {
+    protected get currentPaymentMethodSelector(): string {
         return this.getAttribute('current-payment-method-selector');
     }
 
-    get cardNumberContainerId(): string {
+    protected get cardNumberContainerId(): string {
         return this.getAttribute('card-number-container-id');
     }
 
-    get cardExpiryContainerId(): string {
+    protected get cardExpiryContainerId(): string {
         return this.getAttribute('card-expiry-container-id');
     }
 
-    get cardCvcContainerId(): string {
+    protected get cardCvcContainerId(): string {
         return this.getAttribute('card-cvc-container-id');
     }
 
-    get publicKeyFormElementId(): string {
+    protected get publicKeyFormElementId(): string {
         return this.getAttribute('public-key-form-element-id');
     }
 
-    get transactionIdFormElementId(): string {
+    protected get transactionIdFormElementId(): string {
         return this.getAttribute('transaction-id-form-element-id');
     }
 
-    get locale(): string {
+    protected get locale(): string {
         return this.getAttribute('locale');
     }
 }

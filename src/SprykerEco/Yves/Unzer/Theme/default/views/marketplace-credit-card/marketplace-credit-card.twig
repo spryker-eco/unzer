@@ -1,14 +1,6 @@
 {% extends model('template') %}
 
 {% define data = {
-    form: form,
+    publicKey: form.unzerMarketplaceCreditCard.public_key,
+    id: form.unzerMarketplaceCreditCard.id,
 } %}
-
-{% block body %}
-    {% include molecule('unzer-credit-card', 'Unzer') with {
-        data: {
-            publicKey: data.form.unzerMarketplaceCreditCard.public_key,
-            id: data.form.unzerMarketplaceCreditCard.id,
-        },
-    } only %}
-{% endblock %}

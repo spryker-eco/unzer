@@ -1,14 +1,6 @@
-{% extends model('template') %}
+{% extends template('credit-card-layout', 'Unzer') %}
 
 {% define data = {
-    form: form,
+    publicKey: form.unzerCreditCard.public_key,
+    id: form.unzerCreditCard.id,
 } %}
-
-{% block body %}
-    {% include molecule('unzer-credit-card', 'Unzer') with {
-        data: {
-            publicKey: data.form.unzerCreditCard.public_key,
-            id: data.form.unzerCreditCard.id,
-        },
-    } only %}
-{% endblock %}
