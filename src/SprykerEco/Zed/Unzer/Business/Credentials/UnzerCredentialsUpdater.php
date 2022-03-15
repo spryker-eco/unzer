@@ -83,12 +83,12 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
         }
 
         $this->unzerVaultWriter->storeUnzerPrivateKey(
-            $unzerCredentialsTransfer->getKeypairIdOrFail(),
-            $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPrivateKeyOrFail(),
+            $unzerCredentialsTransfer->getKeypairId(),
+            $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPrivateKey(),
         );
 
         if ($unzerCredentialsTransfer->getStoreRelation() !== null) {
-            $storeRelationTransfer = $unzerCredentialsTransfer->getStoreRelationOrFail()
+            $storeRelationTransfer = $unzerCredentialsTransfer->getStoreRelation()
                 ->setIdEntity($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail());
             $this->unzerCredentialsStoreRelationUpdater->update($storeRelationTransfer);
         }

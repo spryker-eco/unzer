@@ -58,11 +58,13 @@ class UnzerCredentialsStoreRelationUpdater implements UnzerCredentialsStoreRelat
     protected function executeUpdateStoreRelationTransaction(StoreRelationTransfer $storeRelationTransfer): void
     {
         $currentIdStores = $this->getIdStoresByIdUnzerCredentials($storeRelationTransfer->getIdEntityOrFail());
-        $saveIdStores = array_diff($storeRelationTransfer->getIdStores(), $currentIdStores);
-        $deleteIdStores = array_diff($currentIdStores, $storeRelationTransfer->getIdStores());
+        $requestedIdStores = $storeRelationTransfer->getIdStores() ?? [];
 
-        $this->unzerEntityManager->createUnzerCredentialsStoreRelationsForStores($saveIdStores, $storeRelationTransfer->getIdEntityOrFail());
-        $this->unzerEntityManager->deleteUnzerCredentialsStoreRelationsForStores($deleteIdStores, $storeRelationTransfer->getIdEntityOrFail());
+        $saveIdStores = array_diff($requestedIdStores, $currentIdStores);
+        $deleteIdStores = array_diff($currentIdStores, $requestedIdStores);
+
+        $this->unzerEntityManager->createUnzerCredentialsStoreRelationsForStores($saveIdStores, $storeRelationTransfer->getIdEntity());
+        $this->unzerEntityManager->deleteUnzerCredentialsStoreRelationsForStores($deleteIdStores, $storeRelationTransfer->getIdEntity());
     }
 
     /**

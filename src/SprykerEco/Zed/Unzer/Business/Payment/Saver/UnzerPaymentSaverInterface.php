@@ -24,7 +24,7 @@ interface UnzerPaymentSaverInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      * @param string $orderItemStatus
-     * @param array $filteredSalesOrderItemIds
+     * @param array|null $filteredSalesOrderItemIds
      *
      * @return void
      */

@@ -620,8 +620,4 @@
         <property name="messages" type="Message[]" singular="message"/>
         <property name="parameter" type="string"/>
     </transfer>
-
-    <transfer name="OrderFilter">
-        <property name="salesOrderId" type="int"/>
-    </transfer>
 </transfers>

@@ -124,19 +124,17 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         string $transactionType,
         ?string $participantId = null
     ): ?PaymentUnzerTransactionTransfer {
-        /** @var \Orm\Zed\Unzer\Persistence\Base\SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery */
         $paymentUnzerTransactionQuery = $this->getFactory()
             ->createPaymentUnzerTransactionQuery()
-            ->filterByType($transactionType)
             ->usePaymentUnzerQuery()
                 ->filterByPaymentId($paymentId)
                 ->filterByIsMarketplace(true)
-            ->endUse();
+            ->endUse()
+            ->filterByType($transactionType);
 
         if ($participantId !== null) {
             $paymentUnzerTransactionQuery = $paymentUnzerTransactionQuery->filterByParticipantId($participantId);
         }
-
         $paymentUnzerTransactionEntity = $paymentUnzerTransactionQuery->findOne();
 
         if ($paymentUnzerTransactionEntity === null) {
@@ -157,7 +155,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      */
     public function findUnzerCustomerByIdCustomer(int $idCustomer): ?UnzerCustomerTransfer
     {
-        /** @var \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer|null $paymentUnzerCustomerEntity */
+        /** @var \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer $paymentUnzerCustomerEntity */
         $paymentUnzerCustomerEntity = $this->getFactory()
             ->createPaymentUnzerCustomerQuery()
             ->useCustomerQuery()

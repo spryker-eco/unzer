@@ -7,15 +7,14 @@
 
 namespace SprykerEco\Zed\Unzer\Dependency;
 
-use Generated\Shared\Transfer\OrderFilterTransfer;
-use Generated\Shared\Transfer\OrderTransfer;
-
 interface UnzerToSalesFacadeInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\OrderFilterTransfer $orderFilterTransfer
+     * @param int $idSalesOrder
+     *
+     * @throws \Spryker\Zed\Sales\Business\Exception\InvalidSalesOrderException
      *
      * @return \Generated\Shared\Transfer\OrderTransfer
      */
-    public function getOrder(OrderFilterTransfer $orderFilterTransfer): OrderTransfer;
+    public function getOrderByIdSalesOrder($idSalesOrder);
 }

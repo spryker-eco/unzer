@@ -47,7 +47,7 @@ class UnzerMetadataQuoteExpander implements UnzerMetadataQuoteExpanderInterface
             ->setPriceMode($quoteTransfer->getPriceMode())
             ->setStore($quoteTransfer->getStoreOrFail()->getName())
             ->setLocale($this->localeFacade->getCurrentLocale()->getName())
-            ->setCreatedAt((string)time());
+            ->setCreatedAt(time());
 
         $unzerMetadataTransfer = $this->unzerMetadataAdapter->createMetadata(
             $unzerMetadataTransfer,

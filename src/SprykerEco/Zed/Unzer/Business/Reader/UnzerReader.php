@@ -82,7 +82,7 @@ class UnzerReader implements UnzerReaderInterface
 
         return $this->unzerRepository->findPaymentUnzerByPaymentIdAndKeypairId(
             $unzerPaymentId,
-            $unzerCredentialsTransfer->getKeypairIdOrFail(),
+            $unzerCredentialsTransfer->getKeypairId(),
         );
     }
 

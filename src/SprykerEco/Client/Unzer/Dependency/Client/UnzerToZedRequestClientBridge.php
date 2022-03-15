@@ -27,7 +27,7 @@ class UnzerToZedRequestClientBridge implements UnzerToZedRequestClientInterface
     /**
      * @param string $url
      * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $object
-     * @param array|null $requestOptions
+     * @param array|int|null $requestOptions
      *
      * @return \Spryker\Shared\Kernel\Transfer\TransferInterface
      */

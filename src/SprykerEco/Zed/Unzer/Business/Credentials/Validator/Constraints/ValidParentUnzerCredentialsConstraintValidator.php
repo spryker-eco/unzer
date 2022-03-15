@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ValidParentUnzerCredentialsConstraintValidator extends ConstraintValidator
 {
     /**
-     * @param int $value
+     * @param string $value
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UniquePublicKeyConstraint $constraint
      *
      * @return void

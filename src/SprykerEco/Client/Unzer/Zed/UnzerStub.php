@@ -34,9 +34,6 @@ class UnzerStub implements UnzerStubInterface
      */
     public function processNotification(UnzerNotificationTransfer $notificationTransfer): UnzerNotificationTransfer
     {
-        /** @var \Generated\Shared\Transfer\UnzerNotificationTransfer $unzerNotificationTransfer */
-        $unzerNotificationTransfer = $this->zedRequestClient->call('/unzer/gateway/process-notification', $notificationTransfer);
-
-        return $unzerNotificationTransfer;
+        return $this->zedRequestClient->call('/unzer/gateway/process-notification', $notificationTransfer);
     }
 }

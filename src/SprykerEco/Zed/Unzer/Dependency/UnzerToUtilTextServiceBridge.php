@@ -15,7 +15,7 @@ class UnzerToUtilTextServiceBridge implements UnzerToUtilTextServiceInterface
     protected $utilTextService;
 
     /**
-     * @param \Spryker\Service\UtilText\UtilTextServiceInterface $utilTextService
+     * @param $utilTextService
      */
     public function __construct($utilTextService)
     {

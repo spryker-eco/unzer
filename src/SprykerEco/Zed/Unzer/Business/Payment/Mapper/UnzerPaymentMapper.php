@@ -28,19 +28,14 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
         PaymentUnzerTransfer $paymentUnzerTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
-        $amountTotal = (int)$paymentUnzerTransfer->getAmountTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER;
-        $amountRemaining = (int)$paymentUnzerTransfer->getAmountRemaining() / UnzerConstants::INT_TO_FLOAT_DIVIDER;
-        $amountCharged = (int)$paymentUnzerTransfer->getAmountCharged() / UnzerConstants::INT_TO_FLOAT_DIVIDER;
-        $amountCanceled = (int)$paymentUnzerTransfer->getAmountCanceled() / UnzerConstants::INT_TO_FLOAT_DIVIDER;
-
         $unzerPaymentTransfer
             ->setId($paymentUnzerTransfer->getPaymentId())
             ->setCurrency($paymentUnzerTransfer->getCurrency())
             ->setOrderId($paymentUnzerTransfer->getOrderId())
-            ->setAmountTotal((int)$amountTotal)
-            ->setAmountRemaining((int)$amountRemaining)
-            ->setAmountCharged((int)$amountCharged)
-            ->setAmountCanceled((int)$amountCanceled)
+            ->setAmountTotal($paymentUnzerTransfer->getAmountTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountRemaining($paymentUnzerTransfer->getAmountRemaining() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountCharged($paymentUnzerTransfer->getAmountCharged() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountCanceled($paymentUnzerTransfer->getAmountCanceled() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setStateName($paymentUnzerTransfer->getState())
             ->setStateId($paymentUnzerTransfer->getStateId())
             ->setCustomer((new UnzerCustomerTransfer())->setId($paymentUnzerTransfer->getCustomerId()))
@@ -63,10 +58,10 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
         PaymentUnzerTransfer $paymentUnzerTransfer
     ): PaymentUnzerTransfer {
         $paymentUnzerTransfer
-            ->setAmountTotal((int)$unzerPaymentTransfer->getAmountTotal() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountRemaining((int)$unzerPaymentTransfer->getAmountRemainingOrFail() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountCanceled((int)$unzerPaymentTransfer->getAmountCanceledOrFail() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountCharged((int)$unzerPaymentTransfer->getAmountChargedOrFail() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountTotal($unzerPaymentTransfer->getAmountTotal() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountRemaining($unzerPaymentTransfer->getAmountRemaining() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountCanceled($unzerPaymentTransfer->getAmountCanceled() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountCharged($unzerPaymentTransfer->getAmountCharged() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setState($unzerPaymentTransfer->getStateName())
             ->setStateId($unzerPaymentTransfer->getStateId())
             ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
@@ -107,10 +102,10 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): string {
         return md5(
-            $unzerPaymentTransfer->getIdOrFail() .
-            $unzerTransactionTransfer->getTypeOrFail() .
-            $unzerTransactionTransfer->getStatusOrFail() .
-            $unzerTransactionTransfer->getParticipantIdOrFail(),
+            $unzerPaymentTransfer->getId() .
+            $unzerTransactionTransfer->getType() .
+            $unzerTransactionTransfer->getStatus() .
+            $unzerTransactionTransfer->getParticipantId(),
         );
     }
 
@@ -121,8 +116,9 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
      */
     protected function parseTransactionId(UnzerTransactionTransfer $unzerTransactionTransfer): string
     {
-        $urlParts = explode('/', $unzerTransactionTransfer->getUrlOrFail());
+        $url = $unzerTransactionTransfer->getUrl();
+        $urlParts = explode('/', $url);
 
-        return end($urlParts);
+        return (string)end($urlParts);
     }
 }
