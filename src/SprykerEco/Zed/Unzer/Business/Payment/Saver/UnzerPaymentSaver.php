@@ -77,7 +77,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      * @param string $orderItemStatus
-     * @param array|null $filteredSalesOrderItemIds
+     * @param array $filteredSalesOrderItemIds
      *
      * @return void
      */
@@ -104,7 +104,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
      */
     protected function updatePaymentUnzerTransfer(UnzerPaymentTransfer $unzerPaymentTransfer): PaymentUnzerTransfer
     {
-        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($unzerPaymentTransfer->getOrderId());
+        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($unzerPaymentTransfer->getOrderIdOrFail());
 
         return $this->unzerPaymentMapper
             ->mapUnzerPaymentTransferToPaymentUnzerTransfer($unzerPaymentTransfer, $paymentUnzerTransfer);
@@ -113,7 +113,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      * @param string $omsStatus
-     * @param array|null $filteredSalesOrderItemIds
+     * @param array $filteredSalesOrderItemIds
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
      */
@@ -123,7 +123,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
         array $filteredSalesOrderItemIds = []
     ): PaymentUnzerOrderItemCollectionTransfer {
         $unzerPaymentOrderItemCollection = $this->unzerReader
-            ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderId());
+            ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderIdOrFail());
 
         foreach ($unzerPaymentOrderItemCollection->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
             if (count($filteredSalesOrderItemIds) !== 0 && in_array($paymentUnzerOrderItem->getIdSalesOrderItem(), $filteredSalesOrderItemIds, true)) {

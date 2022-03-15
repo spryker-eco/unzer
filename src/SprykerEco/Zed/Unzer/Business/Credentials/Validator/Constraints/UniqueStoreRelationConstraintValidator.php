@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class UniqueStoreRelationConstraintValidator extends ConstraintValidator
 {
     /**
-     * @param string $value
+     * @param array $value
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UniqueStoreRelationConstraint $constraint
      *
      * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException

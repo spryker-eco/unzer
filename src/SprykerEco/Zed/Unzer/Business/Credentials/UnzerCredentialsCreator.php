@@ -110,8 +110,8 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
                 ),
             );
         $this->unzerVaultWriter->storeUnzerPrivateKey(
-            $unzerCredentialsTransfer->getKeypairId(),
-            $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPrivateKey(),
+            $unzerCredentialsTransfer->getKeypairIdOrFail(),
+            $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPrivateKeyOrFail(),
         );
 
         $unzerCredentialsTransfer = $this->createStoreRelationUnzerCredentials($unzerCredentialsTransfer);

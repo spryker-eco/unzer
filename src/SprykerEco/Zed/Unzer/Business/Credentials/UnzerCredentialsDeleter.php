@@ -94,7 +94,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
         }
 
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
-            (new UnzerCredentialsConditionsTransfer())->addParentId($unzerCredentialsTransfer->getIdUnzerCredentials()),
+            (new UnzerCredentialsConditionsTransfer())->addParentId($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail()),
         );
         $childUnzerCredentialsCollectionTransfer = $this->unzerRepository->findUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
 
@@ -110,7 +110,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     {
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())
-                ->addParentId($unzerCredentialsTransfer->getIdUnzerCredentials())
+                ->addParentId($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail())
                 ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT),
         );
 

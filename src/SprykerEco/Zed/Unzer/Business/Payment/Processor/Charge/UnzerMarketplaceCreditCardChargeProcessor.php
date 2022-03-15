@@ -54,7 +54,7 @@ class UnzerMarketplaceCreditCardChargeProcessor implements UnzerChargeProcessorI
     public function charge(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         //@todo refactor to partial charge
-        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
+        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReferenceOrFail());
         $unzerPaymentTransfer = $this->unzerPaymentMapper
             ->mapPaymentUnzerTransferToUnzerPaymentTransfer($paymentUnzerTransfer, new UnzerPaymentTransfer());
 

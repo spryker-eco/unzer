@@ -54,10 +54,9 @@ class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
             return;
         }
 
-        $paymentMethod = $quoteTransfer->getPaymentOrFail()->getPaymentSelection();
+        $paymentMethod = $quoteTransfer->getPaymentOrFail()->getPaymentSelectionOrFail();
         $paymentProcessor = $this->paymentProcessorStrategyResolver->resolvePaymentProcessor($paymentMethod);
-
-        $unzerPaymentTransfer = $paymentProcessor->processOrderPayment($quoteTransfer, $checkoutResponseTransfer->getSaveOrder());
+        $unzerPaymentTransfer = $paymentProcessor->processOrderPayment($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
 
         $checkoutResponseTransfer
             ->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
