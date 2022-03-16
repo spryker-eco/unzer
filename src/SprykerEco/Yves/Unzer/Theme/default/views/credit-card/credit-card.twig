@@ -1,20 +1,6 @@
-{% extends model('template') %}
+{% extends template('credit-card-layout', 'Unzer') %}
 
 {% define data = {
-    form: form
+    publicKey: form.unzerCreditCard.public_key,
+    id: form.unzerCreditCard.id,
 } %}
-
-{% block body %}
-
-    {{ form_widget(form.unzerCreditCard.public_key) }}
-    {{ form_widget(form.unzerCreditCard.id) }}
-
-    <h3>Example Data for VISA:</h3>
-    <ul>
-        <li>Number: 4711100000000000</li>
-        <li>Expiry date: Date in the future</li>
-        <li>Cvc: 123</li>
-        <li>Secret: secret3</li>
-    </ul>
-
-{% endblock %}

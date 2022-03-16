@@ -1,0 +1,15 @@
+{% extends model('template') %}
+
+{% define data = {
+    publicKey: required,
+    id: required,
+} %}
+
+{% block body %}
+    {% include molecule('unzer-credit-card', 'Unzer') with {
+        data: {
+            publicKey: data.publicKey,
+            id: data.id,
+        },
+    } only %}
+{% endblock %}
