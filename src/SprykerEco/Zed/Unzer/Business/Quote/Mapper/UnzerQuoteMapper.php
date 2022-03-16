@@ -54,10 +54,11 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
         AddressTransfer $addressTransfer,
         UnzerAddressTransfer $unzerAddressTransfer
     ): UnzerAddressTransfer {
+        $name = trim(sprintf('%s %s', (string)$addressTransfer->getFirstName(), (string)$addressTransfer->getLastName()));
         return $unzerAddressTransfer->setCountry($addressTransfer->getIso2Code())
             ->setState($addressTransfer->getState())
             ->setCity($addressTransfer->getCity())
-            ->setName((string)$addressTransfer->getFirstName() . ' ' . (string)$addressTransfer->getLastName())
+            ->setName($name)
             ->setZip($addressTransfer->getZipCode())
             ->setStreet($addressTransfer->getAddress1());
     }
