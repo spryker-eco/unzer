@@ -35,13 +35,6 @@ class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
     public function getData(AbstractTransfer $quoteTransfer): QuoteTransfer
     {
         $quoteTransfer = $this->updateQuoteWithPaymentData($quoteTransfer);
-        // TODO cleanup after FE implementation
-        $quoteTransfer->getPaymentOrFail()->setUnzerMarketplaceCreditCard(
-            (new UnzerPaymentTransfer())->setPaymentResource(
-                (new UnzerPaymentResourceTransfer())->setId('s-crd-dcjcn4ing7a2'),
-            ),
-        );
-
         $this->quoteClient->setQuote($quoteTransfer);
 
         return $quoteTransfer;

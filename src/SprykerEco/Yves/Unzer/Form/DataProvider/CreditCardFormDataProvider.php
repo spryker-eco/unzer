@@ -35,13 +35,6 @@ class CreditCardFormDataProvider extends AbstractFormDataProvider
     public function getData(AbstractTransfer $quoteTransfer): QuoteTransfer
     {
         $quoteTransfer = $this->updateQuoteWithPaymentData($quoteTransfer);
-        // TODO cleanup after FE implementation
-        $quoteTransfer->getPaymentOrFail()->setUnzerCreditCard(
-            (new UnzerPaymentTransfer())->setPaymentResource(
-                (new UnzerPaymentResourceTransfer())->setId('s-crd-6l77uorpsbju'),
-            ),
-        );
-
         $this->quoteClient->setQuote($quoteTransfer);
 
         return $quoteTransfer;

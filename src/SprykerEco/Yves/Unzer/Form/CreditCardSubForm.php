@@ -26,6 +26,11 @@ class CreditCardSubForm extends AbstractUnzerSubForm
     /**
      * @var string
      */
+    public const TEMPLATE_PATH = 'views/credit-card/credit-card';
+
+    /**
+     * @var string
+     */
     protected const PAYMENT_METHOD_NAME = 'credit_card';
 
     /**
@@ -118,6 +123,6 @@ class CreditCardSubForm extends AbstractUnzerSubForm
      */
     protected function getTemplatePath(): string
     {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::PAYMENT_METHOD_NAME;
+        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_PATH;
     }
 }

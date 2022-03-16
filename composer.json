@@ -6,6 +6,7 @@
     "require": {
         "php": ">=7.4",
         "spryker-eco/unzer-api": "dev-feature/cc-14610/cc-14722-payment-credit-card",
+        "spryker-shop/shop-ui": "^1.56.0",
         "spryker/calculation": "^4.11.0",
         "spryker/cart-extension": "^4.1.0",
         "spryker/checkout-extension": "^1.3.0",
