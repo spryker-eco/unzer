@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Communication\Oms;
 
+use Generated\Shared\Transfer\OrderFilterTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface;
@@ -43,8 +44,8 @@ class UnzerOmsMapper implements UnzerOmsMapperInterface
      */
     public function mapSpySalesOrderToOrderTransfer(SpySalesOrder $orderEntity): OrderTransfer
     {
-        $orderTransfer = $this->salesFacade
-            ->getOrderByIdSalesOrder($orderEntity->getIdSalesOrder());
+        $orderFilterTransfer = (new OrderFilterTransfer())->setSalesOrderId($orderEntity->getIdSalesOrder());
+        $orderTransfer = $this->salesFacade->getOrder($orderFilterTransfer);
 
         return $this->calculationFacade
             ->recalculateOrder($orderTransfer);

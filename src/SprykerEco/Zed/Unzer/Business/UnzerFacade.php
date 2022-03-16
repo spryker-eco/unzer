@@ -13,6 +13,8 @@ use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
@@ -309,5 +311,48 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
     public function performPaymentMethodsImport(UnzerKeypairTransfer $unzerKeypairTransfer): void
     {
         $this->getFactory()->createUnzerPaymentMethodsImporter()->performPaymentMethodsImport($unzerKeypairTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
+     */
+    public function getUnzerCredentialsCollection(
+        UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+    ): UnzerCredentialsCollectionTransfer {
+        return $this->getFactory()->createUnzerReader()->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
+    {
+        return $this->getFactory()->createUnzerCredentialsDeleter()->deleteUnzerCredentials($unzerCredentialsTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    public function validateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
+    {
+        return $this->getFactory()->createUnzerCredentialsConstraintsValidator()->validate($unzerCredentialsTransfer);
     }
 }

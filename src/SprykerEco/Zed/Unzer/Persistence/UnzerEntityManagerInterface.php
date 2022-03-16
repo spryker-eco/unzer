@@ -68,4 +68,11 @@ interface UnzerEntityManagerInterface
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer|null
      */
     public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): ?UnzerCredentialsTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return bool
+     */
+    public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool;
 }

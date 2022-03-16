@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
@@ -109,6 +110,36 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
+     * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
+     */
+    protected function getMapper(): UnzerPersistenceMapper
+    {
+        return $this->getFactory()->createUnzerPersistenceMapper();
+    }
+
+    /**
+     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
+     *
+     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant
+     */
+    protected function saveOrDeleteMerchantUnzerParticipantEntity(SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity): SpyMerchantUnzerParticipant
+    {
+        if ($merchantUnzerParticipantEntity->getParticipantId()) {
+            $merchantUnzerParticipantEntity->save();
+
+            return $merchantUnzerParticipantEntity;
+        }
+
+        if ($merchantUnzerParticipantEntity->getIdMerchantUnzerParticipant()) {
+            $merchantUnzerParticipantEntity->delete();
+
+            return $merchantUnzerParticipantEntity;
+        }
+
+        return $merchantUnzerParticipantEntity;
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
@@ -182,10 +213,17 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return bool
      */
-    protected function getMapper(): UnzerPersistenceMapper
+    public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
     {
-        return $this->getFactory()->createUnzerPersistenceMapper();
+        $deletedRowsCount = $this->getFactory()
+            ->createUnzerCredentialsQuery()
+            ->filterByIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials())
+            ->delete();
+
+        return $deletedRowsCount !== 0;
     }
 }

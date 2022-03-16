@@ -107,7 +107,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected function addUnzerPayment(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
         $paymentResourceTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResource();
-        $paymentSelection = $quoteTransfer->getPaymentOrFail()->getPaymentSelection();
+        $paymentSelection = $quoteTransfer->getPaymentOrFail()->getPaymentSelectionOrFail();
 
         $unzerPaymentTransfer = (new UnzerPaymentTransfer())
             ->setIsMarketplace($this->unzerConfig->isPaymentMethodMarketplaceReady($paymentSelection))
@@ -117,5 +117,58 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
 
         return $quoteTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\QuoteTransfer
+     */
+    protected function expandQuoteItemsWithUnzerParticipants(QuoteTransfer $quoteTransfer): QuoteTransfer
+    {
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            $this->setParticipantId($itemTransfer, $quoteTransfer->getStoreOrFail());
+        }
+
+        return $quoteTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     *
+     * @return \Generated\Shared\Transfer\ItemTransfer
+     */
+    protected function setParticipantId(ItemTransfer $itemTransfer, StoreTransfer $storeTransfer): ItemTransfer
+    {
+        if (!$itemTransfer->getMerchantReference()) {
+            return $this->setMerchantParticipantIdByType($itemTransfer, $storeTransfer, UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT);
+        }
+
+        return $this->setMerchantParticipantIdByType($itemTransfer, $storeTransfer, UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     * @param int $type
+     *
+     * @return \Generated\Shared\Transfer\ItemTransfer
+     */
+    protected function setMerchantParticipantIdByType(ItemTransfer $itemTransfer, StoreTransfer $storeTransfer, int $type): ItemTransfer
+    {
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions(
+                (new UnzerCredentialsConditionsTransfer())
+                    ->addStoreName($storeTransfer->getNameOrFail())
+                    ->addType($type),
+            );
+
+        $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+        if ($unzerCredentialsTransfer === null) {
+            return $itemTransfer;
+        }
+
+        return $itemTransfer->setUnzerParticipantId($unzerCredentialsTransfer->getParticipantIdOrFail());
     }
 }

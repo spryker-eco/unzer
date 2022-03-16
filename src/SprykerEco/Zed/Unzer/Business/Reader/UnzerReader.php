@@ -92,7 +92,7 @@ class UnzerReader implements UnzerReaderInterface
 
         return $this->unzerRepository->findPaymentUnzerByPaymentIdAndKeypairId(
             $unzerPaymentId,
-            $unzerCredentialsTransfer->getKeypairId(),
+            $unzerCredentialsTransfer->getKeypairIdOrFail(),
         );
     }
 
@@ -131,7 +131,7 @@ class UnzerReader implements UnzerReaderInterface
      */
     public function findUnzerCustomerTransferByCustomerTransfer(CustomerTransfer $customerTransfer): ?UnzerCustomerTransfer
     {
-        return $this->unzerRepository->findUnzerCustomerByIdCustomer($customerTransfer->getIdCustomer());
+        return $this->unzerRepository->findUnzerCustomerByIdCustomer($customerTransfer->getIdCustomerOrFail());
     }
 
     /**
@@ -175,7 +175,7 @@ class UnzerReader implements UnzerReaderInterface
      */
     protected function attachUnzerPrivateKey(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
     {
-        $unzerPrivateKey = $this->unzerVaultReader->retrieveUnzerPrivateKey($unzerCredentialsTransfer->getKeypairId());
+        $unzerPrivateKey = $this->unzerVaultReader->retrieveUnzerPrivateKey($unzerCredentialsTransfer->getKeypairIdOrFail());
         if ($unzerPrivateKey === null) {
             return $unzerCredentialsTransfer;
         }

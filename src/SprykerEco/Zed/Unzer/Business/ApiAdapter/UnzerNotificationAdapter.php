@@ -42,7 +42,7 @@ class UnzerNotificationAdapter extends UnzerAbstractApiAdapter implements UnzerN
             ->setSetWebhookRequest($unzerApiSetWebhookRequestTransfer)
             ->setUnzerKeypair($unzerNotificationConfigTransfer->getUnzerKeyPairOrFail());
 
-        $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateCustomerApiCall($unzerApiRequestTransfer);
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performSetNotificationUrlApiCall($unzerApiRequestTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);
     }
 }

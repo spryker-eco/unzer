@@ -27,7 +27,7 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
         $shippingAddress = $this->getShippingAddressFromQuote($quoteTransfer);
 
         return $unzerCustomerTransfer
-            ->setId($quoteTransfer->getCustomerReference() . uniqid('', true))
+            ->setId($quoteTransfer->getCustomerReferenceOrFail() . uniqid('', true))
             ->setLastname($quoteTransfer->getCustomerOrFail()->getLastName())
             ->setFirstname($quoteTransfer->getCustomerOrFail()->getFirstName())
             ->setSalutation($quoteTransfer->getCustomerOrFail()->getSalutation())
@@ -40,7 +40,7 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
                 $this->mapAddressTransferToUnzerAddressTransfer($shippingAddress, new UnzerAddressTransfer()),
             )
             ->setBillingAddress(
-                $this->mapAddressTransferToUnzerAddressTransfer($quoteTransfer->getBillingAddress(), new UnzerAddressTransfer()),
+                $this->mapAddressTransferToUnzerAddressTransfer($quoteTransfer->getBillingAddressOrFail(), new UnzerAddressTransfer()),
             );
     }
 
@@ -57,7 +57,7 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
         return $unzerAddressTransfer->setCountry($addressTransfer->getIso2Code())
             ->setState($addressTransfer->getState())
             ->setCity($addressTransfer->getCity())
-            ->setName($addressTransfer->getFirstName() . ' ' . $addressTransfer->getLastName())
+            ->setName((string)$addressTransfer->getFirstName() . ' ' . (string)$addressTransfer->getLastName())
             ->setZip($addressTransfer->getZipCode())
             ->setStreet($addressTransfer->getAddress1());
     }
@@ -65,20 +65,16 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \Generated\Shared\Transfer\AddressTransfer|null
+     * @return \Generated\Shared\Transfer\AddressTransfer
      */
-    protected function getShippingAddressFromQuote(QuoteTransfer $quoteTransfer): ?AddressTransfer
+    protected function getShippingAddressFromQuote(QuoteTransfer $quoteTransfer): AddressTransfer
     {
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            if ($itemTransfer->getShipment()) {
-                return $itemTransfer->getShipmentOrFail()->getShippingAddress();
+            if ($itemTransfer->getShipment() && $itemTransfer->getShipmentOrFail()->getShippingAddress()) {
+                return $itemTransfer->getShipmentOrFail()->getShippingAddressOrFail();
             }
         }
 
-        if ($quoteTransfer->getShippingAddress()) {
-            return $quoteTransfer->getShippingAddress();
-        }
-
-        return null;
+        return $quoteTransfer->getShippingAddressOrFail();
     }
 }

@@ -7,14 +7,20 @@
         "php": ">=7.4",
         "spryker/calculation": "^4.11.0",
         "spryker/checkout-extension": "^1.3.0",
+        "spryker/customer": "^7.0.0",
         "spryker/kernel": "^3.30.0",
-        "spryker/merchant-extension": "^1.1.0",
+        "spryker/locale": "^3.8.0",
+        "spryker/merchant": "^3.1.0",
         "spryker/oms": "^11.15.0",
+        "spryker/payment": "^5.4.0",
         "spryker/payment-extension": "^1.0.0",
+        "spryker/propel-orm": "^1.6.0",
         "spryker/quote": "^2.15.0",
         "spryker/refund": "^5.4.0",
         "spryker/sales": "^11.27.0",
+        "spryker/step-engine": "^3.3.0",
         "spryker/store": "^1.0.0",
+        "spryker/symfony": "^3.5.0",
         "spryker/transfer": "^3.25.0",
         "spryker/util-text": "^1.0.0",
         "spryker/vault": "^1.2.0",
@@ -22,10 +28,15 @@
         "spryker-eco/unzer-api": "dev-feature/cc-14610/cc-14716-order-commands as 1.0"
     },
     "require-dev": {
-        "codeception/module-asserts": "^1.3",
         "phpstan/phpstan": "*",
+        "spryker/checkout": "*",
         "spryker/code-sniffer": "*",
+        "spryker/propel": "*",
+        "spryker/state-machine": "^2.7.0",
         "spryker/testify": "*"
+    },
+    "suggest": {
+        "spryker/checkout": "If you want to use Checkout plugins you need to install spryker/checkout."
     },
     "autoload": {
         "psr-4": {
@@ -60,6 +71,9 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "process-timeout": 600
+        "process-timeout": 600,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

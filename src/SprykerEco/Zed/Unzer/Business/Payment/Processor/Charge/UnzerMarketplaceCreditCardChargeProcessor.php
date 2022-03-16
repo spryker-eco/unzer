@@ -31,6 +31,8 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
      */
     public function charge(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
+        //@todo refactor to partial charge
+        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReferenceOrFail());
         $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
         if ($paymentUnzerTransfer === null) {
             throw new UnzerException('Unzer Payment not found for order reference: ' . $orderTransfer->getOrderReference());
