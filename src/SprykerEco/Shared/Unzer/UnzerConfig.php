@@ -245,4 +245,19 @@ class UnzerConfig extends AbstractSharedConfig
      * @var string
      */
     public const PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT = self::PAYMENT_PROVIDER_TYPE . self::PLATFORM_MARKETPLACE . 'Sofort';
+
+    /**
+     * @var array<string, string>
+     */
+    public const SALUTATION_MAP = [
+        'Mr' => 'mr',
+        'Mrs' => 'mrs',
+        'Ms' => 'mrs',
+        'Dr' => 'mr',
+    ];
+
+    /**
+     * @var string
+     */
+    public const SALUTATION_DEFAULT = 'unknown';
 }
