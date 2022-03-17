@@ -15,13 +15,12 @@ class MarketplaceCreditCardSubForm extends CreditCardSubForm
     /**
      * @var string
      */
-    public const TEMPLATE_PATH = 'views/marketplace-credit-card/marketplace-credit-card';
+    protected const TEMPLATE_VIEW_PATH = 'views/marketplace-credit-card/marketplace-credit-card';
 
     /**
      * @var string
      */
     protected const PAYMENT_METHOD_NAME = 'marketplace_credit_card';
-
 
     /**
      * @return string
@@ -44,6 +43,6 @@ class MarketplaceCreditCardSubForm extends CreditCardSubForm
      */
     protected function getTemplatePath(): string
     {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_PATH;
+        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
     }
 }

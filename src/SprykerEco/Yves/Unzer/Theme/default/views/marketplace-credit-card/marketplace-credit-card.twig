@@ -1,6 +1,8 @@
-{% extends model('template') %}
+{% extends template('credit-card-layout', 'Unzer') %}
 
 {% define data = {
     publicKey: form.unzerMarketplaceCreditCard.public_key,
     id: form.unzerMarketplaceCreditCard.id,
+    publicKeyFormElementId: 'paymentForm_unzerMarketplaceCreditCard_public_key',
+    transactionIdFormElementId: 'paymentForm_unzerMarketplaceCreditCard_id',
 } %}

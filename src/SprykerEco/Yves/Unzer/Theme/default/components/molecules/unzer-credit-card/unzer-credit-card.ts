@@ -17,7 +17,8 @@ interface cardInterface {
 import Component from 'ShopUi/models/component';
 import ScriptLoader from 'ShopUi/components/molecules/script-loader/script-loader';
 
-const CURRENT_PAYMENT_METHOD = 'unzerCreditCard';
+const CREDIT_CARD_PAYMENT_METHOD = 'unzerCreditCard';
+const MARKETPLACE_CREDIT_CARD_PAYMENT_METHOD = 'unzerMarketplaceCreditCard';
 
 export default class UnzerCreditCard extends Component {
     scriptLoader: ScriptLoader;
@@ -89,7 +90,8 @@ export default class UnzerCreditCard extends Component {
 
     protected get isCurrentPaymentMethod(): boolean {
         const currentPaymentMethodInput = <HTMLInputElement>document.querySelector(this.currentPaymentMethodSelector);
-        return currentPaymentMethodInput?.value === CURRENT_PAYMENT_METHOD;
+        return currentPaymentMethodInput?.value === CREDIT_CARD_PAYMENT_METHOD
+            || currentPaymentMethodInput?.value === MARKETPLACE_CREDIT_CARD_PAYMENT_METHOD;
     }
 
     protected get formSelector(): string {
