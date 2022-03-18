@@ -23,8 +23,8 @@ class UnzerRouteProviderPlugin extends AbstractRouteProviderPlugin
     public const ROUTE_NAME_UNZER_NOTIFICATION = 'unzer-notification';
 
     /**
-     * Specification:
-     * - Adds Routes to the RouteCollection.
+     * {@inheritDoc}
+     * - Adds Unzer module routes to RouteCollection.
      *
      * @api
      *
