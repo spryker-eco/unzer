@@ -124,6 +124,11 @@ class UnzerConfig extends AbstractSharedConfig
     /**
      * @var string
      */
+    public const PAYMENT_METHOD_NAME_INSTALLMENT_SECURE = self::PAYMENT_PROVIDER_NAME . ' Installment Secured';
+
+    /**
+     * @var string
+     */
     public const PAYMENT_METHOD_NAME_MARKETPLACE_BANK_TRANSFER = self::PAYMENT_PROVIDER_NAME . ' ' . self::PLATFORM_MARKETPLACE . ' Bank Transfer';
 
     /**
@@ -230,6 +235,11 @@ class UnzerConfig extends AbstractSharedConfig
      * @var string
      */
     public const PAYMENT_METHOD_KEY_WECHAT_PAY = self::PAYMENT_PROVIDER_TYPE . 'WeChatPay';
+
+    /**
+     * @var string
+     */
+    public const PAYMENT_METHOD_KEY_INSTALLMENT_SECURED = self::PAYMENT_PROVIDER_TYPE . 'InstallmentSecured';
 
     /**
      * @var string

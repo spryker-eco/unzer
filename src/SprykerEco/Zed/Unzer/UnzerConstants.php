@@ -27,11 +27,7 @@ interface UnzerConstants
     /**
      * @var string
      */
-    // public const UNZER_PAYMENT_METHOD_BANK_TRANSFER = 'pis';
-    /**
-     * @var string
-     */
-    public const UNZER_PAYMENT_METHOD_BANK_TRANSFER = 'sofort';//TEMP
+    public const UNZER_PAYMENT_METHOD_BANK_TRANSFER = 'PIS';
 
     /**
      * @var string
@@ -107,6 +103,11 @@ interface UnzerConstants
      * @var string
      */
     public const UNZER_PAYMENT_METHOD_WECHAT_PAY = 'wechatpay';
+
+    /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_INSTALLMENT_SECURED = 'installment-secured';
 
     /**
      * @var int

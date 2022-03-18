@@ -94,13 +94,16 @@ class UnzerConfig extends AbstractBundleConfig
         UnzerConstants::UNZER_PAYMENT_METHOD_PRZELEWY24 => [
             UnzerSharedConfig::PAYMENT_METHOD_KEY_PRZELEWY24,
         ],
-        // UnzerConstants::UNZER_PAYMENT_METHOD_SOFORT => [
-        //     UnzerSharedConfig::PAYMENT_METHOD_KEY_SOFORT,
-        //     UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
-        // ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_SOFORT => [
+             UnzerSharedConfig::PAYMENT_METHOD_KEY_SOFORT,
+             UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
+        ],
         UnzerConstants::UNZER_PAYMENT_METHOD_WECHAT_PAY => [
             UnzerSharedConfig::PAYMENT_METHOD_KEY_WECHAT_PAY,
         ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_INSTALLMENT_SECURED => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_INSTALLMENT_SECURED,
+        ]
     ];
 
     /**
@@ -136,6 +139,7 @@ class UnzerConfig extends AbstractBundleConfig
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER => UnzerSharedConfig::PAYMENT_METHOD_NAME_MARKETPLACE_BANK_TRANSFER,
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD => UnzerSharedConfig::PAYMENT_METHOD_NAME_MARKETPLACE_CREDIT_CARD,
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT => UnzerSharedConfig::PAYMENT_METHOD_NAME_MARKETPLACE_SOFORT,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_INSTALLMENT_SECURED => UnzerSharedConfig::PAYMENT_METHOD_NAME_INSTALLMENT_SECURE,
     ];
 
     /**
