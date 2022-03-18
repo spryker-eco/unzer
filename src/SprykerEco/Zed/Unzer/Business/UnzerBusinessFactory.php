@@ -492,7 +492,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
                 return $this->createMarketplaceBankTransferPaymentProcessor();
             },
             UnzerConfig::PAYMENT_METHOD_KEY_CREDIT_CARD => function () {
-                return $this->createCreditCardPaymentProcessor();
+                return $this->createCreditCardProcessor();
             },
         ];
 
@@ -531,7 +531,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface
      */
-    public function createCreditCardPaymentProcessor(): UnzerPaymentProcessorInterface
+    public function createCreditCardProcessor(): UnzerPaymentProcessorInterface
     {
         return new CreditCardProcessor(
             $this->createUnzerCheckoutHookMapper(),

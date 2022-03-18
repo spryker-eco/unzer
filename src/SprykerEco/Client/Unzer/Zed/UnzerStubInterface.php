@@ -23,7 +23,7 @@ interface UnzerStubInterface
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
      */
-    public function findUpdatedUnzerPaymentForOrderAction(OrderTransfer $orderTransfer): UnzerPaymentTransfer;
+    public function findUpdatedUnzerPaymentForOrderAction(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer;
 }

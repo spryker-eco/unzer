@@ -44,11 +44,11 @@ class UnzerStub implements UnzerStubInterface
      *
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
      */
-    public function findUpdatedUnzerPaymentForOrderAction(OrderTransfer $orderTransfer): UnzerPaymentTransfer
+    public function getUpdatedUnzerPaymentForOrderAction(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer
     {
-        /** @var \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer */
+        /** @var \Generated\Shared\Transfer\UnzerPaymentTransfer|null $unzerPaymentTransfer */
         $unzerPaymentTransfer = $this->zedRequestClient->call('/unzer/gateway/find-updated-unzer-payment-for-order', $orderTransfer);
 
         return $unzerPaymentTransfer;

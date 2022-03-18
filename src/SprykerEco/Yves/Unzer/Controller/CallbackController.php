@@ -51,7 +51,10 @@ class CallbackController extends AbstractController
 
         $unzerPaymentTransfer = $this->getFactory()->getUnzerClient()->findUpdatedUnzerPaymentForOrderAction($orderTransfer);
 
-        if ($unzerPaymentTransfer->getStateId() === static::UNZER_PAYMENT_STATUS_CANCELED) {
+        if (
+            $unzerPaymentTransfer === null
+            || $unzerPaymentTransfer->getStateIdOrFail() === static::UNZER_PAYMENT_STATUS_CANCELED
+        ) {
             return $this->redirectResponseInternal(static::ROUTE_NAME_CHECKOUT_ERROR);
         }
 
