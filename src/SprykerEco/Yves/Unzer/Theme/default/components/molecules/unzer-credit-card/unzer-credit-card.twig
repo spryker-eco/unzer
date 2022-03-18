@@ -17,8 +17,6 @@
     'card-number-container-id': 'containerUnzerCardNumber',
     'card-expiry-container-id': 'containerUnzerCardExpiry',
     'card-cvc-container-id': 'containerUnzerCardCvc',
-    'public-key-form-element-id': required,
-    'transaction-id-form-element-id': required,
     locale: app.locale | replace({'_': '-'}),
 } %}
 
@@ -27,6 +25,7 @@
     {% set cardNumberClassName = 'form__field col col--sm-12' %}
     {% set cardExpiryClassName = 'form__field col col--sm-12 col--lg-6' %}
     {% set cardCvcClassName = 'form__field col col--sm-12 col--lg-6' %}
+    {% set errorContainerClassName = 'form__field col col--sm-12 text-alert ' ~ config.jsName ~ '__error-container' %}
 
     {% block scriptLoader %}
         {% include molecule('script-loader') with {
@@ -51,10 +50,12 @@
                 <div id="containerUnzerCardCvc">
                 </div>
             </div>
-            <div class="form__field col col--sm-12 text-alert {{ config.jsName }}__error-container"></div>
+            <div class="{{ errorContainerClassName }}"></div>
         </div>
     {% endblock %}
 
-    {{ form_widget(data.publicKey) }}
-    {{ form_widget(data.id) }}
+    {% block hiddenInputs %}
+        {{ form_widget(data.publicKey, { attr: { class: config.jsName ~ '__public-key' }}) }}
+        {{ form_widget(data.id, { attr: { class: config.jsName ~ '__transaction-id' }}) }}
+    {% endblock %}
 {% endblock %}

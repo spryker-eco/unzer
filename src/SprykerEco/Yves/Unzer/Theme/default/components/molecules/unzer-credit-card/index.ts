@@ -1,4 +1,4 @@
-import './unzer-credit-card.scss';
+import './styles.scss';
 import register from 'ShopUi/app/registry';
 export default register('unzer-credit-card', () => import(
     /* webpackMode: "lazy" */

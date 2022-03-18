@@ -24,7 +24,6 @@ export default class UnzerCreditCard extends Component {
     scriptLoader: ScriptLoader;
     form: HTMLFormElement;
     publicKeyInput: HTMLInputElement;
-    publicKey: string;
     transactionIdInput: HTMLInputElement;
     errorElement: HTMLElement;
     card: cardInterface;
@@ -34,9 +33,8 @@ export default class UnzerCreditCard extends Component {
     protected init(): void {
         this.scriptLoader = <ScriptLoader>Array.from(this.getElementsByClassName(`${this.jsName}__script-loader`))[0];
         this.form = <HTMLFormElement>document.querySelector(this.formSelector);
-        this.publicKeyInput = <HTMLInputElement>document.getElementById(this.publicKeyFormElementId);
-        this.publicKey = this.publicKeyInput.value;
-        this.transactionIdInput = <HTMLInputElement>document.getElementById(this.transactionIdFormElementId);
+        this.publicKeyInput = <HTMLInputElement>Array.from(this.getElementsByClassName(`${this.jsName}__public-key`))[0];
+        this.transactionIdInput = <HTMLInputElement>Array.from(this.getElementsByClassName(`${this.jsName}__transaction-id`))[0];
         this.errorElement = <HTMLElement>Array.from(this.getElementsByClassName(`${this.jsName}__error-container`))[0];
 
         this.mapEvents();
@@ -71,19 +69,19 @@ export default class UnzerCreditCard extends Component {
     }
 
     protected loadUnzerForm(): void {
-        const unzerInstance = new unzer(this.publicKey, { locale: this.locale });
+        const unzerInstance = new unzer(this.publicKeyInput.value, { locale: this.locale });
 
         this.card = unzerInstance.Card();
         this.card.create('number', {
-            containerId: 'containerUnzerCardNumber',
+            containerId: this.cardNumberContainerId,
             onlyIframe: false,
         });
         this.card.create('expiry', {
-            containerId: 'containerUnzerCardExpiry',
+            containerId: this.cardExpiryContainerId,
             onlyIframe: false,
         });
         this.card.create('cvc', {
-            containerId: 'containerUnzerCardCvc',
+            containerId: this.cardCvcContainerId,
             onlyIframe: false,
         });
     }
@@ -112,14 +110,6 @@ export default class UnzerCreditCard extends Component {
 
     protected get cardCvcContainerId(): string {
         return this.getAttribute('card-cvc-container-id');
-    }
-
-    protected get publicKeyFormElementId(): string {
-        return this.getAttribute('public-key-form-element-id');
-    }
-
-    protected get transactionIdFormElementId(): string {
-        return this.getAttribute('transaction-id-form-element-id');
     }
 
     protected get locale(): string {
