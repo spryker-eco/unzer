@@ -39,15 +39,15 @@
     {% block formHolder %}
         <div class="{{ gridClassName }}">
             <div class="{{ cardNumberClassName }}">
-                <div id="containerUnzerCardNumber">
+                <div id="{{ attributes['card-number-container-id'] }}">
                 </div>
             </div>
             <div class="{{ cardExpiryClassName }}">
-                <div id="containerUnzerCardExpiry">
+                <div id="{{ attributes['card-expiry-container-id'] }}">
                 </div>
             </div>
             <div class="{{ cardCvcClassName }}">
-                <div id="containerUnzerCardCvc">
+                <div id="{{ attributes['card-cvc-container-id'] }}">
                 </div>
             </div>
             <div class="{{ errorContainerClassName }}"></div>
