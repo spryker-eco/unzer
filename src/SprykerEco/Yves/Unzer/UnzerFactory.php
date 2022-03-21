@@ -15,7 +15,6 @@ use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
 use SprykerEco\Yves\Unzer\Dependency\Service\UnzerToUtilEncodingServiceInterface;
 use SprykerEco\Yves\Unzer\Form\CreditCardSubForm;
 use SprykerEco\Yves\Unzer\Form\DataProvider\CreditCardFormDataProvider;
-use SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface;
 use SprykerEco\Yves\Unzer\Form\BankTransferSubForm;
 use SprykerEco\Yves\Unzer\Form\DataProvider\BankTransferFormDataProvider;
 use SprykerEco\Yves\Unzer\Form\DataProvider\MarketplaceBankTransferFormDataProvider;
@@ -84,16 +83,6 @@ class UnzerFactory extends AbstractFactory
     /**
      * @return \Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface
      */
-    public function createMarketplaceCreditCardFormDataProvider(): StepEngineFormDataProviderInterface
-    {
-        return new MarketplaceCreditCardFormDataProvider(
-            $this->getQuoteClient(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface
-     */
     public function createCreditCardFormDataProvider(): StepEngineFormDataProviderInterface
     {
         return new CreditCardFormDataProvider(
@@ -131,14 +120,6 @@ class UnzerFactory extends AbstractFactory
     public function createMarketplaceSofortSubForm(): SubFormInterface
     {
         return new MarketplaceSofortSubForm();
-    }
-
-    /**
-     * @return \Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface
-     */
-    public function createMarketplaceCreditCardSubForm(): SubFormInterface
-    {
-        return new MarketplaceCreditCardSubForm();
     }
 
     /**
