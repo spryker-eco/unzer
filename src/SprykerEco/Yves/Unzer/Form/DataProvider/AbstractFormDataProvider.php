@@ -12,7 +12,7 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 use Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface;
-use SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface;
+use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
 
 abstract class AbstractFormDataProvider implements StepEngineFormDataProviderInterface
 {
@@ -22,12 +22,12 @@ abstract class AbstractFormDataProvider implements StepEngineFormDataProviderInt
     protected const PAYMENT_PROVIDER_UNZER = 'Unzer';
 
     /**
-     * @var \SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface
+     * @var \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface
      */
     protected $quoteClient;
 
     /**
-     * @param \SprykerEco\Yves\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient
+     * @param \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface $quoteClient
      */
     public function __construct(UnzerToQuoteClientInterface $quoteClient)
     {

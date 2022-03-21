@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
+use Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
@@ -89,7 +90,27 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
      */
     protected function performRegularAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        //@todo implement for regular payments
-        return $unzerPaymentTransfer;
+        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
+
+        $unzerApiAuthorizeRequestTransfer = $this
+            ->unzerAuthorizePaymentMapper
+            ->mapUnzerPaymentTransferToUnzerApiAuthorizeRequestTransfer(
+                $unzerPaymentTransfer,
+                new UnzerApiAuthorizeRequestTransfer(),
+            );
+
+        $unzerApiRequestTransfer->setAuthorizeRequest($unzerApiAuthorizeRequestTransfer);
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performAuthorizeApiCall($unzerApiRequestTransfer);
+        $this->assertSuccessResponse($unzerApiResponseTransfer);
+
+        $unzerApiAuthorizeResponseTransfer = $unzerApiResponseTransfer->getAuthorizeResponseOrFail();
+
+        return $this
+            ->unzerAuthorizePaymentMapper
+            ->mapUnzerApiAuthorizeResponseTransferToUnzerPaymentTransfer(
+                $unzerApiAuthorizeResponseTransfer,
+                $unzerPaymentTransfer,
+            );
     }
 }

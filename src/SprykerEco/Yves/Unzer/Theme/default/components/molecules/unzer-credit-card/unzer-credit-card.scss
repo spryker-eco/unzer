@@ -1,0 +1,22 @@
+@mixin unzer-unzer-credit-card($name: '.unzer-credit-card') {
+    #{$name} {
+        .unzerUI {
+            display: block;
+            width: 100%;
+            height: 2rem;
+
+            &.error.message {
+                display: none;
+                height: auto;
+                color: map-get($setting-color-actions, alert);
+            }
+        }
+
+        .unzerUIIframe {
+            width: 100%;
+            height: 2rem;
+        }
+
+        @content;
+    }
+}

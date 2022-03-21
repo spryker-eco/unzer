@@ -39,8 +39,11 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface $unzerPaymentMethodsAdapter
      */
-    public function __construct(UnzerConfig $unzerConfig, UnzerReaderInterface $unzerReader, UnzerPaymentMethodsAdapterInterface $unzerPaymentMethodsAdapter)
-    {
+    public function __construct(
+        UnzerConfig $unzerConfig,
+        UnzerReaderInterface $unzerReader,
+        UnzerPaymentMethodsAdapterInterface $unzerPaymentMethodsAdapter
+    ) {
         parent::__construct($unzerConfig);
 
         $this->unzerReader = $unzerReader;

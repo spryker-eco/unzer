@@ -1,0 +1,61 @@
+{% extends model('component') %}
+
+{% define config = {
+    name: 'unzer-credit-card',
+    tag: 'unzer-credit-card',
+} %}
+
+{% define data = {
+    publicKey: required,
+    id: required,
+    scriptSrc: 'https://static.unzer.com/v1/unzer.js',
+} %}
+
+{% define attributes = {
+    'form-selector': '[name="paymentForm"]',
+    'current-payment-method-selector': '[name="paymentForm[paymentSelection]"]:checked',
+    'card-number-container-id': 'containerUnzerCardNumber',
+    'card-expiry-container-id': 'containerUnzerCardExpiry',
+    'card-cvc-container-id': 'containerUnzerCardCvc',
+    locale: app.locale | replace({'_': '-'}),
+} %}
+
+{% block body %}
+    {% set gridClassName = 'grid' %}
+    {% set cardNumberClassName = 'form__field col col--sm-12' %}
+    {% set cardExpiryClassName = 'form__field col col--sm-12 col--lg-6' %}
+    {% set cardCvcClassName = 'form__field col col--sm-12 col--lg-6' %}
+    {% set errorContainerClassName = 'form__field col col--sm-12 text-alert ' ~ config.jsName ~ '__error-container' %}
+
+    {% block scriptLoader %}
+        {% include molecule('script-loader') with {
+            class: config.jsName ~ '__script-loader',
+            attributes: {
+                src: data.scriptSrc,
+            },
+        } only %}
+    {% endblock %}
+
+    {% block formHolder %}
+        <div class="{{ gridClassName }}">
+            <div class="{{ cardNumberClassName }}">
+                <div id="{{ attributes['card-number-container-id'] }}">
+                </div>
+            </div>
+            <div class="{{ cardExpiryClassName }}">
+                <div id="{{ attributes['card-expiry-container-id'] }}">
+                </div>
+            </div>
+            <div class="{{ cardCvcClassName }}">
+                <div id="{{ attributes['card-cvc-container-id'] }}">
+                </div>
+            </div>
+            <div class="{{ errorContainerClassName }}"></div>
+        </div>
+    {% endblock %}
+
+    {% block hiddenInputs %}
+        {{ form_widget(data.publicKey, { attr: { class: config.jsName ~ '__public-key' }}) }}
+        {{ form_widget(data.id, { attr: { class: config.jsName ~ '__transaction-id' }}) }}
+    {% endblock %}
+{% endblock %}

@@ -15,7 +15,6 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
  * @method \SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory getFactory()
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
- * @method \SprykerEco\Zed\Unzer\Persistence\UnzerQueryContainerInterface getQueryContainer()
  */
 class UnzerPreSaveOrderPlugin extends AbstractPlugin implements CheckoutPreSaveInterface
 {

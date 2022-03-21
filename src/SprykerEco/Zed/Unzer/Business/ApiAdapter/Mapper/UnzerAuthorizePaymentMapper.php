@@ -7,6 +7,8 @@
 
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
+use Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiAuthorizeResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeResponseTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
@@ -51,6 +53,23 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
     }
 
     /**
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer $unzerApiAuthorizeRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer
+     */
+    public function mapUnzerPaymentTransferToUnzerApiAuthorizeRequestTransfer(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        UnzerApiAuthorizeRequestTransfer $unzerApiAuthorizeRequestTransfer
+    ): UnzerApiAuthorizeRequestTransfer {
+        return $unzerApiAuthorizeRequestTransfer->fromArray($unzerPaymentTransfer->toArray(), true)
+            ->setAmount($unzerPaymentTransfer->getAmountTotal())
+            ->setTypeId($unzerPaymentTransfer->getPaymentResourceOrFail()->getId())
+            ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
+            ->setReturnUrl($this->unzerConfig->getAuthorizeReturnUrl());
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeResponseTransfer $unzerApiMarketplaceAuthorizeResponseTransfer
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
@@ -69,5 +88,25 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
             ->setBasket((new UnzerBasketTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getBasketId()))
             ->setPaymentResource((new UnzerPaymentResourceTransfer())->setId($unzerApiMarketplaceAuthorizeResponseTransfer->getTypeId()))
             ->setRedirectUrl($unzerApiMarketplaceAuthorizeResponseTransfer->getRedirectUrl());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiAuthorizeResponseTransfer $unzerApiAuthorizeResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     */
+    public function mapUnzerApiAuthorizeResponseTransferToUnzerPaymentTransfer(
+        UnzerApiAuthorizeResponseTransfer $unzerApiAuthorizeResponseTransfer,
+        UnzerPaymentTransfer $unzerPaymentTransfer
+    ): UnzerPaymentTransfer {
+        return $unzerPaymentTransfer
+            ->setId($unzerApiAuthorizeResponseTransfer->getPaymentId())
+            ->setAmountTotal((int)($unzerApiAuthorizeResponseTransfer->getAmount() * UnzerConstants::INT_TO_FLOAT_DIVIDER))
+            ->setCurrency($unzerApiAuthorizeResponseTransfer->getCurrency())
+            ->setRedirectUrl($unzerApiAuthorizeResponseTransfer->getRedirectUrl())
+            ->setCustomer((new UnzerCustomerTransfer())->setId($unzerApiAuthorizeResponseTransfer->getCustomerId()))
+            ->setPaymentResource((new UnzerPaymentResourceTransfer())->setId($unzerApiAuthorizeResponseTransfer->getTypeId()))
+            ->setRedirectUrl($unzerApiAuthorizeResponseTransfer->getRedirectUrl());
     }
 }

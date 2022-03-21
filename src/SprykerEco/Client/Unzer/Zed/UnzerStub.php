@@ -7,7 +7,9 @@
 
 namespace SprykerEco\Client\Unzer\Zed;
 
+use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface;
 
 class UnzerStub implements UnzerStubInterface
@@ -38,5 +40,20 @@ class UnzerStub implements UnzerStubInterface
         $unzerNotificationTransfer = $this->zedRequestClient->call('/unzer/gateway/process-notification', $notificationTransfer);
 
         return $unzerNotificationTransfer;
+    }
+
+    /**
+     * @uses \SprykerEco\Zed\Unzer\Communication\Controller\GatewayController::findUpdatedUnzerPaymentForOrderAction()
+     *
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
+     */
+    public function findUpdatedUnzerPaymentForOrderAction(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer
+    {
+        /** @var \Generated\Shared\Transfer\UnzerPaymentTransfer|null $unzerPaymentTransfer */
+        $unzerPaymentTransfer = $this->zedRequestClient->call('/unzer/gateway/find-updated-unzer-payment-for-order', $orderTransfer);
+
+        return $unzerPaymentTransfer;
     }
 }

@@ -33,32 +33,6 @@ abstract class AbstractUnzerPaymentMethodFilter
     }
 
     /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return bool
-     */
-    protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
-    {
-        $merchantReferences = [];
-
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $merchantReference = $itemTransfer->getMerchantReference();
-
-            if ($merchantReference === null) {
-                $merchantReferences[] = static::MAIN_SELLER_REFERENCE;
-
-                continue;
-            }
-
-            if (!in_array($merchantReference, $merchantReferences, true)) {
-                $merchantReferences[] = $merchantReference;
-            }
-        }
-
-        return count($merchantReferences) > 1;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
      *
      * @return bool
@@ -76,5 +50,31 @@ abstract class AbstractUnzerPaymentMethodFilter
     protected function isMarketplaceUnzerPaymentMethod(PaymentMethodTransfer $paymentMethodTransfer): bool
     {
         return $this->isUnzerPaymentProvider($paymentMethodTransfer) && strpos($paymentMethodTransfer->getPaymentMethodKeyOrFail(), SharedUnzerConfig::PLATFORM_MARKETPLACE) !== false;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return bool
+     */
+    protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
+    {
+        $merchantReferences = [];
+
+        foreach ($quoteTransfer->getItems() as $itemTransfer) {
+            $merchantReference = $itemTransfer->getMerchantReference();
+
+            if (!$merchantReference && !in_array(static::MAIN_SELLER_REFERENCE, $merchantReferences, true)) {
+                $merchantReferences[] = static::MAIN_SELLER_REFERENCE;
+
+                continue;
+            }
+
+            if ($merchantReference && !in_array($merchantReference, $merchantReferences, true)) {
+                $merchantReferences[] = $merchantReference;
+            }
+        }
+
+        return count($merchantReferences) > 1;
     }
 }

@@ -161,6 +161,8 @@
     <transfer name="Payment">
         <property name="unzerPayment" type="UnzerPayment"/>
         <property name="unzerMarketplaceBankTransfer" type="UnzerPayment"/>
+        <property name="unzerMarketplaceCreditCard" type="UnzerPayment"/>
+        <property name="unzerCreditCard" type="UnzerPayment"/>
         <property name="paymentProvider" type="string"/>
         <property name="paymentSelection" type="string"/>
         <property name="paymentMethod" type="string"/>
@@ -378,6 +380,23 @@
         <property name="typeId" type="string"/>
     </transfer>
 
+    <transfer name="UnzerApiAuthorizeRequest">
+        <property name="amount" type="float"/>
+        <property name="currency" type="string"/>
+        <property name="returnUrl" type="string"/>
+        <property name="customerId" type="string"/>
+        <property name="typeId" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerApiAuthorizeResponse">
+        <property name="paymentId" type="string"/>
+        <property name="amount" type="float"/>
+        <property name="currency" type="string"/>
+        <property name="redirectUrl" type="string"/>
+        <property name="customerId" type="string"/>
+        <property name="typeId" type="string"/>
+    </transfer>
+
     <transfer name="UnzerApiCreateBasketRequest">
     </transfer>
 
@@ -451,6 +470,7 @@
 
     <transfer name="UnzerApiRequest">
         <property name="marketplaceAuthorizeRequest" type="UnzerApiMarketplaceAuthorizeRequest"/>
+        <property name="authorizeRequest" type="UnzerApiAuthorizeRequest"/>
         <property name="createBasketRequest" type="UnzerApiCreateBasketRequest"/>
         <property name="chargeRequest" type="UnzerApiChargeRequest"/>
         <property name="createCustomerRequest" type="UnzerApiCreateCustomerRequest"/>
@@ -476,6 +496,7 @@
         <property name="billingAddress" type="Address"/>
         <property name="shippingAddress" type="Address" deprecated="Use item level shipping addresses (item.shipment.shippingAddress) instead."/>
         <property name="priceMode" type="string"/>
+        <property name="unzerCredentials" type="UnzerCredentials"/>
     </transfer>
 
     <transfer name="CheckoutResponse">
