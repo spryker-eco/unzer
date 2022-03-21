@@ -11,12 +11,17 @@ use Codeception\TestCase\Test;
 use Generated\Shared\Transfer\LocaleTransfer;
 use Spryker\Service\UtilText\UtilTextService;
 use Spryker\Zed\Locale\Business\LocaleFacade;
+use Spryker\Zed\Merchant\Business\MerchantFacade;
 use Spryker\Zed\Vault\Business\VaultFacade;
 use SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapter;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade;
 use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
@@ -58,6 +63,8 @@ class UnzerFacadeBaseTest extends Test
                 'getVaultFacade',
                 'getLocaleFacade',
                 'getUtilTextService',
+                'getValidatorAdapter',
+                'getMerchantFacade',
             ],
         );
 
@@ -76,6 +83,10 @@ class UnzerFacadeBaseTest extends Test
             ->willReturn($this->getLocaleFacade());
         $stub->method('getUtilTextService')
             ->willReturn($this->getUtilTextService());
+        $stub->method('getValidatorAdapter')
+            ->willReturn($this->getValidatorAdapter());
+        $stub->method('getMerchantFacade')
+            ->willReturn($this->getMerchantFacade());
 
         return $stub;
     }
@@ -155,6 +166,14 @@ class UnzerFacadeBaseTest extends Test
     }
 
     /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface
+     */
+    protected function getValidatorAdapter(): UnzerToValidationAdapterInterface
+    {
+        return new UnzerToValidationAdapter();
+    }
+
+    /**
      * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Zed\Locale\Business\LocaleFacade
      */
     protected function createLocaleFacadeMock(): LocaleFacade
@@ -178,5 +197,21 @@ class UnzerFacadeBaseTest extends Test
                 'generateUniqueId' => uniqid('', true),
             ],
         );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface
+     */
+    protected function getMerchantFacade(): UnzerToMerchantFacadeInterface
+    {
+        return new UnzerToMerchantFacadeBridge($this->createMerchantFacadeMock());
+    }
+
+    /**
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Spryker\Zed\Merchant\Business\MerchantFacade
+     */
+    protected function createMerchantFacadeMock(): MerchantFacade
+    {
+        return $this->makeEmpty(MerchantFacade::class);
     }
 }

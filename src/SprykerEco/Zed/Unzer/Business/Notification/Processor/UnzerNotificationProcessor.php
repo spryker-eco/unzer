@@ -82,7 +82,7 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
      */
     public function processNotification(UnzerNotificationTransfer $unzerNotificationTransfer): UnzerNotificationTransfer
     {
-        if (!$this->unzerConfig->isNotificationTypeEnabled($unzerNotificationTransfer->getEvent())) {
+        if (!$this->unzerConfig->isNotificationTypeEnabled($unzerNotificationTransfer->getEventOrFail())) {
             $unzerNotificationTransfer->setIsProcessed(true);
 
             return $unzerNotificationTransfer;
@@ -91,8 +91,8 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
         //If payment not found - let Unzer try later
         $paymentUnzerTransfer = $this->unzerReader
             ->findPaymentUnzerByPaymentIdAndPublicKey(
-                $unzerNotificationTransfer->getPaymentId(),
-                $unzerNotificationTransfer->getPublicKey(),
+                $unzerNotificationTransfer->getPaymentIdOrFail(),
+                $unzerNotificationTransfer->getPublicKeyOrFail(),
             );
 
         if ($paymentUnzerTransfer === null) {
@@ -110,7 +110,7 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
         $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
 
         $orderItemStatus = $this->unzerConfig->mapUnzerEventToOmsStatus(
-            $unzerNotificationTransfer->getEvent(),
+            $unzerNotificationTransfer->getEventOrFail(),
         );
 
         $this->unzerPaymentSaver->saveUnzerPaymentDetails($unzerPaymentTransfer, $orderItemStatus);

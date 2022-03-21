@@ -25,12 +25,12 @@ class UnzerPostSaveOrderPlugin extends AbstractPlugin implements CheckoutPostSav
      * @api
      *
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponse
+     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
      *
      * @return void
      */
-    public function executeHook(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponse): void
+    public function executeHook(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): void
     {
-        $this->getFacade()->executePostSaveHook($quoteTransfer, $checkoutResponse);
+        $this->getFacade()->executePostSaveHook($quoteTransfer, $checkoutResponseTransfer);
     }
 }

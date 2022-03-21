@@ -35,7 +35,7 @@ class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     public function testUpdateUnzerCredentialsSuccess(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->haveUnzerCredentials($this->tester->haveStore())->getUnzerCredentials();
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials($this->tester->haveStore());
         $unzerCredentialsTransfer->setParticipantId(static::ANOTHER_PARTICIPANT_ID);
         $unzerCredentialsTransfer->getUnzerKeypairOrFail()->setPublicKey(static::ANOTHER_PUBLIC_KEY);
         $unzerCredentialsTransfer->getUnzerKeypairOrFail()->setPrivateKey(static::ANOTHER_PRIVATE_KEY);
@@ -56,7 +56,7 @@ class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     public function testUpdateUnzerCredentialsFail(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->haveUnzerCredentials($this->tester->haveStore())->getUnzerCredentials();
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials($this->tester->haveStore());
         $unzerCredentialsTransfer->setIdUnzerCredentials(static::UNKNOWN_ID);
 
         //Act

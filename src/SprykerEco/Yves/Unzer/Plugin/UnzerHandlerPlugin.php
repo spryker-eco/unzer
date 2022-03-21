@@ -20,6 +20,7 @@ class UnzerHandlerPlugin extends AbstractPlugin implements StepHandlerPluginInte
 {
     /**
      * {@inheritDoc}
+     * - Requires `QuoteTransfer.payment` to be set.
      * - Adds `UnzerPaymentTransfer` to `QuoteTransfer`.
      * - Sets payment provider and payment method based on payment selection.
      *

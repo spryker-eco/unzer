@@ -11,11 +11,13 @@ use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapter;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 
 /**
@@ -64,6 +66,16 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
 
     /**
+     * @var string
+     */
+    public const ADAPTER_VALIDATION = 'ADAPTER_VALIDATION';
+
+    /**
+     * @var string
+     */
+    public const FACADE_MERCHANT = 'FACADE_MERCHANT';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -74,6 +86,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addSalesFacade($container);
         $container = $this->addCalculationFacade($container);
         $container = $this->addRefundFacade($container);
+        $container = $this->addMerchantFacade($container);
 
         return $container;
     }
@@ -93,6 +106,8 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addLocaleFacade($container);
         $container = $this->addVaultFacade($container);
         $container = $this->addUtilTextService($container);
+        $container = $this->addValidationAdapter($container);
+        $container = $this->addMerchantFacade($container);
 
         return $container;
     }
@@ -204,6 +219,34 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_PAYMENT, function (Container $container) {
             return new UnzerToPaymentFacadeBridge($container->getLocator()->payment()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addValidationAdapter(Container $container): Container
+    {
+        $container->set(static::ADAPTER_VALIDATION, function () {
+            return new UnzerToValidationAdapter();
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addMerchantFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_MERCHANT, function (Container $container) {
+            return new UnzerToMerchantFacadeBridge($container->getLocator()->merchant()->facade());
         });
 
         return $container;

@@ -93,7 +93,7 @@ class UnzerPersistenceMapper
     ): SpyPaymentUnzer {
         return $paymentUnzerEntity
             ->fromArray($paymentUnzerTransfer->toArray())
-            ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder())
+            ->setFkSalesOrder($paymentUnzerTransfer->getIdSalesOrderOrFail())
             ->setUnzerKeypairId($paymentUnzerTransfer->getKeypairIdOrFail());
     }
 
@@ -109,8 +109,8 @@ class UnzerPersistenceMapper
     ): SpyPaymentUnzerOrderItem {
         return $paymentUnzerOrderItemEntity
             ->fromArray($paymentUnzerOrderItemTransfer->toArray())
-            ->setFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItem())
-            ->setFkPaymentUnzer($paymentUnzerOrderItemTransfer->getIdPaymentUnzer());
+            ->setFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItemOrFail())
+            ->setFkPaymentUnzer($paymentUnzerOrderItemTransfer->getIdPaymentUnzerOrFail());
     }
 
     /**
@@ -125,7 +125,7 @@ class UnzerPersistenceMapper
     ): SpyPaymentUnzerTransaction {
         return $paymentUnzerTransactionEntity
             ->fromArray($paymentUnzerTransactionTransfer->toArray())
-            ->setFkPaymentUnzer($paymentUnzerTransactionTransfer->getIdPaymentUnzer());
+            ->setFkPaymentUnzer($paymentUnzerTransactionTransfer->getIdPaymentUnzerOrFail());
     }
 
     /**
@@ -167,7 +167,7 @@ class UnzerPersistenceMapper
         SpyUnzerCredentials $unzerCredentialsEntity
     ): SpyUnzerCredentials {
         return $unzerCredentialsEntity->fromArray($unzerCredentialsTransfer->toArray())
-            ->setPublicKey($unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey());
+            ->setPublicKey($unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKeyOrFail());
     }
 
     /**
@@ -184,7 +184,7 @@ class UnzerPersistenceMapper
             ->fromArray($unzerCredentialsEntity->toArray(), true);
 
         if ($unzerCredentialsTransfer->getUnzerKeypair()) {
-            $unzerCredentialsTransfer->getUnzerKeypair()
+            $unzerCredentialsTransfer->getUnzerKeypairOrFail()
                 ->setPublicKey($unzerCredentialsEntity->getPublicKey())
                 ->setKeypairId($unzerCredentialsEntity->getKeypairId());
 

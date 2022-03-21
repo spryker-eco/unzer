@@ -50,10 +50,10 @@ abstract class AbstractPaymentProcessor
         $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail();
 
         $unzerBasket = $this->createUnzerBasket($quoteTransfer, $unzerPaymentTransfer->getUnzerKeypairOrFail());
+        $amountTotal = (int)$quoteTransfer->getTotalsOrFail()->getGrandTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER;
         $unzerPaymentTransfer->setBasket($unzerBasket);
-
         $unzerPaymentTransfer->setCurrency($quoteTransfer->getCurrencyOrFail()->getCode());
-        $unzerPaymentTransfer->setAmountTotal($quoteTransfer->getTotalsOrFail()->getGrandTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER);
+        $unzerPaymentTransfer->setAmountTotal((int)$amountTotal);
 
         return $unzerPaymentTransfer;
     }
