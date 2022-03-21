@@ -7,49 +7,42 @@
 
 namespace SprykerEco\Yves\Unzer\Form;
 
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Generated\Shared\Transfer\PaymentTransfer;
+use SprykerEco\Shared\Unzer\UnzerConfig;
 
-class MarketplaceCreditCardSubForm extends AbstractUnzerSubForm
+class MarketplaceCreditCardSubForm extends CreditCardSubForm
 {
     /**
      * @var string
      */
-    public const PAYMENT_METHOD = 'marketplace-credit-card';
+    protected const TEMPLATE_VIEW_PATH = 'views/marketplace-credit-card/marketplace-credit-card';
 
     /**
-     * @return string
+     * @var string
      */
-    public function getName(): string
-    {
-        return 'unzerMarketplaceCreditCard';
-    }
+    protected const PAYMENT_METHOD_NAME = 'marketplace_credit_card';
 
     /**
      * @return string
      */
     public function getPropertyPath(): string
     {
-        return 'unzerMarketplaceCreditCard';
+        return PaymentTransfer::UNZER_MARKETPLACE_CREDIT_CARD;
     }
 
     /**
      * @return string
      */
-    public function getTemplatePath(): string
+    public function getName(): string
     {
-        return 'unzer' . '/' . 'marketplaceCreditCard';
+        return PaymentTransfer::UNZER_MARKETPLACE_CREDIT_CARD;
     }
 
     /**
-     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
-     *
-     * @return void
+     * @return string
      */
-    public function configureOptions(OptionsResolver $resolver): void
+    protected function getTemplatePath(): string
     {
-        $resolver->setDefaults([
-            'data_class' => UnzerPaymentTransfer::class,
-        ])->setRequired(static::OPTIONS_FIELD_NAME);
+        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
     }
 }

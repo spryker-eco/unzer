@@ -1,0 +1,6 @@
+{% extends template('credit-card-layout', 'Unzer') %}
+
+{% define data = {
+    publicKey: form.unzerCreditCard.public_key,
+    id: form.unzerCreditCard.id,
+} %}

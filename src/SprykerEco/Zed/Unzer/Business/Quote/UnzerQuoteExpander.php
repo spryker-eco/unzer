@@ -7,10 +7,15 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
+use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\StoreTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface;
+use SprykerEco\Shared\Unzer\UnzerConstants;
+use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
@@ -31,16 +36,6 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
     protected $unzerKeypairQuoteExpander;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Quote\UnzerParticipantIdQuoteExpanderInterface
-     */
-    protected $unzerParticipantIdQuoteExpander;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface
-     */
-    protected $quoteClient;
-
-    /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
     protected $unzerConfig;
@@ -54,24 +49,21 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander
      * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerKeypairQuoteExpanderInterface $unzerKeypairQuoteExpander
-     * @param \SprykerEco\Zed\Unzer\Business\Quote\UnzerParticipantIdQuoteExpanderInterface $unzerParticipantIdQuoteExpander
-     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToQuoteClientInterface $quoteClient
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
     public function __construct(
         UnzerCustomerQuoteExpanderInterface $unzerCustomerQuoteExpander,
         UnzerMetadataQuoteExpanderInterface $unzerMetadataQuoteExpander,
         UnzerKeypairQuoteExpanderInterface $unzerKeypairQuoteExpander,
-        UnzerParticipantIdQuoteExpanderInterface $unzerParticipantIdQuoteExpander,
-        UnzerToQuoteClientInterface $quoteClient,
-        UnzerConfig $unzerConfig
+        UnzerConfig $unzerConfig,
+        UnzerReaderInterface $unzerReader
     ) {
         $this->unzerCustomerQuoteExpander = $unzerCustomerQuoteExpander;
         $this->unzerMetadataQuoteExpander = $unzerMetadataQuoteExpander;
         $this->unzerKeypairQuoteExpander = $unzerKeypairQuoteExpander;
-        $this->unzerParticipantIdQuoteExpander = $unzerParticipantIdQuoteExpander;
-        $this->quoteClient = $quoteClient;
         $this->unzerConfig = $unzerConfig;
+        $this->unzerReader = $unzerReader;
     }
 
     /**
@@ -91,10 +83,8 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
         $quoteTransfer = $this->unzerMetadataQuoteExpander->expandQuoteWithUnzerMetadata($quoteTransfer);
 
         if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
-            $quoteTransfer = $this->unzerParticipantIdQuoteExpander->expandQuoteItemsWithParticipantIds($quoteTransfer);
+            $quoteTransfer = $this->expandQuoteItemsWithUnzerParticipants($quoteTransfer);
         }
-
-        $this->quoteClient->setQuote($quoteTransfer);
 
         return $quoteTransfer;
     }

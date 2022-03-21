@@ -7,111 +7,18 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 
-use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\RefundTransfer;
-use Generated\Shared\Transfer\SaveOrderTransfer;
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
+use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 
-class MarketplaceCreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
+class MarketplaceCreditCardProcessor extends CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
 {
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface
-     */
-    protected $unzerAuthorizeAdapter;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
-     */
-    protected $unzerPaymentAdapter;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface
-     */
-    protected $unzerChargeProcessor;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface
-     */
-    protected $unzerRefundProcessor;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
-     */
-    protected $unzerPreparePaymentProcessor;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
-     */
-    protected $unzerCheckoutMapper;
-
-    /**
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface $unzerAuthorizeAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface $unzerChargeProcessor
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
-     * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
-     */
-    public function __construct(
-        UnzerAuthorizeAdapterInterface $unzerAuthorizeAdapter,
-        UnzerPaymentAdapterInterface $unzerPaymentAdapter,
-        UnzerChargeProcessorInterface $unzerChargeProcessor,
-        UnzerRefundProcessorInterface $unzerRefundProcessor,
-        UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor,
-        UnzerCheckoutMapperInterface $unzerCheckoutMapper
-    ) {
-        $this->unzerAuthorizeAdapter = $unzerAuthorizeAdapter;
-        $this->unzerPaymentAdapter = $unzerPaymentAdapter;
-        $this->unzerChargeProcessor = $unzerChargeProcessor;
-        $this->unzerRefundProcessor = $unzerRefundProcessor;
-        $this->unzerPreparePaymentProcessor = $unzerPreparePaymentProcessor;
-        $this->unzerCheckoutMapper = $unzerCheckoutMapper;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
      */
-    public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
+    protected function getUnzerPaymentResourceFromQuote(QuoteTransfer $quoteTransfer): UnzerPaymentResourceTransfer
     {
-        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
-        $unzerPaymentTransfer->setPaymentResource(
-            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResourceOrFail(),
-        );
-        $unzerPaymentTransfer = $this->unzerAuthorizeAdapter->authorizePayment($unzerPaymentTransfer);
-
-        return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
-     *
-     * @return void
-     */
-    public function processCharge(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
-    {
-        $this->unzerChargeProcessor->charge($orderTransfer, $salesOrderItemIds);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
-     *
-     * @return void
-     */
-    public function processRefund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
-    {
-        $this->unzerRefundProcessor->refund($refundTransfer, $orderTransfer, $salesOrderItemIds);
+        return $quoteTransfer->getPaymentOrFail()->getUnzerMarketplaceCreditCardOrFail()->getPaymentResourceOrFail();
     }
 }

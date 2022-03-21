@@ -18,12 +18,12 @@ interface UnzerToRefundFacadeInterface
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
-    public function calculateRefund(array $salesOrderItems, SpySalesOrder $salesOrderEntity);
+    public function calculateRefund(array $salesOrderItems, SpySalesOrder $salesOrderEntity): RefundTransfer;
 
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      *
      * @return bool
      */
-    public function saveRefund(RefundTransfer $refundTransfer);
+    public function saveRefund(RefundTransfer $refundTransfer): bool;
 }

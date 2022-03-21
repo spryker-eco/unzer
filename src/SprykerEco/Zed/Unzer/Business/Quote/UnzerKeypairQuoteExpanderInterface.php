@@ -17,4 +17,11 @@ interface UnzerKeypairQuoteExpanderInterface
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function expandQuoteWithUnzerKeypair(QuoteTransfer $quoteTransfer): QuoteTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\QuoteTransfer
+     */
+    public function expandQuoteWithUnzerCredentials(QuoteTransfer $quoteTransfer): QuoteTransfer;
 }

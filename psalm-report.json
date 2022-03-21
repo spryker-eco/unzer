@@ -40,6 +40,30 @@
         },
         {
             "severity": "info",
+            "line_from": 38,
+            "line_to": 38,
+            "type": "PossiblyNullArgument",
+            "message": "Argument 1 of Generated\\Shared\\Transfer\\UnzerCredentialsConditionsTransfer::addPublicKey cannot be null, possibly null value provided",
+            "file_name": "vendor/spryker-eco/unzer/src/SprykerEco/Zed/Unzer/Business/Credentials/Validator/Constraints/UniquePublicKeyConstraintValidator.php",
+            "snippet": "            ->addPublicKey($value->getUnzerKeypairOrFail()->getPublicKey());",
+            "selected_text": "$value->getUnzerKeypairOrFail()->getPublicKey()",
+            "error_level": 3,
+            "shortcode": 78
+        },
+        {
+            "severity": "info",
+            "line_from": 44,
+            "line_to": 44,
+            "type": "PossiblyInvalidMethodCall",
+            "message": "Cannot call method on possible array<array-key, Generated\\Shared\\Transfer\\UnzerCredentialsTransfer> variable ",
+            "file_name": "vendor/spryker-eco/unzer/src/SprykerEco/Zed/Unzer/Business/Credentials/Validator/Constraints/UniquePublicKeyConstraintValidator.php",
+            "snippet": "        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {",
+            "selected_text": "count",
+            "error_level": 3,
+            "shortcode": 113
+        },
+        {
+            "severity": "info",
             "line_from": 46,
             "line_to": 46,
             "type": "PossiblyInvalidMethodCall",
@@ -330,8 +354,8 @@
         },
         {
             "severity": "info",
-            "line_from": 78,
-            "line_to": 78,
+            "line_from": 79,
+            "line_to": 79,
             "type": "DeprecatedMethod",
             "message": "The method Generated\\Shared\\Transfer\\QuoteTransfer::getShippingAddressOrFail has been marked as deprecated",
             "file_name": "vendor/spryker-eco/unzer/src/SprykerEco/Zed/Unzer/Business/Quote/Mapper/UnzerQuoteMapper.php",

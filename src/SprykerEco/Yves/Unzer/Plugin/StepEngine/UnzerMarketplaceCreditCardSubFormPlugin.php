@@ -19,7 +19,7 @@ class UnzerMarketplaceCreditCardSubFormPlugin extends AbstractPlugin implements 
 {
     /**
      * {@inheritDoc}
-     * - Creates `Marketplace BankTransfer` subform.
+     * - Creates `MarketplaceCreditCard` subform.
      *
      * @api
      *
@@ -32,7 +32,7 @@ class UnzerMarketplaceCreditCardSubFormPlugin extends AbstractPlugin implements 
 
     /**
      * {@inheritDoc}
-     * - Creates `Marketplace BankTransfer` subform data provider.
+     * - Creates `MarketplaceCreditCard` subform data provider.
      *
      * @api
      *

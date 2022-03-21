@@ -7,6 +7,8 @@
 
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
+use Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiAuthorizeResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeResponseTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
@@ -25,6 +27,17 @@ interface UnzerAuthorizePaymentMapperInterface
     ): UnzerApiMarketplaceAuthorizeRequestTransfer;
 
     /**
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer $unzerApiAuthorizeRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer
+     */
+    public function mapUnzerPaymentTransferToUnzerApiAuthorizeRequestTransfer(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        UnzerApiAuthorizeRequestTransfer $unzerApiAuthorizeRequestTransfer
+    ): UnzerApiAuthorizeRequestTransfer;
+
+    /**
      * @param \Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeResponseTransfer $unzerApiMarketplaceAuthorizeResponseTransfer
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
@@ -32,6 +45,17 @@ interface UnzerAuthorizePaymentMapperInterface
      */
     public function mapUnzerApiMarketplaceAuthorizeResponseTransferToUnzerPaymentTransfer(
         UnzerApiMarketplaceAuthorizeResponseTransfer $unzerApiMarketplaceAuthorizeResponseTransfer,
+        UnzerPaymentTransfer $unzerPaymentTransfer
+    ): UnzerPaymentTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiAuthorizeResponseTransfer $unzerApiAuthorizeResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     */
+    public function mapUnzerApiAuthorizeResponseTransferToUnzerPaymentTransfer(
+        UnzerApiAuthorizeResponseTransfer $unzerApiAuthorizeResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer;
 }
