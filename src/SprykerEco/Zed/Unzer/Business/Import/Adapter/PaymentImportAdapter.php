@@ -59,7 +59,8 @@ class PaymentImportAdapter implements PaymentImportAdapterInterface
     public function createPaymentProvider(string $paymentProviderName, ArrayObject $paymentMethodTransfers): PaymentProviderCollectionResponseTransfer
     {
         $paymentProviderTransfer = $this->createPaymentProviderTransfer($paymentProviderName, $paymentMethodTransfers);
-        $paymentProviderCollectionRequestTransfer = (new PaymentProviderCollectionRequestTransfer())->addPaymentProvider($paymentProviderTransfer);
+        $paymentProviderCollectionRequestTransfer = (new PaymentProviderCollectionRequestTransfer())->setIsTransactional(true)
+            ->addPaymentProvider($paymentProviderTransfer);
 
         return $this->paymentFacade->createPaymentProviderCollection($paymentProviderCollectionRequestTransfer);
     }
@@ -78,7 +79,8 @@ class PaymentImportAdapter implements PaymentImportAdapterInterface
             $paymentMethodTransfer->setIdPaymentProvider($paymentProviderTransfer->getIdPaymentProviderOrFail());
         }
 
-        $paymentMethodCollectionRequestTransfer = (new PaymentMethodCollectionRequestTransfer())->setPaymentMethods($paymentMethodTransfers);
+        $paymentMethodCollectionRequestTransfer = (new PaymentMethodCollectionRequestTransfer())->setIsTransactional(true)
+            ->setPaymentMethods($paymentMethodTransfers);
 
         return $this->paymentFacade->createPaymentMethodCollection($paymentMethodCollectionRequestTransfer);
     }

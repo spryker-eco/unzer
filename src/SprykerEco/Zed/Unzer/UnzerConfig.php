@@ -230,6 +230,10 @@ class UnzerConfig extends AbstractBundleConfig
      */
     public function getPaymentMethodKeys(string $unzerPaymentMethodKey): array
     {
+        if (!isset(static::UNZER_PAYMENT_METHOD_KEYS_MAP[$unzerPaymentMethodKey])) {
+            return [];
+        }
+
         return static::UNZER_PAYMENT_METHOD_KEYS_MAP[$unzerPaymentMethodKey];
     }
 
