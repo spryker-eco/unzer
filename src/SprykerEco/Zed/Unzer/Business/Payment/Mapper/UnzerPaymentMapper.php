@@ -112,7 +112,7 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
             $unzerPaymentTransfer->getIdOrFail() .
             $unzerTransactionTransfer->getTypeOrFail() .
             $unzerTransactionTransfer->getStatusOrFail() .
-            $unzerTransactionTransfer->getParticipantIdOrFail(),
+            (string)$unzerTransactionTransfer->getParticipantId(),
         );
     }
 
