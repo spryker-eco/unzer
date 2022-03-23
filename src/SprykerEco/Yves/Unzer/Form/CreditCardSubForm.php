@@ -31,11 +31,6 @@ class CreditCardSubForm extends AbstractUnzerSubForm
     /**
      * @var string
      */
-    protected const PAYMENT_METHOD_NAME = 'credit_card';
-
-    /**
-     * @var string
-     */
     protected const FIELD_ID_PAYMENT = 'id';
 
     /**
@@ -94,7 +89,7 @@ class CreditCardSubForm extends AbstractUnzerSubForm
             'required' => true,
             'property_path' => 'paymentResource.id',
             'constraints' => [
-                new NotBlank(),
+                new NotBlank(['groups' => $this->getPropertyPath()]),
             ],
         ]);
 
