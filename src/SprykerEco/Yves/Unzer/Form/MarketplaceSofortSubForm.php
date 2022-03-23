@@ -12,12 +12,12 @@ use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MarketplaceSofortSubForm extends AbstractUnzerSubForm
+class MarketplaceSofortSubForm extends SofortSubForm
 {
     /**
      * @var string
      */
-    protected const PAYMENT_METHOD_TEMPLATE_NAME = 'marketplace_sofort';
+    protected const TEMPLATE_VIEW_PATH = 'views/marketplace-sofort/marketplace-sofort';
 
     /**
      * @return string
@@ -36,22 +36,10 @@ class MarketplaceSofortSubForm extends AbstractUnzerSubForm
     }
 
     /**
-     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
-     *
-     * @return void
-     */
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => UnzerPaymentTransfer::class,
-        ])->setRequired(static::OPTIONS_FIELD_NAME);
-    }
-
-    /**
      * @return string
      */
     protected function getTemplatePath(): string
     {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::PAYMENT_METHOD_TEMPLATE_NAME;
+        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
     }
 }

@@ -17,7 +17,7 @@ class BankTransferSubForm extends AbstractUnzerSubForm
     /**
      * @var string
      */
-    protected const PAYMENT_METHOD_TEMPLATE_NAME = 'bank_transfer';
+    protected const TEMPLATE_VIEW_PATH = 'views/bank-transfer/bank-transfer';
 
     /**
      * @return string
@@ -52,6 +52,6 @@ class BankTransferSubForm extends AbstractUnzerSubForm
      */
     protected function getTemplatePath(): string
     {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::PAYMENT_METHOD_TEMPLATE_NAME;
+        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
     }
 }

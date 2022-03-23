@@ -17,7 +17,7 @@ class SofortSubForm extends AbstractUnzerSubForm
     /**
      * @var string
      */
-    protected const PAYMENT_METHOD_TEMPLATE_NAME = 'sofort';
+    protected const TEMPLATE_VIEW_PATH = 'views/sofort/sofort';
 
     /**
      * @return string
@@ -52,6 +52,6 @@ class SofortSubForm extends AbstractUnzerSubForm
      */
     protected function getTemplatePath(): string
     {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::PAYMENT_METHOD_TEMPLATE_NAME;
+        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
     }
 }
