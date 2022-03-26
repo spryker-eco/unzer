@@ -21,7 +21,6 @@ use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
-use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 
 class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
 {
@@ -53,7 +52,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     protected $unzerNotificationConfigurator;
 
     /**
-     * @var UnzerReaderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
 
@@ -63,7 +62,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
      * @param \SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface $unzerVaultWriter
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
      * @param \SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface $unzerNotificationConfigurator
-     * @param UnzerReaderInterface $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
     public function __construct(
         UnzerEntityManagerInterface $unzerEntityManager,
@@ -195,9 +194,9 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     }
 
     /**
-     * @param UnzerCredentialsTransfer $unzerCredentialsTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
-     * @return UnzerCredentialsTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
     protected function expandUnzerCredentialsWithParentStoreRelations(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
     {
@@ -205,7 +204,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
 
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions(
-                (new UnzerCredentialsConditionsTransfer())->addId($parentIdUnzerCredentials)
+                (new UnzerCredentialsConditionsTransfer())->addId($parentIdUnzerCredentials),
             );
         $parentUnzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
         if ($parentUnzerCredentialsTransfer === null) {

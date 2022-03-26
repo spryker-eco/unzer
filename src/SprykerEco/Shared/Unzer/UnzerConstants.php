@@ -68,7 +68,7 @@ interface UnzerConstants
     public const UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT = 4;
 
     /**
-     * @var array<int,string>
+     * @var array<int, string>
      */
     public const UNZER_CONFIG_TYPES = [
         self::UNZER_CONFIG_TYPE_STANDARD => 'Standard',

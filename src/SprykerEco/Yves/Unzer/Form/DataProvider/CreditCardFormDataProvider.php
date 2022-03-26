@@ -37,7 +37,7 @@ class CreditCardFormDataProvider extends AbstractFormDataProvider
         $quoteTransfer = $this->updateQuoteWithPaymentData($quoteTransfer);
         $quoteTransfer->getPaymentOrFail()->setUnzerCreditCard(
             (new UnzerPaymentTransfer())->setPaymentResource(
-                (new UnzerPaymentResourceTransfer())
+                (new UnzerPaymentResourceTransfer()),
             ),
         );
 

@@ -187,8 +187,9 @@ class UnzerPersistenceMapper
             $unzerCredentialsTransfer->setStoreRelation(
                 $this->mapUnzerCredentialsStoreEntitiesToStoreRelationTransfer(
                     $unzerCredentialsEntity->getUnzerCredentialsStores(),
-                    new StoreRelationTransfer()
-                ));
+                    new StoreRelationTransfer(),
+                ),
+            );
         }
 
         if ($unzerCredentialsTransfer->getUnzerKeypair()) {

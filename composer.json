@@ -16,7 +16,7 @@
         "spryker/merchant": "^3.1.0",
         "spryker/merchant-extension": "^1.1.0",
         "spryker/oms": "^11.15.0",
-        "spryker/payment": "^5.5.0",
+        "spryker/payment": "^5.4.2",
         "spryker/payment-extension": "^1.0.0",
         "spryker/propel-orm": "^1.6.0",
         "spryker/quote": "^2.15.0",

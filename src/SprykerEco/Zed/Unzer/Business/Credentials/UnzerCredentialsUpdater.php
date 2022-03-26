@@ -43,7 +43,7 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
     protected $unzerVaultWriter;
 
     /**
-     * @var UnzerReaderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
 
@@ -51,7 +51,7 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface $unzerCredentialsStoreRelationUpdater
      * @param \SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface $unzerVaultWriter
-     * @param UnzerReaderInterface $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
     public function __construct(
         UnzerEntityManagerInterface $unzerEntityManager,
@@ -115,14 +115,14 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
     }
 
     /**
-     * @param UnzerCredentialsTransfer $unzerCredentialsTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return void
      */
     protected function updateChildUnzerCredentialsStoreRelations(UnzerCredentialsTransfer $unzerCredentialsTransfer): void
     {
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
-            (new UnzerCredentialsConditionsTransfer())->addParentId($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail())
+            (new UnzerCredentialsConditionsTransfer())->addParentId($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail()),
         );
 
         $unzerCredentialsCollectionTransfer = $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);

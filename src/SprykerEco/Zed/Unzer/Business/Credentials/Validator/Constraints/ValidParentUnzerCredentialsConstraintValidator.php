@@ -21,6 +21,8 @@ class ValidParentUnzerCredentialsConstraintValidator extends ConstraintValidator
      * @param int $value
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\Validator\Constraints\UniquePublicKeyConstraint $constraint
      *
+     * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
+     *
      * @return void
      */
     public function validate($value, Constraint $constraint): void
