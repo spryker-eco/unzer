@@ -386,6 +386,6 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      */
     public function validateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        return $this->getFactory()->createUnzerCredentialsConstraintsValidator()->validate($unzerCredentialsTransfer);
+        return $this->getFactory()->createUnzerCredentialsValidator()->validate($unzerCredentialsTransfer);
     }
 }

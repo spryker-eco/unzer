@@ -68,12 +68,20 @@ interface UnzerConstants
     public const UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT = 4;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     public const UNZER_CONFIG_TYPES = [
         self::UNZER_CONFIG_TYPE_STANDARD => 'Standard',
         self::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE => 'Marketplace (Main channel)',
         self::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT => 'Marketplace (Main merchant)',
         self::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT => 'Marketplace (Sub-merchant)',
+    ];
+
+    /**
+     * @var array<int>
+     */
+    public const UNZER_CHILD_CONFIG_TYPES = [
+        self::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+        self::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
     ];
 }

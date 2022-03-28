@@ -20,8 +20,6 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapter;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade;
 use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
@@ -63,7 +61,6 @@ class UnzerFacadeBaseTest extends Test
                 'getVaultFacade',
                 'getLocaleFacade',
                 'getUtilTextService',
-                'getValidatorAdapter',
                 'getMerchantFacade',
             ],
         );
@@ -83,8 +80,6 @@ class UnzerFacadeBaseTest extends Test
             ->willReturn($this->getLocaleFacade());
         $stub->method('getUtilTextService')
             ->willReturn($this->getUtilTextService());
-        $stub->method('getValidatorAdapter')
-            ->willReturn($this->getValidatorAdapter());
         $stub->method('getMerchantFacade')
             ->willReturn($this->getMerchantFacade());
 
@@ -163,14 +158,6 @@ class UnzerFacadeBaseTest extends Test
     protected function getUtilTextService(): UnzerToUtilTextServiceInterface
     {
         return new UnzerToUtilTextServiceBridge($this->createUtilTextServiceMock());
-    }
-
-    /**
-     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface
-     */
-    protected function getValidatorAdapter(): UnzerToValidationAdapterInterface
-    {
-        return new UnzerToValidationAdapter();
     }
 
     /**

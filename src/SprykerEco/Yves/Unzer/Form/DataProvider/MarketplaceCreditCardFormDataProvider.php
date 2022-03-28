@@ -37,7 +37,7 @@ class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
         $quoteTransfer = $this->updateQuoteWithPaymentData($quoteTransfer);
         $quoteTransfer->getPaymentOrFail()->setUnzerMarketplaceCreditCard(
             (new UnzerPaymentTransfer())->setPaymentResource(
-                (new UnzerPaymentResourceTransfer())
+                (new UnzerPaymentResourceTransfer()),
             ),
         );
 

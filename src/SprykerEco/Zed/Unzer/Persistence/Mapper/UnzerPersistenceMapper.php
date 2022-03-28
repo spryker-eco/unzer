@@ -183,6 +183,15 @@ class UnzerPersistenceMapper
         $unzerCredentialsTransfer = $unzerCredentialsTransfer
             ->fromArray($unzerCredentialsEntity->toArray(), true);
 
+        if ($unzerCredentialsEntity->getUnzerCredentialsStores()->count() !== 0) {
+            $unzerCredentialsTransfer->setStoreRelation(
+                $this->mapUnzerCredentialsStoreEntitiesToStoreRelationTransfer(
+                    $unzerCredentialsEntity->getUnzerCredentialsStores(),
+                    new StoreRelationTransfer(),
+                ),
+            );
+        }
+
         if ($unzerCredentialsTransfer->getUnzerKeypair()) {
             $unzerCredentialsTransfer->getUnzerKeypairOrFail()
                 ->setPublicKey($unzerCredentialsEntity->getPublicKey())

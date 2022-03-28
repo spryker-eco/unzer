@@ -228,7 +228,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     public function findUnzerCredentialsCollectionByCriteria(
         UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
     ): UnzerCredentialsCollectionTransfer {
-        $unzerCredentialsQuery = $this->getFactory()->createUnzerCredentialsQuery();
+        $unzerCredentialsQuery = $this->getFactory()->createUnzerCredentialsQuery()->joinWithUnzerCredentialsStore();
         $unzerCredentialsQuery = $this->setUnzerConfigFilters(
             $unzerCredentialsQuery,
             $unzerCredentialsCriteriaTransfer->getUnzerCredentialsConditionsOrFail(),
@@ -244,6 +244,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
+     * @module Store
+     *
      * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery $unzerCredentialsQuery
      * @param \Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer $unzerCredentialsConditionsTransfer
      *
@@ -279,7 +281,6 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
 
         if ($unzerCredentialsConditionsTransfer->getStoreNames()) {
             $unzerCredentialsQuery
-                ->joinWithUnzerCredentialsStore()
                 ->useUnzerCredentialsStoreQuery()
                     ->joinWithStore()
                     ->useStoreQuery()
@@ -290,7 +291,6 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
 
         if ($unzerCredentialsConditionsTransfer->getStoreIds()) {
             $unzerCredentialsQuery
-                ->joinWithUnzerCredentialsStore()
                 ->useUnzerCredentialsStoreQuery()
                     ->joinWithStore()
                     ->useStoreQuery()

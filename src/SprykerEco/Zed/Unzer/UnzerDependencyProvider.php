@@ -17,7 +17,6 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapter;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 
 /**
@@ -68,11 +67,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @var string
      */
-    public const ADAPTER_VALIDATION = 'ADAPTER_VALIDATION';
-
-    /**
-     * @var string
-     */
     public const FACADE_MERCHANT = 'FACADE_MERCHANT';
 
     /**
@@ -106,7 +100,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addLocaleFacade($container);
         $container = $this->addVaultFacade($container);
         $container = $this->addUtilTextService($container);
-        $container = $this->addValidationAdapter($container);
         $container = $this->addMerchantFacade($container);
 
         return $container;
@@ -219,20 +212,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_PAYMENT, function (Container $container) {
             return new UnzerToPaymentFacadeBridge($container->getLocator()->payment()->facade());
-        });
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addValidationAdapter(Container $container): Container
-    {
-        $container->set(static::ADAPTER_VALIDATION, function () {
-            return new UnzerToValidationAdapter();
         });
 
         return $container;

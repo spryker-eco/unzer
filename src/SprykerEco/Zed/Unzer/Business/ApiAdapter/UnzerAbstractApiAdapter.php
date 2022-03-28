@@ -38,10 +38,10 @@ abstract class UnzerAbstractApiAdapter
      */
     protected function concatErrors(UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer): string
     {
-        $errorsMessage = 'Unzer API errors:';
+        $errorsMessage = 'Unzer API errors: ';
         $unzerApiResponseErrorTransfers = $unzerApiErrorResponseTransfer->getErrors();
         foreach ($unzerApiResponseErrorTransfers as $unzerApiResponseErrorTransfer) {
-            $errorsMessage .= $unzerApiResponseErrorTransfer->getCode() . ' ';
+            $errorsMessage .= $unzerApiResponseErrorTransfer->getMerchantMessage() . ' ';
         }
 
         return trim($errorsMessage);
