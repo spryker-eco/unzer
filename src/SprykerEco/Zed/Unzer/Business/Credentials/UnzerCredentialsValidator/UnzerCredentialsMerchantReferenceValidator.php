@@ -17,6 +17,11 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface;
 class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsValidatorInterface
 {
     /**
+     * @var string
+     */
+    protected const ERROR_MESSAGE_MERCHANT_DOES_NOT_EXISTS = 'Merchant with provided reference does not exist!';
+
+    /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface
      */
     protected $merchantFacade;
@@ -30,13 +35,13 @@ class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsVali
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    public function validate(UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer): UnzerCredentialsResponseTransfer
+    public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        $unzerCredentialsTransfer = $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail();
+        $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
         if (!in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
             return $unzerCredentialsResponseTransfer;
         }
@@ -50,7 +55,7 @@ class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsVali
         }
 
         return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
-            ->addMessage($this->createMerchantNotExistsViolationMessage($unzerCredentialsTransfer));
+            ->addMessage($this->createMerchantDoesNotExistViolationMessage($unzerCredentialsTransfer));
     }
 
     /**
@@ -58,10 +63,12 @@ class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsVali
      *
      * @return \Generated\Shared\Transfer\MessageTransfer
      */
-    protected function createMerchantNotExistsViolationMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
+    protected function createMerchantDoesNotExistViolationMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
     {
-        $message = sprintf('Merchant with reference %s does not exist!', $unzerCredentialsTransfer->getMerchantReferenceOrFail());
-
-        return (new MessageTransfer())->setMessage($message);
+        return (new MessageTransfer())
+            ->setMessage(static::ERROR_MESSAGE_MERCHANT_DOES_NOT_EXISTS)
+            ->setParameters([
+                UnzerCredentialsTransfer::MERCHANT_REFERENCE => $unzerCredentialsTransfer->getMerchantReferenceOrFail(),
+            ]);
     }
 }

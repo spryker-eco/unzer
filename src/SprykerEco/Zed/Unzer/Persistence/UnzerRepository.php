@@ -244,6 +244,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
+     * @module Store
+     *
      * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery $unzerCredentialsQuery
      * @param \Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer $unzerCredentialsConditionsTransfer
      *

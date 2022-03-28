@@ -18,6 +18,13 @@ use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 class UnzerCredentialsParentCredentialsValidator implements UnzerCredentialsValidatorInterface
 {
     /**
+     * @vat string
+     *
+     * @var string
+     */
+    protected const ERROR_MESSAGE_CREDENTIALS_NOT_FOUND = 'Parent Unzer credentials not found!';
+
+    /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
@@ -31,13 +38,13 @@ class UnzerCredentialsParentCredentialsValidator implements UnzerCredentialsVali
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    public function validate(UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer): UnzerCredentialsResponseTransfer
+    public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        $unzerCredentialsTransfer = $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail();
+        $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
         if (!in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
             return $unzerCredentialsResponseTransfer;
         }
@@ -50,18 +57,6 @@ class UnzerCredentialsParentCredentialsValidator implements UnzerCredentialsVali
         }
 
         return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
-            ->addMessage($this->createParentCredentialsNotFoundViolationMessage($unzerCredentialsTransfer));
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
-     *
-     * @return \Generated\Shared\Transfer\MessageTransfer
-     */
-    protected function createParentCredentialsNotFoundViolationMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
-    {
-        $message = sprintf('Parent Unzer credentials with id %s not found!', $unzerCredentialsTransfer->getParentIdUnzerCredentialsOrFail());
-
-        return (new MessageTransfer())->setMessage($message);
+            ->addMessage((new MessageTransfer())->setMessage(static::ERROR_MESSAGE_CREDENTIALS_NOT_FOUND));
     }
 }

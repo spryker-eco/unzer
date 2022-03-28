@@ -8,13 +8,14 @@
 namespace SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator;
 
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 
 interface UnzerCredentialsValidatorInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    public function validate(UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer): UnzerCredentialsResponseTransfer;
+    public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer;
 }

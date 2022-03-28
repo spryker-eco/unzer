@@ -207,10 +207,10 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
                 (new UnzerCredentialsConditionsTransfer())->addId($parentIdUnzerCredentials),
             );
         $parentUnzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
-        if ($parentUnzerCredentialsTransfer === null) {
-            return $unzerCredentialsTransfer;
+        if ($parentUnzerCredentialsTransfer !== null) {
+            $unzerCredentialsTransfer->setStoreRelation($parentUnzerCredentialsTransfer->getStoreRelationOrFail());
         }
 
-        return $unzerCredentialsTransfer->setStoreRelation($parentUnzerCredentialsTransfer->getStoreRelationOrFail());
+        return $unzerCredentialsTransfer;
     }
 }

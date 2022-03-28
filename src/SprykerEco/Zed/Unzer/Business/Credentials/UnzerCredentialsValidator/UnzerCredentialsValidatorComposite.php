@@ -8,6 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator;
 
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 
 class UnzerCredentialsValidatorComposite implements UnzerCredentialsValidatorInterface
 {
@@ -25,14 +26,41 @@ class UnzerCredentialsValidatorComposite implements UnzerCredentialsValidatorInt
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    public function validate(UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer): UnzerCredentialsResponseTransfer
+    public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
+        $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
+
         foreach ($this->unzerCredentialsValidators as $unzerCredentialsValidator) {
-            $unzerCredentialsResponseTransfer = $unzerCredentialsValidator->validate($unzerCredentialsResponseTransfer);
+            $unzerCredentialsIterationResponseTransfer = $unzerCredentialsValidator->validate($unzerCredentialsTransfer);
+            $unzerCredentialsResponseTransfer = $this->processIterationUnzerCredentialsResponse(
+                $unzerCredentialsResponseTransfer,
+                $unzerCredentialsIterationResponseTransfer,
+            );
+        }
+
+        return $unzerCredentialsResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsIterationResponseTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
+     */
+    protected function processIterationUnzerCredentialsResponse(
+        UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer,
+        UnzerCredentialsResponseTransfer $unzerCredentialsIterationResponseTransfer
+    ): UnzerCredentialsResponseTransfer {
+        if ($unzerCredentialsResponseTransfer->getIsSuccessful()) {
+            $unzerCredentialsResponseTransfer->setIsSuccessful($unzerCredentialsIterationResponseTransfer->getIsSuccessful());
+        }
+
+        foreach ($unzerCredentialsIterationResponseTransfer->getMessages() as $messageTransfer) {
+            $unzerCredentialsResponseTransfer->addMessage($messageTransfer);
         }
 
         return $unzerCredentialsResponseTransfer;

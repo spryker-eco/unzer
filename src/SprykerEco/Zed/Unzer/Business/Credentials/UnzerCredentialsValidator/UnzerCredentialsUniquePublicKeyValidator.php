@@ -12,10 +12,16 @@ use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
 class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValidatorInterface
 {
+    /**
+     * @var string
+     */
+    protected const ERROR_MESSAGE_ALREADY_EXISTS = 'Provided public key already exists!';
+
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
@@ -30,13 +36,13 @@ class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValida
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    public function validate(UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer): UnzerCredentialsResponseTransfer
+    public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        $unzerCredentialsTransfer = $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail();
+        $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
         $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
             ->addPublicKey($unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKeyOrFail());
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
@@ -68,8 +74,10 @@ class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValida
      */
     protected function createUniquePublicKeyViolationMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
     {
-        $message = sprintf('Provided public key %s already exists!', $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKeyOrFail());
-
-        return (new MessageTransfer())->setMessage($message);
+        return (new MessageTransfer())
+            ->setMessage(static::ERROR_MESSAGE_ALREADY_EXISTS)
+            ->setParameters([
+                UnzerKeypairTransfer::PUBLIC_KEY => $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
+            ]);
     }
 }

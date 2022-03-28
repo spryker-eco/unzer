@@ -130,7 +130,6 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
 
@@ -838,14 +837,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->getRepository(),
             $this->getEntityManager(),
         );
-    }
-
-    /**
-     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapterInterface
-     */
-    public function getValidatorAdapter(): UnzerToValidationAdapterInterface
-    {
-        return $this->getProvidedDependency(UnzerDependencyProvider::ADAPTER_VALIDATION);
     }
 
     /**

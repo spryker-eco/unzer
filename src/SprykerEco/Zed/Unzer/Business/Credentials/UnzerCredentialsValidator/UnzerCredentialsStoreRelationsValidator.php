@@ -18,6 +18,16 @@ use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidatorInterface
 {
     /**
+     * @var string
+     */
+    protected const ERROR_MESSAGE_STORE_RELATION_EMPTY = 'Store relations can not be empty';
+
+    /**
+     * @var string
+     */
+    protected const ERROR_MESSAGE_STORE_RELATION_ALREADY_USED = 'Chosen Store relation is already used';
+
+    /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
@@ -31,17 +41,17 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    public function validate(UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer): UnzerCredentialsResponseTransfer
+    public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
-        $unzerCredentialsTransfer = $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail();
+        $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
         if (!$this->isUnzerCredentialsHaveStoreRelations($unzerCredentialsTransfer)) {
             return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
                 ->addMessage(
-                    (new MessageTransfer())->setMessage('Store relations can not be empty'),
+                    (new MessageTransfer())->setMessage(static::ERROR_MESSAGE_STORE_RELATION_EMPTY),
                 );
         }
 
@@ -58,7 +68,7 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
             ) {
                 $unzerCredentialsResponseTransfer->setIsSuccessful(false)
                     ->addMessage(
-                        (new MessageTransfer())->setMessage('Chosen Store relation is already used'),
+                        (new MessageTransfer())->setMessage(static::ERROR_MESSAGE_STORE_RELATION_ALREADY_USED),
                     );
 
                 break;
