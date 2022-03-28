@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\MessageTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
@@ -37,10 +38,7 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
     public function validate(UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer): UnzerCredentialsResponseTransfer
     {
         $unzerCredentialsTransfer = $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail();
-        if (
-            !in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES) &&
-            count($unzerCredentialsTransfer->getStoreRelationOrFail()->getIdStores()) === 0
-        ) {
+        if (!$this->isUnzerCredentialsHaveStoreRelations($unzerCredentialsTransfer)) {
             return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
                 ->addMessage(
                     (new MessageTransfer())->setMessage('Store relations can not be empty'),
@@ -59,7 +57,11 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
                 $existingUnzerCredentialsTransfer->getIdUnzerCredentials() !== (int)$unzerCredentialsTransfer->getIdUnzerCredentials()
             ) {
                 $unzerCredentialsResponseTransfer->setIsSuccessful(false)
-                    ->addMessage($this->createStoreRelationAlreadyUsedMessage());
+                    ->addMessage(
+                        (new MessageTransfer())->setMessage('Chosen Store relation is already used'),
+                    );
+
+                break;
             }
         }
 
@@ -67,12 +69,13 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
     }
 
     /**
-     * @return \Generated\Shared\Transfer\MessageTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return bool
      */
-    protected function createStoreRelationAlreadyUsedMessage(): MessageTransfer
+    protected function isUnzerCredentialsHaveStoreRelations(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
     {
-        $message = sprintf('Chosen Store relation is already used');
-
-        return (new MessageTransfer())->setMessage($message);
+        return !in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES) &&
+            count($unzerCredentialsTransfer->getStoreRelationOrFail()->getIdStores()) !== 0;
     }
 }
