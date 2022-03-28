@@ -42,9 +42,6 @@
         "spryker/state-machine": "*",
         "spryker/testify": "*"
     },
-    "suggest": {
-        "spryker/checkout": "If you want to use Checkout plugins you need to install spryker/checkout."
-    },
     "autoload": {
         "psr-4": {
             "SprykerEco\\": "src/SprykerEco/"
