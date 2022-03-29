@@ -8,9 +8,13 @@
 namespace SprykerEco\Zed\Unzer\Business\Credentials;
 
 use Generated\Shared\Transfer\MessageTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
+use SprykerEco\Shared\Unzer\UnzerConstants;
+use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
 
@@ -39,18 +43,26 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
     protected $unzerVaultWriter;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
+     */
+    protected $unzerReader;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsStoreRelationUpdaterInterface $unzerCredentialsStoreRelationUpdater
      * @param \SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface $unzerVaultWriter
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
     public function __construct(
         UnzerEntityManagerInterface $unzerEntityManager,
         UnzerCredentialsStoreRelationUpdaterInterface $unzerCredentialsStoreRelationUpdater,
-        UnzerVaultWriterInterface $unzerVaultWriter
+        UnzerVaultWriterInterface $unzerVaultWriter,
+        UnzerReaderInterface $unzerReader
     ) {
         $this->unzerEntityManager = $unzerEntityManager;
         $this->unzerCredentialsStoreRelationUpdater = $unzerCredentialsStoreRelationUpdater;
         $this->unzerVaultWriter = $unzerVaultWriter;
+        $this->unzerReader = $unzerReader;
     }
 
     /**
@@ -72,6 +84,16 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
      */
     protected function executeUpdateUnzerCredentialsTransaction(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
+        if ($unzerCredentialsTransfer->getStoreRelation() !== null) {
+            $storeRelationTransfer = $unzerCredentialsTransfer->getStoreRelationOrFail()
+                ->setIdEntity($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail());
+            $this->unzerCredentialsStoreRelationUpdater->update($storeRelationTransfer);
+        }
+
+        if ($unzerCredentialsTransfer->getTypeOrFail() === UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE) {
+            $this->updateChildUnzerCredentialsStoreRelations($unzerCredentialsTransfer);
+        }
+
         $unzerCredentialsTransfer = $this->unzerEntityManager->updateUnzerCredentials($unzerCredentialsTransfer);
         if ($unzerCredentialsTransfer === null) {
             return (new UnzerCredentialsResponseTransfer())
@@ -87,14 +109,27 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
             $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPrivateKeyOrFail(),
         );
 
-        if ($unzerCredentialsTransfer->getStoreRelation() !== null) {
-            $storeRelationTransfer = $unzerCredentialsTransfer->getStoreRelationOrFail()
-                ->setIdEntity($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail());
-            $this->unzerCredentialsStoreRelationUpdater->update($storeRelationTransfer);
-        }
-
         return (new UnzerCredentialsResponseTransfer())
             ->setIsSuccessful(true)
             ->setUnzerCredentials($unzerCredentialsTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     *
+     * @return void
+     */
+    protected function updateChildUnzerCredentialsStoreRelations(UnzerCredentialsTransfer $unzerCredentialsTransfer): void
+    {
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
+            (new UnzerCredentialsConditionsTransfer())->addParentId($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail()),
+        );
+
+        $unzerCredentialsCollectionTransfer = $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
+        foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $childUnzerCredentialsTransfer) {
+            $storeRelationTransfer = $unzerCredentialsTransfer->getStoreRelationOrFail()
+                ->setIdEntity($childUnzerCredentialsTransfer->getIdUnzerCredentialsOrFail());
+            $this->unzerCredentialsStoreRelationUpdater->update($storeRelationTransfer);
+        }
     }
 }

@@ -5,12 +5,12 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Business\Credentials\Validator;
+namespace SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator;
 
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 
-interface UnzerCredentialsConstraintsValidatorInterface
+interface UnzerCredentialsValidatorInterface
 {
     /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer

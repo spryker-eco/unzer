@@ -262,6 +262,9 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     * - Requires `UnzerCredentialsTransfer.unzerKeypair.publicKey` to be set.
+     * - Requires `UnzerCredentialsTransfer.unzerKeypair.privateKey` to be set.
+     * - Requires `UnzerCredentialsTransfer.type` to be set.
      * - Saves `UnzerCredentialsTransfer` to persistence.
      * - Saves `UnzerCredentialsTransfer.storeRelation` to persistence if defined.
      *

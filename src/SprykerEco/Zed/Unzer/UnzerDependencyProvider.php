@@ -54,11 +54,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @var string
      */
-    public const CLIENT_QUOTE = 'CLIENT_QUOTE';
-
-    /**
-     * @var string
-     */
     public const FACADE_PAYMENT = 'FACADE_PAYMENT';
 
     /**
@@ -75,11 +70,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
      * @var string
      */
     public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
-
-    /**
-     * @var string
-     */
-    public const ADAPTER_VALIDATION = 'ADAPTER_VALIDATION';
 
     /**
      * @var string
@@ -119,7 +109,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addVaultFacade($container);
         $container = $this->addUtilTextService($container);
         $container = $this->addSalesFacade($container);
-        $container = $this->addValidationAdapter($container);
         $container = $this->addMerchantFacade($container);
 
         return $container;
@@ -246,20 +235,6 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_PAYMENT, function (Container $container) {
             return new UnzerToPaymentFacadeBridge($container->getLocator()->payment()->facade());
-        });
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addValidationAdapter(Container $container): Container
-    {
-        $container->set(static::ADAPTER_VALIDATION, function () {
-            return new UnzerToValidationAdapter();
         });
 
         return $container;
