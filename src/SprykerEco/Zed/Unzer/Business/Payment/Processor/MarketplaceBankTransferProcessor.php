@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 
 use Generated\Shared\Transfer\OrderTransfer;
@@ -67,17 +72,6 @@ class MarketplaceBankTransferProcessor extends AbstractPaymentProcessor implemen
     }
 
     /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
-     *
-     * @return void
-     */
-    public function processCharge(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
-    {
-        //no separate charge call
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $salesOrderItemIds
@@ -99,9 +93,12 @@ class MarketplaceBankTransferProcessor extends AbstractPaymentProcessor implemen
         $unzerPaymentResourceTransfer = $this->unzerCheckoutMapper
             ->mapQuoteTransferToUnzerPaymentResourceTransfer(
                 $quoteTransfer,
-                new UnzerPaymentResourceTransfer()
+                new UnzerPaymentResourceTransfer(),
             );
 
-        return $this->unzerPaymentResourceAdapter->createPaymentResource($unzerPaymentResourceTransfer);
+        return $this->unzerPaymentResourceAdapter->createPaymentResource(
+            $unzerPaymentResourceTransfer,
+            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail(),
+        );
     }
 }
