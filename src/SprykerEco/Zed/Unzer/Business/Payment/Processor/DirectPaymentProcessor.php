@@ -19,7 +19,7 @@ use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
 
-class ChargePaymentProcessor implements UnzerPaymentProcessorInterface
+class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface
