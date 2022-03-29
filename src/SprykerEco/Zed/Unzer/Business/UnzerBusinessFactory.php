@@ -98,13 +98,14 @@ use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerMarketplaceCreditCardChargeProcessor;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\ChargePaymentProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectPaymentProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\CreditCardProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceBankTransferProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceCreditCardProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\MarketplaceRefundProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerMarketplaceRefundProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolver;
@@ -498,7 +499,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createPaymentProcessorResolver(): UnzerPaymentProcessorResolverInterface
     {
-        $unzerPaymentProcessorsCollection = [
+        return new UnzerPaymentProcessorResolver([
             UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER => function () {
                 return $this->createMarketplaceBankTransferPaymentProcessor();
             },
@@ -509,17 +510,15 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
                 return $this->createMarketplaceBankTransferPaymentProcessor();
             },
             UnzerConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER => function () {
-                return $this->createChargePaymentProcessor();
+                return $this->createDirectPaymentProcessor();
             },
             UnzerConfig::PAYMENT_METHOD_KEY_CREDIT_CARD => function () {
                 return $this->createCreditCardProcessor();
             },
             UnzerConfig::PAYMENT_METHOD_KEY_SOFORT => function () {
-                return $this->createChargePaymentProcessor();
+                return $this->createDirectPaymentProcessor();
             },
-        ];
-
-        return new UnzerPaymentProcessorResolver($unzerPaymentProcessorsCollection);
+        ]);
     }
 
     /**
@@ -569,12 +568,12 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface
      */
-    public function createChargePaymentProcessor(): UnzerPaymentProcessorInterface
+    public function createDirectPaymentProcessor(): UnzerPaymentProcessorInterface
     {
-        return new ChargePaymentProcessor(
+        return new DirectPaymentProcessor(
             $this->createUnzerChargeAdapter(),
             $this->createUnzerPaymentResourceAdapter(),
-            $this->createUnzerMarketplaceRefundProcessor(),
+            $this->createUnzerRefundProcessor(),
             $this->createUnzerPreparePaymentProcessor(),
             $this->createUnzerCheckoutMapper(),
         );
@@ -636,9 +635,25 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface
      */
+    public function createUnzerRefundProcessor(): UnzerRefundProcessorInterface
+    {
+        return new UnzerRefundProcessor(
+            $this->createUnzerReader(),
+            $this->createUnzerRefundAdapter(),
+            $this->createUnzerPaymentMapper(),
+            $this->createUnzerPaymentAdapter(),
+            $this->createUnzerPaymentSaver(),
+            $this->createUnzerCredentialsResolver(),
+            $this->getSalesFacade(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface
+     */
     public function createUnzerMarketplaceRefundProcessor(): UnzerRefundProcessorInterface
     {
-        return new MarketplaceRefundProcessor(
+        return new UnzerMarketplaceRefundProcessor(
             $this->createUnzerReader(),
             $this->createUnzerRefundAdapter(),
             $this->createUnzerPaymentMapper(),
