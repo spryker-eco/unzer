@@ -26,7 +26,7 @@ use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
-class MarketplaceRefundProcessor implements UnzerRefundProcessorInterface
+class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
