@@ -85,7 +85,7 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
      */
     protected function isUnzerCredentialsHaveStoreRelations(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
     {
-        if (in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
+        if (in_array((int)$unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
             return true;
         }
 

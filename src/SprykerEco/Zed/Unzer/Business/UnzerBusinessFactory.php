@@ -98,8 +98,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerMarketplaceCreditCardChargeProcessor;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectPaymentProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\CreditCardProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectPaymentProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceBankTransferProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceCreditCardProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessor;
@@ -158,6 +158,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerCustomerQuoteExpander(),
             $this->createUnzerMetadataQuoteExpander(),
             $this->createUnzerKeypairQuoteExpander(),
+            $this->createUnzerParticipantIdQuoteExpander(),
             $this->getConfig(),
             $this->createUnzerReader(),
         );
@@ -201,7 +202,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createUnzerQuoteMapper(): UnzerQuoteMapperInterface
     {
-        return new UnzerQuoteMapper();
+        return new UnzerQuoteMapper($this->getUtilTextService());
     }
 
     /**
@@ -528,10 +529,10 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new MarketplaceBankTransferProcessor(
             $this->createUnzerCheckoutHookMapper(),
-            $this->createUnzerBasketAdapter(),
             $this->createUnzerChargeAdapter(),
             $this->createUnzerPaymentResourceAdapter(),
             $this->createUnzerMarketplaceRefundProcessor(),
+            $this->createUnzerPreparePaymentProcessor(),
         );
     }
 

@@ -18,7 +18,6 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToValidationAdapter;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 
 /**

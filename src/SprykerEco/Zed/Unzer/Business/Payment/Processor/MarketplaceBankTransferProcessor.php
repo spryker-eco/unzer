@@ -13,14 +13,19 @@ use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
 
-class MarketplaceBankTransferProcessor extends AbstractPaymentProcessor implements UnzerPaymentProcessorInterface
+class MarketplaceBankTransferProcessor implements UnzerPaymentProcessorInterface
 {
+    /**
+     * @var \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
+     */
+    protected $unzerCheckoutMapper;
+
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface
      */
@@ -37,24 +42,29 @@ class MarketplaceBankTransferProcessor extends AbstractPaymentProcessor implemen
     protected $unzerRefundProcessor;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
+     */
+    protected $preparePaymentProcessor;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface $unzerBasketAdapter
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface $unzerChargeAdapter
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $preparePaymentProcessor
      */
     public function __construct(
         UnzerCheckoutMapperInterface $unzerCheckoutMapper,
-        UnzerBasketAdapterInterface $unzerBasketAdapter,
         UnzerChargeAdapterInterface $unzerChargeAdapter,
         UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter,
-        UnzerRefundProcessorInterface $unzerRefundProcessor
+        UnzerRefundProcessorInterface $unzerRefundProcessor,
+        UnzerPreparePaymentProcessorInterface $preparePaymentProcessor
     ) {
-        parent::__construct($unzerCheckoutMapper, $unzerBasketAdapter);
-
+        $this->unzerCheckoutMapper = $unzerCheckoutMapper;
         $this->unzerChargeAdapter = $unzerChargeAdapter;
         $this->unzerPaymentResourceAdapter = $unzerPaymentResourceAdapter;
         $this->unzerRefundProcessor = $unzerRefundProcessor;
+        $this->preparePaymentProcessor = $preparePaymentProcessor;
     }
 
     /**
@@ -65,7 +75,7 @@ class MarketplaceBankTransferProcessor extends AbstractPaymentProcessor implemen
      */
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
+        $unzerPaymentTransfer = $this->preparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
 
         return $this->unzerChargeAdapter->chargePayment($unzerPaymentTransfer);

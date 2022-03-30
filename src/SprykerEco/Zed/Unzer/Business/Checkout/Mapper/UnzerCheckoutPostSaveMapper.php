@@ -22,7 +22,7 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
     /**
      * @var string
      */
-    protected const ITEM_TYPE_WIRE = 'Wire';
+    protected const ITEM_TYPE = 'goods';
 
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
@@ -92,7 +92,17 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
     {
         $unzerBasketItemTransferCollection = new ArrayObject();
         foreach ($quoteTransfer->getItems() as $quoteItemTransfer) {
-            $unzerBasketItemTransferCollection->append(
+            $groupKey = $quoteItemTransfer->getGroupKey();
+            if ($unzerBasketItemTransferCollection->offsetExists($groupKey)) {
+                $unzerBasketItemTransfer = $unzerBasketItemTransferCollection->offsetGet($groupKey);
+                $unzerBasketItemTransfer
+                    ->setQuantity($unzerBasketItemTransfer->getQuantity() + $quoteItemTransfer->getQuantity());
+
+                continue;
+            }
+
+            $unzerBasketItemTransferCollection->offsetSet(
+                $groupKey,
                 $this->mapQuoteItemTransferToUnzerBasketItemTransfer($quoteItemTransfer, new UnzerBasketItemTransfer()),
             );
         }
@@ -111,17 +121,16 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
         UnzerBasketItemTransfer $unzerBasketItemTransfer
     ): UnzerBasketItemTransfer {
         return $unzerBasketItemTransfer
-            ->setBasketItemReferenceId(
-                $this->utilTextService->generateUniqueId($itemTransfer->getSkuOrFail(), true),
-            )
+            ->setBasketItemReferenceId($itemTransfer->getGroupKey())
             ->setQuantity($itemTransfer->getQuantity())
-            ->setAmountGross((float)$itemTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountVat((float)$itemTransfer->getSumTaxAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountDiscount((float)$itemTransfer->getSumDiscountAmountAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountPerUnit((float)$itemTransfer->getUnitPriceToPayAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountNet((float)$itemTransfer->getSumNetPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setVat((string)$itemTransfer->getTaxRate())
+            ->setAmountDiscount($itemTransfer->getSumDiscountAmountAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountPerUnit(
+                ($itemTransfer->getUnitPriceToPayAggregation() + $itemTransfer->getCalculatedExpensesCost()) /
+                UnzerConstants::INT_TO_FLOAT_DIVIDER,
+            )
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
-            ->setType(static::ITEM_TYPE_WIRE);
+            ->setType(static::ITEM_TYPE);
     }
 }

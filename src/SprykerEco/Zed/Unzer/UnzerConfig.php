@@ -103,7 +103,7 @@ class UnzerConfig extends AbstractBundleConfig
         ],
         UnzerConstants::UNZER_PAYMENT_METHOD_INSTALLMENT_SECURED => [
             UnzerSharedConfig::PAYMENT_METHOD_KEY_INSTALLMENT_SECURED,
-        ]
+        ],
     ];
 
     /**

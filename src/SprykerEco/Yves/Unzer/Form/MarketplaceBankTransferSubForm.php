@@ -8,9 +8,7 @@
 namespace SprykerEco\Yves\Unzer\Form;
 
 use Generated\Shared\Transfer\PaymentTransfer;
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MarketplaceBankTransferSubForm extends BankTransferSubForm
 {

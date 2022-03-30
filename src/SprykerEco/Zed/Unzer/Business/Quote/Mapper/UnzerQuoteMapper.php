@@ -13,9 +13,23 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerAddressTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 
 class UnzerQuoteMapper implements UnzerQuoteMapperInterface
 {
+    /**
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface
+     */
+    protected $utilTextService;
+
+    /**
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
+     */
+    public function __construct(UnzerToUtilTextServiceInterface $utilTextService)
+    {
+        $this->utilTextService = $utilTextService;
+    }
+
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
@@ -30,7 +44,7 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
         $customerTransfer = $quoteTransfer->getCustomerOrFail();
 
         return $unzerCustomerTransfer
-            ->setId($quoteTransfer->getCustomerReferenceOrFail() . uniqid('', true))
+            ->setId($this->utilTextService->generateUniqueId((string)$customerTransfer->getCustomerReference()))
             ->setLastname($customerTransfer->getLastNameOrFail())
             ->setFirstname($customerTransfer->getFirstNameOrFail())
             ->setSalutation($this->mapSalutationToUnzerSalutation($customerTransfer))
