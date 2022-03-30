@@ -44,8 +44,8 @@ class UnzerOmsMapper implements UnzerOmsMapperInterface
      */
     public function mapSpySalesOrderToOrderTransfer(SpySalesOrder $orderEntity): OrderTransfer
     {
-        $orderFilterTransfer = (new OrderFilterTransfer())->setSalesOrderId($orderEntity->getIdSalesOrder());
-        $orderTransfer = $this->salesFacade->getOrder($orderFilterTransfer);
+        $orderTransfer = $this->salesFacade
+            ->getOrderByIdSalesOrder($orderEntity->getIdSalesOrder());
 
         return $this->calculationFacade
             ->recalculateOrder($orderTransfer);
