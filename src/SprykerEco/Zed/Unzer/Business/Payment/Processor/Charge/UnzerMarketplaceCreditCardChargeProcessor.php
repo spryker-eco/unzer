@@ -86,10 +86,9 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
      */
     protected function getPaymentUnzerTransactionCollection(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransactionCollectionTransfer
     {
-        $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
-            ->setPaymentUnzerTransactionConditions(
-                (new PaymentUnzerTransactionConditionsTransfer())->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzer()),
-            );
+        $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())->setPaymentUnzerTransactionConditions(
+            (new PaymentUnzerTransactionConditionsTransfer())->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzer()),
+        );
 
         return $this->unzerRepository
             ->findPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
@@ -142,11 +141,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         string $participantId
     ): UnzerChargeTransfer {
-        if ($orderTransfer->getExpenses()->count() === 0) {
-            return $unzerChargeTransfer;
-        }
-
-        if ($this->countItemsChargedByParticipantId($paymentUnzerOrderItemCollectionTransfer, $participantId) > 0) {
+        if ($orderTransfer->getExpenses()->count() === 0 || $this->countItemsChargedByParticipantId($paymentUnzerOrderItemCollectionTransfer, $participantId) > 0) {
             return $unzerChargeTransfer;
         }
 
@@ -155,10 +150,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
             foreach ($orderTransfer->getItems() as $itemTransfer) {
                 $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
                 $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
-                if (
-                    $itemTransfer->getUnzerParticipantId() === $participantId
-                    && $itemTransferFkSalesExpense === $expenseTransferFkSalesExpense
-                ) {
+                if ($itemTransfer->getUnzerParticipantId() === $participantId && $itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
                     $expensesAmount += $expenseTransfer->getSumGrossPrice();
 
                     break;
