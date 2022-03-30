@@ -20,11 +20,6 @@ use SprykerEco\Zed\Unzer\UnzerConstants;
 class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
 {
     /**
-     * @var string
-     */
-    protected const ITEM_TYPE = 'goods';
-
-    /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
     protected $unzerConfig;
@@ -131,6 +126,6 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
             )
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
-            ->setType(static::ITEM_TYPE);
+            ->setType(UnzerConstants::UNZER_BASKET_TYPE_GOODS);
     }
 }
