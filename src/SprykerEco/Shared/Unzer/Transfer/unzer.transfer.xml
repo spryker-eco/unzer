@@ -284,6 +284,7 @@
         <property name="fkPaymentUnzerIds" type="int[]" singular="fkPaymentUnzerId"/>
         <property name="types" type="string[]" singular="type"/>
         <property name="statuses" type="string[]" singular="status"/>
+        <property name="unzerKeypairIds" type="string[]" singular="unzerKeypairId"/>
     </transfer>
 
     <transfer name="PaymentUnzerOrderItemCollection">
