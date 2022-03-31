@@ -139,6 +139,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
+     * @deprecated Please remove usage and use UnzerRepository::findPaymentUnzerTransactionCollectionByCriteria
+     *
      * @param string $paymentId
      * @param string $transactionType
      * @param string|null $participantId
@@ -260,7 +262,6 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             $paymentUnzerTransactionQuery,
             $paymentUnzerTransactionCriteriaTransfer->getPaymentUnzerTransactionConditions(),
         );
-
         $paymentUnzerTransactionEntities = $paymentUnzerTransactionQuery->find();
 
         return $this->getFactory()->createUnzerPersistenceMapper()
@@ -357,6 +358,12 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
 
         if ($paymentUnzerTransactionConditionsTransfer->getStatuses()) {
             $paymentUnzerTransactionQuery->filterByStatus_In($paymentUnzerTransactionConditionsTransfer->getStatuses());
+        }
+
+        if ($paymentUnzerTransactionConditionsTransfer->getUnzerKeypairIds()) {
+            $paymentUnzerTransactionQuery->usePaymentUnzerQuery()
+                ->filterByUnzerKeypairId_In($paymentUnzerTransactionConditionsTransfer->getUnzerKeypairIds())
+                ->endUse();
         }
 
         return $paymentUnzerTransactionQuery;
