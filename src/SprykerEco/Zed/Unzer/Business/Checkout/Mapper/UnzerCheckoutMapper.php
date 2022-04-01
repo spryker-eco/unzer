@@ -17,7 +17,7 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
-class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
+class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
@@ -25,20 +25,11 @@ class UnzerCheckoutPostSaveMapper implements UnzerCheckoutMapperInterface
     protected $unzerConfig;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface
-     */
-    protected $utilTextService;
-
-    /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
-     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
      */
-    public function __construct(
-        UnzerConfig $unzerConfig,
-        UnzerToUtilTextServiceInterface $utilTextService
-    ) {
+    public function __construct(UnzerConfig $unzerConfig)
+    {
         $this->unzerConfig = $unzerConfig;
-        $this->utilTextService = $utilTextService;
     }
 
     /**

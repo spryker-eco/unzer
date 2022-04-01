@@ -50,7 +50,7 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributor;
 use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutPostSaveMapper;
+use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapper;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreator;
@@ -173,17 +173,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerPostSaveCheckoutHook(
             $this->createUnzerPaymentSaver(),
             $this->createPaymentProcessorResolver(),
-        );
-    }
-
-    /**
-     * @return \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
-     */
-    public function createUnzerCheckoutHookMapper(): UnzerCheckoutMapperInterface
-    {
-        return new UnzerCheckoutPostSaveMapper(
-            $this->getConfig(),
-            $this->getUtilTextService(),
         );
     }
 
@@ -529,7 +518,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createMarketplaceBankTransferPaymentProcessor(): UnzerPaymentProcessorInterface
     {
         return new MarketplaceBankTransferProcessor(
-            $this->createUnzerCheckoutHookMapper(),
+            $this->createUnzerCheckoutMapper(),
             $this->createUnzerChargeAdapter(),
             $this->createUnzerPaymentResourceAdapter(),
             $this->createUnzerMarketplaceRefundProcessor(),
@@ -612,9 +601,8 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createUnzerCheckoutMapper(): UnzerCheckoutMapperInterface
     {
-        return new UnzerCheckoutPostSaveMapper(
-            $this->getConfig(),
-            $this->getUtilTextService(),
+        return new UnzerCheckoutMapper(
+            $this->getConfig()
         );
     }
 
