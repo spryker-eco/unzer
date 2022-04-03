@@ -100,7 +100,9 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
 
         $itemCollectionTransfer = new ItemCollectionTransfer();
         foreach ($orderTransfer->getItems() as $itemTransfer) {
-            $itemCollectionTransfer->addItem($itemTransfer);
+            if (in_array($itemTransfer->getIdSalesOrderItemOrFail(), $salesOrderItemIds, true)) {
+                $itemCollectionTransfer->addItem($itemTransfer);
+            }
         }
 
         $unzerChargeTransfer = $this->createUnzerCharge($unzerPaymentTransfer, $itemCollectionTransfer);

@@ -65,10 +65,10 @@ class UnzerPaymentMapper implements UnzerPaymentMapperInterface
         PaymentUnzerTransfer $paymentUnzerTransfer
     ): PaymentUnzerTransfer {
         $paymentUnzerTransfer
-            ->setAmountTotal((int)$unzerPaymentTransfer->getAmountTotal() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountRemaining((int)$unzerPaymentTransfer->getAmountRemaining() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountCanceled((int)$unzerPaymentTransfer->getAmountCanceled() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setAmountCharged((int)$unzerPaymentTransfer->getAmountCharged() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountTotal((int)($unzerPaymentTransfer->getAmountTotal() * UnzerConstants::INT_TO_FLOAT_DIVIDER))
+            ->setAmountRemaining((int)($unzerPaymentTransfer->getAmountRemaining() * UnzerConstants::INT_TO_FLOAT_DIVIDER))
+            ->setAmountCanceled((int)($unzerPaymentTransfer->getAmountCanceled() * UnzerConstants::INT_TO_FLOAT_DIVIDER))
+            ->setAmountCharged((int)($unzerPaymentTransfer->getAmountCharged() * UnzerConstants::INT_TO_FLOAT_DIVIDER))
             ->setState($unzerPaymentTransfer->getStateName())
             ->setStateId($unzerPaymentTransfer->getStateId())
             ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
