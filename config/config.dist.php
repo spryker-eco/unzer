@@ -9,3 +9,4 @@ $config[UnzerConstants::WEBHOOK_RETRIEVE_URL] = 'https://spryker.com';
 $config[UnzerConstants::MAIN_MARKETPLACE_KEYPAIR_ID] = '';
 $config[UnzerConstants::MAIN_REGULAR_KEYPAIR_ID] = '';
 $config[UnzerConstants::VAULT_DATA_TYPE] = 'UNZER_CREDENTIALS_PRIVATE_KEY';
+$config[UnzerConstants::EXPENSES_REFUND_STRATEGY_KEY] = UnzerConstants::NO_EXPENSES_REFUND_STRATEGY;

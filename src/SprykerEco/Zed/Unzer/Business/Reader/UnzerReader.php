@@ -64,16 +64,6 @@ class UnzerReader implements UnzerReaderInterface
     }
 
     /**
-     * @param string $orderReference
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
-     */
-    public function getUnrefundedPaymentUnzerOrderItemCollectionByOrderReference(string $orderReference): PaymentUnzerOrderItemCollectionTransfer
-    {
-        return $this->unzerRepository->getUnrefundedPaymentUnzerOrderItemCollectionByOrderReference($orderReference);
-    }
-
-    /**
      * @param string $unzerPaymentId
      * @param string $publicKey
      *

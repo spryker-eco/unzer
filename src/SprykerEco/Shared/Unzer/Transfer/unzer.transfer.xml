@@ -50,6 +50,11 @@
         <property name="quantity" type="int"/>
         <property name="amountGross" type="float"/>
         <property name="participantId" type="string"/>
+        <property name="idSalesOrderItem" type="int"/>
+    </transfer>
+
+    <transfer name="UnzerRefundItemCollection">
+        <property name="unzerRefundItems" type="UnzerRefundItem[]" singular="unzerRefundItem"/>
     </transfer>
 
     <transfer name="UnzerCustomer">
@@ -223,6 +228,7 @@
 
     <transfer name="Expense">
         <property name="unzerParticipantId" type="string"/>
+        <property name="unzerChargeId" type="string"/>
     </transfer>
 
     <transfer name="PaymentUnzer">
@@ -577,6 +583,8 @@
     </transfer>
 
     <transfer name="Refund">
+        <property name="unzerRefunds" singular="unzerRefund" type="UnzerRefund[]"/>
+
         <property name="items" singular="item" type="Item[]"/>
     </transfer>
 

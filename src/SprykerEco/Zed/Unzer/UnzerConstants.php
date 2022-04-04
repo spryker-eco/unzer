@@ -245,6 +245,11 @@ interface UnzerConstants
     public const TRANSACTION_TYPE_CHARGE = 'charge';
 
     /**
+     * @var string
+     */
+    public const TRANSACTION_STATUS_SUCCESS = 'success';
+
+    /**
      * @var int
      */
     public const INT_TO_FLOAT_DIVIDER = 100;
@@ -278,33 +283,4 @@ interface UnzerConstants
      * @var string
      */
     public const UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID = self::UNZER_BASKET_SHIPMENT_REFERENCE_ID . '_%s';
-
-    /**
-     * @var int
-     */
-    public const UNZER_SHIPMENT_REFUND_STRATEGY = 2;
-
-    /**
-     * @var string
-     */
-    public const NO_SHIPMENT_REFUNDS = 'NO_SHIPMENT_REFUNDS';
-
-    /**
-     * @var string
-     */
-    public const SHIPMENT_REFUND_WITH_LAST_ORDER_ITEM_REFUND = 'SHIPMENT_REFUND_WITH_LAST_ORDER_ITEM_REFUND';
-
-    /**
-     * @var string
-     */
-    public const SHIPMENT_REFUND_WITH_LAST_SHIPMENT_ITEM_REFUND = 'SHIPMENT_REFUND_WITH_LAST_SHIPMENT_ITEM_REFUND';
-
-    /**
-     * @var array<int, string>
-     */
-    public const UNZER_SHIPMENT_REFUND_STRATEGY_LIST = [
-        0 => self::NO_SHIPMENT_REFUNDS,
-        1 => self::SHIPMENT_REFUND_WITH_LAST_ORDER_ITEM_REFUND,
-        2 => self::SHIPMENT_REFUND_WITH_LAST_SHIPMENT_ITEM_REFUND,
-    ];
 }

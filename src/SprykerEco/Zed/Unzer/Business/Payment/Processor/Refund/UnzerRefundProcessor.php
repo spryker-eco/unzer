@@ -1,105 +1,193 @@
 <?php
 
-/**
- * MIT License
- * For full license information, please view the LICENSE file that was distributed with this source code.
- */
-
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund;
 
-use Generated\Shared\Transfer\ItemTransfer;
+use Generated\Shared\Transfer\ItemCollectionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use Generated\Shared\Transfer\UnzerRefundItemTransfer;
 use Generated\Shared\Transfer\UnzerRefundTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper\UnzerMarketplaceRefundMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
-use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
+use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpensesRefundStrategyResolverInterface;
+use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
+use SprykerEco\Zed\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerRefundProcessor implements UnzerRefundProcessorInterface
 {
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
-     */
-    protected $unzerReader;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface
-     */
-    protected $unzerRefundAdapter;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface
-     */
-    protected $unzerPaymentMapper;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
-     */
-    protected $unzerPaymentAdapter;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface
-     */
-    protected $unzerPaymentSaver;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
+     * @var UnzerCredentialsResolverInterface
      */
     protected $unzerCredentialsResolver;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface
+     * @var UnzerExpensesRefundStrategyResolverInterface
      */
-    protected $salesFacade;
+    protected $unzerExpensesRefundStrategyResolver;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface $unzerRefundAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
-     * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
-     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface $salesFacade
+     * @var UnzerConfig
+     */
+    protected $unzerConfig;
+
+    /**
+     * @var UnzerRefundAdapterInterface
+     */
+    protected $unzerRefundAdapter;
+
+    /**
+     * @var UnzerRepositoryInterface
+     */
+    protected $unzerRepository;
+
+    /**
+     * @var UnzerMarketplaceRefundMapperInterface
+     */
+    protected $unzerRefundMapper;
+
+    /**
+     * @var UnzerPaymentMapperInterface
+     */
+    protected $unzerPaymentMapper;
+
+    /**
+     * @var UnzerPaymentAdapterInterface
+     */
+    protected $unzerPaymentAdapter;
+
+    /**
+     * @var UnzerPaymentSaverInterface
+     */
+    protected $unzerPaymentSaver;
+
+    /**
+     * @param UnzerCredentialsResolverInterface $unzerCredentialsResolver
+     * @param UnzerExpensesRefundStrategyResolverInterface $unzerExpensesRefundStrategyResolver
+     * @param UnzerConfig $unzerConfig
+     * @param UnzerRefundAdapterInterface $unzerRefundAdapter
+     * @param UnzerRepositoryInterface $unzerRepository
+     * @param UnzerPaymentMapperInterface $unzerPaymentMapper
+     * @param UnzerPaymentAdapterInterface $unzerPaymentAdapter
+     * @param UnzerPaymentSaverInterface $unzerPaymentSaver
      */
     public function __construct(
-        UnzerReaderInterface $unzerReader,
-        UnzerRefundAdapterInterface $unzerRefundAdapter,
-        UnzerPaymentMapperInterface $unzerPaymentMapper,
-        UnzerPaymentAdapterInterface $unzerPaymentAdapter,
-        UnzerPaymentSaverInterface $unzerPaymentSaver,
-        UnzerCredentialsResolverInterface $unzerCredentialsResolver,
-        UnzerToSalesFacadeInterface $salesFacade
-    ) {
-        $this->unzerReader = $unzerReader;
+        UnzerCredentialsResolverInterface            $unzerCredentialsResolver,
+        UnzerExpensesRefundStrategyResolverInterface $unzerExpensesRefundStrategyResolver,
+        UnzerConfig                                  $unzerConfig,
+        UnzerRefundAdapterInterface                  $unzerRefundAdapter,
+        UnzerRepositoryInterface                     $unzerRepository,
+        UnzerPaymentMapperInterface                  $unzerPaymentMapper,
+        UnzerPaymentAdapterInterface                 $unzerPaymentAdapter,
+        UnzerPaymentSaverInterface                   $unzerPaymentSaver
+    )
+    {
+        $this->unzerCredentialsResolver = $unzerCredentialsResolver;
+        $this->unzerExpensesRefundStrategyResolver = $unzerExpensesRefundStrategyResolver;
+        $this->unzerConfig = $unzerConfig;
         $this->unzerRefundAdapter = $unzerRefundAdapter;
+        $this->unzerRepository = $unzerRepository;
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerPaymentSaver = $unzerPaymentSaver;
-        $this->unzerCredentialsResolver = $unzerCredentialsResolver;
-        $this->salesFacade = $salesFacade;
+    }
+
+    public function refund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
+    {
+        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
+        if ($paymentUnzerTransfer === null) {
+            throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReference()));
+        }
+
+        $chargeId = $this->getUnzerPaymentChargeId($paymentUnzerTransfer);
+
+        $refundTransfer->addUnzerRefund($this->createUnzerRefund($paymentUnzerTransfer, $refundTransfer, $chargeId));
+
+        $refundTransfer = $this->applyExpensesRefundStrategy($refundTransfer, $orderTransfer, $salesOrderItemIds);
+        $this->applyRefundChanges($paymentUnzerTransfer, $refundTransfer, $salesOrderItemIds);
     }
 
     /**
-     * @inheritDoc
+     * @param PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @return string
      */
-    public function refund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
+    protected function getUnzerPaymentChargeId(PaymentUnzerTransfer $paymentUnzerTransfer): string
     {
-        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
-        $unzerRefundTransfers = $this->createUnzerMarketplaceRefundTransfers($refundTransfer, $paymentUnzerTransfer, $orderTransfer);
-        $unzerKeypairTransfer = $this->getUnzerKeypairTransfer($paymentUnzerTransfer->getKeypairId());
+        $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
+            ->setPaymentUnzerTransactionConditions(
+                (new PaymentUnzerTransactionConditionsTransfer())
+                    ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzer())
+                    ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE)
+                    ->addStatus(UnzerConstants::TRANSACTION_STATUS_SUCCESS)
+            );
 
-        foreach ($unzerRefundTransfers as $unzerRefundTransfer) {
+        $paymentUnzerTransactionCollectionTransfer = $this->unzerRepository
+            ->findPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
+
+        if ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions()->count() === 0) {
+            throw new UnzerException(sprintf('Unzer transactions for Payment ID %s not found.', $paymentUnzerTransfer->getPaymentIdOrFail()));
+        }
+
+        $paymentUnzerTransaction = $paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions()->getIterator()->current();
+
+        return $paymentUnzerTransaction->getTransactionIdOrFail();
+    }
+
+    /**
+     * @param PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param RefundTransfer $refundTransfer
+     * @param string $chargeId
+     *
+     * @return UnzerRefundTransfer
+     */
+    protected function createUnzerRefund(
+        PaymentUnzerTransfer   $paymentUnzerTransfer,
+        RefundTransfer $refundTransfer,
+        string                 $chargeId
+    ): UnzerRefundTransfer
+    {
+        $refundAmount = 0;
+        foreach ($refundTransfer->getItems() as $itemTransfer) {
+            $refundAmount += $itemTransfer->getRefundableAmountOrFail();
+        }
+
+        return (new UnzerRefundTransfer())
+            ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
+            ->setChargeId($chargeId)
+            ->setAmount($refundAmount / UnzerConstants::INT_TO_FLOAT_DIVIDER);
+    }
+
+    /**
+     * @param RefundTransfer $refundTransfer
+     * @param OrderTransfer $orderTransfer
+     * @param array $salesOrderItemIds
+     *
+     * @return RefundTransfer
+     */
+    protected function applyExpensesRefundStrategy(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer
+    {
+        $unzerExpensesRefundStrategy = $this->unzerExpensesRefundStrategyResolver->resolveRefundStrategy($this->unzerConfig->getExpensesRefundStrategyKey());
+
+        return $unzerExpensesRefundStrategy->prepareUnzerRefund($refundTransfer, $orderTransfer, $salesOrderItemIds);
+    }
+
+    protected function applyRefundChanges(PaymentUnzerTransfer $paymentUnzerTransfer, $refundTransfer, array $salesOrderItemIds)
+    {
+        $unzerKeypairTransfer = $this->getUnzerKeypair($paymentUnzerTransfer->getKeypairIdOrFail());
+
+        foreach ($refundTransfer->getUnzerRefunds() as $unzerRefundTransfer) {
             $this->unzerRefundAdapter->refundPayment(
                 $unzerRefundTransfer,
                 $unzerKeypairTransfer,
@@ -114,101 +202,20 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param string $keypairId
      *
-     * @return array
+     * @return UnzerKeypairTransfer
      */
-    protected function createUnzerMarketplaceRefundTransfers(
-        RefundTransfer $refundTransfer,
-        PaymentUnzerTransfer $paymentUnzerTransfer,
-        OrderTransfer $orderTransfer
-    ): array {
-        $this->setParticipantIdForOrderAndRefundItems($orderTransfer, $refundTransfer);
-        $participantReorderedItems = $this->reorderRefundItemsByParticipant($refundTransfer);
-
-        $unzerRefundTransfers = [];
-        foreach ($participantReorderedItems as $participantId => $itemTransfers) {
-            $unzerRefundTransfers[] = $this->createUnzerRefundTransfer(
-                $paymentUnzerTransfer,
-                $participantId,
-                $itemTransfers,
-                $orderTransfer,
-            );
-        }
-
-        return $unzerRefundTransfers;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param string $participantId
-     * @param array $itemTransfers
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerRefundTransfer
-     */
-    protected function createUnzerRefundTransfer(
-        PaymentUnzerTransfer $paymentUnzerTransfer,
-        string $participantId,
-        array $itemTransfers,
-        OrderTransfer $orderTransfer
-    ): UnzerRefundTransfer {
-        if (!$paymentUnzerTransfer->getIsAuthorizable()) {
-            //Sofort and BankTransfer transactions do not have participantId
-            $participantId = null;
-        }
-
-        $paymentUnzerTransactionTransfer = $this->unzerReader
-            ->getPaymentUnzerTransactionByPaymentIdAndParticipantId(
-                $paymentUnzerTransfer->getPaymentIdOrFail(),
-                UnzerConstants::TRANSACTION_TYPE_CHARGE,
-                $participantId,
-            );
-
-        $unzerRefundTransfer = (new UnzerRefundTransfer())
-            ->setIsMarketplace(true)
-            ->setOrderId($paymentUnzerTransfer->getOrderId())
-            ->setInvoiceId($paymentUnzerTransfer->getOrderId())
-            ->setPaymentId($paymentUnzerTransfer->getPaymentId())
-            ->setChargeId($paymentUnzerTransactionTransfer->getTransactionId());
-
-        foreach ($itemTransfers as $itemTransfer) {
-            $unzerRefundItemTransfer = $this->createUnzerRefundItemTransfer($itemTransfer);
-            $unzerRefundTransfer->addItem($unzerRefundItemTransfer);
-        }
-
-        $this->addShipmentRefund(
-            $unzerRefundTransfer,
-            $itemTransfers,
-            $orderTransfer,
-        );
-
-        return $unzerRefundTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
-     *
-     * @return void
-     */
-    protected function setParticipantIdForOrderAndRefundItems(OrderTransfer $orderTransfer, RefundTransfer $refundTransfer): void
+    protected function getUnzerKeypair(string $keypairId): UnzerKeypairTransfer
     {
-        foreach ($orderTransfer->getItems() as $orderItemTransfer) {
-            $paymentUnzerOrderItemTransfer = $this->unzerReader->getPaymentUnzerOrderItemByIdSalesOrderItem($orderItemTransfer->getIdSalesOrderItem());
-            if ($paymentUnzerOrderItemTransfer->getParticipantId() === null) {
-                continue;
-            }
-            $orderItemTransfer->setUnzerParticipantId($paymentUnzerOrderItemTransfer->getParticipantId());
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions(
+                (new UnzerCredentialsConditionsTransfer())->addKeypairId($keypairId)
+            );
+        $unzerCredentialsTransfer = $this->unzerCredentialsResolver
+            ->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
 
-            foreach ($refundTransfer->getItems() as $refundItemTransfer) {
-                if ($refundItemTransfer->getIdSalesOrderItem() === $orderItemTransfer->getIdSalesOrderItem()) {
-                    $refundItemTransfer->setUnzerParticipantId($paymentUnzerOrderItemTransfer->getParticipantId());
-                }
-            }
-        }
+        return $unzerCredentialsTransfer->getUnzerKeypairOrFail();
     }
 
     /**
@@ -221,8 +228,9 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     protected function saveUnzerPaymentDetails(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         UnzerKeypairTransfer $unzerKeypairTransfer,
-        array $salesOrderItemIds
-    ): void {
+        array                $salesOrderItemIds
+    ): void
+    {
         $unzerPaymentTransfer = $this->unzerPaymentMapper
             ->mapPaymentUnzerTransferToUnzerPaymentTransfer($paymentUnzerTransfer, new UnzerPaymentTransfer());
         $unzerPaymentTransfer->setUnzerKeypair($unzerKeypairTransfer);
@@ -232,230 +240,6 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
             $unzerPaymentTransfer,
             UnzerConstants::OMS_STATUS_CHARGE_REFUNDED,
             $salesOrderItemIds,
-        );
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerRefundItemTransfer
-     */
-    protected function createUnzerRefundItemTransfer(ItemTransfer $itemTransfer): UnzerRefundItemTransfer
-    {
-        return (new UnzerRefundItemTransfer())
-            ->setParticipantId($itemTransfer->getUnzerParticipantId())
-            ->setAmountGross((float)$itemTransfer->getRefundableAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setBasketItemReferenceId($itemTransfer->getSku())
-            ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY);
-    }
-
-    /**
-     * @param string $keypair
-     *
-     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
-     */
-    protected function getUnzerKeypairTransfer(string $keypair): UnzerKeypairTransfer
-    {
-        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
-            ->setUnzerCredentialsConditions(
-                (new UnzerCredentialsConditionsTransfer())->addKeypairId($keypair),
-            );
-
-        $unzerCredentialsTransfer = $this->unzerCredentialsResolver->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
-
-        return $unzerCredentialsTransfer->getUnzerKeypair();
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
-     *
-     * @return array
-     */
-    protected function reorderRefundItemsByParticipant(RefundTransfer $refundTransfer): array
-    {
-        $participants = [];
-        foreach ($refundTransfer->getItems() as $itemTransfer) {
-            $participants[$itemTransfer->getUnzerParticipantIdOrFail()][] = $itemTransfer;
-        }
-
-        return $participants;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerRefundTransfer $unzerRefundTransfer
-     * @param array $itemTransfers
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return void
-     */
-    protected function addShipmentRefund(
-        UnzerRefundTransfer $unzerRefundTransfer,
-        array $itemTransfers,
-        OrderTransfer $orderTransfer
-    ): void {
-        if (UnzerConstants::UNZER_SHIPMENT_REFUND_STRATEGY_LIST[UnzerConstants::UNZER_SHIPMENT_REFUND_STRATEGY] === UnzerConstants::SHIPMENT_REFUND_WITH_LAST_ORDER_ITEM_REFUND) {
-            $this->addShipemtRefundWithLastOrderItem($unzerRefundTransfer, $orderTransfer, $itemTransfers);
-        }
-
-        if (UnzerConstants::UNZER_SHIPMENT_REFUND_STRATEGY_LIST[UnzerConstants::UNZER_SHIPMENT_REFUND_STRATEGY] === UnzerConstants::SHIPMENT_REFUND_WITH_LAST_SHIPMENT_ITEM_REFUND) {
-            $this->addShipemtRefundWithLastShipmentItem($unzerRefundTransfer, $orderTransfer, $itemTransfers);
-        }
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerRefundTransfer $unzerRefundTransfer
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $itemsToRefundTransfers
-     *
-     * @return void
-     */
-    protected function addShipemtRefundWithLastOrderItem(
-        UnzerRefundTransfer $unzerRefundTransfer,
-        OrderTransfer $orderTransfer,
-        array $itemsToRefundTransfers
-    ): void {
-        $unrefundedUnzerOrderItems = $this->unzerReader
-            ->getUnrefundedPaymentUnzerOrderItemCollectionByOrderReference($orderTransfer->getOrderReference())
-            ->getPaymentUnzerOrderItems();
-
-        if (count($unrefundedUnzerOrderItems) === count($itemsToRefundTransfers)) {
-            $sortedUnrefundedOrderItemIds = $this->getItemsIds($unrefundedUnzerOrderItems);
-            $sortedOrderItemsToRefundIds = $this->getItemsIds($itemsToRefundTransfers);
-
-            if (sort($sortedUnrefundedOrderItemIds) === sort($sortedOrderItemsToRefundIds)) {
-                $shipmentRefundData = $this->getOrderShipmentsRefundData($orderTransfer);
-                foreach ($shipmentRefundData as $participantId => $amount) {
-                    $unzerRefundItemTransfer = $this->createUnzerShipmentRefundItemTransfer($participantId, $amount);
-                    $unzerRefundTransfer->addItem($unzerRefundItemTransfer);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerRefundTransfer $unzerRefundTransfer
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $itemsToRefundTransfers
-     *
-     * @return void
-     */
-    protected function addShipemtRefundWithLastShipmentItem(
-        UnzerRefundTransfer $unzerRefundTransfer,
-        OrderTransfer $orderTransfer,
-        array $itemsToRefundTransfers
-    ): void {
-        $unrefundedUnzerOrderItemIds = $this->getUnrefundedUnzerOrderItemsIds($orderTransfer->getOrderReference());
-
-        $itemsToRefundIds = $this->getItemsIds($itemsToRefundTransfers);
-
-        $unrefundedSalesOrderItems = array_filter(
-            $orderTransfer->getItems()->getArrayCopy(),
-            function ($orderItem) use ($unrefundedUnzerOrderItemIds) {
-                return in_array($orderItem->getIdSalesOrderItem(), $unrefundedUnzerOrderItemIds);
-            },
-        );
-        $unrefundedShipmentToOrderItemMap = [];
-        /** @var \Generated\Shared\Transfer\ItemTransfer $salesOrderItemTransfer */
-        foreach ($unrefundedSalesOrderItems as $salesOrderItemTransfer) {
-            $unrefundedShipmentToOrderItemMap[$salesOrderItemTransfer->getShipmentOrFail()->getIdSalesShipment()][] = $salesOrderItemTransfer->getIdSalesOrderItem();
-        }
-
-        foreach ($unrefundedShipmentToOrderItemMap as $idSalesShipment => $orderItemIds) {
-            if (!array_diff($orderItemIds, $itemsToRefundIds)) {
-                $shipmentRefundData = $this->getOrderShipmentsRefundData($orderTransfer, $idSalesShipment);
-                foreach ($shipmentRefundData as $participantId => $amount) {
-                    $unzerRefundItemTransfer = $this->createUnzerShipmentRefundItemTransfer($participantId, $amount);
-                    $unzerRefundTransfer->addItem($unzerRefundItemTransfer);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param string $participantId
-     * @param int $amount
-     *
-     * @return \Generated\Shared\Transfer\UnzerRefundItemTransfer
-     */
-    protected function createUnzerShipmentRefundItemTransfer(string $participantId, int $amount): UnzerRefundItemTransfer
-    {
-        return (new UnzerRefundItemTransfer())
-            ->setParticipantId($participantId)
-            ->setAmountGross($amount / UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setBasketItemReferenceId(sprintf(UnzerConstants::UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID, $participantId))
-            ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param int|null $idSalesShipment
-     *
-     * @return array
-     */
-    protected function getOrderShipmentsRefundData(
-        OrderTransfer $orderTransfer,
-        ?int $idSalesShipment = null
-    ): array {
-        $shipments = [];
-
-        foreach ($orderTransfer->getExpenses() as $expenseTransferToRefund) {
-            if (
-                $idSalesShipment !== null
-                && $expenseTransferToRefund->getShipmentOrFail()->getIdSalesShipment() !== $idSalesShipment
-            ) {
-                continue;
-            }
-
-            $refundableAmount = (int)$expenseTransferToRefund->getRefundableAmount() - (int)$expenseTransferToRefund->getCanceledAmount();
-            if ($refundableAmount !== 0) {
-                /** @var \Generated\Shared\Transfer\ItemTransfer $orderItem */
-                foreach ($orderTransfer->getItems()->getArrayCopy() as $orderItem) {
-                    if ($expenseTransferToRefund->getMerchantReference() === $orderItem->getMerchantReference()) {
-                        if (isset($shipments[$orderItem->getUnzerParticipantId()])) {
-                            $shipments[$orderItem->getUnzerParticipantId()] += $refundableAmount;
-                        } else {
-                            $shipments[$orderItem->getUnzerParticipantId()] = $refundableAmount;
-                        }
-
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $shipments;
-    }
-
-    /**
-     * @param string $orderReference
-     *
-     * @return array
-     */
-    protected function getUnrefundedUnzerOrderItemsIds(string $orderReference): array
-    {
-        return array_map(
-            function ($orderItem) {
-                return $orderItem->getIdSalesOrderItem();
-            },
-            $this->unzerReader
-                ->getUnrefundedPaymentUnzerOrderItemCollectionByOrderReference($orderReference)
-                ->getPaymentUnzerOrderItems()
-                ->getArrayCopy(),
-        );
-    }
-
-    /**
-     * @param array $itemsTransfers
-     *
-     * @return array
-     */
-    protected function getItemsIds(array $itemsTransfers): array
-    {
-        return array_map(
-            function ($itemTransfer) {
-                return $itemTransfer->getIdSalesOrderItem();
-            },
-            $itemsTransfers,
         );
     }
 }

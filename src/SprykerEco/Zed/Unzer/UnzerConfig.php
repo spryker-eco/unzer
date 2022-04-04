@@ -442,4 +442,12 @@ class UnzerConfig extends AbstractBundleConfig
     {
         return UnzerConstants::WEBHOOK_EVENT_TYPE;
     }
+
+    /**
+     * @return int
+     */
+    public function getExpensesRefundStrategyKey(): int
+    {
+        return $this->get(UnzerSharedConstants::EXPENSES_REFUND_STRATEGY_KEY);
+    }
 }

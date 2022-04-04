@@ -73,28 +73,6 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
-     * @param string $orderReference
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
-     */
-    public function getUnrefundedPaymentUnzerOrderItemCollectionByOrderReference(string $orderReference): PaymentUnzerOrderItemCollectionTransfer
-    {
-        $paymentUnzerOrderItemEntities = $this->getFactory()
-            ->createPaymentUnzerOrderItemQuery()
-            ->usePaymentUnzerQuery()
-            ->filterByOrderId($orderReference)
-            ->endUse()
-            ->filterByStatus(UnzerConstants::OMS_STATUS_CHARGE_REFUNDED, Criteria::NOT_EQUAL)
-            ->find();
-
-        return $this->getFactory()->createUnzerPersistenceMapper()
-            ->mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
-                $paymentUnzerOrderItemEntities,
-                new PaymentUnzerOrderItemCollectionTransfer(),
-            );
-    }
-
-    /**
      * @param string $paymentId
      * @param string $unzerKeypairId
      *
