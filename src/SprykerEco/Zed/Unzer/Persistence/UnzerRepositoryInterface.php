@@ -50,19 +50,6 @@ interface UnzerRepositoryInterface
     public function findPaymentUnzerOrderItemByIdSalesOrderItem(int $idSalesOrderItem): ?PaymentUnzerOrderItemTransfer;
 
     /**
-     * @param string $paymentId
-     * @param string $transactionType
-     * @param string|null $participantId
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer|null
-     */
-    public function findPaymentUnzerTransactionByPaymentIdAndParticipantId(
-        string $paymentId,
-        string $transactionType,
-        ?string $participantId = null
-    ): ?PaymentUnzerTransactionTransfer;
-
-    /**
      * @param int $idCustomer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null

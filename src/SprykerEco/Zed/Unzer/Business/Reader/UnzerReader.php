@@ -98,23 +98,6 @@ class UnzerReader implements UnzerReaderInterface
     }
 
     /**
-     * @param string $paymentId
-     * @param string $transactionType
-     * @param string|null $participantId
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer
-     */
-    public function getPaymentUnzerTransactionByPaymentIdAndParticipantId(
-        string $paymentId,
-        string $transactionType,
-        ?string $participantId = null
-    ): PaymentUnzerTransactionTransfer {
-        return $this->unzerRepository
-                ->findPaymentUnzerTransactionByPaymentIdAndParticipantId($paymentId, $transactionType, $participantId)
-            ?? new PaymentUnzerTransactionTransfer();
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null

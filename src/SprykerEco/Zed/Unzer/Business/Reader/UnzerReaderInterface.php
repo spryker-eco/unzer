@@ -49,19 +49,6 @@ interface UnzerReaderInterface
     public function getPaymentUnzerOrderItemByIdSalesOrderItem(int $idSalesOrderItem): PaymentUnzerOrderItemTransfer;
 
     /**
-     * @param string $paymentId
-     * @param string $transactionType
-     * @param string|null $participantId
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer
-     */
-    public function getPaymentUnzerTransactionByPaymentIdAndParticipantId(
-        string $paymentId,
-        string $transactionType,
-        ?string $participantId = null
-    ): PaymentUnzerTransactionTransfer;
-
-    /**
      * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null

@@ -115,46 +115,6 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
-     * @deprecated Please remove usage and use UnzerRepository::findPaymentUnzerTransactionCollectionByCriteria
-     *
-     * @param string $paymentId
-     * @param string $transactionType
-     * @param string|null $participantId
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer|null
-     */
-    public function findPaymentUnzerTransactionByPaymentIdAndParticipantId(
-        string $paymentId,
-        string $transactionType,
-        ?string $participantId = null
-    ): ?PaymentUnzerTransactionTransfer {
-        /** @var \Orm\Zed\Unzer\Persistence\Base\SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery */
-        $paymentUnzerTransactionQuery = $this->getFactory()
-            ->createPaymentUnzerTransactionQuery()
-            ->filterByType($transactionType)
-            ->usePaymentUnzerQuery()
-                ->filterByPaymentId($paymentId)
-                ->filterByIsMarketplace(true)
-            ->endUse();
-
-        if ($participantId !== null) {
-            $paymentUnzerTransactionQuery = $paymentUnzerTransactionQuery->filterByParticipantId($participantId);
-        }
-
-        $paymentUnzerTransactionEntity = $paymentUnzerTransactionQuery->findOne();
-
-        if ($paymentUnzerTransactionEntity === null) {
-            return null;
-        }
-
-        return $this->getFactory()->createUnzerPersistenceMapper()
-            ->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
-                $paymentUnzerTransactionEntity,
-                new PaymentUnzerTransactionTransfer(),
-            );
-    }
-
-    /**
      * @module Customer
      *
      * @param int $idCustomer
