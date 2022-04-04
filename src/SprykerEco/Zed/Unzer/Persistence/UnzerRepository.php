@@ -21,9 +21,7 @@ use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
-use Propel\Runtime\ActiveQuery\Criteria;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
-use SprykerEco\Zed\Unzer\UnzerConstants;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerPersistenceFactory getFactory()

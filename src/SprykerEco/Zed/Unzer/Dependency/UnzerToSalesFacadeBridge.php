@@ -8,7 +8,6 @@
 namespace SprykerEco\Zed\Unzer\Dependency;
 
 use Generated\Shared\Transfer\ItemCollectionTransfer;
-use Generated\Shared\Transfer\OrderFilterTransfer;
 use Generated\Shared\Transfer\OrderItemFilterTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 

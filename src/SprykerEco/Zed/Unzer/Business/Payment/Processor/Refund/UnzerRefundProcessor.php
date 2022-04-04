@@ -1,8 +1,12 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund;
 
-use Generated\Shared\Transfer\ItemCollectionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
@@ -18,7 +22,6 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper\UnzerMarketplaceRefundMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpensesRefundStrategyResolverInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
@@ -28,71 +31,70 @@ use SprykerEco\Zed\Unzer\UnzerConstants;
 class UnzerRefundProcessor implements UnzerRefundProcessorInterface
 {
     /**
-     * @var UnzerCredentialsResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
      */
     protected $unzerCredentialsResolver;
 
     /**
-     * @var UnzerExpensesRefundStrategyResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpensesRefundStrategyResolverInterface
      */
     protected $unzerExpensesRefundStrategyResolver;
 
     /**
-     * @var UnzerConfig
+     * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
     protected $unzerConfig;
 
     /**
-     * @var UnzerRefundAdapterInterface
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface
      */
     protected $unzerRefundAdapter;
 
     /**
-     * @var UnzerRepositoryInterface
+     * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
      */
     protected $unzerRepository;
 
     /**
-     * @var UnzerMarketplaceRefundMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper\UnzerMarketplaceRefundMapperInterface
      */
     protected $unzerRefundMapper;
 
     /**
-     * @var UnzerPaymentMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface
      */
     protected $unzerPaymentMapper;
 
     /**
-     * @var UnzerPaymentAdapterInterface
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
      */
     protected $unzerPaymentAdapter;
 
     /**
-     * @var UnzerPaymentSaverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface
      */
     protected $unzerPaymentSaver;
 
     /**
-     * @param UnzerCredentialsResolverInterface $unzerCredentialsResolver
-     * @param UnzerExpensesRefundStrategyResolverInterface $unzerExpensesRefundStrategyResolver
-     * @param UnzerConfig $unzerConfig
-     * @param UnzerRefundAdapterInterface $unzerRefundAdapter
-     * @param UnzerRepositoryInterface $unzerRepository
-     * @param UnzerPaymentMapperInterface $unzerPaymentMapper
-     * @param UnzerPaymentAdapterInterface $unzerPaymentAdapter
-     * @param UnzerPaymentSaverInterface $unzerPaymentSaver
+     * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpensesRefundStrategyResolverInterface $unzerExpensesRefundStrategyResolver
+     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface $unzerRefundAdapter
+     * @param \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface $unzerRepository
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
      */
     public function __construct(
-        UnzerCredentialsResolverInterface            $unzerCredentialsResolver,
+        UnzerCredentialsResolverInterface $unzerCredentialsResolver,
         UnzerExpensesRefundStrategyResolverInterface $unzerExpensesRefundStrategyResolver,
-        UnzerConfig                                  $unzerConfig,
-        UnzerRefundAdapterInterface                  $unzerRefundAdapter,
-        UnzerRepositoryInterface                     $unzerRepository,
-        UnzerPaymentMapperInterface                  $unzerPaymentMapper,
-        UnzerPaymentAdapterInterface                 $unzerPaymentAdapter,
-        UnzerPaymentSaverInterface                   $unzerPaymentSaver
-    )
-    {
+        UnzerConfig $unzerConfig,
+        UnzerRefundAdapterInterface $unzerRefundAdapter,
+        UnzerRepositoryInterface $unzerRepository,
+        UnzerPaymentMapperInterface $unzerPaymentMapper,
+        UnzerPaymentAdapterInterface $unzerPaymentAdapter,
+        UnzerPaymentSaverInterface $unzerPaymentSaver
+    ) {
         $this->unzerCredentialsResolver = $unzerCredentialsResolver;
         $this->unzerExpensesRefundStrategyResolver = $unzerExpensesRefundStrategyResolver;
         $this->unzerConfig = $unzerConfig;
@@ -103,6 +105,15 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
         $this->unzerPaymentSaver = $unzerPaymentSaver;
     }
 
+    /**
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param array $salesOrderItemIds
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return void
+     */
     public function refund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
@@ -119,7 +130,9 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     }
 
     /**
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
      * @return string
      */
@@ -130,7 +143,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
                 (new PaymentUnzerTransactionConditionsTransfer())
                     ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzer())
                     ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE)
-                    ->addStatus(UnzerConstants::TRANSACTION_STATUS_SUCCESS)
+                    ->addStatus(UnzerConstants::TRANSACTION_STATUS_SUCCESS),
             );
 
         $paymentUnzerTransactionCollectionTransfer = $this->unzerRepository
@@ -146,18 +159,17 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     }
 
     /**
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param RefundTransfer $refundTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param string $chargeId
      *
-     * @return UnzerRefundTransfer
+     * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
     protected function createUnzerRefund(
-        PaymentUnzerTransfer   $paymentUnzerTransfer,
+        PaymentUnzerTransfer $paymentUnzerTransfer,
         RefundTransfer $refundTransfer,
-        string                 $chargeId
-    ): UnzerRefundTransfer
-    {
+        string $chargeId
+    ): UnzerRefundTransfer {
         $refundAmount = 0;
         foreach ($refundTransfer->getItems() as $itemTransfer) {
             $refundAmount += $itemTransfer->getRefundableAmountOrFail();
@@ -170,11 +182,11 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     }
 
     /**
-     * @param RefundTransfer $refundTransfer
-     * @param OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $salesOrderItemIds
      *
-     * @return RefundTransfer
+     * @return \Generated\Shared\Transfer\RefundTransfer
      */
     protected function applyExpensesRefundStrategy(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer
     {
@@ -183,7 +195,14 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
         return $unzerExpensesRefundStrategy->prepareUnzerRefund($refundTransfer, $orderTransfer, $salesOrderItemIds);
     }
 
-    protected function applyRefundChanges(PaymentUnzerTransfer $paymentUnzerTransfer, $refundTransfer, array $salesOrderItemIds)
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param $refundTransfer
+     * @param array<int> $salesOrderItemIds
+     *
+     * @return void
+     */
+    protected function applyRefundChanges(PaymentUnzerTransfer $paymentUnzerTransfer, $refundTransfer, array $salesOrderItemIds): void
     {
         $unzerKeypairTransfer = $this->getUnzerKeypair($paymentUnzerTransfer->getKeypairIdOrFail());
 
@@ -204,13 +223,13 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     /**
      * @param string $keypairId
      *
-     * @return UnzerKeypairTransfer
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
      */
     protected function getUnzerKeypair(string $keypairId): UnzerKeypairTransfer
     {
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions(
-                (new UnzerCredentialsConditionsTransfer())->addKeypairId($keypairId)
+                (new UnzerCredentialsConditionsTransfer())->addKeypairId($keypairId),
             );
         $unzerCredentialsTransfer = $this->unzerCredentialsResolver
             ->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
@@ -228,9 +247,8 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     protected function saveUnzerPaymentDetails(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         UnzerKeypairTransfer $unzerKeypairTransfer,
-        array                $salesOrderItemIds
-    ): void
-    {
+        array $salesOrderItemIds
+    ): void {
         $unzerPaymentTransfer = $this->unzerPaymentMapper
             ->mapPaymentUnzerTransferToUnzerPaymentTransfer($paymentUnzerTransfer, new UnzerPaymentTransfer());
         $unzerPaymentTransfer->setUnzerKeypair($unzerKeypairTransfer);

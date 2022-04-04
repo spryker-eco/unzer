@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver;
 
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
@@ -8,12 +13,12 @@ use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrat
 class UnzerExpensesRefundStrategyResolver implements UnzerExpensesRefundStrategyResolverInterface
 {
     /**
-     * @var array<int,\Closure>
+     * @var array<int, \Closure>
      */
     protected $unzerRefundStrategiesCollection;
 
     /**
-     * @param array<int,\Closure> $unzerRefundStrategiesCollection
+     * @param array<int, \Closure> $unzerRefundStrategiesCollection
      */
     public function __construct(array $unzerRefundStrategiesCollection)
     {
@@ -23,9 +28,9 @@ class UnzerExpensesRefundStrategyResolver implements UnzerExpensesRefundStrategy
     /**
      * @param int $strategyConfigKey
      *
-     * @return UnzerExpensesRefundStrategyInterface
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
-     * @throws UnzerException
+     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface
      */
     public function resolveRefundStrategy(int $strategyConfigKey): UnzerExpensesRefundStrategyInterface
     {

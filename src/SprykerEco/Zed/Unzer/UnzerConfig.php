@@ -111,6 +111,7 @@ class UnzerConfig extends AbstractBundleConfig
      */
     protected const AUTHORIZE_PAYMENT_METHODS = [
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_CREDIT_CARD,
     ];
 
     /**
@@ -444,6 +445,8 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * @api
+     *
      * @return int
      */
     public function getExpensesRefundStrategyKey(): int

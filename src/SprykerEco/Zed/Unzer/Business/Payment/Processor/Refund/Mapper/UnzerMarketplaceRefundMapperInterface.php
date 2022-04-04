@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper;
 
 use Generated\Shared\Transfer\ItemCollectionTransfer;
@@ -10,10 +15,10 @@ use Generated\Shared\Transfer\UnzerRefundItemTransfer;
 interface UnzerMarketplaceRefundMapperInterface
 {
     /**
-     * @param ItemCollectionTransfer $itemCollectionTransfer
-     * @param UnzerRefundItemCollectionTransfer $unzerRefundItemCollectionTransfer
+     * @param \Generated\Shared\Transfer\ItemCollectionTransfer $itemCollectionTransfer
+     * @param \Generated\Shared\Transfer\UnzerRefundItemCollectionTransfer $unzerRefundItemCollectionTransfer
      *
-     * @return UnzerRefundItemCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerRefundItemCollectionTransfer
      */
     public function mapItemCollectionTransferToUnzerRefundItemCollection(
         ItemCollectionTransfer $itemCollectionTransfer,
@@ -21,10 +26,13 @@ interface UnzerMarketplaceRefundMapperInterface
     ): UnzerRefundItemCollectionTransfer;
 
     /**
-     * @param ItemTransfer $itemTransfer
-     * @param UnzerRefundItemTransfer $unzerRefundItemTransfer
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     * @param \Generated\Shared\Transfer\UnzerRefundItemTransfer $unzerRefundItemTransfer
      *
-     * @return UnzerRefundItemTransfer
+     * @return \Generated\Shared\Transfer\UnzerRefundItemTransfer
      */
-    public function mapItemTransferToUnzerRefundItemTransfer(ItemTransfer $itemTransfer, UnzerRefundItemTransfer $unzerRefundItemTransfer): UnzerRefundItemTransfer;
+    public function mapItemTransferToUnzerRefundItemTransfer(
+        ItemTransfer $itemTransfer,
+        UnzerRefundItemTransfer $unzerRefundItemTransfer
+    ): UnzerRefundItemTransfer;
 }

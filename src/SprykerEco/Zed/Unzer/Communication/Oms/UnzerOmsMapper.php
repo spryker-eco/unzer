@@ -7,7 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Communication\Oms;
 
-use Generated\Shared\Transfer\OrderFilterTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface;

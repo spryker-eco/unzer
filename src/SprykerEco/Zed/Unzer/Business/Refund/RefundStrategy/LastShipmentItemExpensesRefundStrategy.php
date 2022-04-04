@@ -1,49 +1,52 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy;
 
 use ArrayObject;
-use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
-use Spryker\Shared\Kernel\Transfer\Exception\NullValueException;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
-use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Refund\UnzerRefundExpanderInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 
 class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrategy implements UnzerExpensesRefundStrategyInterface
 {
     /**
-     * @var UnzerRepositoryInterface
+     * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
      */
     protected $unzerRepository;
 
     /**
-     * @var UnzerRefundExpanderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Refund\UnzerRefundExpanderInterface
      */
     protected $unzerRefundExpander;
 
     /**
-     * @param UnzerRepositoryInterface $unzerRepository
-     * @param UnzerRefundExpanderInterface $unzerRefundExpander
+     * @param \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface $unzerRepository
+     * @param \SprykerEco\Zed\Unzer\Business\Refund\UnzerRefundExpanderInterface $unzerRefundExpander
      */
     public function __construct(
         UnzerRepositoryInterface $unzerRepository,
         UnzerRefundExpanderInterface $unzerRefundExpander
-    )
-    {
+    ) {
         $this->unzerRepository = $unzerRepository;
         $this->unzerRefundExpander = $unzerRefundExpander;
     }
 
     /**
-     * @param RefundTransfer $refundTransfer
-     * @param OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array $salesOrderItemIds
      *
-     * @return RefundTransfer
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return \Generated\Shared\Transfer\RefundTransfer
      */
     public function prepareUnzerRefund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer
     {
@@ -61,10 +64,10 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
     }
 
     /**
-     * @param OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array<int> $salesOrderItemIds
      *
-     * @return ArrayObject
+     * @return \ArrayObject
      */
     protected function collectExpenseTransfersForRefund(OrderTransfer $orderTransfer, array $salesOrderItemIds): ArrayObject
     {
@@ -84,20 +87,21 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
 
     /**
      * @param array $orderItemsGroupedByIdSalesShipment
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
      * @param array $salesOrderItemIds
      *
      * @return array<int>
      */
     protected function detectShipmentsForRefund(
-        array                                   $orderItemsGroupedByIdSalesShipment,
+        array $orderItemsGroupedByIdSalesShipment,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
-        array                                   $salesOrderItemIds): array
-    {
+        array $salesOrderItemIds
+    ): array {
         $result = [];
         foreach ($orderItemsGroupedByIdSalesShipment as $idSalesShipment => $itemTransfers) {
             $totalItemsCount = count($itemTransfers);
             foreach ($itemTransfers as $itemTransfer) {
-                /** @var ItemTransfer $itemTransfer */
+                /** @var \Generated\Shared\Transfer\ItemTransfer $itemTransfer */
                 if (in_array($itemTransfer->getIdSalesOrderItemOrFail(), $salesOrderItemIds, true)) {
                     $totalItemsCount--;
 
@@ -107,7 +111,7 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
                 $itemAlreadyRefunded = $this
                     ->isPaymentUnzerOrderItemAlreadyRefunded(
                         $paymentUnzerOrderItemCollectionTransfer,
-                        $itemTransfer->getIdSalesOrderItemOrFail()
+                        $itemTransfer->getIdSalesOrderItemOrFail(),
                     );
 
                 if ($itemAlreadyRefunded) {
@@ -124,9 +128,9 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
     }
 
     /**
-     * @param OrderTransfer $orderTransfer
-     * @return array<int,array<ItemTransfer>>
-     * @throws NullValueException
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return array<int, array<\Generated\Shared\Transfer\ItemTransfer>>
      */
     protected function groupOrderItemsByIdSalesShipment(OrderTransfer $orderTransfer)
     {

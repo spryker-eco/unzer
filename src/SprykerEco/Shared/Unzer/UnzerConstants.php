@@ -91,17 +91,17 @@ interface UnzerConstants
     ];
 
     /**
-     * @var string
+     * @var int
      */
     public const NO_EXPENSES_REFUND_STRATEGY = 0;
 
     /**
-     * @var string
+     * @var int
      */
     public const LAST_SHIPMENT_ITEM_EXPENSES_REFUND_STRATEGY = 1;
 
     /**
-     * @var string
+     * @var int
      */
     public const LAST_ORDER_ITEM_EXPENSES_REFUND_STRATEGY = 2;
 }

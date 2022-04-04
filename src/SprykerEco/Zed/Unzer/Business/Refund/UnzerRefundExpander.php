@@ -1,12 +1,17 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Refund;
 
+use ArrayObject;
 use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
-use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
@@ -24,41 +29,39 @@ use SprykerEco\Zed\Unzer\UnzerConstants;
 class UnzerRefundExpander implements UnzerRefundExpanderInterface
 {
     /**
-     * @var UnzerReaderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
 
     /**
-     * @var UnzerRepositoryInterface
+     * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
      */
     protected $unzerRepository;
 
     /**
-     * @param UnzerReaderInterface $unzerReader
-     * @param UnzerRepositoryInterface $unzerRepository
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface $unzerRepository
      */
     public function __construct(
         UnzerReaderInterface $unzerReader,
         UnzerRepositoryInterface $unzerRepository
-    )
-    {
+    ) {
         $this->unzerReader = $unzerReader;
         $this->unzerRepository = $unzerRepository;
     }
 
     /**
-     * @param RefundTransfer $refundTransfer
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \ArrayObject|array<ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      *
-     * @return RefundTransfer
+     * @return \Generated\Shared\Transfer\RefundTransfer
      */
     public function expandRefundWithUnzerRefundCollection(
         RefundTransfer $refundTransfer,
         PaymentUnzerTransfer $paymentUnzerTransfer,
-        \ArrayObject $expenseTransfersCollectionForRefund
-    ): RefundTransfer
-    {
+        ArrayObject $expenseTransfersCollectionForRefund
+    ): RefundTransfer {
         if ($paymentUnzerTransfer->getIsMarketplace()) {
             return $this->processMarketplaceExpensesRefund($refundTransfer, $paymentUnzerTransfer, $expenseTransfersCollectionForRefund);
         }
@@ -67,20 +70,17 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param RefundTransfer $refundTransfer
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \ArrayObject|array<ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      *
-     * @return RefundTransfer
-     *
-     * @throws UnzerException
+     * @return \Generated\Shared\Transfer\RefundTransfer
      */
     protected function processMarketplaceExpensesRefund(
-        RefundTransfer       $refundTransfer,
+        RefundTransfer $refundTransfer,
         PaymentUnzerTransfer $paymentUnzerTransfer,
-        \ArrayObject          $expenseTransfersCollectionForRefund
-    ): RefundTransfer
-    {
+        ArrayObject $expenseTransfersCollectionForRefund
+    ): RefundTransfer {
         $expenseTransfersCollectionForRefund = $this->expandExpensesWithParticipantIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         $expenseTransfersCollectionForRefund = $this->expandExpensesWithChargeIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
@@ -91,20 +91,20 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param \ArrayObject|array<ExpenseTransfer> $expenseTransfersCollectionForRefund
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      *
      * @return \ArrayObject
-     *
-     * @throws UnzerException
      */
-    protected function expandExpensesWithParticipantIds(\ArrayObject $expenseTransfersCollectionForRefund, PaymentUnzerTransfer $paymentUnzerTransfer): \ArrayObject
-    {
+    protected function expandExpensesWithParticipantIds(
+        ArrayObject $expenseTransfersCollectionForRefund,
+        PaymentUnzerTransfer $paymentUnzerTransfer
+    ): ArrayObject {
         $mainMarketplaceUnzerCredentialsTransfer = $this->getMainMarketplaceUnzerCredentials($paymentUnzerTransfer);
         $childMarketplaceUnzerCredentialsCollectionTransfer = $this->getChildUnzerCredentialsCollection($mainMarketplaceUnzerCredentialsTransfer);
 
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            /** @var ExpenseTransfer $expenseTransfer */
+            /** @var \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer */
             foreach ($childMarketplaceUnzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
                 if (
                     $expenseTransfer->getMerchantReference() === null
@@ -125,17 +125,17 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      *
-     * @return UnzerCredentialsTransfer
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
-     * @throws UnzerException
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
     protected function getMainMarketplaceUnzerCredentials(PaymentUnzerTransfer $paymentUnzerTransfer): UnzerCredentialsTransfer
     {
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions(
-                (new UnzerCredentialsConditionsTransfer())->addKeypairId($paymentUnzerTransfer->getKeypairIdOrFail())
+                (new UnzerCredentialsConditionsTransfer())->addKeypairId($paymentUnzerTransfer->getKeypairIdOrFail()),
             );
 
         $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
@@ -147,25 +147,25 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param UnzerCredentialsTransfer $mainMarketplaceUnzerCredentialsTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $mainMarketplaceUnzerCredentialsTransfer
      *
-     * @return UnzerCredentialsCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
     protected function getChildUnzerCredentialsCollection(UnzerCredentialsTransfer $mainMarketplaceUnzerCredentialsTransfer): UnzerCredentialsCollectionTransfer
     {
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions(
-                (new UnzerCredentialsConditionsTransfer())->addParentId($mainMarketplaceUnzerCredentialsTransfer->getIdUnzerCredentialsOrFail())
+                (new UnzerCredentialsConditionsTransfer())->addParentId($mainMarketplaceUnzerCredentialsTransfer->getIdUnzerCredentialsOrFail()),
             );
 
         return $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
     }
 
     /**
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param ExpenseTransfer $expenseTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
      *
-     * @return UnzerRefundTransfer
+     * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
     protected function createMarketplaceUnzerRefund(PaymentUnzerTransfer $paymentUnzerTransfer, ExpenseTransfer $expenseTransfer): UnzerRefundTransfer
     {
@@ -175,27 +175,27 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             ->addItem(
                 (new UnzerRefundItemTransfer())
                     ->setBasketItemReferenceId(
-                        sprintf(UnzerConstants::UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID, $expenseTransfer->getUnzerParticipantIdOrFail())
+                        sprintf(UnzerConstants::UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID, $expenseTransfer->getUnzerParticipantIdOrFail()),
                     )
                     ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY)
-                    ->setAmountGross($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+                    ->setAmountGross($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER),
             );
 
         return $unzerRefundTransfer;
     }
 
     /**
-     * @param \ArrayObject|array<ExpenseTransfer> $expenseTransfersCollectionForRefund
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
      * @return \ArrayObject
-     * @throws UnzerException
      */
-    protected function expandExpensesWithChargeIds(\ArrayObject $expenseTransfersCollectionForRefund, PaymentUnzerTransfer $paymentUnzerTransfer): \ArrayObject
+    protected function expandExpensesWithChargeIds(ArrayObject $expenseTransfersCollectionForRefund, PaymentUnzerTransfer $paymentUnzerTransfer): ArrayObject
     {
         $paymentUnzerTransactionCollectionCollectionTransfer = $this->getPaymentUnzerTransactionCollectionTransfer($paymentUnzerTransfer);
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
             $expenseTransfer->setUnzerChargeId(
-                $this->getChargeIdByParticipantId($paymentUnzerTransactionCollectionCollectionTransfer, $expenseTransfer->getUnzerParticipantId())
+                $this->getChargeIdByParticipantId($paymentUnzerTransactionCollectionCollectionTransfer, $expenseTransfer->getUnzerParticipantId()),
             );
         }
 
@@ -203,9 +203,9 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      *
-     * @return PaymentUnzerTransactionCollectionTransfer
+     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
      */
     protected function getPaymentUnzerTransactionCollectionTransfer(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransactionCollectionTransfer
     {
@@ -218,7 +218,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             ->setPaymentUnzerTransactionConditions(
                 (new PaymentUnzerTransactionConditionsTransfer())
                     ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzer())
-                    ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE)
+                    ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE),
             );
 
         return $this->unzerRepository
@@ -226,17 +226,17 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
      * @param string $participantId
      *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
      * @return string
-     * @throws UnzerException
      */
     protected function getChargeIdByParticipantId(
         PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer,
         string $participantId
-    ): string
-    {
+    ): string {
         foreach ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions() as $paymentUnzerTransactionTransfer) {
             if ($paymentUnzerTransactionTransfer->getParticipantId() === null) {
                 return $paymentUnzerTransactionTransfer->getTransactionIdOrFail();
@@ -251,36 +251,35 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param RefundTransfer $refundTransfer
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \ArrayObject|array<ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      *
-     * @return RefundTransfer
+     * @return \Generated\Shared\Transfer\RefundTransfer
      */
     protected function processStandardExpensesRefund(
         RefundTransfer $refundTransfer,
         PaymentUnzerTransfer $paymentUnzerTransfer,
-        \ArrayObject $expenseTransfersCollectionForRefund
-    ): RefundTransfer
-    {
+        ArrayObject $expenseTransfersCollectionForRefund
+    ): RefundTransfer {
         $unzerRefundTransfer = $this->createStandardUnzerRefund($paymentUnzerTransfer, $expenseTransfersCollectionForRefund);
 
         return $refundTransfer->addUnzerRefund($unzerRefundTransfer);
     }
 
     /**
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \ArrayObject|array<ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      *
-     * @return UnzerRefundTransfer
-     *
-     * @throws UnzerException
+     * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
-    protected function createStandardUnzerRefund(PaymentUnzerTransfer $paymentUnzerTransfer, \ArrayObject $expenseTransfersCollectionForRefund): UnzerRefundTransfer
-    {
+    protected function createStandardUnzerRefund(
+        PaymentUnzerTransfer $paymentUnzerTransfer,
+        ArrayObject $expenseTransfersCollectionForRefund
+    ): UnzerRefundTransfer {
         $refundAmountTotal = 0;
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            /** @var ExpenseTransfer $expenseTransfer */
+            /** @var \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer */
             $refundAmountTotal += (int)$expenseTransfer->getRefundableAmount();
         }
 
@@ -291,11 +290,11 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
      * @return string
-     *
-     * @throws UnzerException
      */
     protected function getChargeIdByPaymentUnzer(PaymentUnzerTransfer $paymentUnzerTransfer): string
     {
@@ -303,7 +302,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             ->setPaymentUnzerTransactionConditions(
                 (new PaymentUnzerTransactionConditionsTransfer())
                     ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzer())
-                    ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE)
+                    ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE),
             );
 
         $paymentUnzerTransactionCollection = $this->unzerRepository
@@ -313,7 +312,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             throw new UnzerException(sprintf('Unzer Charge Id not found for Unzer Payment ID %s', $paymentUnzerTransfer->getIdPaymentUnzer()));
         }
 
-        /** @var PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer */
+        /** @var \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer */
         $paymentUnzerTransactionTransfer = $paymentUnzerTransactionCollection->getPaymentUnzerTransactions()->getIterator()->current();
 
         return $paymentUnzerTransactionTransfer->getTransactionIdOrFail();

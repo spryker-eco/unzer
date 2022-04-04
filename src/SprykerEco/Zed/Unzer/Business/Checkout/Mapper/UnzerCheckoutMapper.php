@@ -13,7 +13,6 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerBasketItemTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
-use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 

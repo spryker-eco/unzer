@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper;
 
 use Generated\Shared\Transfer\ItemCollectionTransfer;
@@ -16,25 +21,24 @@ class UnzerMarketplaceRefundMapper implements UnzerMarketplaceRefundMapperInterf
     protected const DEFAULT_QUANTITY = 0;
 
     /**
-     * @param ItemCollectionTransfer $itemCollectionTransfer
-     * @param UnzerRefundItemCollectionTransfer $unzerRefundItemCollectionTransfer
+     * @param \Generated\Shared\Transfer\ItemCollectionTransfer $itemCollectionTransfer
+     * @param \Generated\Shared\Transfer\UnzerRefundItemCollectionTransfer $unzerRefundItemCollectionTransfer
      *
-     * @return UnzerRefundItemCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerRefundItemCollectionTransfer
      */
     public function mapItemCollectionTransferToUnzerRefundItemCollection(
         ItemCollectionTransfer $itemCollectionTransfer,
         UnzerRefundItemCollectionTransfer $unzerRefundItemCollectionTransfer
-    ): UnzerRefundItemCollectionTransfer
-    {
+    ): UnzerRefundItemCollectionTransfer {
         foreach ($itemCollectionTransfer->getItems() as $itemTransfer) {
             $groupKey = $itemTransfer->getGroupKey();
             if ($unzerRefundItemCollectionTransfer->getUnzerRefundItems()->offsetExists($groupKey)) {
-                /** @var UnzerRefundItemTransfer $unzerRefundItemTransfer */
+                /** @var \Generated\Shared\Transfer\UnzerRefundItemTransfer $unzerRefundItemTransfer */
                 $unzerRefundItemTransfer = $unzerRefundItemCollectionTransfer->getUnzerRefundItems()->offsetGet($groupKey);
                 $unzerRefundItemTransfer
                     ->setQuantity(static::DEFAULT_QUANTITY)
                     ->setAmountGross(
-                        $unzerRefundItemTransfer->getAmountGross() + $itemTransfer->getSumPriceToPayAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER
+                        $unzerRefundItemTransfer->getAmountGross() + $itemTransfer->getSumPriceToPayAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
                     );
 
                 continue;
@@ -50,13 +54,15 @@ class UnzerMarketplaceRefundMapper implements UnzerMarketplaceRefundMapperInterf
     }
 
     /**
-     * @param ItemTransfer $itemTransfer
-     * @param UnzerRefundItemTransfer $unzerRefundItemTransfer
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     * @param \Generated\Shared\Transfer\UnzerRefundItemTransfer $unzerRefundItemTransfer
      *
-     * @return UnzerRefundItemTransfer
+     * @return \Generated\Shared\Transfer\UnzerRefundItemTransfer
      */
-    public function mapItemTransferToUnzerRefundItemTransfer(ItemTransfer $itemTransfer, UnzerRefundItemTransfer $unzerRefundItemTransfer): UnzerRefundItemTransfer
-    {
+    public function mapItemTransferToUnzerRefundItemTransfer(
+        ItemTransfer $itemTransfer,
+        UnzerRefundItemTransfer $unzerRefundItemTransfer
+    ): UnzerRefundItemTransfer {
         return $unzerRefundItemTransfer
             ->setAmountGross($itemTransfer->getSumPriceToPayAggregationOrFail() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setParticipantId($itemTransfer->getUnzerParticipantIdOrFail())
