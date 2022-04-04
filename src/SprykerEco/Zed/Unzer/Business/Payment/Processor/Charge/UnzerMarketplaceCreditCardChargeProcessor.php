@@ -71,7 +71,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
 
         $authIdsGroupedByParticipant = [];
         foreach ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions() as $paymentUnzerTransactionTransfer) {
-            if ($paymentUnzerTransactionTransfer->getType() === 'authorize') {
+            if ($paymentUnzerTransactionTransfer->getType() === UnzerConstants::TRANSACTION_TYPE_AUTHORIZE) {
                 $authIdsGroupedByParticipant[$paymentUnzerTransactionTransfer->getParticipantId()] = $paymentUnzerTransactionTransfer->getTransactionId();
             }
         }

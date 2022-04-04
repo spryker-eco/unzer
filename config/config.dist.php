@@ -2,8 +2,8 @@
 
 use SprykerEco\Shared\Unzer\UnzerConstants;
 
-$config[UnzerConstants::UNZER_AUTHORIZE_RETURN_URL] = 'https://spryker.com/checkout-success';
-$config[UnzerConstants::UNZER_CHARGE_RETURN_URL] = 'https://spryker.com/checkout-success';
+$config[UnzerConstants::UNZER_AUTHORIZE_RETURN_URL] = 'https://spryker.com/checkout/success';
+$config[UnzerConstants::UNZER_CHARGE_RETURN_URL] = 'https://spryker.com/checkout/success';
 $config[UnzerConstants::WEBHOOK_RETRIEVE_URL] = 'https://spryker.com';
 
 $config[UnzerConstants::MAIN_MARKETPLACE_KEYPAIR_ID] = '';

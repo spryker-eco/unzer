@@ -209,11 +209,6 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      */
     protected function getPaymentUnzerTransactionCollectionTransfer(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransactionCollectionTransfer
     {
-//        if (!$paymentUnzerTransfer->getIsAuthorizable()) {
-//            //Sofort and BankTransfer transactions do not have participantId
-//            $participantIds = null;
-//        }
-
         $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
             ->setPaymentUnzerTransactionConditions(
                 (new PaymentUnzerTransactionConditionsTransfer())

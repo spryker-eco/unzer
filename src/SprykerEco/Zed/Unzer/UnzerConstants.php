@@ -247,6 +247,11 @@ interface UnzerConstants
     /**
      * @var string
      */
+    public const TRANSACTION_TYPE_AUTHORIZE = 'authorize';
+
+    /**
+     * @var string
+     */
     public const TRANSACTION_STATUS_SUCCESS = 'success';
 
     /**
