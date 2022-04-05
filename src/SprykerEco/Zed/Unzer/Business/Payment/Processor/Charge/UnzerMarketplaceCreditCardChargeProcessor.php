@@ -33,7 +33,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
     {
         $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
         if ($paymentUnzerTransfer === null) {
-            throw new UnzerException('Unzer Payment not found for order reference: ' . $orderTransfer->getOrderReference());
+            throw new UnzerException(sprintf('Unzer Payment not found for order reference %s', $orderTransfer->getOrderReference()));
         }
 
         $unzerPaymentTransfer = $this->unzerPaymentMapper
@@ -43,8 +43,8 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         $paymentUnzerOrderItemCollectionTransfer = $this->unzerRepository
             ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderId());
 
-        $authIdsGroupedByParticipantId = $this->groupAuthorizeIdsByParticipantIds($paymentUnzerTransfer);
-        $orderItemsGroupedByParticipantId = $this->groupOrderItemsByParticipantId($paymentUnzerOrderItemCollectionTransfer, $orderTransfer, $salesOrderItemIds);
+        $authIdsGroupedByParticipantId = $this->groupAuthorizeIdsIndexedByParticipantIds($paymentUnzerTransfer);
+        $orderItemsGroupedByParticipantId = $this->getOrderItemsGroupedByParticipantId($paymentUnzerOrderItemCollectionTransfer, $orderTransfer, $salesOrderItemIds);
         foreach ($orderItemsGroupedByParticipantId as $participantId => $itemCollectionTransfer) {
             $unzerChargeTransfer = $this->createUnzerCharge($unzerPaymentTransfer, $itemCollectionTransfer, $authIdsGroupedByParticipantId[$participantId]);
             $unzerChargeTransfer = $this->addExpensesToMarketplaceUnzerChargeTransfer(
@@ -65,7 +65,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
      *
      * @return array<string, string>
      */
-    protected function groupAuthorizeIdsByParticipantIds(PaymentUnzerTransfer $paymentUnzerTransfer): array
+    protected function groupAuthorizeIdsIndexedByParticipantIds(PaymentUnzerTransfer $paymentUnzerTransfer): array
     {
         $paymentUnzerTransactionCollectionTransfer = $this->getPaymentUnzerTransactionCollection($paymentUnzerTransfer);
 
@@ -101,7 +101,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
      *
      * @return array<string, \Generated\Shared\Transfer\ItemCollectionTransfer>
      */
-    protected function groupOrderItemsByParticipantId(
+    protected function getOrderItemsGroupedByParticipantId(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         OrderTransfer $orderTransfer,
         array $salesOrderItemIds
@@ -113,14 +113,16 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
             }
 
             foreach ($orderTransfer->getItems() as $itemTransfer) {
-                if ($itemTransfer->getIdSalesOrderItem() === $paymentUnzerOrderItem->getIdSalesOrderItem()) {
-                    $itemCollectionTransfer = $orderItemsGroupedByParticipant[$paymentUnzerOrderItem->getParticipantId()] ?? new ItemCollectionTransfer();
-                    $itemCollectionTransfer->addItem($itemTransfer);
-                    $orderItemsGroupedByParticipant[$paymentUnzerOrderItem->getParticipantId()] = $itemCollectionTransfer;
-                    $itemTransfer->setUnzerParticipantId($paymentUnzerOrderItem->getParticipantId());
-
-                    break;
+                if ($itemTransfer->getIdSalesOrderItem() !== $paymentUnzerOrderItem->getIdSalesOrderItem()) {
+                    continue;
                 }
+
+                $itemCollectionTransfer = $orderItemsGroupedByParticipant[$paymentUnzerOrderItem->getParticipantId()] ?? new ItemCollectionTransfer();
+                $itemCollectionTransfer->addItem($itemTransfer);
+                $orderItemsGroupedByParticipant[$paymentUnzerOrderItem->getParticipantId()] = $itemCollectionTransfer;
+                $itemTransfer->setUnzerParticipantId($paymentUnzerOrderItem->getParticipantId());
+
+                break;
             }
         }
 
@@ -141,7 +143,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         string $participantId
     ): UnzerChargeTransfer {
-        if ($orderTransfer->getExpenses()->count() === 0 || $this->countItemsChargedByParticipantId($paymentUnzerOrderItemCollectionTransfer, $participantId) > 0) {
+        if ($orderTransfer->getExpenses()->count() === 0 || $this->getChargedItemsCountByIdParticipant($paymentUnzerOrderItemCollectionTransfer, $participantId) > 0) {
             return $unzerChargeTransfer;
         }
 
@@ -167,7 +169,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
      *
      * @return int
      */
-    protected function countItemsChargedByParticipantId(
+    protected function getChargedItemsCountByIdParticipant(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         string $participantId
     ): int {

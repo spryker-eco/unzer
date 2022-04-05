@@ -48,7 +48,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
 
     /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenses
+     * @param \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer> $expenses
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
@@ -56,7 +56,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     {
         $expensesGroupedByParticipantId = [];
         foreach ($expenses as $expenseTransfer) {
-            $expensesGroupedByParticipantId[$expenseTransfer->getUnzerParticipantId()][] = $expenseTransfer;
+            $expensesGroupedByParticipantId[$expenseTransfer->getUnzerParticipantIdOrFail()][] = $expenseTransfer;
         }
 
         foreach ($expensesGroupedByParticipantId as $participantId => $expensesCollection) {
@@ -67,15 +67,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
                 ->setParticipantId($participantId)
                 ->setBasketItemReferenceId($referenceId);
 
-            /** @phpstan-var array<string, \Generated\Shared\Transfer\ExpenseTransfer> $expensesCollection */
-            foreach ($expensesCollection as $expenseTransfer) {
-                $unzerBasketItemTransfer->setAmountPerUnit(
-                    $unzerBasketItemTransfer->getAmountPerUnit() +
-                    $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
-                );
-                $unzerBasketItemTransfer->setVat((int)$expenseTransfer->getTaxRate());
-            }
-
+            $unzerBasketItemTransfer = $this->addExpensesToUnzerBasketItem($expensesCollection, $unzerBasketItemTransfer);
             $unzerBasketTransfer->addBasketItem($unzerBasketItemTransfer);
         }
 
@@ -84,7 +76,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
 
     /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenses
+     * @param \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer> $expenses
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
@@ -114,5 +106,25 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
             ->setQuantity(static::DEFAULT_QUANTITY)
             ->setAmountPerUnit(static::DEFAULT_ZERO_AMOUNT)
             ->setVat(static::DEFAULT_ZERO_AMOUNT);
+    }
+
+    /**
+     * @param array $expensesCollection
+     * @param UnzerBasketItemTransfer $unzerBasketItemTransfer
+     *
+     * @return UnzerBasketItemTransfer
+     */
+    protected function addExpensesToUnzerBasketItem(array $expensesCollection, UnzerBasketItemTransfer $unzerBasketItemTransfer): UnzerBasketItemTransfer
+    {
+        /** @phpstan-var array<string, \Generated\Shared\Transfer\ExpenseTransfer> $expensesCollection */
+        foreach ($expensesCollection as $expenseTransfer) {
+            $unzerBasketItemTransfer->setAmountPerUnit(
+                $unzerBasketItemTransfer->getAmountPerUnit() +
+                $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
+            );
+            $unzerBasketItemTransfer->setVat((int)$expenseTransfer->getTaxRate());
+        }
+
+        return $unzerBasketItemTransfer;
     }
 }

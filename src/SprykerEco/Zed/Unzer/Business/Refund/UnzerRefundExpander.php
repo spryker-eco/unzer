@@ -53,7 +53,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
@@ -72,7 +72,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
@@ -91,7 +91,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      *
      * @return \ArrayObject
@@ -169,7 +169,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      */
     protected function createMarketplaceUnzerRefund(PaymentUnzerTransfer $paymentUnzerTransfer, ExpenseTransfer $expenseTransfer): UnzerRefundTransfer
     {
-        $unzerRefundTransfer = (new UnzerRefundTransfer())
+        return (new UnzerRefundTransfer())
             ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
             ->setChargeId($expenseTransfer->getUnzerChargeIdOrFail())
             ->addItem(
@@ -180,12 +180,10 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
                     ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY)
                     ->setAmountGross($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER),
             );
-
-        return $unzerRefundTransfer;
     }
 
     /**
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      *
      * @return \ArrayObject
@@ -248,7 +246,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
@@ -264,7 +262,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */

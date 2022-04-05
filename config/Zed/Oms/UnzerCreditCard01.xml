@@ -29,7 +29,6 @@
         </events>
 
         <transitions>
-
             <transition happy="true">
                 <source>new</source>
                 <target>authorize pending</target>

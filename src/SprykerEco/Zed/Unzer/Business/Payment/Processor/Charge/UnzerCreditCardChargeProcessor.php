@@ -88,7 +88,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     {
         $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
         if ($paymentUnzerTransfer === null) {
-            throw new UnzerException('Unzer Payment not found for order reference: ' . $orderTransfer->getOrderReference());
+            throw new UnzerException(sprintf('Unzer Payment not found for order reference %s', $orderTransfer->getOrderReference()));
         }
 
         $unzerPaymentTransfer = $this->unzerPaymentMapper
@@ -150,7 +150,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
             ->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
 
         if ($unzerCredentialsTransfer === null) {
-            throw new UnzerException('UnzerCredentials not found by keypairId: ' . $keypairId);
+            throw new UnzerException(sprintf('UnzerCredentials not found by keypairId %s', $keypairId));
         }
 
         return $unzerCredentialsTransfer->getUnzerKeypairOrFail();
@@ -194,11 +194,10 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
         OrderTransfer $orderTransfer,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
     ): UnzerChargeTransfer {
-        if ($orderTransfer->getExpenses()->count() === 0) {
-            return $unzerChargeTransfer;
-        }
-
-        if ($this->countItemsCharged($paymentUnzerOrderItemCollectionTransfer) > 0) {
+        if (
+            $orderTransfer->getExpenses()->count() === 0
+            || $this->getChargedItemsCount($paymentUnzerOrderItemCollectionTransfer) > 0
+        ) {
             return $unzerChargeTransfer;
         }
 
@@ -223,7 +222,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      *
      * @return int
      */
-    protected function countItemsCharged(
+    protected function getChargedItemsCount(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
     ): int {
         $counter = 0;

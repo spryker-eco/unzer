@@ -130,7 +130,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
             throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReference()));
         }
 
-        $groupRefundItemTransfersByParticipantIds = $this->groupRefundItemTransfersByParticipantIds($paymentUnzerTransfer, $refundTransfer);
+        $groupRefundItemTransfersByParticipantIds = $this->getRefundItemsGroupedByParticipantIds($paymentUnzerTransfer, $refundTransfer);
         $paymentUnzerTransactionCollectionTransfer = $this->getPaymentUnzerTransactionCollectionTransfer(
             $paymentUnzerTransfer,
             array_keys($groupRefundItemTransfersByParticipantIds),
@@ -138,7 +138,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
 
         foreach ($groupRefundItemTransfersByParticipantIds as $participantId => $itemCollectionTransfer) {
             $chargeId = $this->getChargeIdByParticipantId($paymentUnzerTransactionCollectionTransfer, $participantId);
-            $refundTransfer->addUnzerRefund($this->createUnzerRefund($paymentUnzerTransfer, $itemCollectionTransfer, $chargeId));
+            $refundTransfer->addUnzerRefund($this->createUnzerRefundTransfer($paymentUnzerTransfer, $itemCollectionTransfer, $chargeId));
         }
 
         $refundTransfer = $this->applyExpensesRefundStrategy($refundTransfer, $orderTransfer, $salesOrderItemIds);
@@ -151,7 +151,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      *
      * @return array<string, \Generated\Shared\Transfer\ItemCollectionTransfer>
      */
-    protected function groupRefundItemTransfersByParticipantIds(PaymentUnzerTransfer $paymentUnzerTransfer, RefundTransfer $refundTransfer): array
+    protected function getRefundItemsGroupedByParticipantIds(PaymentUnzerTransfer $paymentUnzerTransfer, RefundTransfer $refundTransfer): array
     {
         $paymentUnzerOrderItemsCollection = $this->unzerRepository->getPaymentUnzerOrderItemCollectionByOrderId(
             $paymentUnzerTransfer->getOrderIdOrFail(),
@@ -192,7 +192,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
-    protected function createUnzerRefund(
+    protected function createUnzerRefundTransfer(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         ItemCollectionTransfer $itemCollectionTransfer,
         string $chargeId
@@ -249,11 +249,10 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
         string $participantId
     ): string {
         foreach ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions() as $paymentUnzerTransactionTransfer) {
-            if ($paymentUnzerTransactionTransfer->getParticipantId() === null) {
-                return $paymentUnzerTransactionTransfer->getTransactionIdOrFail();
-            }
-
-            if ($paymentUnzerTransactionTransfer->getParticipantIdOrFail() === $participantId) {
+            if (
+                $paymentUnzerTransactionTransfer->getParticipantId() === null
+                || $paymentUnzerTransactionTransfer->getParticipantIdOrFail() === $participantId
+            ) {
                 return $paymentUnzerTransactionTransfer->getTransactionIdOrFail();
             }
         }
