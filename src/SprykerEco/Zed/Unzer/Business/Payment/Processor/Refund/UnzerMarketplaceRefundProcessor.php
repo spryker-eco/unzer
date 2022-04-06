@@ -160,7 +160,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
         $groupedRefundItems = [];
 
         foreach ($refundTransfer->getItems() as $itemTransfer) {
-            $participantId = $this->findParticipantIdByItem($paymentUnzerOrderItemsCollection, $itemTransfer);
+            $participantId = $this->getParticipantIdByItem($paymentUnzerOrderItemsCollection, $itemTransfer);
             if (!isset($groupedRefundItems[$participantId])) {
                 $groupedRefundItems[$participantId] = new ItemCollectionTransfer();
             }
@@ -178,7 +178,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      *
      * @return string
      */
-    protected function findParticipantIdByItem(PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemsCollection, ItemTransfer $itemTransfer): string
+    protected function getParticipantIdByItem(PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemsCollection, ItemTransfer $itemTransfer): string
     {
         foreach ($paymentUnzerOrderItemsCollection->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
             if ($paymentUnzerOrderItem->getIdSalesOrderItemOrFail() === $itemTransfer->getIdSalesOrderItemOrFail()) {
@@ -267,7 +267,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
@@ -281,7 +281,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */
@@ -323,7 +323,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */

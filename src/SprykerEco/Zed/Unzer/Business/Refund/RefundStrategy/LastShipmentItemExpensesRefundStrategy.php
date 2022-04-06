@@ -42,7 +42,7 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
