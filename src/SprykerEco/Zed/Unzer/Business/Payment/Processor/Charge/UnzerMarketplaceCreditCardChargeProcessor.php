@@ -157,14 +157,17 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
     }
 
     /**
-     * @param OrderTransfer $orderTransfer
-     * @param ExpenseTransfer $expenseTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
      * @param string $participantId
      *
      * @return int
      */
-    protected function getExpensesAmountForOrderExpenseByParticipantId(OrderTransfer $orderTransfer, ExpenseTransfer $expenseTransfer, string $participantId): int
-    {
+    protected function getExpensesAmountForOrderExpenseByParticipantId(
+        OrderTransfer $orderTransfer,
+        ExpenseTransfer $expenseTransfer,
+        string $participantId
+    ): int {
         $expensesAmount = 0;
         foreach ($orderTransfer->getItems() as $itemTransfer) {
             $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();

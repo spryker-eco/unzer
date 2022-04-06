@@ -211,8 +211,8 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     }
 
     /**
-     * @param OrderTransfer $orderTransfer
-     * @param ExpenseTransfer $expenseTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
      *
      * @return int
      */

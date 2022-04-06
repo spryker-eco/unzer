@@ -8,7 +8,6 @@
 namespace SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor;
 
 use ArrayObject;
-use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerBasketItemTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
@@ -73,8 +72,9 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     }
 
     /**
-     * @param ArrayObject<ExpenseTransfer> $expenses
-     * @return array<string, ExpenseTransfer>
+     * @param \ArrayObject<\SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\ExpenseTransfer> $expenses
+     *
+     * @return array<string, \Generated\Shared\Transfer\ExpenseTransfer>
      */
     protected function getExpensesGroupedByParticipantId(ArrayObject $expenses): array
     {
@@ -116,9 +116,9 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
 
     /**
      * @param array<\Generated\Shared\Transfer\ExpenseTransfer> $expensesCollection
-     * @param UnzerBasketItemTransfer $unzerBasketItemTransfer
+     * @param \Generated\Shared\Transfer\UnzerBasketItemTransfer $unzerBasketItemTransfer
      *
-     * @return UnzerBasketItemTransfer
+     * @return \Generated\Shared\Transfer\UnzerBasketItemTransfer
      */
     protected function addExpensesToUnzerBasketItem(array $expensesCollection, UnzerBasketItemTransfer $unzerBasketItemTransfer): UnzerBasketItemTransfer
     {

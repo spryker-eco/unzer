@@ -174,9 +174,9 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemsCollection
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
      *
-     * @return string
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
-     * @throws UnzerException
+     * @return string
      */
     protected function findParticipantIdByItem(PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemsCollection, ItemTransfer $itemTransfer): string
     {
