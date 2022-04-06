@@ -104,7 +104,6 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         $childMarketplaceUnzerCredentialsCollectionTransfer = $this->getChildUnzerCredentialsCollection($mainMarketplaceUnzerCredentialsTransfer);
 
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            /** @var \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer */
             foreach ($childMarketplaceUnzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
                 if (
                     $expenseTransfer->getMerchantReference() === null
@@ -215,7 +214,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             );
 
         return $this->unzerRepository
-            ->findPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
+            ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
     }
 
     /**
@@ -272,7 +271,6 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     ): UnzerRefundTransfer {
         $refundAmountTotal = 0;
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            /** @var \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer */
             $refundAmountTotal += (int)$expenseTransfer->getRefundableAmount();
         }
 
@@ -299,7 +297,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             );
 
         $paymentUnzerTransactionCollection = $this->unzerRepository
-            ->findPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
+            ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
 
         if ($paymentUnzerTransactionCollection->getPaymentUnzerTransactions()->count() === 0) {
             throw new UnzerException(sprintf('Unzer Charge Id not found for Unzer Payment ID %s', $paymentUnzerTransfer->getIdPaymentUnzer()));

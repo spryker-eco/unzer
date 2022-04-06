@@ -43,7 +43,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         $paymentUnzerOrderItemCollectionTransfer = $this->unzerRepository
             ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderId());
 
-        $authIdsGroupedByParticipantId = $this->groupAuthorizeIdsIndexedByParticipantIds($paymentUnzerTransfer);
+        $authIdsGroupedByParticipantId = $this->getAuthorizeIdsIndexedByParticipantIds($paymentUnzerTransfer);
         $orderItemsGroupedByParticipantId = $this->getOrderItemsGroupedByParticipantId($paymentUnzerOrderItemCollectionTransfer, $orderTransfer, $salesOrderItemIds);
         foreach ($orderItemsGroupedByParticipantId as $participantId => $itemCollectionTransfer) {
             $unzerChargeTransfer = $this->createUnzerCharge($unzerPaymentTransfer, $itemCollectionTransfer, $authIdsGroupedByParticipantId[$participantId]);
@@ -65,18 +65,18 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
      *
      * @return array<string, string>
      */
-    protected function groupAuthorizeIdsIndexedByParticipantIds(PaymentUnzerTransfer $paymentUnzerTransfer): array
+    protected function getAuthorizeIdsIndexedByParticipantIds(PaymentUnzerTransfer $paymentUnzerTransfer): array
     {
         $paymentUnzerTransactionCollectionTransfer = $this->getPaymentUnzerTransactionCollection($paymentUnzerTransfer);
 
-        $authIdsGroupedByParticipant = [];
+        $indexedAuthorizeTransactionIds = [];
         foreach ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions() as $paymentUnzerTransactionTransfer) {
             if ($paymentUnzerTransactionTransfer->getType() === UnzerConstants::TRANSACTION_TYPE_AUTHORIZE) {
-                $authIdsGroupedByParticipant[$paymentUnzerTransactionTransfer->getParticipantId()] = $paymentUnzerTransactionTransfer->getTransactionId();
+                $indexedAuthorizeTransactionIds[$paymentUnzerTransactionTransfer->getParticipantId()] = $paymentUnzerTransactionTransfer->getTransactionId();
             }
         }
 
-        return $authIdsGroupedByParticipant;
+        return $indexedAuthorizeTransactionIds;
     }
 
     /**
@@ -91,7 +91,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         );
 
         return $this->unzerRepository
-            ->findPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
+            ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
     }
 
     /**
@@ -106,7 +106,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         OrderTransfer $orderTransfer,
         array $salesOrderItemIds
     ): array {
-        $orderItemsGroupedByParticipant = [];
+        $groupedOrderItems = [];
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
             if (!in_array($paymentUnzerOrderItem->getIdSalesOrderItem(), $salesOrderItemIds, true)) {
                 continue;
@@ -117,16 +117,16 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
                     continue;
                 }
 
-                $itemCollectionTransfer = $orderItemsGroupedByParticipant[$paymentUnzerOrderItem->getParticipantId()] ?? new ItemCollectionTransfer();
+                $itemCollectionTransfer = $groupedOrderItems[$paymentUnzerOrderItem->getParticipantId()] ?? new ItemCollectionTransfer();
                 $itemCollectionTransfer->addItem($itemTransfer);
-                $orderItemsGroupedByParticipant[$paymentUnzerOrderItem->getParticipantId()] = $itemCollectionTransfer;
+                $groupedOrderItems[$paymentUnzerOrderItem->getParticipantId()] = $itemCollectionTransfer;
                 $itemTransfer->setUnzerParticipantId($paymentUnzerOrderItem->getParticipantId());
 
                 break;
             }
         }
 
-        return $orderItemsGroupedByParticipant;
+        return $groupedOrderItems;
     }
 
     /**

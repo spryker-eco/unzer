@@ -12,7 +12,7 @@ use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerAddressTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
-use SprykerEco\Shared\Unzer\UnzerConfig;
+use SprykerEco\Zed\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 
 class UnzerQuoteMapper implements UnzerQuoteMapperInterface

@@ -19,7 +19,7 @@ class NoExpensesRefundStrategy implements UnzerExpensesRefundStrategyInterface
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
-    public function prepareUnzerRefund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer
+    public function prepareUnzerRefundTransfer(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer
     {
         return $refundTransfer;
     }

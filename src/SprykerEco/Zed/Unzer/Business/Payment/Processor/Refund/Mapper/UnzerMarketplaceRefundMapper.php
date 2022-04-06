@@ -64,7 +64,6 @@ class UnzerMarketplaceRefundMapper implements UnzerMarketplaceRefundMapperInterf
         UnzerRefundItemTransfer $unzerRefundItemTransfer
     ): UnzerRefundItemTransfer {
         return $unzerRefundItemTransfer
-            ->setAmountGross($itemTransfer->getSumPriceToPayAggregationOrFail() * UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setParticipantId($itemTransfer->getUnzerParticipantIdOrFail())
             ->setAmountGross($itemTransfer->getSumPriceToPayAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setQuantity($itemTransfer->getQuantityOrFail())

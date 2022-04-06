@@ -123,7 +123,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
 
         $chargeId = $this->getUnzerPaymentChargeId($paymentUnzerTransfer);
 
-        $refundTransfer->addUnzerRefund($this->createUnzerRefund($paymentUnzerTransfer, $refundTransfer, $chargeId));
+        $refundTransfer->addUnzerRefund($this->createUnzerRefundTransfer($paymentUnzerTransfer, $refundTransfer, $chargeId));
 
         $refundTransfer = $this->applyExpensesRefundStrategy($refundTransfer, $orderTransfer, $salesOrderItemIds);
         $this->applyRefundChanges($paymentUnzerTransfer, $refundTransfer, $salesOrderItemIds);
@@ -147,7 +147,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
             );
 
         $paymentUnzerTransactionCollectionTransfer = $this->unzerRepository
-            ->findPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
+            ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
 
         if ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions()->count() === 0) {
             throw new UnzerException(sprintf('Unzer transactions for Payment ID %s not found.', $paymentUnzerTransfer->getPaymentIdOrFail()));
@@ -165,7 +165,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
-    protected function createUnzerRefund(
+    protected function createUnzerRefundTransfer(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         RefundTransfer $refundTransfer,
         string $chargeId
@@ -192,7 +192,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     {
         $unzerExpensesRefundStrategy = $this->unzerExpensesRefundStrategyResolver->resolveRefundStrategy($this->unzerConfig->getExpensesRefundStrategyKey());
 
-        return $unzerExpensesRefundStrategy->prepareUnzerRefund($refundTransfer, $orderTransfer, $salesOrderItemIds);
+        return $unzerExpensesRefundStrategy->prepareUnzerRefundTransfer($refundTransfer, $orderTransfer, $salesOrderItemIds);
     }
 
     /**

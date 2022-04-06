@@ -48,47 +48,47 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
-    public function prepareUnzerRefund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer
+    public function prepareUnzerRefundTransfer(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer
     {
         $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
         if ($paymentUnzerTransfer === null) {
             throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReference()));
         }
 
-        $expenseTransfersCollectionForRefund = $this->collectExpenseTransfersForRefund($orderTransfer, $salesOrderItemIds);
-        if ($expenseTransfersCollectionForRefund->count() === 0) {
+        $expenseTransfersForRefund = $this->collectExpenseTransfersForRefund($orderTransfer, $salesOrderItemIds);
+        if ($expenseTransfersForRefund->count() === 0) {
             return $refundTransfer;
         }
 
-        return $this->unzerRefundExpander->expandRefundWithUnzerRefundCollection($refundTransfer, $paymentUnzerTransfer, $expenseTransfersCollectionForRefund);
+        return $this->unzerRefundExpander->expandRefundWithUnzerRefundCollection($refundTransfer, $paymentUnzerTransfer, $expenseTransfersForRefund);
     }
 
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array<int> $salesOrderItemIds
      *
-     * @return \ArrayObject
+     * @return \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer>
      */
     protected function collectExpenseTransfersForRefund(OrderTransfer $orderTransfer, array $salesOrderItemIds): ArrayObject
     {
-        $orderItemsGroupedByIdSalesShipment = $this->groupOrderItemsByIdSalesShipment($orderTransfer);
+        $orderItemsGroupedByIdSalesShipment = $this->getOrderItemsGroupedByIdSalesShipment($orderTransfer);
         $paymentUnzerOrderItemCollection = $this->unzerRepository->getPaymentUnzerOrderItemCollectionByOrderId($orderTransfer->getOrderReferenceOrFail());
         $idsSalesShipmentForRefund = $this->detectShipmentsForRefund($orderItemsGroupedByIdSalesShipment, $paymentUnzerOrderItemCollection, $salesOrderItemIds);
 
-        $result = new ArrayObject();
+        $expenseTransfers = new ArrayObject();
         foreach ($orderTransfer->getExpenses() as $expenseTransfer) {
             if (in_array($expenseTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail(), $idsSalesShipmentForRefund, true)) {
-                $result->append($expenseTransfer);
+                $expenseTransfers->append($expenseTransfer);
             }
         }
 
-        return $result;
+        return $expenseTransfers;
     }
 
     /**
-     * @param array $orderItemsGroupedByIdSalesShipment
+     * @param array<int, array<\Generated\Shared\Transfer\ItemTransfer>> $orderItemsGroupedByIdSalesShipment
      * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return array<int>
      */
@@ -101,7 +101,6 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
         foreach ($orderItemsGroupedByIdSalesShipment as $idSalesShipment => $itemTransfers) {
             $totalItemsCount = count($itemTransfers);
             foreach ($itemTransfers as $itemTransfer) {
-                /** @var \Generated\Shared\Transfer\ItemTransfer $itemTransfer */
                 if (in_array($itemTransfer->getIdSalesOrderItemOrFail(), $salesOrderItemIds, true)) {
                     $totalItemsCount--;
 
@@ -132,14 +131,14 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
      *
      * @return array<int, array<\Generated\Shared\Transfer\ItemTransfer>>
      */
-    protected function groupOrderItemsByIdSalesShipment(OrderTransfer $orderTransfer)
+    protected function getOrderItemsGroupedByIdSalesShipment(OrderTransfer $orderTransfer)
     {
-        $result = [];
+        $indexedItems = [];
         foreach ($orderTransfer->getItems() as $itemTransfer) {
             $idSalesShipment = $itemTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail();
-            $result[$idSalesShipment][] = $itemTransfer;
+            $indexedItems[$idSalesShipment][] = $itemTransfer;
         }
 
-        return $result;
+        return $indexedItems;
     }
 }

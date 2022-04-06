@@ -45,11 +45,11 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
         }
 
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $this->setQuoteItemParticipantId($itemTransfer, $marketplaceMainUnzerCredentials);
+            $this->addParticipantIdToItemTransfer($itemTransfer, $marketplaceMainUnzerCredentials);
         }
 
         foreach ($quoteTransfer->getExpenses() as $expenseTransfer) {
-            $this->setQuoteExpenseParticipantId($expenseTransfer, $marketplaceMainUnzerCredentials);
+            $this->addParticipantIdToExpenseTransfer($expenseTransfer, $marketplaceMainUnzerCredentials);
         }
 
         return $quoteTransfer;
@@ -61,7 +61,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
      *
      * @return \Generated\Shared\Transfer\ItemTransfer
      */
-    protected function setQuoteItemParticipantId(ItemTransfer $itemTransfer, UnzerCredentialsTransfer $unzerCredentialsTransfer): ItemTransfer
+    protected function addParticipantIdToItemTransfer(ItemTransfer $itemTransfer, UnzerCredentialsTransfer $unzerCredentialsTransfer): ItemTransfer
     {
         if (!$itemTransfer->getMerchantReference()) {
             return $itemTransfer->setUnzerParticipantId(
@@ -80,7 +80,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
      *
      * @return \Generated\Shared\Transfer\ExpenseTransfer
      */
-    protected function setQuoteExpenseParticipantId(ExpenseTransfer $expenseTransfer, UnzerCredentialsTransfer $unzerCredentialsTransfer): ExpenseTransfer
+    protected function addParticipantIdToExpenseTransfer(ExpenseTransfer $expenseTransfer, UnzerCredentialsTransfer $unzerCredentialsTransfer): ExpenseTransfer
     {
         $merchantReference = $expenseTransfer->getShipmentOrFail()->getMerchantReference();
 

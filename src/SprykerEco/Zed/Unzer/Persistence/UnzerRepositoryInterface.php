@@ -77,7 +77,7 @@ interface UnzerRepositoryInterface
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
      */
-    public function findPaymentUnzerTransactionCollectionByCriteria(
+    public function getPaymentUnzerTransactionCollectionByCriteria(
         PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
     ): PaymentUnzerTransactionCollectionTransfer;
 }

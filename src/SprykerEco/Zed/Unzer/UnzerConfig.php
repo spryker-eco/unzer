@@ -169,6 +169,21 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
+     * @var array<string, string>
+     */
+    public const SALUTATION_MAP = [
+        'Mr' => 'mr',
+        'Mrs' => 'mrs',
+        'Ms' => 'mrs',
+        'Dr' => 'mr',
+    ];
+
+    /**
+     * @var string
+     */
+    public const SALUTATION_DEFAULT = 'unknown';
+
+    /**
      * @api
      *
      * @param string $paymentMethodName
