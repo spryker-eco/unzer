@@ -8,6 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor;
 
 use ArrayObject;
+use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerBasketItemTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
@@ -40,7 +41,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
         }
 
         if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
-            return $this->addGroupedExpensesByParticipantId($unzerBasketTransfer, $expensesCollection);
+            return $this->addExpensesGroupedByParticipantId($unzerBasketTransfer, $expensesCollection);
         }
 
         return $this->addStandardExpenses($unzerBasketTransfer, $expensesCollection);
@@ -52,12 +53,9 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
-    protected function addGroupedExpensesByParticipantId(UnzerBasketTransfer $unzerBasketTransfer, ArrayObject $expenses): UnzerBasketTransfer
+    protected function addExpensesGroupedByParticipantId(UnzerBasketTransfer $unzerBasketTransfer, ArrayObject $expenses): UnzerBasketTransfer
     {
-        $expensesGroupedByParticipantId = [];
-        foreach ($expenses as $expenseTransfer) {
-            $expensesGroupedByParticipantId[$expenseTransfer->getUnzerParticipantIdOrFail()][] = $expenseTransfer;
-        }
+        $expensesGroupedByParticipantId = $this->getExpensesGroupedByParticipantId($expenses);
 
         foreach ($expensesGroupedByParticipantId as $participantId => $expensesCollection) {
             $referenceId = sprintf(UnzerConstants::UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID, $participantId);
@@ -72,6 +70,20 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
         }
 
         return $unzerBasketTransfer;
+    }
+
+    /**
+     * @param ArrayObject<ExpenseTransfer> $expenses
+     * @return array<string, ExpenseTransfer>
+     */
+    protected function getExpensesGroupedByParticipantId(ArrayObject $expenses): array
+    {
+        $expensesGroupedByParticipantId = [];
+        foreach ($expenses as $expenseTransfer) {
+            $expensesGroupedByParticipantId[$expenseTransfer->getUnzerParticipantIdOrFail()][] = $expenseTransfer;
+        }
+
+        return $expensesGroupedByParticipantId;
     }
 
     /**

@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge;
 
+use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\ItemCollectionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
@@ -203,18 +204,32 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
 
         $expensesAmount = 0;
         foreach ($orderTransfer->getExpenses() as $expenseTransfer) {
-            foreach ($orderTransfer->getItems() as $itemTransfer) {
-                $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
-                $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
-                if ($itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
-                    $expensesAmount += $expenseTransfer->getSumGrossPrice();
-
-                    break;
-                }
-            }
+            $expensesAmount += $this->getExpensesAmountForOrderExpense($orderTransfer, $expenseTransfer);
         }
 
         return $unzerChargeTransfer->setAmount($unzerChargeTransfer->getAmount() + $expensesAmount);
+    }
+
+    /**
+     * @param OrderTransfer $orderTransfer
+     * @param ExpenseTransfer $expenseTransfer
+     *
+     * @return int
+     */
+    protected function getExpensesAmountForOrderExpense(OrderTransfer $orderTransfer, ExpenseTransfer $expenseTransfer): int
+    {
+        $expensesAmount = 0;
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
+            $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
+            if ($itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
+                $expensesAmount += $expenseTransfer->getSumGrossPrice();
+
+                break;
+            }
+        }
+
+        return $expensesAmount;
     }
 
     /**

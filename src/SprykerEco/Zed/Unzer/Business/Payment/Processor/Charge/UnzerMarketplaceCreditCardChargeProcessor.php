@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge;
 
+use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\ItemCollectionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
@@ -143,46 +144,60 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         string $participantId
     ): UnzerChargeTransfer {
-        if ($orderTransfer->getExpenses()->count() === 0 || $this->getChargedItemsCountByIdParticipant($paymentUnzerOrderItemCollectionTransfer, $participantId) > 0) {
+        if ($orderTransfer->getExpenses()->count() === 0 || $this->orderHasChargedItemsByParticipantId($paymentUnzerOrderItemCollectionTransfer, $participantId)) {
             return $unzerChargeTransfer;
         }
 
         $expensesAmount = 0;
         foreach ($orderTransfer->getExpenses() as $expenseTransfer) {
-            foreach ($orderTransfer->getItems() as $itemTransfer) {
-                $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
-                $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
-                if ($itemTransfer->getUnzerParticipantId() === $participantId && $itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
-                    $expensesAmount += $expenseTransfer->getSumGrossPrice();
-
-                    break;
-                }
-            }
+            $expensesAmount += $this->getExpensesAmountForOrderExpenseByParticipantId($orderTransfer, $expenseTransfer, $participantId);
         }
 
         return $unzerChargeTransfer->setAmount($unzerChargeTransfer->getAmount() + $expensesAmount);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param OrderTransfer $orderTransfer
+     * @param ExpenseTransfer $expenseTransfer
      * @param string $participantId
      *
      * @return int
      */
-    protected function getChargedItemsCountByIdParticipant(
+    protected function getExpensesAmountForOrderExpenseByParticipantId(OrderTransfer $orderTransfer, ExpenseTransfer $expenseTransfer, string $participantId): int
+    {
+        $expensesAmount = 0;
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
+            $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
+            if ($itemTransfer->getUnzerParticipantId() === $participantId && $itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
+                $expensesAmount += $expenseTransfer->getSumGrossPrice();
+
+                break;
+            }
+        }
+
+        return $expensesAmount;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param string $participantId
+     *
+     * @return bool
+     */
+    protected function orderHasChargedItemsByParticipantId(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         string $participantId
-    ): int {
-        $counter = 0;
+    ): bool {
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
             if (
                 $paymentUnzerOrderItem->getParticipantId() === $participantId
                 && $paymentUnzerOrderItem->getStatus() === UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED
             ) {
-                $counter++;
+                return true;
             }
         }
 
-        return $counter;
+        return false;
     }
 }
