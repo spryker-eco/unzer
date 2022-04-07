@@ -237,6 +237,7 @@
         <property name="taxRate" type="float"/>
         <property name="refundableAmount" type="int"/>
         <property name="shipment" type="Shipment"/>
+        <property name="merchantReference" type="string"/>
     </transfer>
 
     <transfer name="PaymentUnzer">
