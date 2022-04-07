@@ -102,8 +102,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerCreditCardCharge
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerMarketplaceCreditCardChargeProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\CreditCardProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectPaymentProcessor;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceBankTransferProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceCreditCardProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceDirectPaymentProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper\UnzerMarketplaceRefundMapper;
@@ -528,7 +528,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createMarketplaceBankTransferPaymentProcessor(): UnzerPaymentProcessorInterface
     {
-        return new MarketplaceBankTransferProcessor(
+        return new MarketplaceDirectPaymentProcessor(
             $this->createUnzerCheckoutMapper(),
             $this->createUnzerChargeAdapter(),
             $this->createUnzerPaymentResourceAdapter(),

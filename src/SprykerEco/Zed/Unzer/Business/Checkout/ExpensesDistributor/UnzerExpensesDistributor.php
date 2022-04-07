@@ -48,7 +48,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
 
     /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenses
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenses
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
@@ -56,7 +56,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     {
         $expensesGroupedByParticipantId = [];
         foreach ($expenses as $expenseTransfer) {
-            $expensesGroupedByParticipantId[$expenseTransfer->getUnzerParticipantId()][] = $expenseTransfer;
+            $expensesGroupedByParticipantId[(string)$expenseTransfer->getUnzerParticipantId()][] = $expenseTransfer;
         }
 
         foreach ($expensesGroupedByParticipantId as $participantId => $expensesCollection) {
@@ -84,7 +84,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
 
     /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
-     * @param \ArrayObject|array<\Generated\Shared\Transfer\ExpenseTransfer> $expenses
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenses
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */

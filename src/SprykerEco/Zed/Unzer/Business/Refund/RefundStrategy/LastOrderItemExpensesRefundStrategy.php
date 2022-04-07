@@ -49,7 +49,7 @@ class LastOrderItemExpensesRefundStrategy extends AbstractExpensesRefundStrategy
      */
     public function prepareUnzerRefund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer
     {
-        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
+        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference((string)$orderTransfer->getOrderReference());
         if ($paymentUnzerTransfer === null) {
             throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReference()));
         }

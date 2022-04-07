@@ -31,7 +31,7 @@ class UnzerMarketplaceRefundMapper implements UnzerMarketplaceRefundMapperInterf
         UnzerRefundItemCollectionTransfer $unzerRefundItemCollectionTransfer
     ): UnzerRefundItemCollectionTransfer {
         foreach ($itemCollectionTransfer->getItems() as $itemTransfer) {
-            $groupKey = $itemTransfer->getGroupKey();
+            $groupKey = (string)$itemTransfer->getGroupKey();
             if ($unzerRefundItemCollectionTransfer->getUnzerRefundItems()->offsetExists($groupKey)) {
                 /** @var \Generated\Shared\Transfer\UnzerRefundItemTransfer $unzerRefundItemTransfer */
                 $unzerRefundItemTransfer = $unzerRefundItemCollectionTransfer->getUnzerRefundItems()->offsetGet($groupKey);

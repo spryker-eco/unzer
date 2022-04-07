@@ -68,7 +68,7 @@ class CallbackController extends AbstractController
      */
     public function notificationAction(Request $request): JsonResponse
     {
-        $requestData = $this->getFactory()->getUtilEncodingService()->decodeJson($request->getContent(), true);
+        $requestData = $this->getFactory()->getUtilEncodingService()->decodeJson((string)$request->getContent(), true);
         $unzerNotificationTransfer = (new UnzerNotificationTransfer())->fromArray($requestData, true);
 
         $unzerNotificationTransfer = $this->getFactory()->getUnzerClient()->processNotification($unzerNotificationTransfer);

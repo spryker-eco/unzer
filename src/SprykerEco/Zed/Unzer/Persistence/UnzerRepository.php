@@ -12,7 +12,6 @@ use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
-use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
@@ -268,14 +267,18 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
 
     /**
      * @param \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer|null $paymentUnzerTransactionConditionsTransfer
      *
      * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery
      */
     protected function setPaymentUnzerTransactionFilters(
         SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery,
-        PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
+        ?PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
     ): SpyPaymentUnzerTransactionQuery {
+        if (!$paymentUnzerTransactionConditionsTransfer) {
+            return $paymentUnzerTransactionQuery;
+        }
+
         if ($paymentUnzerTransactionConditionsTransfer->getIds()) {
             $paymentUnzerTransactionQuery->filterByIdPaymentUnzerTransaction_In($paymentUnzerTransactionConditionsTransfer->getIds());
         }

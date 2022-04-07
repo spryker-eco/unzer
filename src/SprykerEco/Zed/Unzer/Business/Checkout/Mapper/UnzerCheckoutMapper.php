@@ -77,7 +77,7 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
     {
         $unzerBasketItemTransferCollection = new ArrayObject();
         foreach ($quoteTransfer->getItems() as $quoteItemTransfer) {
-            $groupKey = $quoteItemTransfer->getGroupKey();
+            $groupKey = (string)$quoteItemTransfer->getGroupKey();
             if ($unzerBasketItemTransferCollection->offsetExists($groupKey)) {
                 $unzerBasketItemTransfer = $unzerBasketItemTransferCollection->offsetGet($groupKey);
                 $unzerBasketItemTransfer
