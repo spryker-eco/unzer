@@ -168,7 +168,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      */
     protected function createMarketplaceUnzerRefund(PaymentUnzerTransfer $paymentUnzerTransfer, ExpenseTransfer $expenseTransfer): UnzerRefundTransfer
     {
-        $unzerRefundTransfer = (new UnzerRefundTransfer())
+        return (new UnzerRefundTransfer())
             ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
             ->setChargeId($expenseTransfer->getUnzerChargeIdOrFail())
             ->addItem(
@@ -179,8 +179,6 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
                     ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY)
                     ->setAmountGross($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER),
             );
-
-        return $unzerRefundTransfer;
     }
 
     /**
@@ -216,7 +214,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             );
 
         return $this->unzerRepository
-            ->findPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
+            ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
     }
 
     /**
@@ -273,7 +271,6 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     ): UnzerRefundTransfer {
         $refundAmountTotal = 0;
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            /** @var \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer */
             $refundAmountTotal += (int)$expenseTransfer->getRefundableAmount();
         }
 
@@ -300,7 +297,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             );
 
         $paymentUnzerTransactionCollection = $this->unzerRepository
-            ->findPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
+            ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
 
         if ($paymentUnzerTransactionCollection->getPaymentUnzerTransactions()->count() === 0) {
             throw new UnzerException(sprintf('Unzer Charge Id not found for Unzer Payment ID %s', $paymentUnzerTransfer->getIdPaymentUnzer()));

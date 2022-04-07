@@ -189,11 +189,11 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
      */
-    public function findPaymentUnzerTransactionCollectionByCriteria(
+    public function getPaymentUnzerTransactionCollectionByCriteria(
         PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
     ): PaymentUnzerTransactionCollectionTransfer {
         $paymentUnzerTransactionQuery = $this->getFactory()->createPaymentUnzerTransactionQuery();
-        $paymentUnzerTransactionQuery = $this->setPaymentUnzerTransactionFilters(
+        $paymentUnzerTransactionQuery = $this->applyPaymentUnzerTransactionConditions(
             $paymentUnzerTransactionQuery,
             $paymentUnzerTransactionCriteriaTransfer->getPaymentUnzerTransactionConditions(),
         );
@@ -271,7 +271,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      *
      * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery
      */
-    protected function setPaymentUnzerTransactionFilters(
+    protected function applyPaymentUnzerTransactionConditions(
         SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery,
         ?PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
     ): SpyPaymentUnzerTransactionQuery {

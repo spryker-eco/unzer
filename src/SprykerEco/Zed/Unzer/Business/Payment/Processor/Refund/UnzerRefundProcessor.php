@@ -108,7 +108,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
@@ -123,7 +123,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
 
         $chargeId = $this->getUnzerPaymentChargeId($paymentUnzerTransfer);
 
-        $refundTransfer->addUnzerRefund($this->createUnzerRefund($paymentUnzerTransfer, $refundTransfer, $chargeId));
+        $refundTransfer->addUnzerRefund($this->createUnzerRefundTransfer($paymentUnzerTransfer, $refundTransfer, $chargeId));
 
         $refundTransfer = $this->applyExpensesRefundStrategy($refundTransfer, $orderTransfer, $salesOrderItemIds);
         $this->applyRefundChanges($paymentUnzerTransfer, $refundTransfer, $salesOrderItemIds);
@@ -147,7 +147,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
             );
 
         $paymentUnzerTransactionCollectionTransfer = $this->unzerRepository
-            ->findPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
+            ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
 
         if ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions()->count() === 0) {
             throw new UnzerException(sprintf('Unzer transactions for Payment ID %s not found.', $paymentUnzerTransfer->getPaymentIdOrFail()));
@@ -165,7 +165,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
-    protected function createUnzerRefund(
+    protected function createUnzerRefundTransfer(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         RefundTransfer $refundTransfer,
         string $chargeId
@@ -184,7 +184,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
@@ -192,7 +192,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     {
         $unzerExpensesRefundStrategy = $this->unzerExpensesRefundStrategyResolver->resolveRefundStrategy($this->unzerConfig->getExpensesRefundStrategyKey());
 
-        return $unzerExpensesRefundStrategy->prepareUnzerRefund($refundTransfer, $orderTransfer, $salesOrderItemIds);
+        return $unzerExpensesRefundStrategy->prepareUnzerRefundTransfer($refundTransfer, $orderTransfer, $salesOrderItemIds);
     }
 
     /**
@@ -240,7 +240,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */

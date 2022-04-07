@@ -40,7 +40,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
         }
 
         if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
-            return $this->addGroupedExpensesByParticipantId($unzerBasketTransfer, $expensesCollection);
+            return $this->addExpensesGroupedByParticipantId($unzerBasketTransfer, $expensesCollection);
         }
 
         return $this->addStandardExpenses($unzerBasketTransfer, $expensesCollection);
@@ -48,16 +48,13 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
 
     /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
-     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenses
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfers
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
-    protected function addGroupedExpensesByParticipantId(UnzerBasketTransfer $unzerBasketTransfer, ArrayObject $expenses): UnzerBasketTransfer
+    protected function addExpensesGroupedByParticipantId(UnzerBasketTransfer $unzerBasketTransfer, ArrayObject $expenseTransfers): UnzerBasketTransfer
     {
-        $expensesGroupedByParticipantId = [];
-        foreach ($expenses as $expenseTransfer) {
-            $expensesGroupedByParticipantId[(string)$expenseTransfer->getUnzerParticipantId()][] = $expenseTransfer;
-        }
+        $expensesGroupedByParticipantId = $this->getExpensesGroupedByParticipantId($expenseTransfers);
 
         foreach ($expensesGroupedByParticipantId as $participantId => $expensesCollection) {
             $referenceId = sprintf(UnzerConstants::UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID, $participantId);
@@ -67,15 +64,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
                 ->setParticipantId($participantId)
                 ->setBasketItemReferenceId($referenceId);
 
-            /** @phpstan-var array<string, \Generated\Shared\Transfer\ExpenseTransfer> $expensesCollection */
-            foreach ($expensesCollection as $expenseTransfer) {
-                $unzerBasketItemTransfer->setAmountPerUnit(
-                    $unzerBasketItemTransfer->getAmountPerUnit() +
-                    $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
-                );
-                $unzerBasketItemTransfer->setVat((int)$expenseTransfer->getTaxRate());
-            }
-
+            $unzerBasketItemTransfer = $this->addExpensesToUnzerBasketItem($expensesCollection, $unzerBasketItemTransfer);
             $unzerBasketTransfer->addBasketItem($unzerBasketItemTransfer);
         }
 
@@ -83,22 +72,31 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     }
 
     /**
+     * @param \ArrayObject<int, \SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\ExpenseTransfer> $expenseTransfers
+     *
+     * @return array<string, \Generated\Shared\Transfer\ExpenseTransfer>
+     */
+    protected function getExpensesGroupedByParticipantId(ArrayObject $expenseTransfers): array
+    {
+        $expensesGroupedByParticipantId = [];
+        foreach ($expenseTransfers as $expenseTransfer) {
+            $expensesGroupedByParticipantId[$expenseTransfer->getUnzerParticipantIdOrFail()][] = $expenseTransfer;
+        }
+
+        return $expensesGroupedByParticipantId;
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
-     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenses
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfers
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
-    protected function addStandardExpenses(UnzerBasketTransfer $unzerBasketTransfer, ArrayObject $expenses): UnzerBasketTransfer
+    protected function addStandardExpenses(UnzerBasketTransfer $unzerBasketTransfer, ArrayObject $expenseTransfers): UnzerBasketTransfer
     {
         $unzerBasketItemTransfer = $this->createUnzerBasketItemTransfer()
             ->setBasketItemReferenceId(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID);
-        foreach ($expenses as $expenseTransfer) {
-            $unzerBasketItemTransfer->setAmountPerUnit(
-                $unzerBasketItemTransfer->getAmountPerUnit() +
-                $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
-            );
-            $unzerBasketItemTransfer->setVat((int)$expenseTransfer->getTaxRate());
-        }
+        $unzerBasketItemTransfer = $this->addExpensesToUnzerBasketItem($expenseTransfers, $unzerBasketItemTransfer);
 
         return $unzerBasketTransfer->addBasketItem($unzerBasketItemTransfer);
     }
@@ -114,5 +112,24 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
             ->setQuantity(static::DEFAULT_QUANTITY)
             ->setAmountPerUnit(static::DEFAULT_ZERO_AMOUNT)
             ->setVat(static::DEFAULT_ZERO_AMOUNT);
+    }
+
+    /**
+     * @param array<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfers
+     * @param \Generated\Shared\Transfer\UnzerBasketItemTransfer $unzerBasketItemTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerBasketItemTransfer
+     */
+    protected function addExpensesToUnzerBasketItem(array $expenseTransfers, UnzerBasketItemTransfer $unzerBasketItemTransfer): UnzerBasketItemTransfer
+    {
+        foreach ($expenseTransfers as $expenseTransfer) {
+            $unzerBasketItemTransfer->setAmountPerUnit(
+                $unzerBasketItemTransfer->getAmountPerUnit() +
+                $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
+            );
+            $unzerBasketItemTransfer->setVat((int)$expenseTransfer->getTaxRate());
+        }
+
+        return $unzerBasketItemTransfer;
     }
 }

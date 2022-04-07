@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge;
 
+use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\ItemCollectionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
@@ -88,7 +89,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     {
         $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
         if ($paymentUnzerTransfer === null) {
-            throw new UnzerException('Unzer Payment not found for order reference: ' . $orderTransfer->getOrderReference());
+            throw new UnzerException(sprintf('Unzer Payment not found for order reference %s', $orderTransfer->getOrderReference()));
         }
 
         $unzerPaymentTransfer = $this->unzerPaymentMapper
@@ -106,7 +107,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
         }
 
         $unzerChargeTransfer = $this->createUnzerCharge($unzerPaymentTransfer, $itemCollectionTransfer);
-        $this->addExpensesToUnzerChargeTransfer($unzerChargeTransfer, $orderTransfer, $paymentUnzerOrderItemCollectionTransfer);
+        $unzerChargeTransfer = $this->addExpensesToUnzerChargeTransfer($unzerChargeTransfer, $orderTransfer, $paymentUnzerOrderItemCollectionTransfer);
 
         $this->unzerChargeAdapter->chargePartialAuthorizablePayment($unzerPaymentTransfer, $unzerChargeTransfer);
         $this->updatePaymentUnzerOrderItemEntities($paymentUnzerOrderItemCollectionTransfer, $salesOrderItemIds);
@@ -150,7 +151,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
             ->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
 
         if ($unzerCredentialsTransfer === null) {
-            throw new UnzerException('UnzerCredentials not found by keypairId: ' . $keypairId);
+            throw new UnzerException(sprintf('UnzerCredentials not found by keypairId %s', $keypairId));
         }
 
         return $unzerCredentialsTransfer->getUnzerKeypairOrFail();
@@ -194,28 +195,41 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
         OrderTransfer $orderTransfer,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
     ): UnzerChargeTransfer {
-        if ($orderTransfer->getExpenses()->count() === 0) {
-            return $unzerChargeTransfer;
-        }
-
-        if ($this->countItemsCharged($paymentUnzerOrderItemCollectionTransfer) > 0) {
+        if (
+            $orderTransfer->getExpenses()->count() === 0
+            || $this->getChargedItemsCount($paymentUnzerOrderItemCollectionTransfer) > 0
+        ) {
             return $unzerChargeTransfer;
         }
 
         $expensesAmount = 0;
         foreach ($orderTransfer->getExpenses() as $expenseTransfer) {
-            foreach ($orderTransfer->getItems() as $itemTransfer) {
-                $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
-                $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
-                if ($itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
-                    $expensesAmount += $expenseTransfer->getSumGrossPrice();
-
-                    break;
-                }
-            }
+            $expensesAmount += $this->getExpensesAmountForOrderExpense($orderTransfer, $expenseTransfer);
         }
 
         return $unzerChargeTransfer->setAmount($unzerChargeTransfer->getAmount() + $expensesAmount);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
+     *
+     * @return int
+     */
+    protected function getExpensesAmountForOrderExpense(OrderTransfer $orderTransfer, ExpenseTransfer $expenseTransfer): int
+    {
+        $expensesAmount = 0;
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
+            $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
+            if ($itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
+                $expensesAmount += $expenseTransfer->getSumGrossPrice();
+
+                break;
+            }
+        }
+
+        return $expensesAmount;
     }
 
     /**
@@ -223,7 +237,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      *
      * @return int
      */
-    protected function countItemsCharged(
+    protected function getChargedItemsCount(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
     ): int {
         $counter = 0;
