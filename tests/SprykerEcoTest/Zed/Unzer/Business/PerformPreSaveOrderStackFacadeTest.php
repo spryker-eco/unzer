@@ -7,11 +7,23 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerMetadataTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
+use SprykerEco\Shared\Unzer\UnzerConfig;
 
+/**
+ * Auto-generated group annotations
+ *
+ * @group SprykerTest
+ * @group Zed
+ * @group Unzer
+ * @group Business
+ * @group Facade
+ * @group PerformPreSaveOrderStackFacadeTest
+ */
 class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -20,11 +32,18 @@ class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
     public function testPerformPreSaveOrderStackMarketplace(): void
     {
         //Arrange
-        $quoteTransfer = $this->tester->createMarketplaceQuoteTransfer();
-        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials($quoteTransfer->getStoreOrFail());
+        $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(true, false);
+        $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER)->setUnzerPayment($unzerPaymentTransfer);
+        $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
+        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials([
+            UnzerCredentialsTransfer::STORE_RELATION => $this->tester->createStoreRelation($quoteTransfer->getStore()),
+        ], [
+            UnzerCredentialsTransfer::STORE_RELATION => $this->tester->createStoreRelation($quoteTransfer->getStore()),
+        ]);
+        $quoteTransfer->getPayment()->getUnzerPayment()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypair());
 
         //Act
-        $quoteTransfer = $this->facade->performPreSaveOrderStack($quoteTransfer);
+        $quoteTransfer = $this->tester->getFacade()->performPreSaveOrderStack($quoteTransfer);
 
         //Assert
         $unzerPayment = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();
@@ -43,13 +62,15 @@ class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
     public function testPerformPreSaveOrderStackStandard(): void
     {
         //Arrange
-        $quoteTransfer = $this->tester->createQuoteTransfer();
-        $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setIsMarketplace(false);
-        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials($quoteTransfer->getStoreOrFail());
-        $this->tester->haveStandardUnzerCredentials($quoteTransfer->getStoreOrFail());
+        $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, false);
+        $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER)->setUnzerPayment($unzerPaymentTransfer);
+        $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials([
+            UnzerCredentialsTransfer::STORE_RELATION => $this->tester->createStoreRelation($quoteTransfer->getStore()),
+        ]);
 
         //Act
-        $quoteTransfer = $this->facade->performPreSaveOrderStack($quoteTransfer);
+        $quoteTransfer = $this->tester->getFacade()->performPreSaveOrderStack($quoteTransfer);
 
         //Assert
         $unzerPayment = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();

@@ -9,10 +9,3 @@ parameters:
 
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
-    - '#Call to an undefined method .+LocatorLocatorInterface::.+\(\).#'
-    - '#Parameter .+ of method .+ has invalid typehint type .+Transfer#'
-    - '#Call to method .+ on an unknown class .+Transfer#'
-    - '#Return typehint of method .+ has invalid type .+Transfer#'
-    - '#Parameter .+ of anonymous function has invalid typehint type .+Transfer#'
-    - '#Property .+ has unknown class .+Transfer as its type#'
-    - '#Instantiated class .+Transfer not found#'

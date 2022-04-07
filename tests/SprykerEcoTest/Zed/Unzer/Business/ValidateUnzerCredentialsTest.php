@@ -7,9 +7,12 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
+use Generated\Shared\DataBuilder\StoreBuilder;
 use Generated\Shared\DataBuilder\UnzerCredentialsBuilder;
+use Generated\Shared\Transfer\MerchantTransfer;
+use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Generated\Shared\Transfer\UnzerKeypairTransfer;
+use Spryker\Shared\Kernel\Transfer\Exception\NullValueException;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 
 /**
@@ -30,18 +33,29 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public const TOO_LONG_STRING = '6sVhY4A8ny34pBoZZG69uqAmJfH8ZrcvrhbLMrEFg10XyF0Km4sifwDBvHLyxkdh8VkDuc4wQgsRFfgDH5SkzmlUghzkGa8YPHCBvy4iV9QM6QTcYliVxspnaRBdoL5MQBdUmyxAh4u9LldnUgURa8Np9GxdPUx557VL35HUntQYsCSjnjdndpGcuRuT0QHxmkPIBYGee58MTAL6Cgawdp5aseF1eOMwDUQyM713vMW8lvlKNbOGttPJIleweUwnWjMt';
 
     /**
+     * @var int
+     */
+    public const UNKNOWN_ID_UNZER_CREDENTIALS = 99999;
+
+    /**
      * @return void
      */
     public function testValidateUnzerCredentialsTypeStandardReturnsSuccessfulUnzerCredentialsResponse(): void
     {
         // Arrange
+        $storeTransfer = (new StoreBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-        ]))->withUnzerKeypair()
+                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
+            ]))
+            ->withStoreRelation([
+                StoreRelationTransfer::STORES => [$storeTransfer],
+                StoreRelationTransfer::ID_STORES => [$storeTransfer->getIdStore()],
+            ])
+            ->withUnzerKeypair()
             ->build();
 
         // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
+        $unzerCredentialsResponseTransfer = $this->tester->getFacade()->validateUnzerCredentials($unzerCredentialsTransfer);
 
         // Assert
         $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
@@ -51,227 +65,77 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileConfigNameUndefined(): void
+    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileUnzerKeypairIsNull(): void
     {
         // Arrange
+        $storeTransfer = (new StoreBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-            UnzerCredentialsTransfer::CONFIG_NAME => '',
-        ]))->withUnzerKeypair()
+                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
+            ]))
+            ->withStoreRelation([
+                StoreRelationTransfer::STORES => [$storeTransfer],
+                StoreRelationTransfer::ID_STORES => [$storeTransfer->getIdStore()],
+            ])
+            ->build();
+
+        // Assert
+        $this->expectException(NullValueException::class);
+        $this->expectExceptionMessage('Property "unzerKeypair" of transfer `Generated\Shared\Transfer\UnzerCredentialsTransfer` is null.');
+
+        // Act
+        $this->tester->getFacade()->validateUnzerCredentials($unzerCredentialsTransfer);
+    }
+
+    /**
+     * @return void
+     */
+    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileStoreRelationAlreadyUsed(): void
+    {
+        // Arrange
+        $standardUnzerCredentials = $this->tester->haveStandardUnzerCredentials();
+        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
+                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
+                UnzerCredentialsTransfer::STORE_RELATION => $standardUnzerCredentials->getStoreRelation(),
+            ]))
+            ->withStoreRelation($standardUnzerCredentials->getStoreRelation()->toArray())
+            ->withUnzerKeypair()
             ->build();
 
         // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
+        $unzerCredentialsResponseTransfer = $this->tester->getFacade()->validateUnzerCredentials($unzerCredentialsTransfer);
 
         // Assert
         $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
         $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[configName]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('This value should not be blank.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
+        $this->assertSame('Chosen Store relation is already used', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
     }
 
     /**
      * @return void
      */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileConfigNameTooLong(): void
+    public function testValidateUnzerCredentialsTypeMarketplaceMainMerchantReturnsUnsuccessfulUnzerCredentialsResponseWhileMerchantReferenceDoesNotExist(): void
     {
         // Arrange
+        $storeTransfer = (new StoreBuilder())->build();
+        $marketplaceUnzerCredentailsTransfer = $this->tester->haveMarketplaceUnzerCredentials();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-            UnzerCredentialsTransfer::CONFIG_NAME => static::TOO_LONG_STRING,
-        ]))->withUnzerKeypair()
+                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+                UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $marketplaceUnzerCredentailsTransfer->getIdUnzerCredentials(),
+            ]))
+            ->withStoreRelation([
+                StoreRelationTransfer::STORES => [$storeTransfer],
+                StoreRelationTransfer::ID_STORES => [$storeTransfer->getIdStore()],
+            ])
+            ->withUnzerKeypair()
             ->build();
 
         // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
+        $unzerCredentialsResponseTransfer = $this->tester->getFacade()->validateUnzerCredentials($unzerCredentialsTransfer);
 
         // Assert
         $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
         $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[configName]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('This value is too long. It should have 255 characters or less.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
-    }
-
-    /**
-     * @return void
-     */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairUndefined(): void
-    {
-        // Arrange
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-            UnzerCredentialsTransfer::UNZER_KEYPAIR => null,
-        ]))->build();
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[unzerKeypair]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('This value should not be blank.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
-    }
-
-    /**
-     * @return void
-     */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPrivateKeyTooLong(): void
-    {
-        // Arrange
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-        ]))->withUnzerKeypair([
-            UnzerKeypairTransfer::PRIVATE_KEY => static::TOO_LONG_STRING,
-        ])->build();
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[unzerKeypair][privateKey]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('This value is too long. It should have 255 characters or less.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
-    }
-
-    /**
-     * @return void
-     */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPrivateKeyUndefined(): void
-    {
-        // Arrange
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-        ]))->withUnzerKeypair([
-            UnzerKeypairTransfer::PRIVATE_KEY => null,
-        ])->build();
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[unzerKeypair][privateKey]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('This value should not be blank.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
-    }
-
-    /**
-     * @return void
-     */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPublicKeyUndefined(): void
-    {
-        // Arrange
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-        ]))->withUnzerKeypair([
-            UnzerKeypairTransfer::PUBLIC_KEY => null,
-        ])->build();
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[unzerKeypair][publicKey]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('This value should not be blank.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
-    }
-
-    /**
-     * @return void
-     */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPublicKeyTooLong(): void
-    {
-        // Arrange
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-        ]))->withUnzerKeypair([
-            UnzerKeypairTransfer::PUBLIC_KEY => static::TOO_LONG_STRING,
-        ])->build();
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[unzerKeypair][publicKey]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('This value is too long. It should have 255 characters or less.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
-    }
-
-    /**
-     * @return void
-     */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileKeypairPublicKeyNotUnique(): void
-    {
-        // Arrange
-        $storeTransfer = $this->tester->haveStore();
-        $standardUnzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials($storeTransfer);
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-        ]))->withUnzerKeypair([
-            UnzerKeypairTransfer::PUBLIC_KEY => $standardUnzerCredentialsTransfer->getUnzerKeypair()->getPublicKey(),
-        ])->build();
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[unzerKeypair][publicKey]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('Unzer public key is already used.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
-    }
-
-    /**
-     * @return void
-     */
-    public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileStoreRelationAlreadyDefined(): void
-    {
-        // Arrange
-        $storeTransfer = $this->tester->haveStore();
-        $standardUnzerCredentials = $this->tester->haveStandardUnzerCredentials($storeTransfer);
-
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-            UnzerCredentialsTransfer::STORE_RELATION => $storeTransfer->getName(),
-        ]))->withUnzerKeypair()
-            ->build();
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[storeRelation]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('Store relation already defined.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
-    }
-
-    /**
-     * @return void
-     */
-    public function testValidateUnzerCredentialsTypeMarketplaceMainMerchantReturnsUnsuccessfulUnzerCredentialsResponseWhileMerchantReferenceIsInvalid(): void
-    {
-        // Arrange
-        $storeTransfer = $this->tester->haveStore();
-        $mainMarketplaceUnzerCredentailsTransfer = $this->tester->haveMarketplaceUnzerCredentials($storeTransfer);
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
-            UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $mainMarketplaceUnzerCredentailsTransfer->getIdUnzerCredentials(),
-        ]))->withUnzerKeypair()
-            ->build();
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($unzerCredentialsTransfer);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[merchantReference]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('Unknown merchant reference detected.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
+        $this->assertSame('Merchant with provided reference does not exist!', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
     }
 
     /**
@@ -280,22 +144,26 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeMarketplaceMainMerchantReturnsUnsuccessfulUnzerCredentialsResponseWhileParentUnzerCredentialsAreInvalid(): void
     {
         // Arrange
-        $storeTransfer = $this->tester->haveStore();
-        $standardUnzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials($storeTransfer);
+        $merchantTransfer = $this->tester->haveMerchant([MerchantTransfer::MERCHANT_REFERENCE => 'MyMerchantReference', MerchantTransfer::STATUS => 'approved']);
+        $storeTransfer = (new StoreBuilder())->build();
         $mainMarketplaceMerchantUnzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
-            UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $standardUnzerCredentialsTransfer->getIdUnzerCredentials(),
-            UnzerCredentialsTransfer::MERCHANT_REFERENCE => null,
-        ]))->withUnzerKeypair()
+            UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => static::UNKNOWN_ID_UNZER_CREDENTIALS,
+            UnzerCredentialsTransfer::MERCHANT_REFERENCE => $merchantTransfer->getMerchantReference(),
+        ]))
+            ->withStoreRelation([
+                StoreRelationTransfer::STORES => [$storeTransfer],
+                StoreRelationTransfer::ID_STORES => [$storeTransfer->getIdStore()],
+            ])
+            ->withUnzerKeypair()
             ->build();
 
         // Act
-        $unzerCredentialsResponseTransfer = $this->facade->validateUnzerCredentials($mainMarketplaceMerchantUnzerCredentialsTransfer);
+        $unzerCredentialsResponseTransfer = $this->tester->getFacade()->validateUnzerCredentials($mainMarketplaceMerchantUnzerCredentialsTransfer);
 
         // Assert
         $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
         $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('[parentIdUnzerCredentials]', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getValue());
-        $this->assertSame('Invalid parent Unzer credentials detected.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
+        $this->assertSame('Parent Unzer credentials not found!', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
     }
 }

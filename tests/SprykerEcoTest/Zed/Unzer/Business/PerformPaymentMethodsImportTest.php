@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
+namespace SprykerEcoTest\Zed\Unzer\Business;
+
+/**
+ * Auto-generated group annotations
+ *
+ * @group SprykerTest
+ * @group Zed
+ * @group Unzer
+ * @group Business
+ * @group Facade
+ * @group PerformPaymentMethodsImportTest
+ */
+class PerformPaymentMethodsImportTest extends UnzerFacadeBaseTest
+{
+    /**
+     * @return void
+     */
+    public function testPerformPaymentMethodsImportTest(): void
+    {
+        //Arrange
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensurePaymentMethodTableIsEmpty();
+        $this->tester->ensurePaymentProviderTableIsEmpty();
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
+
+        //Act
+        $this->tester->getFacade()->performPaymentMethodsImport($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+
+        //Assert
+        $this->assertSame(1, $this->tester->getNumberOfPaymentProviders());
+        $this->assertSame(2, $this->tester->getNumberOfPaymentMethods());
+    }
+}

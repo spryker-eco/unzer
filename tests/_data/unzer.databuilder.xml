@@ -5,18 +5,19 @@
     xsi:schemaLocation="spryker:databuilder-01 http://static.spryker.com/databuilder-01.xsd"
 >
     <transfer name="UnzerCredentials">
-        <property name="keypairId" dataBuilderRule="word"/>
-        <property name="configName" dataBuilderRule="word"/>
+        <property name="idUnzerCredentials" dataBuilderRule="randomDigit(20)"/>
+        <property name="keypairId" dataBuilderRule="word()"/>
+        <property name="configName" dataBuilderRule="word()"/>
         <property name="type" dataBuilderRule="randomDigit(20)"/>
-        <property name="participantId" dataBuilderRule="word"/>
-        <property name="merchantReference" dataBuilderRule="word"/>
+        <property name="participantId" dataBuilderRule="word()"/>
+        <property name="merchantReference" dataBuilderRule="word()"/>
         <property name="parentIdUnzerCredentials" dataBuilderRule="randomDigit(20)"/>
     </transfer>
 
     <transfer name="UnzerKeypair">
-        <property name="keypairId" dataBuilderRule="word"/>
-        <property name="publicKey" dataBuilderRule="word"/>
-        <property name="privateKey" dataBuilderRule="word"/>
+        <property name="keypairId" dataBuilderRule="word()"/>
+        <property name="publicKey" dataBuilderRule="word()"/>
+        <property name="privateKey" dataBuilderRule="word()"/>
     </transfer>
 
     <transfer name="UnzerPayment">
@@ -29,5 +30,4 @@
         <property name="invoiceId" dataBuilderRule="word()"/>
         <property name="redirectUrl" dataBuilderRule="url()"/>
     </transfer>
-
 </transfers>

@@ -8,31 +8,35 @@ paths:
     output: ../../../_output
 
 coverage:
-  enabled: true
-  remote: false
-  whitelist: { include: ['../../../../src/*'] }
+    enabled: true
+    remote: false
+    whitelist: { include: ['../../../../src/*'] }
 
 suites:
-  Zed:
-    path: .
-    class_name: UnzerZedTester
-    modules:
-      enabled:
-        - Asserts
-        - \SprykerTest\Shared\Testify\Helper\Environment
-        - \SprykerTest\Shared\Testify\Helper\ConfigHelper
-        - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
-        - \SprykerTest\Zed\Testify\Helper\Communication\CommunicationHelper
-        - \SprykerTest\Zed\Testify\Helper\Communication\Table\TableHelper
-        - \SprykerTest\Shared\Testify\Helper\LocatorHelper:
-            projectNamespaces:
-              - 'SprykerEco'
-              - 'SprykerEcoTest'
-        - \SprykerTest\Shared\Testify\Helper\BusinessHelper
-        - \SprykerTest\Shared\Testify\Helper\DependencyHelper
-        - \SprykerTest\Shared\Propel\Helper\TransactionHelper
-        - \SprykerTest\Shared\Store\Helper\StoreDataHelper
-        - \SprykerTest\Shared\Sales\Helper\SalesDataHelper
-        - \SprykerTest\Shared\Customer\Helper\CustomerDataHelper
-        - \SprykerTest\Zed\StateMachine\Helper\StateMachineHelper
-        - \SprykerTest\Zed\Oms\Helper\OmsHelper
+    Business:
+        path: Business
+        class_name: UnzerZedTester
+        modules:
+            enabled:
+                - Asserts
+                - \SprykerTest\Shared\Testify\Helper\Environment
+                - \SprykerTest\Shared\Testify\Helper\ConfigHelper
+                - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
+                - \SprykerTest\Zed\Testify\Helper\Communication\CommunicationHelper
+                - \SprykerTest\Zed\Testify\Helper\Communication\Table\TableHelper
+                - \SprykerTest\Shared\Testify\Helper\LocatorHelper:
+                    projectNamespaces:
+                      - 'Spryker'
+                      - 'SprykerTest'
+                      - 'SprykerEco'
+                      - 'SprykerEcoTest'
+                - \SprykerTest\Shared\Testify\Helper\BusinessHelper
+                - \SprykerTest\Shared\Payment\Helper\PaymentDataHelper
+                - \SprykerTest\Shared\Testify\Helper\DependencyHelper
+                - \SprykerTest\Shared\Propel\Helper\TransactionHelper
+                - \SprykerTest\Zed\Merchant\Helper\MerchantHelper
+                - \SprykerTest\Shared\Store\Helper\StoreDataHelper
+                - \SprykerTest\Shared\Sales\Helper\SalesDataHelper
+                - \SprykerTest\Shared\Customer\Helper\CustomerDataHelper
+                - \SprykerTest\Zed\StateMachine\Helper\StateMachineHelper
+                - \SprykerTest\Zed\Oms\Helper\OmsHelper

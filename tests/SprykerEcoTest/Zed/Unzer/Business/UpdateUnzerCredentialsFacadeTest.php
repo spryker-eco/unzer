@@ -7,6 +7,18 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
+use Generated\Shared\DataBuilder\UnzerKeypairBuilder;
+
+/**
+ * Auto-generated group annotations
+ *
+ * @group SprykerTest
+ * @group Zed
+ * @group Unzer
+ * @group Business
+ * @group Facade
+ * @group UpdateUnzerCredentialsFacadeTest
+ */
 class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -17,7 +29,7 @@ class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     /**
      * @var string
      */
-    protected const ANOTHER_PARTICIPANT_ID = 'part2';
+    protected const ANOTHER_PARTICIPANT_ID = '123ABC456ABC73DB2BBE1A016A028B46';
 
     /**
      * @var string
@@ -25,44 +37,71 @@ class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     protected const ANOTHER_PRIVATE_KEY = 'key3';
 
     /**
-     * @var string
+     * @var int
      */
-    protected const UNKNOWN_ID = 'unknown';
+    protected const UNKNOWN_ID = 9999999;
 
     /**
      * @return void
      */
-    public function testUpdateUnzerCredentialsSuccess(): void
+    public function testUpdateMarketplaceMainUnzerCredentialsStoreRelationsAndParticipantIdReturnsSuccessful(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials($this->tester->haveStore());
-        $unzerCredentialsTransfer->setParticipantId(static::ANOTHER_PARTICIPANT_ID);
-        $unzerCredentialsTransfer->getUnzerKeypairOrFail()->setPublicKey(static::ANOTHER_PUBLIC_KEY);
-        $unzerCredentialsTransfer->getUnzerKeypairOrFail()->setPrivateKey(static::ANOTHER_PRIVATE_KEY);
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $storeTransfer = $this->tester->haveStore();
+        $unzerCredentialsTransfer = $this->tester
+            ->haveMarketplaceUnzerCredentials()
+            ->setParticipantId(static::ANOTHER_PARTICIPANT_ID);
+
+        $unzerCredentialsTransfer->getStoreRelation()
+            ->addIdStores($storeTransfer->getIdStore())
+            ->addStores($storeTransfer);
 
         //Act
-        $unzerCredentialsResponseTransfer = $this->facade->updateUnzerCredentials($unzerCredentialsTransfer);
+        $unzerCredentialsResponseTransfer = $this->tester
+            ->getFacade()
+            ->updateUnzerCredentials($unzerCredentialsTransfer);
 
         //Assert
         $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
-        $this->assertSame(static::ANOTHER_PUBLIC_KEY, $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPublicKey());
-        $this->assertSame(static::ANOTHER_PRIVATE_KEY, $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPrivateKey());
-        $this->assertSame(static::ANOTHER_PARTICIPANT_ID, $unzerCredentialsResponseTransfer->getUnzerCredentialsOrFail()->getParticipantId());
+        $this->assertSame(
+            static::ANOTHER_PARTICIPANT_ID,
+            $unzerCredentialsResponseTransfer->getUnzerCredentials()
+                ->getParticipantId(),
+        );
+        $this->assertSame(2, $unzerCredentialsResponseTransfer->getUnzerCredentials()->getStoreRelation()->getStores()->count());
     }
 
     /**
      * @return void
      */
-    public function testUpdateUnzerCredentialsFail(): void
+    public function testUpdateStandardUnzerCredentialsKeypairReturnsResponseSuccessful(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials($this->tester->haveStore());
-        $unzerCredentialsTransfer->setIdUnzerCredentials(static::UNKNOWN_ID);
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $unzerKeypairTransfer = (new UnzerKeypairBuilder())->build();
+        $unzerCredentialsTransfer = $this->tester
+            ->haveStandardUnzerCredentials()
+            ->setUnzerKeypair($unzerKeypairTransfer);
 
         //Act
-        $unzerCredentialsResponseTransfer = $this->facade->updateUnzerCredentials($unzerCredentialsTransfer);
+        $unzerCredentialsResponseTransfer = $this->tester
+            ->getFacade()
+            ->updateUnzerCredentials($unzerCredentialsTransfer);
 
         //Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
+        $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
+        $this->assertSame(
+            $unzerKeypairTransfer->getPublicKey(),
+            $unzerCredentialsResponseTransfer->getUnzerCredentials()
+                ->getUnzerKeypair()
+                ->getPublicKey(),
+        );
+        $this->assertSame(
+            $unzerKeypairTransfer->getPrivateKey(),
+            $unzerCredentialsResponseTransfer->getUnzerCredentials()
+                ->getUnzerKeypair()
+                ->getPrivateKey(),
+        );
     }
 }

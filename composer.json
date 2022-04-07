@@ -42,9 +42,13 @@
         "spryker/state-machine": "*",
         "spryker/testify": "*"
     },
+    "suggest": {
+        "spryker/checkout": "Use this module if you want to use Checkout plugins.",
+        "spryker/router": "Use this module if you want use the RouterProviderPlugin."
+    },
     "autoload": {
         "psr-4": {
-            "SprykerEco\\": "src/SprykerEco/"
+            "SprykerEco\\": "src/SprykerEco/",
         }
     },
     "autoload-dev": {
@@ -79,9 +83,5 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
-    },
-    "suggest": {
-        "spryker/checkout": "Use this module if you want to use Checkout plugins.",
-        "spryker/router": "Use this module if you want use the RouterProviderPlugin."
     }
 }

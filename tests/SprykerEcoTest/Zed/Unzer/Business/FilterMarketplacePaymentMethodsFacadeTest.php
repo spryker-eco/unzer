@@ -9,6 +9,16 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
 
+/**
+ * Auto-generated group annotations
+ *
+ * @group SprykerTest
+ * @group Zed
+ * @group Unzer
+ * @group Business
+ * @group Facade
+ * @group FilterMarketplacePaymentMethodsFacadeTest
+ */
 class FilterMarketplacePaymentMethodsFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -22,7 +32,7 @@ class FilterMarketplacePaymentMethodsFacadeTest extends UnzerFacadeBaseTest
         $paymentMethodsCount = $paymentMethodsTransfer->getMethods()->count();
 
         //Act
-        $paymentMethodsTransfer = $this->facade->filterMarketplacePaymentMethods($paymentMethodsTransfer, $quoteTransfer);
+        $paymentMethodsTransfer = $this->tester->getFacade()->filterMarketplacePaymentMethods($paymentMethodsTransfer, $quoteTransfer);
 
         //Assert
         $this->assertSame($paymentMethodsCount, $paymentMethodsTransfer->getMethods()->count());
@@ -39,7 +49,7 @@ class FilterMarketplacePaymentMethodsFacadeTest extends UnzerFacadeBaseTest
         $paymentMethodsCount = $paymentMethodsTransfer->getMethods()->count();
 
         //Act
-        $paymentMethodsTransfer = $this->facade->filterMarketplacePaymentMethods($paymentMethodsTransfer, $quoteTransfer);
+        $paymentMethodsTransfer = $this->tester->getFacade()->filterMarketplacePaymentMethods($paymentMethodsTransfer, $quoteTransfer);
 
         //Assert
         $this->assertSame(

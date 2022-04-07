@@ -9,8 +9,19 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use Generated\Shared\Transfer\OrderTransfer;
 use Spryker\Shared\Kernel\Transfer\Exception\NullValueException;
+use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\Communication\Plugin\Checkout\UnzerCheckoutDoSaveOrderPlugin;
 
+/**
+ * Auto-generated group annotations
+ *
+ * @group SprykerTest
+ * @group Zed
+ * @group Unzer
+ * @group Business
+ * @group Facade
+ * @group FindUpdatedUnzerPaymentForOrderFacadeTest
+ */
 class FindUpdatedUnzerPaymentForOrderFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -27,7 +38,7 @@ class FindUpdatedUnzerPaymentForOrderFacadeTest extends UnzerFacadeBaseTest
         $orderTransfer = (new OrderTransfer())->setOrderReference('fake-order-reference');
 
         // Act
-        $unzerPaymentTransfer = $this->facade->findUpdatedUnzerPaymentForOrder($orderTransfer);
+        $unzerPaymentTransfer = $this->tester->getFacade()->findUpdatedUnzerPaymentForOrder($orderTransfer);
 
         // Assert
         $this->assertNull($unzerPaymentTransfer);
@@ -40,12 +51,14 @@ class FindUpdatedUnzerPaymentForOrderFacadeTest extends UnzerFacadeBaseTest
     {
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $unzerCredentials = $this->tester->haveStandardUnzerCredentials();
+        $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, false)->setUnzerKeypair($unzerCredentials->getUnzerKeypair());
+        $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
+        $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
 
-        $quoteTransfer = $this->tester->createMarketplaceQuoteTransfer();
-        $this->tester->haveUnzerCredentials($quoteTransfer->getStoreOrFail());
         $saveOrderTransfer = $this->tester->haveOrderFromQuote(
             $quoteTransfer,
-            static::STATE_MACHINE_PROCESS_NAME,
+            'UnzerSofort01',
             [
                 new UnzerCheckoutDoSaveOrderPlugin(),
             ],
@@ -53,7 +66,7 @@ class FindUpdatedUnzerPaymentForOrderFacadeTest extends UnzerFacadeBaseTest
         $orderTransfer = (new OrderTransfer())->setOrderReference($saveOrderTransfer->getOrderReference());
 
         // Act
-        $unzerPaymentTransfer = $this->facade->findUpdatedUnzerPaymentForOrder($orderTransfer);
+        $unzerPaymentTransfer = $this->tester->getFacade()->findUpdatedUnzerPaymentForOrder($orderTransfer);
 
         // Assert
         $this->assertNotNull($unzerPaymentTransfer);
@@ -70,6 +83,6 @@ class FindUpdatedUnzerPaymentForOrderFacadeTest extends UnzerFacadeBaseTest
         $this->expectException(NullValueException::class);
 
         // Act
-        $this->facade->findUpdatedUnzerPaymentForOrder($orderTransfer);
+        $this->tester->getFacade()->findUpdatedUnzerPaymentForOrder($orderTransfer);
     }
 }

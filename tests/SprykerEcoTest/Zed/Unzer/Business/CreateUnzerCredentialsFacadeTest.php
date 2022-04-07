@@ -8,8 +8,17 @@
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use Generated\Shared\DataBuilder\UnzerCredentialsBuilder;
-use Generated\Shared\DataBuilder\UnzerKeypairBuilder;
 
+/**
+ * Auto-generated group annotations
+ *
+ * @group SprykerTest
+ * @group Zed
+ * @group Unzer
+ * @group Business
+ * @group Facade
+ * @group CreateUnzerCredentialsFacadeTest
+ */
 class CreateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -18,12 +27,13 @@ class CreateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     public function testCreateUnzerCredentials(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder())->build();
-        $unzerKeypairTransfer = (new UnzerKeypairBuilder())->build();
-        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder())
+            ->withUnzerKeypair()
+            ->build();
 
         //Act
-        $unzerCredentialsResponseTransfer = $this->facade->createUnzerCredentials($unzerCredentialsTransfer);
+        $unzerCredentialsResponseTransfer = $this->tester->getFacade()->createUnzerCredentials($unzerCredentialsTransfer);
 
         //Assert
         $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());

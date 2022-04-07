@@ -11,9 +11,20 @@ use Generated\Shared\DataBuilder\ItemBuilder;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
 
+/**
+ * Auto-generated group annotations
+ *
+ * @group SprykerTest
+ * @group Zed
+ * @group Unzer
+ * @group Business
+ * @group Facade
+ * @group ExpandQuoteWithUnzerCredentialsFacadeTest
+ */
 class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -28,11 +39,11 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     {
         // Arrange
         $storeTransfer = $this->tester->haveStore([StoreTransfer::NAME => static::STORE_NAME]);
-        $this->tester->haveUnzerCredentials($storeTransfer);
+        $this->tester->haveStandardUnzerCredentials();
         $quoteTransfer = (new QuoteTransfer())->setStore($storeTransfer);
 
         // Act
-        $quoteTransfer = $this->facade->expandQuoteWithUnzerCredentials($quoteTransfer);
+        $quoteTransfer = $this->tester->getFacade()->expandQuoteWithUnzerCredentials($quoteTransfer);
 
         // Assert
         $this->assertNull($quoteTransfer->getUnzerCredentials());
@@ -45,15 +56,17 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     {
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
-        $storeTransfer = $this->tester->haveStore([StoreTransfer::NAME => static::STORE_NAME]);
-        $unzerCredentialsTransfer = $this->tester->haveUnzerCredentials($storeTransfer)->getUnzerCredentialsOrFail();
+        $storeRelationTransfer = $this->tester->createStoreRelation();
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials([
+            UnzerCredentialsTransfer::STORE_RELATION => $storeRelationTransfer,
+        ])->setStoreRelation($storeRelationTransfer);
         $quoteTransfer = (new QuoteTransfer())
-            ->setStore($storeTransfer)
+            ->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0))
             ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => null]))->build())
             ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => null]))->build());
 
         // Act
-        $quoteTransfer = $this->facade->expandQuoteWithUnzerCredentials($quoteTransfer);
+        $quoteTransfer = $this->tester->getFacade()->expandQuoteWithUnzerCredentials($quoteTransfer);
 
         // Assert
         $this->assertNotNull($quoteTransfer->getUnzerCredentials());
@@ -62,23 +75,23 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     }
 
     /**
-     * @group test
-     *
      * @return void
      */
     public function testWillExpandQuoteWithUnzerCredentialForQuoteWithDifferentSellers(): void
     {
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
-        $storeTransfer = $this->tester->haveStore([StoreTransfer::NAME => static::STORE_NAME]);
-        $this->tester->haveMarketplaceUnzerCredentials($storeTransfer);
+        $storeRelationTransfer = $this->tester->createStoreRelation();
+        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials([
+            UnzerCredentialsTransfer::STORE_RELATION => $storeRelationTransfer,
+        ]);
         $quoteTransfer = (new QuoteTransfer())
-            ->setStore($storeTransfer)
+            ->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0))
             ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => null]))->build())
             ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE]))->build());
 
         // Act
-        $quoteTransfer = $this->facade->expandQuoteWithUnzerCredentials($quoteTransfer);
+        $quoteTransfer = $this->tester->getFacade()->expandQuoteWithUnzerCredentials($quoteTransfer);
 
         // Assert
         $this->assertNotNull($quoteTransfer->getUnzerCredentials());
@@ -92,15 +105,18 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     {
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
-        $storeTransfer = $this->tester->haveStore([StoreTransfer::NAME => static::STORE_NAME]);
-        $this->tester->haveMarketplaceUnzerCredentials($storeTransfer);
+        $storeRelationTransfer = $this->tester->createStoreRelation();
+        $unzerCredentialsTransfer = $this->tester->haveMarketplaceMerchantUnzerCredentials([
+            UnzerCredentialsTransfer::STORE_RELATION => $storeRelationTransfer,
+            UnzerCredentialsTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE,
+        ]);
         $quoteTransfer = (new QuoteTransfer())
-            ->setStore($storeTransfer)
+            ->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0))
             ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE]))->build())
             ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE]))->build());
 
         // Act
-        $quoteTransfer = $this->facade->expandQuoteWithUnzerCredentials($quoteTransfer);
+        $quoteTransfer = $this->tester->getFacade()->expandQuoteWithUnzerCredentials($quoteTransfer);
 
         // Assert
         $this->assertNotNull($quoteTransfer->getUnzerCredentials());

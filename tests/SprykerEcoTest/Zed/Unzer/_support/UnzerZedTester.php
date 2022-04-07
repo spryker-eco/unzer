@@ -13,9 +13,12 @@ use Generated\Shared\DataBuilder\CheckoutResponseBuilder;
 use Generated\Shared\DataBuilder\PaymentMethodsBuilder;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\SaveOrderBuilder;
+use Generated\Shared\DataBuilder\StoreRelationBuilder;
+use Generated\Shared\DataBuilder\TaxTotalBuilder;
 use Generated\Shared\DataBuilder\TotalsBuilder;
 use Generated\Shared\DataBuilder\UnzerCredentialsBuilder;
 use Generated\Shared\DataBuilder\UnzerKeypairBuilder;
+use Generated\Shared\DataBuilder\UnzerNotificationBuilder;
 use Generated\Shared\DataBuilder\UnzerPaymentBuilder;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\CurrencyTransfer;
@@ -25,13 +28,17 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
+use Generated\Shared\Transfer\TotalsTransfer;
+use Generated\Shared\Transfer\UnzerApiAuthorizeResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateBasketResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateMetadataResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceResponseTransfer;
+use Generated\Shared\Transfer\UnzerApiGetPaymentMethodsResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiGetPaymentResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeResponseTransfer;
+use Generated\Shared\Transfer\UnzerApiPaymentMethodTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiSetWebhookResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiUpdateCustomerResponseTransfer;
@@ -41,6 +48,8 @@ use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
+use Orm\Zed\Payment\Persistence\SpyPaymentMethodQuery;
+use Orm\Zed\Payment\Persistence\SpyPaymentProviderQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStoreQuery;
 use Spryker\Shared\Vault\VaultConstants;
@@ -63,8 +72,7 @@ use SprykerEco\Zed\Unzer\UnzerConfig;
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
- * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = NULL)
- * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
+ * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = null)
  *
  * @SuppressWarnings(PHPMD)
  */
@@ -189,6 +197,11 @@ class UnzerZedTester extends Actor
     protected const CURRENCY_CODE = 'EUR';
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface
+     */
+    protected $facade;
+
+    /**
      * @param \Codeception\Scenario $scenario
      */
     public function __construct(Scenario $scenario)
@@ -227,18 +240,18 @@ class UnzerZedTester extends Actor
      */
     public function createQuoteTransfer(): QuoteTransfer
     {
-        $quoteTransfer = (new QuoteBuilder())
+        return (new QuoteBuilder())
             ->withItem()
-            ->withTotals()
+            ->withTotals([
+                TotalsTransfer::TAX_TOTAL => (new TaxTotalBuilder())->build(),
+            ])
             ->withShippingAddress()
             ->withBillingAddress()
             ->withStore()
-            ->build();
-
-        return $quoteTransfer
+            ->withCurrency()
+            ->build()
             ->setCustomer($this->haveCustomer())
-            ->setStore($this->haveStore())
-            ->setPayment($this->createPaymentTransfer());
+            ->setStore($this->haveStore());
     }
 
     /**
@@ -254,17 +267,15 @@ class UnzerZedTester extends Actor
                 'merchantReference' => null,
             ])
             ->withTotals(
-                (new TotalsBuilder())
-                    ->withTaxTotal(),
+                (new TotalsBuilder())->withTaxTotal(),
             )
             ->withCurrency([CurrencyTransfer::CODE => static::CURRENCY_CODE])
             ->withShippingAddress()
             ->withBillingAddress()
             ->build();
 
-        return $quoteTransfer
-            ->setCustomer($this->haveCustomer())
-            ->setPayment($this->createPaymentTransfer())
+        return $quoteTransfer->setCustomer($this->haveCustomer())
+            ->setPayment($this->createPaymentTransfer('unzerBankTransfer')->setUnzerPayment($this->createUnzerPaymentTransfer(true, false)))
             ->setStore($this->haveStore());
     }
 
@@ -273,8 +284,7 @@ class UnzerZedTester extends Actor
      */
     public function createCheckoutResponseTransfer(): CheckoutResponseTransfer
     {
-        return (new CheckoutResponseBuilder())
-            ->build()
+        return (new CheckoutResponseBuilder())->build()
             ->setSaveOrder($this->createSaveOrderTransfer());
     }
 
@@ -291,22 +301,24 @@ class UnzerZedTester extends Actor
             ->setCreateBasketResponse($this->createUnzerApiCreateBasketResponseTransfer())
             ->setCreatePaymentResourceResponse($this->createUnzerApiCreatePaymentResourceResponseTransfer())
             ->setSetWebhookResponse($this->createUnzerApiSetWebhookResponseTransfer())
+            ->setGetPaymentMethodsResponse($this->createUnzerApiGetPaymentMethodsResponseTransfer())
             ->setGetPaymentResponse($this->createUnzerApiGetPaymentResponseTransfer())
             ->setMarketplaceAuthorizeResponse($this->createUnzerApiMarketplaceAuthorizeResponseTransfer())
-            ->setChargeResponse($this->createUnzerApiChargeResponseTransfer());
+            ->setChargeResponse($this->createUnzerApiChargeResponseTransfer())
+            ->setAuthorizeResponse($this->createUnzerApiAuthorizeResponseTransfer());
     }
 
     /**
-     * @param string $publicKey
+     * @param array $override
      *
      * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
      */
-    public function createUnzerNotificationTransfer(string $publicKey): UnzerNotificationTransfer
+    public function createUnzerNotificationTransfer(array $override = []): UnzerNotificationTransfer
     {
-        return (new UnzerNotificationTransfer())
-            ->setEvent(static::UNZER_EVENT_AUTHORIZED)
-            ->setPublicKey($publicKey)
-            ->setPaymentId(static::UNZER_PAYMENT_ID);
+        return (new UnzerNotificationBuilder(array_merge([
+            UnzerNotificationTransfer::PAYMENT_ID => static::UNZER_PAYMENT_ID,
+            UnzerNotificationTransfer::EVENT => static::UNZER_EVENT_AUTHORIZED,
+        ], $override)))->build();
     }
 
     /**
@@ -317,8 +329,25 @@ class UnzerZedTester extends Actor
      */
     public function haveUnzerEntities(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): void
     {
-        $this->getUnzerFacade()
-            ->saveOrderPayment($quoteTransfer, $saveOrderTransfer);
+        $this->getFacade()->saveOrderPayment($quoteTransfer, $saveOrderTransfer);
+    }
+
+    /**
+     * @param \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface $facade
+     *
+     * @return void
+     */
+    public function setFacade(UnzerFacadeInterface $facade): void
+    {
+        $this->facade = $facade;
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface
+     */
+    public function getFacade(): UnzerFacadeInterface
+    {
+        return $this->facade;
     }
 
     /**
@@ -410,49 +439,42 @@ class UnzerZedTester extends Actor
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    protected function createUnzerPaymentTransfer(bool $isMarketplace, bool $isAuthorizable): UnzerPaymentTransfer
+    public function createUnzerPaymentTransfer(bool $isMarketplace, bool $isAuthorizable): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = (new UnzerPaymentBuilder())
-            ->build();
-
-        return $unzerPaymentTransfer
-            ->setId(static::UNZER_PAYMENT_ID)
-            ->setOrderId(static::ORDER_REFERENCE)
-            ->setBasket($this->createUnzerBasket())
-            ->setCustomer($this->createUnzerCustomer())
-            ->setUnzerKeypair($this->createUnzerKeyPair())
-            ->setIsMarketplace($isMarketplace)
-            ->setIsAuthorizable($isAuthorizable);
+        return (new UnzerPaymentBuilder([
+            UnzerPaymentTransfer::IS_MARKETPLACE => $isMarketplace,
+            UnzerPaymentTransfer::IS_AUTHORIZABLE => $isAuthorizable,
+            UnzerPaymentTransfer::CUSTOMER => $this->createUnzerCustomer(),
+            UnzerPaymentTransfer::UNZER_KEYPAIR => $this->createUnzerKeyPair(),
+            UnzerPaymentTransfer::BASKET => $this->createUnzerBasket(),
+            UnzerPaymentTransfer::ORDER_ID => static::ORDER_REFERENCE,
+        ]))->build();
     }
 
     /**
+     * @param string $paymentMethod
+     *
      * @return \Generated\Shared\Transfer\PaymentTransfer
      */
-    protected function createPaymentTransfer(): PaymentTransfer
+    public function createPaymentTransfer(string $paymentMethod): PaymentTransfer
     {
         return (new PaymentTransfer())
             ->setPaymentProvider(static::PAYMENT_PROVIDER)
-            ->setPaymentMethod(static::PAYMENT_METHOD)
-            ->setPaymentSelection(static::PAYMENT_METHOD)
-            ->setUnzerPayment($this->createUnzerPaymentTransfer(true, true));
+            ->setPaymentMethod($paymentMethod)
+            ->setPaymentSelection($paymentMethod);
     }
 
     /**
+     * @param array $override
+     *
      * @return \Generated\Shared\Transfer\SaveOrderTransfer
      */
-    protected function createSaveOrderTransfer(): SaveOrderTransfer
+    protected function createSaveOrderTransfer(array $override = []): SaveOrderTransfer
     {
-        return (new SaveOrderBuilder())
-            ->build()
-            ->setOrderReference(static::ORDER_REFERENCE);
-    }
-
-    /**
-     * @return \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface
-     */
-    protected function getUnzerFacade(): UnzerFacadeInterface
-    {
-        return $this->getLocator()->unzer()->facade();
+        return (new SaveOrderBuilder([
+            SaveOrderTransfer::ORDER_REFERENCE => static::ORDER_REFERENCE,
+        ])
+        )->build();
     }
 
     /**
@@ -510,6 +532,16 @@ class UnzerZedTester extends Actor
     }
 
     /**
+     * @return \Generated\Shared\Transfer\UnzerApiGetPaymentMethodsResponseTransfer
+     */
+    protected function createUnzerApiGetPaymentMethodsResponseTransfer(): UnzerApiGetPaymentMethodsResponseTransfer
+    {
+        return (new UnzerApiGetPaymentMethodsResponseTransfer())->addPaymentMethod(
+            (new UnzerApiPaymentMethodTransfer())->setPaymentMethodKey('sofort'),
+        );
+    }
+
+    /**
      * @return \Generated\Shared\Transfer\UnzerApiGetPaymentResponseTransfer
      */
     protected function createUnzerApiGetPaymentResponseTransfer(): UnzerApiGetPaymentResponseTransfer
@@ -549,94 +581,107 @@ class UnzerZedTester extends Actor
     }
 
     /**
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiAuthorizeResponseTransfer
      */
-    public function haveStandardUnzerCredentials(StoreTransfer $storeTransfer): UnzerCredentialsTransfer
+    protected function createUnzerApiAuthorizeResponseTransfer(): UnzerApiAuthorizeResponseTransfer
     {
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            'type' => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-        ]))->build();
-
-        $storeRelationTransfer = (new StoreRelationTransfer())->addStores($storeTransfer)->addIdStores($storeTransfer->getIdStore());
-        $unzerCredentialsTransfer->setStoreRelation($storeRelationTransfer);
-
-        return $this->createUnzerCredentials($unzerCredentialsTransfer);
+        return (new UnzerApiAuthorizeResponseTransfer())
+            ->setIsSuccessful(true)
+            ->setRedirectUrl(static::UNZER_REDIRECT_URL)
+            ->setCustomerId(static::UNZER_API_RESPONSE_CUSTOMER_ID)
+            ->setBasketId(static::UNZER_API_RESPONSE_BASKET_ID);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     * @param array $override
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function haveMarketplaceUnzerCredentials(StoreTransfer $storeTransfer): UnzerCredentialsTransfer
+    public function haveUnzerCredentials(array $override = []): UnzerCredentialsTransfer
     {
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            'type' => UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
-        ]))->build();
-        $storeRelationTransfer = (new StoreRelationTransfer())->addStores($storeTransfer)->addIdStores($storeTransfer->getIdStore());
-        $unzerCredentialsTransfer->setStoreRelation($storeRelationTransfer);
+        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder(array_merge([
+            UnzerCredentialsTransfer::UNZER_KEYPAIR => (new UnzerKeypairBuilder())->build(),
+            UnzerCredentialsTransfer::STORE_RELATION => $this->createStoreRelation(),
+        ], $override)))->build();
 
-        $mainMerchantUnzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            'type' => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
-        ]))->build();
-
-        $unzerCredentialsTransfer = $this->createUnzerCredentials($unzerCredentialsTransfer);
-
-        $mainMerchantUnzerCredentialsTransfer->setParentIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials());
-        $mainMerchantUnzerCredentialsTransfer = $this->createUnzerCredentials($mainMerchantUnzerCredentialsTransfer);
-        $unzerCredentialsTransfer->setChildUnzerCredentials($mainMerchantUnzerCredentialsTransfer);
-
-        return $unzerCredentialsTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $parentUnzerCredentialsTransfer
-     * @param string $merchantReference
-     *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
-     */
-    public function haveMerchantUnzerCredentials(UnzerCredentialsTransfer $parentUnzerCredentialsTransfer, string $merchantReference): UnzerCredentialsTransfer
-    {
-        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            'type' => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
-            'merchantReference' => $merchantReference,
-        ]))->build();
-
-        $unzerCredentialsTransfer->setParentIdUnzerCredentials($parentUnzerCredentialsTransfer->getIdUnzerCredentials());
-
-        return $this->createUnzerCredentials($unzerCredentialsTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
-     */
-    protected function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
-    {
-        $unzerKeypairTransfer = (new UnzerKeypairBuilder())->build();
-        $unzerCredentialsTransfer->setUnzerKeypair($unzerKeypairTransfer);
-
-        $unzerCredentialsTransfer = $this->getUnzerFacade()
+        return $this->getFacade()
             ->createUnzerCredentials($unzerCredentialsTransfer)
             ->getUnzerCredentials();
-
-        $this->addCleanup(function () use ($unzerCredentialsTransfer): void {
-            $this->cleanupUnzerCredentials($unzerCredentialsTransfer);
-        });
-
-        return $unzerCredentialsTransfer;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
+     * @param array $override
      *
-     * @return void
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    protected function cleanupUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): void
+    public function haveStandardUnzerCredentials(array $override = []): UnzerCredentialsTransfer
     {
-        $result = $this->getUnzerFacade()->deleteUnzerCredentials($unzerCredentialsTransfer);
+        return $this->haveUnzerCredentials(array_merge([
+            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
+        ], $override));
+    }
+
+    /**
+     * @param array $mainMarketplaceOverride
+     * @param array $merchantMainMarketplaceOverride
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function haveMarketplaceUnzerCredentials(array $mainMarketplaceOverride = [], array $merchantMainMarketplaceOverride = []): UnzerCredentialsTransfer
+    {
+        $mainMarketplaceUnzerCredentialsTransfer = $this->haveUnzerCredentials(array_merge([
+            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
+        ], $mainMarketplaceOverride));
+
+        $marketplaceMainMerchantUnzerCredentialsTransfer = $this->haveUnzerCredentials(array_merge([
+            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+            UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $mainMarketplaceUnzerCredentialsTransfer->getIdUnzerCredentials(),
+        ], $merchantMainMarketplaceOverride));
+
+        return $mainMarketplaceUnzerCredentialsTransfer->setChildUnzerCredentials($marketplaceMainMerchantUnzerCredentialsTransfer);
+    }
+
+    /**
+     * @param array $override
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function haveMarketplaceMerchantUnzerCredentials(array $override = []): UnzerCredentialsTransfer
+    {
+        return $this->haveUnzerCredentials(array_merge([
+            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
+        ], $override));
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\StoreTransfer|null $storeTransfer
+     *
+     * @return \Generated\Shared\Transfer\StoreRelationTransfer
+     */
+    public function createStoreRelation(?StoreTransfer $storeTransfer = null): StoreRelationTransfer
+    {
+        $storeTransfer = $storeTransfer ?? $this->haveStore([StoreTransfer::NAME => 'DE']);
+
+        return (new StoreRelationBuilder([
+            StoreRelationTransfer::ID_STORES => [
+                $storeTransfer->getIdStore(),
+            ],
+        ]))->build()->addStores($storeTransfer);
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfPaymentProviders(): int
+    {
+        return SpyPaymentProviderQuery::create()->count();
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfPaymentMethods(): int
+    {
+        return SpyPaymentMethodQuery::create()->count();
     }
 }

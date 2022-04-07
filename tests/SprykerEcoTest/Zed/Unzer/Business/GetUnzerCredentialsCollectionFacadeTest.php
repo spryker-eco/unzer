@@ -10,6 +10,16 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 
+/**
+ * Auto-generated group annotations
+ *
+ * @group SprykerTest
+ * @group Zed
+ * @group Unzer
+ * @group Business
+ * @group Facade
+ * @group GetUnzerCredentialsCollectionFacadeTest
+ */
 class GetUnzerCredentialsCollectionFacadeTest extends UnzerFacadeBaseTest
 {
     /**
@@ -18,20 +28,20 @@ class GetUnzerCredentialsCollectionFacadeTest extends UnzerFacadeBaseTest
     public function testGetUnzerCredentialsCollectionExists(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials($this->tester->haveStore());
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
 
+        //Act
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())
                 ->addId($unzerCredentialsTransfer->getIdUnzerCredentials())
                 ->addType($unzerCredentialsTransfer->getType())
                 ->addPublicKey($unzerCredentialsTransfer->getUnzerKeypair()->getPublicKey()),
         );
-
-        //Act
-        $unzerCredentialsCollectionTransfer = $this->facade->getUnzerCredentialsCollection($unzerCredentialsCriteriaTransfer);
+        $unzerCredentialsCollectionTransfer = $this->tester->getFacade()->getUnzerCredentialsCollection($unzerCredentialsCriteriaTransfer);
 
         //Assert
-        $this->assertEquals(1, $unzerCredentialsCollectionTransfer->getUnzerCredentials()->count());
+        $this->assertSame(1, $unzerCredentialsCollectionTransfer->getUnzerCredentials()->count());
     }
 
     /**
@@ -40,15 +50,14 @@ class GetUnzerCredentialsCollectionFacadeTest extends UnzerFacadeBaseTest
     public function testGetUnzerCredentialsCollectionEmpty(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials($this->tester->haveStore());
-
-        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
-            (new UnzerCredentialsConditionsTransfer())
-                ->addId($unzerCredentialsTransfer->getIdUnzerCredentials() + 1),
-        );
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->haveStandardUnzerCredentials();
 
         //Act
-        $unzerCredentialsCollectionTransfer = $this->facade->getUnzerCredentialsCollection($unzerCredentialsCriteriaTransfer);
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
+            (new UnzerCredentialsConditionsTransfer())->addId(9999),
+        );
+        $unzerCredentialsCollectionTransfer = $this->tester->getFacade()->getUnzerCredentialsCollection($unzerCredentialsCriteriaTransfer);
 
         //Assert
         $this->assertEquals(0, $unzerCredentialsCollectionTransfer->getUnzerCredentials()->count());
