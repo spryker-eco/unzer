@@ -74,7 +74,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     /**
      * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfers
      *
-     * @return array<string, \Generated\Shared\Transfer\ExpenseTransfer>
+     * @return array<string, array<int, \Generated\Shared\Transfer\ExpenseTransfer>>
      */
     protected function getExpensesGroupedByParticipantId(ArrayObject $expenseTransfers): array
     {
@@ -96,7 +96,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     {
         $unzerBasketItemTransfer = $this->createUnzerBasketItemTransfer()
             ->setBasketItemReferenceId(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID);
-        $unzerBasketItemTransfer = $this->addExpensesToUnzerBasketItem($expenseTransfers, $unzerBasketItemTransfer);
+        $unzerBasketItemTransfer = $this->addExpensesToUnzerBasketItem($expenseTransfers->getArrayCopy(), $unzerBasketItemTransfer);
 
         return $unzerBasketTransfer->addBasketItem($unzerBasketItemTransfer);
     }
