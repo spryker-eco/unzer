@@ -134,8 +134,6 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
-     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
-     *
      * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
      */
     protected function getUnzerKeyPair(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerKeypairTransfer
