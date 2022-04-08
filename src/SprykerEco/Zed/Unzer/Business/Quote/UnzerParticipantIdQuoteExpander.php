@@ -50,7 +50,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
      */
     public function expandQuoteItemsWithParticipantIds(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $marketplaceMainUnzerCredentials = $this->getMarketplaceMainUnzerCredentials($quoteTransfer->getStore());
+        $marketplaceMainUnzerCredentials = $this->getMarketplaceMainUnzerCredentials($quoteTransfer->getStoreOrFail());
         if ($marketplaceMainUnzerCredentials === null) {
             return $quoteTransfer;
         }
@@ -129,7 +129,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions(
                 (new UnzerCredentialsConditionsTransfer())
-                    ->addStoreName($storeTransfer->getName())
+                    ->addStoreName($storeTransfer->getNameOrFail())
                     ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE),
             );
 
@@ -160,7 +160,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
             );
         }
 
-        $this->mainMerchantParticipantId = $unzerCredentialsTransfer->getParticipantId();
+        $this->mainMerchantParticipantId = $unzerCredentialsTransfer->getParticipantIdOrFail();
     }
 
     /**

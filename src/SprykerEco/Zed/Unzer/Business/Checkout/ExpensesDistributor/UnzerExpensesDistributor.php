@@ -72,7 +72,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     }
 
     /**
-     * @param \ArrayObject<int, \SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\ExpenseTransfer> $expenseTransfers
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfers
      *
      * @return array<string, \Generated\Shared\Transfer\ExpenseTransfer>
      */
@@ -111,7 +111,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
             ->setType(UnzerConstants::UNZER_BASKET_TYPE_SHIPMENTS)
             ->setQuantity(static::DEFAULT_QUANTITY)
             ->setAmountPerUnit(static::DEFAULT_ZERO_AMOUNT)
-            ->setVat(static::DEFAULT_ZERO_AMOUNT);
+            ->setVat((string)static::DEFAULT_ZERO_AMOUNT);
     }
 
     /**
@@ -127,7 +127,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
                 $unzerBasketItemTransfer->getAmountPerUnit() +
                 $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
             );
-            $unzerBasketItemTransfer->setVat((int)$expenseTransfer->getTaxRate());
+            $unzerBasketItemTransfer->setVat((string)$expenseTransfer->getTaxRate());
         }
 
         return $unzerBasketItemTransfer;

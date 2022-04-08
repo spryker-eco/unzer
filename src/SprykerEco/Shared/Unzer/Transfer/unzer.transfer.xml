@@ -23,7 +23,7 @@
         <property name="basketItemReferenceId" type="string"/>
         <property name="quantity" type="int"/>
         <property name="amountDiscount" type="float"/>
-        <property name="vat" type="float"/>
+        <property name="vat" type="string"/>
         <property name="amountGross" type="float"/>
         <property name="amountVat" type="float"/>
         <property name="amountPerUnit" type="float"/>

@@ -125,9 +125,9 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      */
     public function refund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
-        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
+        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReferenceOrFail());
         if ($paymentUnzerTransfer === null) {
-            throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReference()));
+            throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReferenceOrFail()));
         }
 
         $groupRefundItemTransfersByParticipantIds = $this->getRefundItemsGroupedByParticipantIds($paymentUnzerTransfer, $refundTransfer);
@@ -230,7 +230,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
         $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
             ->setPaymentUnzerTransactionConditions(
                 (new PaymentUnzerTransactionConditionsTransfer())
-                    ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzer())
+                    ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
                     ->setParticipantIds($participantIds)
                     ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE)
                     ->addStatus(UnzerConstants::TRANSACTION_STATUS_SUCCESS),

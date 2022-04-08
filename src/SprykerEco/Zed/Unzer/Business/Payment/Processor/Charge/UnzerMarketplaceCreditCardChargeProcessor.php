@@ -32,9 +32,9 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
      */
     public function charge(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
-        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
+        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReferenceOrFail());
         if ($paymentUnzerTransfer === null) {
-            throw new UnzerException(sprintf('Unzer Payment not found for order reference %s', $orderTransfer->getOrderReference()));
+            throw new UnzerException(sprintf('Unzer Payment not found for order reference %s', $orderTransfer->getOrderReferenceOrFail()));
         }
 
         $unzerPaymentTransfer = $this->unzerPaymentMapper
@@ -42,7 +42,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         $unzerPaymentTransfer->setUnzerKeypair($this->getUnzerKeyPair($unzerPaymentTransfer));
 
         $paymentUnzerOrderItemCollectionTransfer = $this->unzerRepository
-            ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderId());
+            ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderIdOrFail());
 
         $authIdsGroupedByParticipantId = $this->getAuthorizeIdsIndexedByParticipantIds($paymentUnzerTransfer);
         $orderItemsGroupedByParticipantId = $this->getOrderItemsGroupedByParticipantId($paymentUnzerOrderItemCollectionTransfer, $orderTransfer, $salesOrderItemIds);
@@ -64,7 +64,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
      *
-     * @return array<string, string>
+     * @return array<string, string|null>
      */
     protected function getAuthorizeIdsIndexedByParticipantIds(PaymentUnzerTransfer $paymentUnzerTransfer): array
     {
@@ -88,7 +88,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
     protected function getPaymentUnzerTransactionCollection(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransactionCollectionTransfer
     {
         $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())->setPaymentUnzerTransactionConditions(
-            (new PaymentUnzerTransactionConditionsTransfer())->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzer()),
+            (new PaymentUnzerTransactionConditionsTransfer())->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail()),
         );
 
         return $this->unzerRepository

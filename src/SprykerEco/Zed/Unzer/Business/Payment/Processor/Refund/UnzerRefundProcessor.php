@@ -116,9 +116,9 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
      */
     public function refund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
-        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
+        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReferenceOrFail());
         if ($paymentUnzerTransfer === null) {
-            throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReference()));
+            throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReferenceOrFail()));
         }
 
         $chargeId = $this->getUnzerPaymentChargeId($paymentUnzerTransfer);
@@ -141,7 +141,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
         $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
             ->setPaymentUnzerTransactionConditions(
                 (new PaymentUnzerTransactionConditionsTransfer())
-                    ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzer())
+                    ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
                     ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE)
                     ->addStatus(UnzerConstants::TRANSACTION_STATUS_SUCCESS),
             );
@@ -197,12 +197,12 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param $refundTransfer
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param array<int> $salesOrderItemIds
      *
      * @return void
      */
-    protected function applyRefundChanges(PaymentUnzerTransfer $paymentUnzerTransfer, $refundTransfer, array $salesOrderItemIds): void
+    protected function applyRefundChanges(PaymentUnzerTransfer $paymentUnzerTransfer, RefundTransfer $refundTransfer, array $salesOrderItemIds): void
     {
         $unzerKeypairTransfer = $this->getUnzerKeypair($paymentUnzerTransfer->getKeypairIdOrFail());
 

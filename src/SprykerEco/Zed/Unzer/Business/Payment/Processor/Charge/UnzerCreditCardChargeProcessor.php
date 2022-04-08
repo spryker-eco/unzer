@@ -87,9 +87,9 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      */
     public function charge(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
-        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReference());
+        $paymentUnzerTransfer = $this->unzerRepository->findPaymentUnzerByOrderReference($orderTransfer->getOrderReferenceOrFail());
         if ($paymentUnzerTransfer === null) {
-            throw new UnzerException(sprintf('Unzer Payment not found for order reference %s', $orderTransfer->getOrderReference()));
+            throw new UnzerException(sprintf('Unzer Payment not found for order reference %s', $orderTransfer->getOrderReferenceOrFail()));
         }
 
         $unzerPaymentTransfer = $this->unzerPaymentMapper
@@ -140,7 +140,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      */
     protected function getUnzerKeyPair(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerKeypairTransfer
     {
-        $keypairId = $unzerPaymentTransfer->getUnzerKeypairOrFail()->getKeypairId();
+        $keypairId = $unzerPaymentTransfer->getUnzerKeypairOrFail()->getKeypairIdOrFail();
 
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions(
@@ -150,7 +150,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
         $unzerCredentialsTransfer = $this->unzerCredentialsResolver
             ->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
 
-        if ($unzerCredentialsTransfer === null) {
+        if (!$unzerCredentialsTransfer) {
             throw new UnzerException(sprintf('UnzerCredentials not found by keypairId %s', $keypairId));
         }
 
