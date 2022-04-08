@@ -97,7 +97,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
         $unzerPaymentTransfer->setUnzerKeypair($this->getUnzerKeyPair($unzerPaymentTransfer));
 
         $paymentUnzerOrderItemCollectionTransfer = $this->unzerRepository
-            ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderId());
+            ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderIdOrFail());
 
         $itemCollectionTransfer = new ItemCollectionTransfer();
         foreach ($orderTransfer->getItems() as $itemTransfer) {
@@ -147,14 +147,9 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
                 (new UnzerCredentialsConditionsTransfer())->addKeypairId($keypairId),
             );
 
-        $unzerCredentialsTransfer = $this->unzerCredentialsResolver
-            ->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
-
-        if (!$unzerCredentialsTransfer) {
-            throw new UnzerException(sprintf('UnzerCredentials not found by keypairId %s', $keypairId));
-        }
-
-        return $unzerCredentialsTransfer->getUnzerKeypairOrFail();
+        return $this->unzerCredentialsResolver
+            ->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer)
+            ->getUnzerKeypairOrFail();
     }
 
     /**
