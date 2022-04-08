@@ -84,7 +84,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         $expenseTransfersCollectionForRefund = $this->expandExpensesWithParticipantIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         $expenseTransfersCollectionForRefund = $this->expandExpensesWithChargeIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            $refundTransfer->addUnzerRefund($this->createMarketplaceUnzerRefund($paymentUnzerTransfer, $expenseTransfer));
+            $refundTransfer->addUnzerRefund($this->createMarketplaceUnzerRefundTransfer($paymentUnzerTransfer, $expenseTransfer));
         }
 
         return $refundTransfer;
@@ -166,8 +166,10 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
-    protected function createMarketplaceUnzerRefund(PaymentUnzerTransfer $paymentUnzerTransfer, ExpenseTransfer $expenseTransfer): UnzerRefundTransfer
-    {
+    protected function createMarketplaceUnzerRefundTransfer(
+        PaymentUnzerTransfer $paymentUnzerTransfer,
+        ExpenseTransfer $expenseTransfer
+    ): UnzerRefundTransfer {
         return (new UnzerRefundTransfer())
             ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
             ->setChargeId($expenseTransfer->getUnzerChargeIdOrFail())
@@ -254,7 +256,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         PaymentUnzerTransfer $paymentUnzerTransfer,
         ArrayObject $expenseTransfersCollectionForRefund
     ): RefundTransfer {
-        $unzerRefundTransfer = $this->createStandardUnzerRefund($paymentUnzerTransfer, $expenseTransfersCollectionForRefund);
+        $unzerRefundTransfer = $this->createStandardUnzerRefundTransfer($paymentUnzerTransfer, $expenseTransfersCollectionForRefund);
 
         return $refundTransfer->addUnzerRefund($unzerRefundTransfer);
     }
@@ -265,7 +267,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
-    protected function createStandardUnzerRefund(
+    protected function createStandardUnzerRefundTransfer(
         PaymentUnzerTransfer $paymentUnzerTransfer,
         ArrayObject $expenseTransfersCollectionForRefund
     ): UnzerRefundTransfer {

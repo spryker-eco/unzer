@@ -23,24 +23,6 @@ use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
  */
 class ExecutePostSaveHookFacadeTest extends UnzerFacadeBaseTest
 {
-//    /**
-//     * @var array
-//     */
-//    protected const UNZER_STANDARD_PAYMENT_METHODS = [
-//        //UnzerConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER,
-//        //UnzerConfig::PAYMENT_METHOD_KEY_CREDIT_CARD,
-//        UnzerConfig::PAYMENT_METHOD_KEY_SOFORT,
-//    ];
-//
-//    /**
-//     * @var array
-//     */
-//    protected const UNZER_MARKETPLACE_PAYMENT_METHODS = [
-//        UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER,
-//        //*UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
-//        UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT,
-//    ];
-
     /**
      * @return void
      */
@@ -131,9 +113,9 @@ class ExecutePostSaveHookFacadeTest extends UnzerFacadeBaseTest
 
         $saveOrderTransfer = $this->tester->haveOrder(
             [
-            'unitPrice' => 72350,
-            'sumPrice' => 72350,
-            'orderReference' => 'DE--3',
+                'unitPrice' => 72350,
+                'sumPrice' => 72350,
+                'orderReference' => 'DE--3',
             ],
             'UnzerCreditCard01',
         );
@@ -249,54 +231,4 @@ class ExecutePostSaveHookFacadeTest extends UnzerFacadeBaseTest
         $this->assertTrue($checkoutResponseTransfer->getIsExternalRedirect());
         $this->assertSame(UnzerZedTester::UNZER_REDIRECT_URL, $checkoutResponseTransfer->getRedirectUrl());
     }
-
-//    /**
-//     * @return void
-//     */
-//    public function testExecutePostSaveHookRegularPayments()
-//    {
-//        $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, true);
-//        $paymentTransfer = $this->tester->createPaymentTransfer();
-//        $quoteTransfer = $this->tester->createQuoteTransfer()
-//            ->setPayment($paymentTransfer);
-//
-//        $this->tester->haveStandardUnzerCredentials();
-//
-//        foreach (static::UNZER_STANDARD_PAYMENT_METHODS as $paymentMethod) {
-//            $quoteTransfer->getPaymentOrFail()->setPaymentSelection($paymentMethod);
-//            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setIsMarketplace(false);
-//            $this->tester->haveUnzerEntities($quoteTransfer, $this->tester->createOrder());
-//            $checkoutResponseTransfer = $this->tester->createCheckoutResponseTransfer();
-//
-//            //Act
-//            $this->tester->getFacade()->executePostSaveHook($quoteTransfer, $checkoutResponseTransfer);
-//
-//            //Assert
-//            $this->assertTrue($checkoutResponseTransfer->getIsExternalRedirect());
-//            $this->assertSame(UnzerZedTester::UNZER_REDIRECT_URL, $checkoutResponseTransfer->getRedirectUrl());
-//        }
-//    }
-//
-//    /**
-//     * @return void
-//     */
-//    public function testExecutePostSaveHookMarketplacePayments(): void
-//    {
-//        //Arrange
-//        $quoteTransfer = $this->tester->createMarketplaceQuoteTransfer();
-//        $this->tester->haveMarketplaceUnzerCredentials();
-//
-//        foreach (static::UNZER_MARKETPLACE_PAYMENT_METHODS as $paymentMethod) {
-//            $quoteTransfer->getPaymentOrFail()->setPaymentSelection($paymentMethod);
-//            $this->tester->haveUnzerEntities($quoteTransfer, $this->tester->createOrder());
-//            $checkoutResponseTransfer = $this->tester->createCheckoutResponseTransfer();
-//
-//            //Act
-//            $this->tester->getFacade()->executePostSaveHook($quoteTransfer, $checkoutResponseTransfer);
-//
-//            //Assert
-//            $this->assertTrue($checkoutResponseTransfer->getIsExternalRedirect());
-//            $this->assertSame(UnzerZedTester::UNZER_REDIRECT_URL, $checkoutResponseTransfer->getRedirectUrl());
-//        }
-//    }
 }
