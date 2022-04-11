@@ -10,19 +10,19 @@ namespace SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStra
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface;
 
-class UnzerExpensesRefundStrategyResolver implements UnzerExpensesRefundStrategyResolverInterface
+class UnzerExpenseRefundStrategyResolver implements UnzerExpenseRefundStrategyResolverInterface
 {
     /**
      * @var array<int, \Closure>
      */
-    protected $unzerRefundStrategiesCollection;
+    protected $unzerRefundStrategies;
 
     /**
      * @param array<int, \Closure> $unzerRefundStrategiesCollection
      */
     public function __construct(array $unzerRefundStrategiesCollection)
     {
-        $this->unzerRefundStrategiesCollection = $unzerRefundStrategiesCollection;
+        $this->unzerRefundStrategies = $unzerRefundStrategiesCollection;
     }
 
     /**
@@ -34,8 +34,8 @@ class UnzerExpensesRefundStrategyResolver implements UnzerExpensesRefundStrategy
      */
     public function resolveRefundStrategy(int $strategyConfigKey): UnzerExpensesRefundStrategyInterface
     {
-        if (isset($this->unzerRefundStrategiesCollection[$strategyConfigKey])) {
-            return call_user_func($this->unzerRefundStrategiesCollection[$strategyConfigKey]);
+        if (isset($this->unzerRefundStrategies[$strategyConfigKey])) {
+            return call_user_func($this->unzerRefundStrategies[$strategyConfigKey]);
         }
 
         throw new UnzerException(sprintf('Unzer refund strategy for config key %s not found!', $strategyConfigKey));

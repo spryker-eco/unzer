@@ -37,12 +37,4 @@ class MarketplaceCreditCardSubForm extends CreditCardSubForm
     {
         return PaymentTransfer::UNZER_MARKETPLACE_CREDIT_CARD;
     }
-
-    /**
-     * @return string
-     */
-    protected function getTemplatePath(): string
-    {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
-    }
 }

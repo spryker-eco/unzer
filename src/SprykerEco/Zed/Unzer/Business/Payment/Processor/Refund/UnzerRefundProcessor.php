@@ -23,7 +23,7 @@ use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
-use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpensesRefundStrategyResolverInterface;
+use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpenseRefundStrategyResolverInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\UnzerConstants;
@@ -36,7 +36,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     protected $unzerCredentialsResolver;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpensesRefundStrategyResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpenseRefundStrategyResolverInterface
      */
     protected $unzerExpensesRefundStrategyResolver;
 
@@ -77,7 +77,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
-     * @param \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpensesRefundStrategyResolverInterface $unzerExpensesRefundStrategyResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpenseRefundStrategyResolverInterface $unzerExpensesRefundStrategyResolver
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface $unzerRefundAdapter
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface $unzerRepository
@@ -86,14 +86,14 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
      */
     public function __construct(
-        UnzerCredentialsResolverInterface $unzerCredentialsResolver,
-        UnzerExpensesRefundStrategyResolverInterface $unzerExpensesRefundStrategyResolver,
-        UnzerConfig $unzerConfig,
-        UnzerRefundAdapterInterface $unzerRefundAdapter,
-        UnzerRepositoryInterface $unzerRepository,
-        UnzerPaymentMapperInterface $unzerPaymentMapper,
-        UnzerPaymentAdapterInterface $unzerPaymentAdapter,
-        UnzerPaymentSaverInterface $unzerPaymentSaver
+        UnzerCredentialsResolverInterface           $unzerCredentialsResolver,
+        UnzerExpenseRefundStrategyResolverInterface $unzerExpensesRefundStrategyResolver,
+        UnzerConfig                                 $unzerConfig,
+        UnzerRefundAdapterInterface                 $unzerRefundAdapter,
+        UnzerRepositoryInterface                    $unzerRepository,
+        UnzerPaymentMapperInterface                 $unzerPaymentMapper,
+        UnzerPaymentAdapterInterface                $unzerPaymentAdapter,
+        UnzerPaymentSaverInterface                  $unzerPaymentSaver
     ) {
         $this->unzerCredentialsResolver = $unzerCredentialsResolver;
         $this->unzerExpensesRefundStrategyResolver = $unzerExpensesRefundStrategyResolver;

@@ -9,12 +9,14 @@ namespace SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy;
 
 use ArrayObject;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Refund\UnzerRefundExpanderInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
-class LastOrderItemExpensesRefundStrategy extends AbstractExpensesRefundStrategy implements UnzerExpensesRefundStrategyInterface
+class LastOrderItemExpenseRefundStrategy implements UnzerExpensesRefundStrategyInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
@@ -100,5 +102,27 @@ class LastOrderItemExpensesRefundStrategy extends AbstractExpensesRefundStrategy
         }
 
         return $expenseTransferCollectionForRefund;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param int $idSalesOrderItem
+     *
+     * @return bool
+     */
+    protected function isPaymentUnzerOrderItemAlreadyRefunded(
+        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
+        int $idSalesOrderItem
+    ): bool {
+        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
+            if (
+                $paymentUnzerOrderItem->getIdSalesOrderItemOrFail() === $idSalesOrderItem
+                && $paymentUnzerOrderItem->getStatusOrFail() === UnzerConstants::OMS_STATUS_CHARGE_REFUNDED
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

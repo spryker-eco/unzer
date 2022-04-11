@@ -296,7 +296,7 @@
     <transfer name="PaymentUnzerTransactionConditions">
         <property name="ids" type="int[]" singular="id"/>
         <property name="participantIds" type="string[]" singular="participantId"/>
-        <property name="fkPaymentUnzerIds" type="int[]" singular="fkPaymentUnzerId"/>
+        <property name="paymentUnzerIds" type="int[]" singular="paymentUnzerId"/>
         <property name="types" type="string[]" singular="type"/>
         <property name="statuses" type="string[]" singular="status"/>
         <property name="unzerKeypairIds" type="string[]" singular="unzerKeypairId"/>

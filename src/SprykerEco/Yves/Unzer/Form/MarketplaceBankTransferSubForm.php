@@ -15,7 +15,7 @@ class MarketplaceBankTransferSubForm extends BankTransferSubForm
     /**
      * @var string
      */
-    public const TEMPLATE_VIEW_PATH = 'views/marketplace-bank-transfer/marketplace-bank-transfer';
+    protected const TEMPLATE_VIEW_PATH = 'views/marketplace-bank-transfer/marketplace-bank-transfer';
 
     /**
      * @return string
@@ -31,13 +31,5 @@ class MarketplaceBankTransferSubForm extends BankTransferSubForm
     public function getPropertyPath(): string
     {
         return PaymentTransfer::UNZER_MARKETPLACE_BANK_TRANSFER;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplatePath(): string
-    {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
     }
 }

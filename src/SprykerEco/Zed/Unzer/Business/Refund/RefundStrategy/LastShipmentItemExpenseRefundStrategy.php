@@ -14,8 +14,9 @@ use Generated\Shared\Transfer\RefundTransfer;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Refund\UnzerRefundExpanderInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
-class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrategy implements UnzerExpensesRefundStrategyInterface
+class LastShipmentItemExpenseRefundStrategy implements UnzerExpensesRefundStrategyInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
@@ -97,7 +98,7 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         array $salesOrderItemIds
     ): array {
-        $result = [];
+        $idsSalesShipment = [];
         foreach ($orderItemsGroupedByIdSalesShipment as $idSalesShipment => $itemTransfers) {
             $totalItemsCount = count($itemTransfers);
             foreach ($itemTransfers as $itemTransfer) {
@@ -119,11 +120,11 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
             }
 
             if ($totalItemsCount === 0) {
-                $result[] = $idSalesShipment;
+                $idsSalesShipment[] = $idSalesShipment;
             }
         }
 
-        return $result;
+        return $idsSalesShipment;
     }
 
     /**
@@ -133,12 +134,34 @@ class LastShipmentItemExpensesRefundStrategy extends AbstractExpensesRefundStrat
      */
     protected function getOrderItemsGroupedByIdSalesShipment(OrderTransfer $orderTransfer)
     {
-        $indexedItems = [];
+        $groupedItemTransfers = [];
         foreach ($orderTransfer->getItems() as $itemTransfer) {
             $idSalesShipment = $itemTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail();
-            $indexedItems[$idSalesShipment][] = $itemTransfer;
+            $groupedItemTransfers[$idSalesShipment][] = $itemTransfer;
         }
 
-        return $indexedItems;
+        return $groupedItemTransfers;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param int $idSalesOrderItem
+     *
+     * @return bool
+     */
+    protected function isPaymentUnzerOrderItemAlreadyRefunded(
+        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
+        int $idSalesOrderItem
+    ): bool {
+        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
+            if (
+                $paymentUnzerOrderItem->getIdSalesOrderItemOrFail() === $idSalesOrderItem
+                && $paymentUnzerOrderItem->getStatusOrFail() === UnzerConstants::OMS_STATUS_CHARGE_REFUNDED
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

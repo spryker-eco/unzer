@@ -195,7 +195,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         $paymentUnzerTransactionQuery = $this->getFactory()->createPaymentUnzerTransactionQuery();
         $paymentUnzerTransactionQuery = $this->applyPaymentUnzerTransactionConditions(
             $paymentUnzerTransactionQuery,
-            $paymentUnzerTransactionCriteriaTransfer->getPaymentUnzerTransactionConditions(),
+            $paymentUnzerTransactionCriteriaTransfer->getPaymentUnzerTransactionConditionsOrFail(),
         );
         $paymentUnzerTransactionEntities = $paymentUnzerTransactionQuery->find();
 
@@ -273,12 +273,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      */
     protected function applyPaymentUnzerTransactionConditions(
         SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery,
-        ?PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
+        PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
     ): SpyPaymentUnzerTransactionQuery {
-        if (!$paymentUnzerTransactionConditionsTransfer) {
-            return $paymentUnzerTransactionQuery;
-        }
-
         if ($paymentUnzerTransactionConditionsTransfer->getIds()) {
             $paymentUnzerTransactionQuery->filterByIdPaymentUnzerTransaction_In($paymentUnzerTransactionConditionsTransfer->getIds());
         }
@@ -287,8 +283,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             $paymentUnzerTransactionQuery->filterByType_In($paymentUnzerTransactionConditionsTransfer->getTypes());
         }
 
-        if ($paymentUnzerTransactionConditionsTransfer->getFkPaymentUnzerIds()) {
-            $paymentUnzerTransactionQuery->filterByFkPaymentUnzer_In($paymentUnzerTransactionConditionsTransfer->getFkPaymentUnzerIds());
+        if ($paymentUnzerTransactionConditionsTransfer->getPaymentUnzerIds()) {
+            $paymentUnzerTransactionQuery->filterByFkPaymentUnzer_In($paymentUnzerTransactionConditionsTransfer->getPaymentUnzerIds());
         }
 
         if ($paymentUnzerTransactionConditionsTransfer->getParticipantIds()) {

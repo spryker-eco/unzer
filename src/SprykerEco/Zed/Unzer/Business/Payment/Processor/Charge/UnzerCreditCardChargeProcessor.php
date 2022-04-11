@@ -218,7 +218,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
             if ($itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
                 $expensesAmount += $expenseTransfer->getSumGrossPrice();
 
-                break;
+                return $expensesAmount;
             }
         }
 

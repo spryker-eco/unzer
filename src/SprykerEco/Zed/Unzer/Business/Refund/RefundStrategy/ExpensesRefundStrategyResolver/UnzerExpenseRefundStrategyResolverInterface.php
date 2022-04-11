@@ -9,7 +9,7 @@ namespace SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStra
 
 use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface;
 
-interface UnzerExpensesRefundStrategyResolverInterface
+interface UnzerExpenseRefundStrategyResolverInterface
 {
     /**
      * @param int $strategyConfigKey

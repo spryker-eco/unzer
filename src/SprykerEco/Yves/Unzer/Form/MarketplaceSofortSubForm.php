@@ -32,12 +32,4 @@ class MarketplaceSofortSubForm extends SofortSubForm
     {
         return PaymentTransfer::UNZER_MARKETPLACE_SOFORT;
     }
-
-    /**
-     * @return string
-     */
-    protected function getTemplatePath(): string
-    {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
-    }
 }

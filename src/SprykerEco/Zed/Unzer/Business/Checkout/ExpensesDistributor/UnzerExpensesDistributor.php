@@ -23,7 +23,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     /**
      * @var int
      */
-    protected const DEFAULT_ZERO_AMOUNT = 0;
+    protected const DEFAULT_AMOUNT = 0;
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -33,30 +33,30 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
      */
     public function distributeExpensesBetweenQuoteItems(QuoteTransfer $quoteTransfer, UnzerBasketTransfer $unzerBasketTransfer): UnzerBasketTransfer
     {
-        $expensesCollection = $quoteTransfer->getExpenses();
+        $expenseTransfers = $quoteTransfer->getExpenses();
 
-        if ($expensesCollection->count() === 0) {
+        if ($expenseTransfers->count() === 0) {
             return $unzerBasketTransfer;
         }
 
         if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
-            return $this->addExpensesGroupedByParticipantId($unzerBasketTransfer, $expensesCollection);
+            $expenseTransfersGroupedByParticipantId = $this->getExpenseTransfersGroupedByParticipantId($expenseTransfers);
+
+            return $this->addExpensesGroupedByParticipantId($unzerBasketTransfer, $expenseTransfersGroupedByParticipantId);
         }
 
-        return $this->addStandardExpenses($unzerBasketTransfer, $expensesCollection);
+        return $this->addStandardExpenses($unzerBasketTransfer, $expenseTransfers);
     }
 
     /**
      * @param \Generated\Shared\Transfer\UnzerBasketTransfer $unzerBasketTransfer
-     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfers
+     * @param array<string, array<int, \Generated\Shared\Transfer\ExpenseTransfer>> $expensesGroupedByParticipantId
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
-    protected function addExpensesGroupedByParticipantId(UnzerBasketTransfer $unzerBasketTransfer, ArrayObject $expenseTransfers): UnzerBasketTransfer
+    protected function addExpensesGroupedByParticipantId(UnzerBasketTransfer $unzerBasketTransfer, array $expensesGroupedByParticipantId): UnzerBasketTransfer
     {
-        $expensesGroupedByParticipantId = $this->getExpensesGroupedByParticipantId($expenseTransfers);
-
-        foreach ($expensesGroupedByParticipantId as $participantId => $expensesCollection) {
+        foreach ($expensesGroupedByParticipantId as $participantId => $expenseTransfers) {
             $referenceId = sprintf(UnzerConstants::UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID, $participantId);
 
             $unzerBasketItemTransfer = $this
@@ -64,7 +64,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
                 ->setParticipantId($participantId)
                 ->setBasketItemReferenceId($referenceId);
 
-            $unzerBasketItemTransfer = $this->addExpensesToUnzerBasketItem($expensesCollection, $unzerBasketItemTransfer);
+            $unzerBasketItemTransfer = $this->addExpensesToUnzerBasketItem($expenseTransfers, $unzerBasketItemTransfer);
             $unzerBasketTransfer->addBasketItem($unzerBasketItemTransfer);
         }
 
@@ -76,14 +76,14 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
      *
      * @return array<string, array<int, \Generated\Shared\Transfer\ExpenseTransfer>>
      */
-    protected function getExpensesGroupedByParticipantId(ArrayObject $expenseTransfers): array
+    protected function getExpenseTransfersGroupedByParticipantId(ArrayObject $expenseTransfers): array
     {
-        $expensesGroupedByParticipantId = [];
+        $expenseTransfersGroupedByParticipantId = [];
         foreach ($expenseTransfers as $expenseTransfer) {
-            $expensesGroupedByParticipantId[$expenseTransfer->getUnzerParticipantIdOrFail()][] = $expenseTransfer;
+            $expenseTransfersGroupedByParticipantId[$expenseTransfer->getUnzerParticipantIdOrFail()][] = $expenseTransfer;
         }
 
-        return $expensesGroupedByParticipantId;
+        return $expenseTransfersGroupedByParticipantId;
     }
 
     /**
@@ -110,8 +110,8 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
             ->setTitle(UnzerConstants::UNZER_BASKET_SHIPMENT_TITLE)
             ->setType(UnzerConstants::UNZER_BASKET_TYPE_SHIPMENTS)
             ->setQuantity(static::DEFAULT_QUANTITY)
-            ->setAmountPerUnit(static::DEFAULT_ZERO_AMOUNT)
-            ->setVat((string)static::DEFAULT_ZERO_AMOUNT);
+            ->setAmountPerUnit(static::DEFAULT_AMOUNT)
+            ->setVat((string)static::DEFAULT_AMOUNT);
     }
 
     /**

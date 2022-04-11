@@ -67,10 +67,7 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
      */
     public function getSalesFacade(): UnzerToSalesFacadeInterface
     {
-        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface $salesFacade */
-        $salesFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SALES);
-
-        return $salesFacade;
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SALES);
     }
 
     /**
@@ -86,10 +83,7 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
      */
     public function getRefundFacade(): UnzerToRefundFacadeInterface
     {
-        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade */
-        $refundFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_REFUND);
-
-        return $refundFacade;
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_REFUND);
     }
 
     /**
@@ -97,9 +91,6 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
      */
     public function getShipmentFacade(): UnzerToShipmentFacadeInterface
     {
-        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface $shipmentFacade */
-        $shipmentFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SHIPMENT);
-
-        return $shipmentFacade;
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SHIPMENT);
     }
 }

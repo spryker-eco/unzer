@@ -50,13 +50,13 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
      */
     public function expandQuoteItemsWithParticipantIds(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $marketplaceMainUnzerCredentials = $this->getMarketplaceMainUnzerCredentials($quoteTransfer->getStoreOrFail());
-        if ($marketplaceMainUnzerCredentials === null) {
+        $unzerCredentialsTransfer = $this->getMarketplaceMainUnzerCredentials($quoteTransfer->getStoreOrFail());
+        if ($unzerCredentialsTransfer === null) {
             return $quoteTransfer;
         }
 
-        $this->setMainMerchantParticipantId($marketplaceMainUnzerCredentials);
-        $this->setMerchantsUnzerCredentials($marketplaceMainUnzerCredentials);
+        $this->setMainMerchantParticipantId($unzerCredentialsTransfer);
+        $this->setMerchantsUnzerCredentials($unzerCredentialsTransfer);
 
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
             $this->addParticipantIdToItemTransfer($itemTransfer);
@@ -81,7 +81,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
         }
 
         return $itemTransfer->setUnzerParticipantId(
-            $this->getMerchantParticipantIdByMerchantReference($itemTransfer->getMerchantReference()),
+            $this->extractMerchantParticipantIdByMerchantReference($itemTransfer->getMerchantReference()),
         );
     }
 
@@ -99,7 +99,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
         }
 
         return $expenseTransfer->setUnzerParticipantId(
-            $this->getMerchantParticipantIdByMerchantReference($merchantReference),
+            $this->extractMerchantParticipantIdByMerchantReference($merchantReference),
         );
     }
 
@@ -108,7 +108,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
      *
      * @return string|null
      */
-    protected function getMerchantParticipantIdByMerchantReference(string $merchantReference): ?string
+    protected function extractMerchantParticipantIdByMerchantReference(string $merchantReference): ?string
     {
         foreach ($this->merchantUnzerCredentialsCollection->getUnzerCredentials() as $unzerCredentialsTransfer) {
             if ($unzerCredentialsTransfer->getMerchantReference() === $merchantReference) {
