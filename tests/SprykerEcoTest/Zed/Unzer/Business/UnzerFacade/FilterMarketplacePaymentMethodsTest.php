@@ -27,15 +27,15 @@ class FilterMarketplacePaymentMethodsTest extends UnzerFacadeBaseTest
      */
     public function testFilterMarketplacePaymentMethodsNotFiltered(): void
     {
-        //Arrange
+        // Arrange
         $quoteTransfer = $this->tester->createMarketplaceQuoteTransfer();
         $paymentMethodsTransfer = $this->tester->createPaymentMethodsTransfer();
         $paymentMethodsCount = $paymentMethodsTransfer->getMethods()->count();
 
-        //Act
+        // Act
         $paymentMethodsTransfer = $this->tester->getFacade()->filterMarketplacePaymentMethods($paymentMethodsTransfer, $quoteTransfer);
 
-        //Assert
+        // Assert
         $this->assertSame($paymentMethodsCount, $paymentMethodsTransfer->getMethods()->count());
     }
 
@@ -44,15 +44,15 @@ class FilterMarketplacePaymentMethodsTest extends UnzerFacadeBaseTest
      */
     public function testFilterMarketplacePaymentMethodsFiltered(): void
     {
-        //Arrange
+        // Arrange
         $quoteTransfer = $this->tester->createQuoteTransfer();
         $paymentMethodsTransfer = $this->tester->createPaymentMethodsTransfer();
         $paymentMethodsCount = $paymentMethodsTransfer->getMethods()->count();
 
-        //Act
+        // Act
         $paymentMethodsTransfer = $this->tester->getFacade()->filterMarketplacePaymentMethods($paymentMethodsTransfer, $quoteTransfer);
 
-        //Assert
+        // Assert
         $this->assertSame(
             $paymentMethodsCount - count(UnzerBusinessTester::UNZER_MARKETPLACE_PAYMENT_METHODS),
             $paymentMethodsTransfer->getMethods()->count(),

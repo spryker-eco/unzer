@@ -26,16 +26,11 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
 class CheckIsAuthorizeCanceledOmsConditionTest extends UnzerFacadeBaseTest
 {
     /**
-     * @var string
-     */
-    public const STATE_MACHINE_PROCESS_NAME = 'UnzerSofort01';
-
-    /**
      * @return void
      */
     public function testCheckIsAuthorizeCanceledOmsConditionReturnsTrueWhileOmsStatusIsAuthorizeCanceled(): void
     {
-        //Arrange
+        // Arrange
         $customerTransfer = $this->tester->haveCustomer();
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
         $saveOrderTransfer = $this->tester->haveOrder(
@@ -43,7 +38,7 @@ class CheckIsAuthorizeCanceledOmsConditionTest extends UnzerFacadeBaseTest
                 ->withOrderItem()
                 ->build()
                 ->toArray(),
-            static::STATE_MACHINE_PROCESS_NAME,
+            static::UNZER_SOFORT_STATE_MACHINE_PROCESS_NAME,
         );
         $paymentUnzerTransfer = $this->tester->havePaymentUnzer([
             PaymentUnzerTransfer::ID_SALES_ORDER => $saveOrderTransfer->getIdSalesOrder(),
@@ -60,12 +55,12 @@ class CheckIsAuthorizeCanceledOmsConditionTest extends UnzerFacadeBaseTest
             PaymentUnzerOrderItemTransfer::STATUS => UnzerConstants::OMS_STATUS_AUTHORIZE_CANCELED,
         ]);
 
-        //Act
+        // Act
         $isAuthorizeCanceledOmsCondition = $this->tester
             ->getFacade()
             ->checkIsAuthorizeCanceledOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
 
-        //Assert
+        // Assert
         $this->assertTrue($isAuthorizeCanceledOmsCondition);
     }
 
@@ -74,7 +69,7 @@ class CheckIsAuthorizeCanceledOmsConditionTest extends UnzerFacadeBaseTest
      */
     public function testCheckIsAuthorizeCanceledOmsConditionReturnsFalseWhileOmsStatusIsNotAuthorizeCanceled(): void
     {
-        //Arrange
+        // Arrange
         $customerTransfer = $this->tester->haveCustomer();
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
         $saveOrderTransfer = $this->tester->haveOrder(
@@ -82,7 +77,7 @@ class CheckIsAuthorizeCanceledOmsConditionTest extends UnzerFacadeBaseTest
                 ->withOrderItem()
                 ->build()
                 ->toArray(),
-            static::STATE_MACHINE_PROCESS_NAME,
+            static::UNZER_SOFORT_STATE_MACHINE_PROCESS_NAME,
         );
         $paymentUnzerTransfer = $this->tester->havePaymentUnzer([
             PaymentUnzerTransfer::ID_SALES_ORDER => $saveOrderTransfer->getIdSalesOrder(),
@@ -100,12 +95,12 @@ class CheckIsAuthorizeCanceledOmsConditionTest extends UnzerFacadeBaseTest
             PaymentUnzerOrderItemTransfer::STATUS => UnzerConstants::OMS_STATUS_NEW,
         ]);
 
-        //Act
+        // Act
         $isAuthorizeCanceledOmsCondition = $this->tester
             ->getFacade()
             ->checkIsAuthorizeCanceledOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
 
-        //Assert
+        // Assert
         $this->assertFalse($isAuthorizeCanceledOmsCondition);
     }
 }

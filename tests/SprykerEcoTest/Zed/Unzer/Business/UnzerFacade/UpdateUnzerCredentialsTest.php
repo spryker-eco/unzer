@@ -47,7 +47,7 @@ class UpdateUnzerCredentialsTest extends UnzerFacadeBaseTest
      */
     public function testUpdateMarketplaceMainUnzerCredentialsStoreRelationsAndParticipantIdReturnsSuccessful(): void
     {
-        //Arrange
+        // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $storeTransfer = $this->tester->haveStore();
         $unzerCredentialsTransfer = $this->tester
@@ -58,12 +58,12 @@ class UpdateUnzerCredentialsTest extends UnzerFacadeBaseTest
             ->addIdStores($storeTransfer->getIdStore())
             ->addStores($storeTransfer);
 
-        //Act
+        // Act
         $unzerCredentialsResponseTransfer = $this->tester
             ->getFacade()
             ->updateUnzerCredentials($unzerCredentialsTransfer);
 
-        //Assert
+        // Assert
         $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
         $this->assertSame(
             static::ANOTHER_PARTICIPANT_ID,
@@ -78,19 +78,19 @@ class UpdateUnzerCredentialsTest extends UnzerFacadeBaseTest
      */
     public function testUpdateStandardUnzerCredentialsKeypairReturnsResponseSuccessful(): void
     {
-        //Arrange
+        // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerKeypairTransfer = (new UnzerKeypairBuilder())->build();
         $unzerCredentialsTransfer = $this->tester
             ->haveStandardUnzerCredentials()
             ->setUnzerKeypair($unzerKeypairTransfer);
 
-        //Act
+        // Act
         $unzerCredentialsResponseTransfer = $this->tester
             ->getFacade()
             ->updateUnzerCredentials($unzerCredentialsTransfer);
 
-        //Assert
+        // Assert
         $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
         $this->assertSame(
             $unzerKeypairTransfer->getPublicKey(),

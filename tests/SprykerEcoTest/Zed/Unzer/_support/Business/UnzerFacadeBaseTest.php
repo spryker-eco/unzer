@@ -30,6 +30,36 @@ use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
 class UnzerFacadeBaseTest extends Test
 {
     /**
+     * @var string
+     */
+    protected const UNZER_BANK_TRANSFER_STATE_MACHINE_PROCESS_NAME = 'UnzerBankTransfer01';
+
+    /**
+     * @var string
+     */
+    protected const UNZER_SOFORT_STATE_MACHINE_PROCESS_NAME = 'UnzerSofort01';
+
+    /**
+     * @var string
+     */
+    protected const UNZER_CREDIT_CARD_STATE_MACHINE_PROCESS_NAME = 'UnzerCreditCard01';
+
+    /**
+     * @var string
+     */
+    protected const UNZER_MARKETPLACE_BANK_TRANSFER_STATE_MACHINE_PROCESS_NAME = 'UnzerMarketplaceBankTransfer01';
+
+    /**
+     * @var string
+     */
+    protected const UNZER_MARKETPLACE_SOFORT_STATE_MACHINE_PROCESS_NAME = 'UnzerMarketplaceSofort01';
+
+    /**
+     * @var string
+     */
+    protected const UNZER_MARKETPLACE_CREDIT_CARD_STATE_MACHINE_PROCESS_NAME = 'UnzerMarketplaceCreditCard01';
+
+    /**
      * @var \SprykerEcoTest\Zed\Unzer\UnzerBusinessTester
      */
     protected $tester;

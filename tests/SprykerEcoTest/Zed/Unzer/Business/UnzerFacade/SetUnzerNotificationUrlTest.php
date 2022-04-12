@@ -26,13 +26,13 @@ class SetUnzerNotificationUrlTest extends UnzerFacadeBaseTest
      */
     public function testSetUnzerNotificationUrl(): void
     {
-        //Arrange
+        // Arrange
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
 
-        //Act
+        // Act
         $this->tester->getFacade()->setUnzerNotificationUrl($unzerCredentialsTransfer);
 
-        //Assert
+        // Assert
         $this->assertTrue(true);
     }
 }

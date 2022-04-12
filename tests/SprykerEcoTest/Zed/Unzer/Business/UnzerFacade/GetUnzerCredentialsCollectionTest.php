@@ -28,11 +28,11 @@ class GetUnzerCredentialsCollectionTest extends UnzerFacadeBaseTest
      */
     public function testGetUnzerCredentialsCollectionExists(): void
     {
-        //Arrange
+        // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
 
-        //Act
+        // Act
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())
                 ->addId($unzerCredentialsTransfer->getIdUnzerCredentials())
@@ -41,7 +41,7 @@ class GetUnzerCredentialsCollectionTest extends UnzerFacadeBaseTest
         );
         $unzerCredentialsCollectionTransfer = $this->tester->getFacade()->getUnzerCredentialsCollection($unzerCredentialsCriteriaTransfer);
 
-        //Assert
+        // Assert
         $this->assertSame(1, $unzerCredentialsCollectionTransfer->getUnzerCredentials()->count());
     }
 
@@ -50,17 +50,17 @@ class GetUnzerCredentialsCollectionTest extends UnzerFacadeBaseTest
      */
     public function testGetUnzerCredentialsCollectionEmpty(): void
     {
-        //Arrange
+        // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $this->tester->haveStandardUnzerCredentials();
 
-        //Act
+        // Act
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())->addId(9999),
         );
         $unzerCredentialsCollectionTransfer = $this->tester->getFacade()->getUnzerCredentialsCollection($unzerCredentialsCriteriaTransfer);
 
-        //Assert
+        // Assert
         $this->assertEquals(0, $unzerCredentialsCollectionTransfer->getUnzerCredentials()->count());
     }
 }

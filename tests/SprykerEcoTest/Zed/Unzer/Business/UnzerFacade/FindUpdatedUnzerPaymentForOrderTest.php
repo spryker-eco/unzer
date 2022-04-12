@@ -26,11 +26,6 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
 class FindUpdatedUnzerPaymentForOrderTest extends UnzerFacadeBaseTest
 {
     /**
-     * @var string
-     */
-    protected const STATE_MACHINE_PROCESS_NAME = 'UnzerMarketplaceBankTransfer01';
-
-    /**
      * @return void
      */
     public function testWillReturnNullForNonExistingOrder(): void
@@ -59,7 +54,7 @@ class FindUpdatedUnzerPaymentForOrderTest extends UnzerFacadeBaseTest
 
         $saveOrderTransfer = $this->tester->haveOrderFromQuote(
             $quoteTransfer,
-            'UnzerSofort01',
+            static::UNZER_SOFORT_STATE_MACHINE_PROCESS_NAME,
             [
                 new UnzerCheckoutDoSaveOrderPlugin(),
             ],
@@ -81,6 +76,8 @@ class FindUpdatedUnzerPaymentForOrderTest extends UnzerFacadeBaseTest
     {
         // Arrange
         $orderTransfer = (new OrderTransfer());
+
+        // Assert
         $this->expectException(NullValueException::class);
 
         // Act

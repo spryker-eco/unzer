@@ -27,16 +27,18 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
      */
     public function testCreateUnzerCredentials(): void
     {
-        //Arrange
+        // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder())
             ->withUnzerKeypair()
             ->build();
 
-        //Act
-        $unzerCredentialsResponseTransfer = $this->tester->getFacade()->createUnzerCredentials($unzerCredentialsTransfer);
+        // Act
+        $unzerCredentialsResponseTransfer = $this->tester
+            ->getFacade()
+            ->createUnzerCredentials($unzerCredentialsTransfer);
 
-        //Assert
+        // Assert
         $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
     }
 }

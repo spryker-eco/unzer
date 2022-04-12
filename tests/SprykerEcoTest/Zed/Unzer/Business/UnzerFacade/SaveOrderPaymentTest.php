@@ -35,7 +35,7 @@ class SaveOrderPaymentTest extends UnzerFacadeBaseTest
      */
     public function testSaveOrderPaymentSuccess(): void
     {
-        //Arrange
+        // Arrange
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, false);
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
@@ -44,10 +44,10 @@ class SaveOrderPaymentTest extends UnzerFacadeBaseTest
             SaveOrderTransfer::ORDER_REFERENCE => UnzerBusinessTester::ORDER_REFERENCE,
         ], static::OMS_PROCESS);
 
-        //Act
+        // Act
         $this->tester->getFacade()->saveOrderPayment($quoteTransfer, $saveOrderTransfer);
 
-        //Assert
+        // Assert
         $this->assertTrue(true);
     }
 
@@ -56,7 +56,7 @@ class SaveOrderPaymentTest extends UnzerFacadeBaseTest
      */
     public function testSaveOrderPaymentShouldThrowAnExceptionWhenOrderAlreadyExists(): void
     {
-        //Arrange
+        // Arrange
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, false);
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
@@ -65,13 +65,13 @@ class SaveOrderPaymentTest extends UnzerFacadeBaseTest
             SaveOrderTransfer::ORDER_REFERENCE => UnzerBusinessTester::ORDER_REFERENCE,
         ], static::OMS_PROCESS);
 
-        //Act
+        // Act
         $this->tester->getFacade()->saveOrderPayment($quoteTransfer, $saveOrderTransfer);
 
-        //Assert
+        // Assert
         $this->expectException(UnzerException::class);
 
-        //Act
+        // Act
         $this->tester->getFacade()->saveOrderPayment($quoteTransfer, $saveOrderTransfer);
     }
 }

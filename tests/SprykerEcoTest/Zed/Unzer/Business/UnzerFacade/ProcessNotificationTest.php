@@ -28,7 +28,7 @@ class ProcessNotificationTest extends UnzerFacadeBaseTest
      */
     public function testProcessNotificationSuccessful(): void
     {
-        //Arrange
+        // Arrange
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
         $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer([
             UnzerNotificationTransfer::PUBLIC_KEY => $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey(),
@@ -53,10 +53,10 @@ class ProcessNotificationTest extends UnzerFacadeBaseTest
                 UnzerNotificationTransfer::PUBLIC_KEY => $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey(),
         ]);
 
-        //Act
+        // Act
         $unzerNotificationTransfer = $this->tester->getFacade()->processNotification($unzerNotificationTransfer);
 
-        //Assert
+        // Assert
         $this->assertTrue($unzerNotificationTransfer->getIsProcessed());
     }
 
@@ -65,17 +65,17 @@ class ProcessNotificationTest extends UnzerFacadeBaseTest
      */
     public function testProcessNotificationSkip(): void
     {
-        //Arrange
+        // Arrange
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
         $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer([
             UnzerNotificationTransfer::EVENT => 'disabled.event',
             UnzerNotificationTransfer::PUBLIC_KEY => $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey(),
         ]);
 
-        //Act
+        // Act
         $unzerNotificationTransfer = $this->tester->getFacade()->processNotification($unzerNotificationTransfer);
 
-        //Assert
+        // Assert
         $this->assertTrue($unzerNotificationTransfer->getIsProcessed());
     }
 
@@ -84,15 +84,15 @@ class ProcessNotificationTest extends UnzerFacadeBaseTest
      */
     public function testProcessNotificationTooEarly(): void
     {
-        //Arrange
+        // Arrange
         $unzerNotificationTransfer = $this->tester->createUnzerNotificationTransfer([
             UnzerNotificationTransfer::PUBLIC_KEY => '',
         ]);
 
-        //Act
+        // Act
         $unzerNotificationTransfer = $this->tester->getFacade()->processNotification($unzerNotificationTransfer);
 
-        //Assert
+        // Assert
         $this->assertFalse($unzerNotificationTransfer->getIsProcessed());
     }
 }

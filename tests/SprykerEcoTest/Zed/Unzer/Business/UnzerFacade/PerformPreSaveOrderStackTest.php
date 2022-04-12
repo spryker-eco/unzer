@@ -31,7 +31,7 @@ class PerformPreSaveOrderStackTest extends UnzerFacadeBaseTest
      */
     public function testPerformPreSaveOrderStackMarketplace(): void
     {
-        //Arrange
+        // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(true, false);
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER)->setUnzerPayment($unzerPaymentTransfer);
@@ -39,10 +39,10 @@ class PerformPreSaveOrderStackTest extends UnzerFacadeBaseTest
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer)->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0));
         $quoteTransfer->getPayment()->getUnzerPayment()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypair());
 
-        //Act
+        // Act
         $quoteTransfer = $this->tester->getFacade()->performPreSaveOrderStack($quoteTransfer);
 
-        //Assert
+        // Assert
         $unzerPayment = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();
 
         $this->assertInstanceOf(UnzerPaymentTransfer::class, $unzerPayment);
@@ -58,17 +58,17 @@ class PerformPreSaveOrderStackTest extends UnzerFacadeBaseTest
      */
     public function testPerformPreSaveOrderStackStandard(): void
     {
-        //Arrange
+        // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, false);
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer)->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0));
 
-        //Act
+        // Act
         $quoteTransfer = $this->tester->getFacade()->performPreSaveOrderStack($quoteTransfer);
 
-        //Assert
+        // Assert
         $unzerPayment = $quoteTransfer->getPaymentOrFail()->getUnzerPayment();
 
         $this->assertInstanceOf(UnzerPaymentTransfer::class, $unzerPayment);
