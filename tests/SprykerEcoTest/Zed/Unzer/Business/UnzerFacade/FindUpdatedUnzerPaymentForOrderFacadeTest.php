@@ -5,12 +5,13 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEcoTest\Zed\Unzer\Business;
+namespace SprykerEcoTest\Zed\Unzer\Business\UnzerFacade;
 
 use Generated\Shared\Transfer\OrderTransfer;
 use Spryker\Shared\Kernel\Transfer\Exception\NullValueException;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\Communication\Plugin\Checkout\UnzerCheckoutDoSaveOrderPlugin;
+use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
 
 /**
  * Auto-generated group annotations
