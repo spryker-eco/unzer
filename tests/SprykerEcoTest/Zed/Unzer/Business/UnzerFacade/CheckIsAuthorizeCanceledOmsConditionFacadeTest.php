@@ -21,9 +21,9 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
- * @group CheckIsPaymentCompletedOmsConditionTest
+ * @group CheckIsAuthorizeCanceledOmsConditionFacadeTest
  */
-class CheckIsPaymentCompletedOmsConditionTest extends UnzerFacadeBaseTest
+class CheckIsAuthorizeCanceledOmsConditionFacadeTest extends UnzerFacadeBaseTest
 {
     /**
      * @var string
@@ -33,7 +33,7 @@ class CheckIsPaymentCompletedOmsConditionTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
-    public function testCheckIsPaymentCompletedOmsConditionReturnsTrueWhileOmsStatusIsPaymentCompleted(): void
+    public function testCheckIsAuthorizeCanceledOmsConditionReturnsTrueWhileOmsStatusIsAuthorizeCanceled(): void
     {
         //Arrange
         $customerTransfer = $this->tester->haveCustomer();
@@ -57,22 +57,22 @@ class CheckIsPaymentCompletedOmsConditionTest extends UnzerFacadeBaseTest
         $paymentUnzerOrderItemTransfer = $this->tester->havePaymentUnzerOrderItem([
             PaymentUnzerOrderItemTransfer::ID_SALES_ORDER_ITEM => $itemTransfer->getIdSalesOrderItem(),
             PaymentUnzerOrderItemTransfer::ID_PAYMENT_UNZER => $paymentUnzerTransfer->getIdPaymentUnzer(),
-            PaymentUnzerOrderItemTransfer::STATUS => UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
+            PaymentUnzerOrderItemTransfer::STATUS => UnzerConstants::OMS_STATUS_AUTHORIZE_CANCELED,
         ]);
 
         //Act
-        $isPaymentCompletedOmsConditionOmsCondition = $this->tester
+        $isAuthorizeCanceledOmsCondition = $this->tester
             ->getFacade()
-            ->checkIsPaymentCompletedOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
+            ->checkIsAuthorizeCanceledOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
 
         //Assert
-        $this->assertTrue($isPaymentCompletedOmsConditionOmsCondition);
+        $this->assertTrue($isAuthorizeCanceledOmsCondition);
     }
 
     /**
      * @return void
      */
-    public function testCheckIsPaymentCompletedOmsConditionReturnsFalseWhileOmsStatusIsNotChargedFailed(): void
+    public function testCheckIsAuthorizeCanceledOmsConditionReturnsFalseWhileOmsStatusIsNotAuthorizeCanceled(): void
     {
         //Arrange
         $customerTransfer = $this->tester->haveCustomer();
@@ -101,11 +101,11 @@ class CheckIsPaymentCompletedOmsConditionTest extends UnzerFacadeBaseTest
         ]);
 
         //Act
-        $isPaymentCompletedOmsConditionOmsCondition = $this->tester
+        $isAuthorizeCanceledOmsCondition = $this->tester
             ->getFacade()
-            ->checkIsPaymentCompletedOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
+            ->checkIsAuthorizeCanceledOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
 
         //Assert
-        $this->assertFalse($isPaymentCompletedOmsConditionOmsCondition);
+        $this->assertFalse($isAuthorizeCanceledOmsCondition);
     }
 }
