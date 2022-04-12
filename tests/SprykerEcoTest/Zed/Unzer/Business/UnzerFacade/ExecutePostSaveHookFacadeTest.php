@@ -5,22 +5,23 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEcoTest\Zed\Unzer\Business;
+namespace SprykerEcoTest\Zed\Unzer\Business\UnzerFacade;
 
 use Generated\Shared\DataBuilder\CheckoutResponseBuilder;
 use Generated\Shared\DataBuilder\UnzerPaymentResourceBuilder;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
+use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
 use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
 
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group ExecutePostSaveHookFacadeTest
  */
 class ExecutePostSaveHookFacadeTest extends UnzerFacadeBaseTest

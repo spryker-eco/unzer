@@ -5,19 +5,20 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEcoTest\Zed\Unzer\Business;
+namespace SprykerEcoTest\Zed\Unzer\Business\UnzerFacade;
 
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
+use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
 
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group ProcessNotificationFacadeTest
  */
 class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest

@@ -5,24 +5,25 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEcoTest\Zed\Unzer\Business;
+namespace SprykerEcoTest\Zed\Unzer\Business\UnzerFacade;
 
 use Generated\Shared\DataBuilder\SaveOrderBuilder;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use SprykerEco\Zed\Unzer\UnzerConstants;
+use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
 
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
- * @group CheckIsPaymentChargebackOmsConditionTest
+ * @group UnzerFacade
+ * @group CheckIsAuthorizeFailedOmsConditionTest
  */
-class CheckIsPaymentChargebackOmsConditionTest extends UnzerFacadeBaseTest
+class CheckIsAuthorizeFailedOmsConditionTest extends UnzerFacadeBaseTest
 {
     /**
      * @var string
@@ -32,7 +33,7 @@ class CheckIsPaymentChargebackOmsConditionTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
-    public function testCheckIsPaymentChargebackOmsConditionReturnsTrueWhileOmsStatusIsPaymentChargeback(): void
+    public function testCheckIsAuthorizeFailedOmsConditionReturnsTrueWhileOmsStatusIsAuthorizeFailed(): void
     {
         //Arrange
         $customerTransfer = $this->tester->haveCustomer();
@@ -56,22 +57,22 @@ class CheckIsPaymentChargebackOmsConditionTest extends UnzerFacadeBaseTest
         $paymentUnzerOrderItemTransfer = $this->tester->havePaymentUnzerOrderItem([
             PaymentUnzerOrderItemTransfer::ID_SALES_ORDER_ITEM => $itemTransfer->getIdSalesOrderItem(),
             PaymentUnzerOrderItemTransfer::ID_PAYMENT_UNZER => $paymentUnzerTransfer->getIdPaymentUnzer(),
-            PaymentUnzerOrderItemTransfer::STATUS => UnzerConstants::OMS_STATUS_PAYMENT_CHARGEBACK,
+            PaymentUnzerOrderItemTransfer::STATUS => UnzerConstants::OMS_STATUS_AUTHORIZE_FAILED,
         ]);
 
         //Act
-        $isPaymentChargebackOmsConditionOmsCondition = $this->tester
+        $isAuthorizeFailedOmsCondition = $this->tester
             ->getFacade()
-            ->checkIsPaymentChargebackOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
+            ->checkIsAuthorizeFailedOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
 
         //Assert
-        $this->assertTrue($isPaymentChargebackOmsConditionOmsCondition);
+        $this->assertTrue($isAuthorizeFailedOmsCondition);
     }
 
     /**
      * @return void
      */
-    public function testCheckIsPaymentChargebackOmsConditionReturnsFalseWhileOmsStatusIsNotChargedFailed(): void
+    public function testCheckIsAuthorizeFailedOmsConditionReturnsFalseWhileOmsStatusIsNotAuthorizeFailed(): void
     {
         //Arrange
         $customerTransfer = $this->tester->haveCustomer();
@@ -100,11 +101,11 @@ class CheckIsPaymentChargebackOmsConditionTest extends UnzerFacadeBaseTest
         ]);
 
         //Act
-        $isPaymentChargebackOmsConditionOmsCondition = $this->tester
+        $isAuthorizeFailedOmsCondition = $this->tester
             ->getFacade()
-            ->checkIsPaymentChargebackOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
+            ->checkIsAuthorizeFailedOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
 
         //Assert
-        $this->assertFalse($isPaymentChargebackOmsConditionOmsCondition);
+        $this->assertFalse($isAuthorizeFailedOmsCondition);
     }
 }
