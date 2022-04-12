@@ -150,6 +150,6 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
             return (int)$expenseTransfer->getTaxRate();
         }
 
-        return  static::DEFAULT_VAT_VALUE;
+        return static::DEFAULT_VAT_VALUE;
     }
 }
