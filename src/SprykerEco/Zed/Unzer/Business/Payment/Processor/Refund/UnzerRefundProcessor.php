@@ -47,11 +47,6 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
     protected $unzerRepository;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper\UnzerMarketplaceRefundMapperInterface
-     */
-    protected $unzerRefundMapper;
-
-    /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Saver\UnzerRefundPaymentSaverInterface
      */
     protected $unzerRefundPaymentSaver;

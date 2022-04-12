@@ -503,7 +503,15 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createPaymentProcessorResolver(): UnzerPaymentProcessorResolverInterface
     {
-        return new UnzerPaymentProcessorResolver([
+        return new UnzerPaymentProcessorResolver($this->getUnzerPaymentProcessors());
+    }
+
+    /**
+     * @return array<string, \Closure>
+     */
+    public function getUnzerPaymentProcessors(): array
+    {
+        return [
             UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER => function () {
                 return $this->createMarketplaceBankTransferPaymentProcessor();
             },
@@ -522,7 +530,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             UnzerConfig::PAYMENT_METHOD_KEY_SOFORT => function () {
                 return $this->createDirectPaymentProcessor();
             },
-        ]);
+        ];
     }
 
     /**
@@ -688,7 +696,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return array<\Closure>
+     * @return array<int, \Closure>
      */
     public function createUnzerExpenseRefundStrategies(): array
     {

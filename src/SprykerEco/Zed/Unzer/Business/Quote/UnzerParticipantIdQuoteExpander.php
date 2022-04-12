@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
@@ -24,16 +25,6 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
-
-    /**
-     * @var string
-     */
-    protected $mainMerchantParticipantId;
-
-    /**
-     * @var \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
-     */
-    protected $merchantUnzerCredentialsCollection;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
@@ -55,15 +46,15 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
             return $quoteTransfer;
         }
 
-        $this->setMainMerchantParticipantId($unzerCredentialsTransfer);
-        $this->setMerchantsUnzerCredentials($unzerCredentialsTransfer);
+        $mainMerchantParticipantId = $this->getMainMerchantParticipantId($unzerCredentialsTransfer);
+        $merchantUnzerCredentialsCollection = $this->getMerchantsUnzerCredentials($unzerCredentialsTransfer);
 
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $this->addParticipantIdToItemTransfer($itemTransfer);
+            $this->addParticipantIdToItemTransfer($itemTransfer, $merchantUnzerCredentialsCollection, $mainMerchantParticipantId);
         }
 
         foreach ($quoteTransfer->getExpenses() as $expenseTransfer) {
-            $this->addParticipantIdToExpenseTransfer($expenseTransfer);
+            $this->addParticipantIdToExpenseTransfer($expenseTransfer, $merchantUnzerCredentialsCollection, $mainMerchantParticipantId);
         }
 
         return $quoteTransfer;
@@ -71,46 +62,59 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
 
     /**
      * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
+     * @param string $mainMerchantParticipantId
      *
      * @return \Generated\Shared\Transfer\ItemTransfer
      */
-    protected function addParticipantIdToItemTransfer(ItemTransfer $itemTransfer): ItemTransfer
-    {
+    protected function addParticipantIdToItemTransfer(
+        ItemTransfer $itemTransfer,
+        UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer,
+        string $mainMerchantParticipantId
+    ): ItemTransfer {
         if (!$itemTransfer->getMerchantReference()) {
-            return $itemTransfer->setUnzerParticipantId($this->mainMerchantParticipantId);
+            return $itemTransfer->setUnzerParticipantId($mainMerchantParticipantId);
         }
 
         return $itemTransfer->setUnzerParticipantId(
-            $this->extractMerchantParticipantIdByMerchantReference($itemTransfer->getMerchantReference()),
+            $this->extractMerchantParticipantIdByMerchantReference($unzerCredentialsCollectionTransfer, $itemTransfer->getMerchantReference()),
         );
     }
 
     /**
      * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
+     * @param string $mainMerchantParticipantId
      *
      * @return \Generated\Shared\Transfer\ExpenseTransfer
      */
-    protected function addParticipantIdToExpenseTransfer(ExpenseTransfer $expenseTransfer): ExpenseTransfer
-    {
+    protected function addParticipantIdToExpenseTransfer(
+        ExpenseTransfer $expenseTransfer,
+        UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer,
+        string $mainMerchantParticipantId
+    ): ExpenseTransfer {
         $merchantReference = $expenseTransfer->getShipmentOrFail()->getMerchantReference();
 
         if ($merchantReference === null) {
-            return $expenseTransfer->setUnzerParticipantId($this->mainMerchantParticipantId);
+            return $expenseTransfer->setUnzerParticipantId($mainMerchantParticipantId);
         }
 
         return $expenseTransfer->setUnzerParticipantId(
-            $this->extractMerchantParticipantIdByMerchantReference($merchantReference),
+            $this->extractMerchantParticipantIdByMerchantReference($unzerCredentialsCollectionTransfer, $merchantReference),
         );
     }
 
     /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
      * @param string $merchantReference
      *
      * @return string|null
      */
-    protected function extractMerchantParticipantIdByMerchantReference(string $merchantReference): ?string
-    {
-        foreach ($this->merchantUnzerCredentialsCollection->getUnzerCredentials() as $unzerCredentialsTransfer) {
+    protected function extractMerchantParticipantIdByMerchantReference(
+        UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer,
+        string $merchantReference
+    ): ?string {
+        foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
             if ($unzerCredentialsTransfer->getMerchantReference() === $merchantReference) {
                 return $unzerCredentialsTransfer->getParticipantIdOrFail();
             }
@@ -141,9 +145,9 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
      *
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
-     * @return void
+     * @return string
      */
-    protected function setMainMerchantParticipantId(UnzerCredentialsTransfer $marketplaceMainUnzerCredentials): void
+    protected function getMainMerchantParticipantId(UnzerCredentialsTransfer $marketplaceMainUnzerCredentials): string
     {
         $parentIdUnzerCredentials = $marketplaceMainUnzerCredentials->getIdUnzerCredentialsOrFail();
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
@@ -160,15 +164,15 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
             );
         }
 
-        $this->mainMerchantParticipantId = $unzerCredentialsTransfer->getParticipantIdOrFail();
+        return $unzerCredentialsTransfer->getParticipantIdOrFail();
     }
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $marketplaceMainUnzerCredentials
      *
-     * @return void
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
-    protected function setMerchantsUnzerCredentials(UnzerCredentialsTransfer $marketplaceMainUnzerCredentials): void
+    protected function getMerchantsUnzerCredentials(UnzerCredentialsTransfer $marketplaceMainUnzerCredentials): UnzerCredentialsCollectionTransfer
     {
         $parentIdUnzerCredentials = $marketplaceMainUnzerCredentials->getIdUnzerCredentialsOrFail();
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
@@ -178,6 +182,6 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
                     ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT),
             );
 
-        $this->merchantUnzerCredentialsCollection = $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
+        return $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
     }
 }
