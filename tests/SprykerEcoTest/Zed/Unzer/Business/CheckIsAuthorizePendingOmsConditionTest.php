@@ -27,7 +27,7 @@ class CheckIsAuthorizePendingOmsConditionTest extends UnzerFacadeBaseTest
     /**
      * @var string
      */
-    const STATE_MACHINE_PROCESS_NAME = 'UnzerSofort01';
+    public const STATE_MACHINE_PROCESS_NAME = 'UnzerSofort01';
 
     /**
      * @return void
@@ -42,7 +42,7 @@ class CheckIsAuthorizePendingOmsConditionTest extends UnzerFacadeBaseTest
                 ->withOrderItem()
                 ->build()
                 ->toArray(),
-            static::STATE_MACHINE_PROCESS_NAME
+            static::STATE_MACHINE_PROCESS_NAME,
         );
         $paymentUnzerTransfer = $this->tester->havePaymentUnzer([
             PaymentUnzerTransfer::ID_SALES_ORDER => $saveOrderTransfer->getIdSalesOrder(),
@@ -81,7 +81,7 @@ class CheckIsAuthorizePendingOmsConditionTest extends UnzerFacadeBaseTest
                 ->withOrderItem()
                 ->build()
                 ->toArray(),
-            static::STATE_MACHINE_PROCESS_NAME
+            static::STATE_MACHINE_PROCESS_NAME,
         );
         $paymentUnzerTransfer = $this->tester->havePaymentUnzer([
             PaymentUnzerTransfer::ID_SALES_ORDER => $saveOrderTransfer->getIdSalesOrder(),
@@ -98,7 +98,6 @@ class CheckIsAuthorizePendingOmsConditionTest extends UnzerFacadeBaseTest
             PaymentUnzerOrderItemTransfer::ID_PAYMENT_UNZER => $paymentUnzerTransfer->getIdPaymentUnzer(),
             PaymentUnzerOrderItemTransfer::STATUS => UnzerConstants::OMS_STATUS_NEW,
         ]);
-
 
         //Act
         $isAuthorizePendingOmsCondition = $this->tester

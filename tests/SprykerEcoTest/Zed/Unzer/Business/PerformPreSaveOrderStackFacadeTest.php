@@ -7,8 +7,6 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
-use Generated\Shared\Transfer\StoreRelationTransfer;
-use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerMetadataTransfer;

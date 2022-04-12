@@ -19,5 +19,4 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
  */
 class ExecuteRefundOmsCommandTest extends UnzerFacadeBaseTest
 {
-
 }

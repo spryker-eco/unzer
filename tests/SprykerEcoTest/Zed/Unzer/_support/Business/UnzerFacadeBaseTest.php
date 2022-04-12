@@ -9,7 +9,6 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 
 use Codeception\TestCase\Test;
 use Generated\Shared\Transfer\LocaleTransfer;
-use Generated\Shared\Transfer\PaymentProviderCollectionTransfer;
 use Spryker\Service\UtilText\UtilTextService;
 use Spryker\Zed\Locale\Business\LocaleFacade;
 use Spryker\Zed\Merchant\Business\MerchantFacade;

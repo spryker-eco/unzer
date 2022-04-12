@@ -621,8 +621,10 @@ class UnzerBusinessTester extends Actor
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails(array $mainMarketplaceOverride = [], array $merchantMainMarketplaceOverride = []): UnzerCredentialsTransfer
-    {
+    public function haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails(
+        array $mainMarketplaceOverride = [],
+        array $merchantMainMarketplaceOverride = []
+    ): UnzerCredentialsTransfer {
         $mainMarketplaceUnzerCredentialsTransfer = $this->haveUnzerCredentials(array_merge([
             UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
         ], $mainMarketplaceOverride));
@@ -700,7 +702,7 @@ class UnzerBusinessTester extends Actor
     protected function addStoreRelation(UnzerCredentialsTransfer $unzerCredentialsTransfer, array $override): UnzerCredentialsTransfer
     {
         return $unzerCredentialsTransfer->setStoreRelation(
-            $this->createStoreRelationTransfer($override)
+            $this->createStoreRelationTransfer($override),
         );
     }
 
@@ -732,7 +734,7 @@ class UnzerBusinessTester extends Actor
     protected function addUnzerKeypair(UnzerCredentialsTransfer $unzerCredentialsTransfer, array $override): UnzerCredentialsTransfer
     {
         return $unzerCredentialsTransfer->setUnzerKeypair(
-            $this->createUnzerKeypiarTransfer($override)
+            $this->createUnzerKeypiarTransfer($override),
         );
     }
 

@@ -14,7 +14,6 @@ use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Spryker\Shared\Kernel\Transfer\Exception\NullValueException;
 use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEco\Shared\Unzer\UnzerConstants as UnzerSharedConstants;
 
 /**
  * Auto-generated group annotations
@@ -128,7 +127,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
                 UnzerCredentialsTransfer::STORE_RELATION => [
                     StoreRelationTransfer::ID_STORES => [$marketplaceUnzerCredentailsTransfer->getStoreRelation()->getStores()->offsetGet(0)->getIdStore()],
                     StoreRelationTransfer::STORES => [$marketplaceUnzerCredentailsTransfer->getStoreRelation()->getStores()->offsetGet(0)],
-                ]
+                ],
             ]))
             ->withUnzerKeypair()
             ->build();
