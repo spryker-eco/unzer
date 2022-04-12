@@ -59,7 +59,7 @@ class UnzerMarketplaceRefundMapper implements UnzerMarketplaceRefundMapperInterf
      *
      * @return \Generated\Shared\Transfer\UnzerRefundItemTransfer
      */
-    protected function mapItemTransferToUnzerRefundItemTransfer(
+    public function mapItemTransferToUnzerRefundItemTransfer(
         ItemTransfer $itemTransfer,
         UnzerRefundItemTransfer $unzerRefundItemTransfer
     ): UnzerRefundItemTransfer {
