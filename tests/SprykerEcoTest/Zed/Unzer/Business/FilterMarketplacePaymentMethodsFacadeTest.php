@@ -12,11 +12,11 @@ use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group FilterMarketplacePaymentMethodsFacadeTest
  */
 class FilterMarketplacePaymentMethodsFacadeTest extends UnzerFacadeBaseTest

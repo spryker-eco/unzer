@@ -12,11 +12,11 @@ use Generated\Shared\DataBuilder\UnzerKeypairBuilder;
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group UpdateUnzerCredentialsFacadeTest
  */
 class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest

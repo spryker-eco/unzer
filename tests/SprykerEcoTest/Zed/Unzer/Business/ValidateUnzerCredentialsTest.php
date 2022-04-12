@@ -18,11 +18,11 @@ use SprykerEco\Shared\Unzer\UnzerConstants;
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group ValidateUnzerCredentialsTest
  */
 class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest

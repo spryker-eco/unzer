@@ -10,11 +10,11 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group PerformPaymentMethodsImportTest
  */
 class PerformPaymentMethodsImportTest extends UnzerFacadeBaseTest

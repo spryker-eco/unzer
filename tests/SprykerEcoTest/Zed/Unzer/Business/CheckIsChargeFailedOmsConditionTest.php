@@ -15,11 +15,11 @@ use SprykerEco\Zed\Unzer\UnzerConstants;
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group CheckIsChargeFailedOmsConditionTest
  */
 class CheckIsChargeFailedOmsConditionTest extends UnzerFacadeBaseTest

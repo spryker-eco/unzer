@@ -12,11 +12,11 @@ use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group DeleteUnzerCredentialsFacadeTest
  */
 class DeleteUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest

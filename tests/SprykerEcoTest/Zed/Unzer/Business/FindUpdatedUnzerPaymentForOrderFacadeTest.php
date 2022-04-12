@@ -15,11 +15,11 @@ use SprykerEco\Zed\Unzer\Communication\Plugin\Checkout\UnzerCheckoutDoSaveOrderP
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group FindUpdatedUnzerPaymentForOrderFacadeTest
  */
 class FindUpdatedUnzerPaymentForOrderFacadeTest extends UnzerFacadeBaseTest

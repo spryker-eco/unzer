@@ -13,11 +13,11 @@ use SprykerEco\Shared\Unzer\UnzerConfig;
 /**
  * Auto-generated group annotations
  *
- * @group SprykerTest
+ * @group SprykerEcoTest
  * @group Zed
  * @group Unzer
  * @group Business
- * @group Facade
+ * @group UnzerFacade
  * @group ProcessNotificationFacadeTest
  */
 class ProcessNotificationFacadeTest extends UnzerFacadeBaseTest
