@@ -16,7 +16,7 @@ use SprykerEco\Zed\Unzer\Business\Refund\UnzerRefundExpanderInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
-class LastShipmentItemExpenseRefundStrategy implements UnzerExpensesRefundStrategyInterface
+class LastShipmentItemExpenseRefundStrategy implements UnzerExpenseRefundStrategyInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface

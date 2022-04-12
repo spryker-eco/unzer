@@ -287,5 +287,5 @@ interface UnzerConstants
     /**
      * @var string
      */
-    public const UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID = self::UNZER_BASKET_SHIPMENT_REFERENCE_ID . '_%s';
+    public const UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE = self::UNZER_BASKET_SHIPMENT_REFERENCE_ID . '_%s';
 }

@@ -104,20 +104,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         $childMarketplaceUnzerCredentialsCollectionTransfer = $this->getChildUnzerCredentialsCollection($mainMarketplaceUnzerCredentialsTransfer);
 
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            foreach ($childMarketplaceUnzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
-                if (
-                    $expenseTransfer->getMerchantReference() === null
-                    && $unzerCredentialsTransfer->getTypeOrFail() === UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT
-                ) {
-                    $expenseTransfer->setUnzerParticipantId($unzerCredentialsTransfer->getParticipantIdOrFail());
-
-                    continue;
-                }
-
-                if ($expenseTransfer->getMerchantReference() === $unzerCredentialsTransfer->getMerchantReference()) {
-                    $expenseTransfer->setUnzerParticipantId($unzerCredentialsTransfer->getParticipantIdOrFail());
-                }
-            }
+            $this->updateExpenseTransferWithParticipantId($childMarketplaceUnzerCredentialsCollectionTransfer, $expenseTransfer);
         }
 
         return $expenseTransfersCollectionForRefund;
@@ -176,7 +163,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             ->addItem(
                 (new UnzerRefundItemTransfer())
                     ->setBasketItemReferenceId(
-                        sprintf(UnzerConstants::UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID, $expenseTransfer->getUnzerParticipantIdOrFail()),
+                        sprintf(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE, $expenseTransfer->getUnzerParticipantIdOrFail()),
                     )
                     ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY)
                     ->setAmountGross($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER),
@@ -309,5 +296,31 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         $paymentUnzerTransactionTransfer = $paymentUnzerTransactionCollection->getPaymentUnzerTransactions()->getIterator()->current();
 
         return $paymentUnzerTransactionTransfer->getTransactionIdOrFail();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer $childMarketplaceUnzerCredentialsCollectionTransfer
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
+     *
+     * @return void
+     */
+    public function updateExpenseTransferWithParticipantId(
+        UnzerCredentialsCollectionTransfer $childMarketplaceUnzerCredentialsCollectionTransfer,
+        ExpenseTransfer $expenseTransfer
+    ): void {
+        foreach ($childMarketplaceUnzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
+            if (
+                $expenseTransfer->getMerchantReference() === null
+                && $unzerCredentialsTransfer->getTypeOrFail() === UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT
+            ) {
+                $expenseTransfer->setUnzerParticipantId($unzerCredentialsTransfer->getParticipantIdOrFail());
+
+                continue;
+            }
+
+            if ($expenseTransfer->getMerchantReference() === $unzerCredentialsTransfer->getMerchantReference()) {
+                $expenseTransfer->setUnzerParticipantId($unzerCredentialsTransfer->getParticipantIdOrFail());
+            }
+        }
     }
 }

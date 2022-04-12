@@ -8,7 +8,8 @@
 namespace SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver;
 
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
-use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface;
+use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface;
+use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerExpenseRefundStrategyResolver implements UnzerExpenseRefundStrategyResolverInterface
 {
@@ -18,22 +19,30 @@ class UnzerExpenseRefundStrategyResolver implements UnzerExpenseRefundStrategyRe
     protected $unzerRefundStrategies;
 
     /**
-     * @param array<int, \Closure> $unzerRefundStrategiesCollection
+     * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
-    public function __construct(array $unzerRefundStrategiesCollection)
-    {
+    protected $unzerConfig;
+
+    /**
+     * @param array<int, \Closure> $unzerRefundStrategiesCollection
+     * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
+     */
+    public function __construct(
+        array $unzerRefundStrategiesCollection,
+        UnzerConfig $unzerConfig
+    ) {
         $this->unzerRefundStrategies = $unzerRefundStrategiesCollection;
+        $this->unzerConfig = $unzerConfig;
     }
 
     /**
-     * @param int $strategyConfigKey
-     *
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
-     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface
      */
-    public function resolveRefundStrategy(int $strategyConfigKey): UnzerExpensesRefundStrategyInterface
+    public function resolveRefundStrategyFromConfig(): UnzerExpenseRefundStrategyInterface
     {
+        $strategyConfigKey = $this->unzerConfig->getExpensesRefundStrategyKey();
         if (isset($this->unzerRefundStrategies[$strategyConfigKey])) {
             return call_user_func($this->unzerRefundStrategies[$strategyConfigKey]);
         }

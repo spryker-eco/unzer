@@ -7,14 +7,12 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver;
 
-use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface;
+use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface;
 
 interface UnzerExpenseRefundStrategyResolverInterface
 {
     /**
-     * @param int $strategyConfigKey
-     *
-     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface
      */
-    public function resolveRefundStrategy(int $strategyConfigKey): UnzerExpensesRefundStrategyInterface;
+    public function resolveRefundStrategyFromConfig(): UnzerExpenseRefundStrategyInterface;
 }

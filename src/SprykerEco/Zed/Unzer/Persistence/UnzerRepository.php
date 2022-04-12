@@ -267,7 +267,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
 
     /**
      * @param \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer|null $paymentUnzerTransactionConditionsTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
      *
      * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery
      */

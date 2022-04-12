@@ -108,6 +108,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPrepareP
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper\UnzerMarketplaceRefundMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper\UnzerMarketplaceRefundMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Saver\UnzerRefundPaymentSaver;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Saver\UnzerRefundPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerMarketplaceRefundProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
@@ -136,8 +138,8 @@ use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyRe
 use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpenseRefundStrategyResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\LastOrderItemExpenseRefundStrategy;
 use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\LastShipmentItemExpenseRefundStrategy;
-use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\NoExpensesRefundStrategy;
-use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface;
+use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\NoExpenseRefundStrategy;
+use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface;
 use SprykerEco\Zed\Unzer\Business\Refund\UnzerRefundExpander;
 use SprykerEco\Zed\Unzer\Business\Refund\UnzerRefundExpanderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriter;
@@ -653,12 +655,9 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerRefundProcessor(
             $this->createUnzerCredentialsResolver(),
             $this->createUnzerExpensesRefundStrategyResolver(),
-            $this->getConfig(),
             $this->createUnzerRefundAdapter(),
             $this->getRepository(),
-            $this->createUnzerPaymentMapper(),
-            $this->createUnzerPaymentAdapter(),
-            $this->createUnzerPaymentSaver(),
+            $this->createUnzerRefundPaymentSaver(),
         );
     }
 
@@ -670,13 +669,10 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerMarketplaceRefundProcessor(
             $this->createUnzerCredentialsResolver(),
             $this->createUnzerExpensesRefundStrategyResolver(),
-            $this->getConfig(),
             $this->createUnzerRefundAdapter(),
             $this->getRepository(),
             $this->createUnzerMarketplaceRefundMapper(),
-            $this->createUnzerPaymentMapper(),
-            $this->createUnzerPaymentAdapter(),
-            $this->createUnzerPaymentSaver(),
+            $this->createUnzerRefundPaymentSaver(),
         );
     }
 
@@ -685,7 +681,18 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createUnzerExpensesRefundStrategyResolver(): UnzerExpenseRefundStrategyResolverInterface
     {
-        return new UnzerExpenseRefundStrategyResolver([
+        return new UnzerExpenseRefundStrategyResolver(
+            $this->createUnzerExpenseRefundStrategies(),
+            $this->getConfig(),
+        );
+    }
+
+    /**
+     * @return array<\Closure>
+     */
+    public function createUnzerExpenseRefundStrategies(): array
+    {
+        return [
             UnzerConstants::NO_EXPENSES_REFUND_STRATEGY => function () {
                 return $this->createNoExpensesRefundStrategy();
             },
@@ -695,19 +702,19 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             UnzerConstants::LAST_ORDER_ITEM_EXPENSES_REFUND_STRATEGY => function () {
                 return $this->createLastOrderItemExpensesRefundStrategy();
             },
-        ]);
+        ];
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface
      */
-    public function createNoExpensesRefundStrategy(): UnzerExpensesRefundStrategyInterface
+    public function createNoExpensesRefundStrategy(): UnzerExpenseRefundStrategyInterface
     {
-        return new NoExpensesRefundStrategy();
+        return new NoExpenseRefundStrategy();
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface
      */
     public function createLastShipmentItemExpensesRefundStrategy()
     {
@@ -718,7 +725,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpensesRefundStrategyInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface
      */
     public function createLastOrderItemExpensesRefundStrategy()
     {
@@ -1067,5 +1074,17 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerCredentialsUniquePublicKeyValidator(): UnzerCredentialsValidatorInterface
     {
         return new UnzerCredentialsUniquePublicKeyValidator($this->createUnzerReader());
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Saver\UnzerRefundPaymentSaverInterface
+     */
+    public function createUnzerRefundPaymentSaver(): UnzerRefundPaymentSaverInterface
+    {
+        return new UnzerRefundPaymentSaver(
+            $this->createUnzerPaymentMapper(),
+            $this->createUnzerPaymentAdapter(),
+            $this->createUnzerPaymentSaver(),
+        );
     }
 }

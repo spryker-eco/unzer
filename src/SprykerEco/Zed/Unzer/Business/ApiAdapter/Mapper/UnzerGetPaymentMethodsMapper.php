@@ -40,7 +40,9 @@ class UnzerGetPaymentMethodsMapper implements UnzerGetPaymentMethodsMapperInterf
         foreach ($unzerApiGetPaymentMethodsResponseTransfer->getPaymentMethods() as $unzerApiPaymentMethodTransfer) {
             $paymentMethodsTransfer = $this->mapPaymentMethodKeysToPaymentMethodTransfers(
                 $paymentMethodsTransfer,
-                $this->unzerConfig->getPaymentMethodKeys($unzerApiPaymentMethodTransfer->getPaymentMethodKeyOrFail()),
+                $this->unzerConfig->getMappedUnzerPaymentMethodsByUnzerPaymentMethodKey(
+                    $unzerApiPaymentMethodTransfer->getPaymentMethodKeyOrFail(),
+                ),
             );
         }
 

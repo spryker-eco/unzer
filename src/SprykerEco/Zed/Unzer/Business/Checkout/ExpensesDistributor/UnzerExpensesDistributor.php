@@ -57,7 +57,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     protected function addExpensesGroupedByParticipantId(UnzerBasketTransfer $unzerBasketTransfer, array $expensesGroupedByParticipantId): UnzerBasketTransfer
     {
         foreach ($expensesGroupedByParticipantId as $participantId => $expenseTransfers) {
-            $referenceId = sprintf(UnzerConstants::UNZER_MARKETPLACE_BASKET_SHIPMENT_REFERENCE_ID, $participantId);
+            $referenceId = sprintf(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE, $participantId);
 
             $unzerBasketItemTransfer = $this
                 ->createUnzerBasketItemTransfer()

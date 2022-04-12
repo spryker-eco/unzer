@@ -10,7 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 
-interface UnzerExpensesRefundStrategyInterface
+class NoExpenseRefundStrategy implements UnzerExpenseRefundStrategyInterface
 {
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
@@ -19,5 +19,8 @@ interface UnzerExpensesRefundStrategyInterface
      *
      * @return \Generated\Shared\Transfer\RefundTransfer
      */
-    public function prepareUnzerRefundTransfer(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer;
+    public function prepareUnzerRefundTransfer(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): RefundTransfer
+    {
+        return $refundTransfer;
+    }
 }

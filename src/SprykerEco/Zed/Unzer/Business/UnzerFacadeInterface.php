@@ -181,7 +181,12 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     * - Requires `OrderTransfer.orderReference` to be set.
+     * - Requires `OrderTransfer.idSalesOrderItem` to be set.
      * - Executes Unzer API Charge request.
+     * - Saves Unzer payment details to Persistence.
+     * - Throws `UnzerApiException` if API call failed.
+     * - Throws `UnzerException` if Unzer payment not found in Persistence.
      *
      * @api
      *
@@ -195,7 +200,13 @@ interface UnzerFacadeInterface
     /**
      * Specification:
      * - Requires `OrderTransfer.payments.paymentProvider.paymentMethod` to be set.
+     * - Requires `OrderTransfer.orderReference` to be set.
+     * - Requires `OrderTransfer.idSalesOrderItem` to be set.
+     * - Uses a strategy to resolve Unzer Expense Refund.
      * - Executes Unzer API Refund request.
+     * - Saves Unzer payment details to Persistence.
+     * - Throws `UnzerApiException` if API call failed.
+     * - Throws `UnzerException` if Unzer payment not found in Persistence.
      *
      * @api
      *

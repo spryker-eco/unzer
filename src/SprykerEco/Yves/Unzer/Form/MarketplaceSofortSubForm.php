@@ -8,7 +8,6 @@
 namespace SprykerEco\Yves\Unzer\Form;
 
 use Generated\Shared\Transfer\PaymentTransfer;
-use SprykerEco\Shared\Unzer\UnzerConfig;
 
 class MarketplaceSofortSubForm extends SofortSubForm
 {
