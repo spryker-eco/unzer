@@ -8,9 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\Mapper;
 
 use Generated\Shared\Transfer\ItemCollectionTransfer;
-use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\UnzerRefundItemCollectionTransfer;
-use Generated\Shared\Transfer\UnzerRefundItemTransfer;
 
 interface UnzerMarketplaceRefundMapperInterface
 {
@@ -24,15 +22,4 @@ interface UnzerMarketplaceRefundMapperInterface
         ItemCollectionTransfer $itemCollectionTransfer,
         UnzerRefundItemCollectionTransfer $unzerRefundItemCollectionTransfer
     ): UnzerRefundItemCollectionTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
-     * @param \Generated\Shared\Transfer\UnzerRefundItemTransfer $unzerRefundItemTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerRefundItemTransfer
-     */
-    public function mapItemTransferToUnzerRefundItemTransfer(
-        ItemTransfer $itemTransfer,
-        UnzerRefundItemTransfer $unzerRefundItemTransfer
-    ): UnzerRefundItemTransfer;
 }
