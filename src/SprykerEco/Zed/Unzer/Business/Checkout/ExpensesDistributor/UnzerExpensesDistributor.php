@@ -8,6 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor;
 
 use ArrayObject;
+use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerBasketItemTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
@@ -24,6 +25,11 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
      * @var int
      */
     protected const DEFAULT_AMOUNT = 0;
+
+    /**
+     * @var int
+     */
+    protected const DEFAULT_VAT_VALUE = 0;
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -127,9 +133,23 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
                 $unzerBasketItemTransfer->getAmountPerUnit() +
                 $expenseTransfer->getSumGrossPrice() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
             );
-            $unzerBasketItemTransfer->setVat((string)$expenseTransfer->getTaxRate());
+            $unzerBasketItemTransfer->setVat((string)$this->buildVatValue($expenseTransfer));
         }
 
         return $unzerBasketItemTransfer;
+    }
+
+    /**
+     * @param ExpenseTransfer $expenseTransfer
+     *
+     * @return int
+     */
+    protected function buildVatValue(ExpenseTransfer $expenseTransfer): int
+    {
+        if ($expenseTransfer->getTaxRate() !== null) {
+            return (int)$expenseTransfer->getTaxRate();
+        }
+
+        return  static::DEFAULT_VAT_VALUE;
     }
 }
