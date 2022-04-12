@@ -21,9 +21,9 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
- * @group CheckIsChargeFailedOmsConditionTest
+ * @group CheckIsAuthorizeFailedOmsConditionFacadeTest
  */
-class CheckIsChargeFailedOmsConditionTest extends UnzerFacadeBaseTest
+class CheckIsAuthorizeFailedOmsConditionFacadeTest extends UnzerFacadeBaseTest
 {
     /**
      * @var string
@@ -33,7 +33,7 @@ class CheckIsChargeFailedOmsConditionTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
-    public function testCheckIsChargeFailedOmsConditionReturnsTrueWhileOmsStatusIsChargeFailed(): void
+    public function testCheckIsAuthorizeFailedOmsConditionReturnsTrueWhileOmsStatusIsAuthorizeFailed(): void
     {
         //Arrange
         $customerTransfer = $this->tester->haveCustomer();
@@ -57,22 +57,22 @@ class CheckIsChargeFailedOmsConditionTest extends UnzerFacadeBaseTest
         $paymentUnzerOrderItemTransfer = $this->tester->havePaymentUnzerOrderItem([
             PaymentUnzerOrderItemTransfer::ID_SALES_ORDER_ITEM => $itemTransfer->getIdSalesOrderItem(),
             PaymentUnzerOrderItemTransfer::ID_PAYMENT_UNZER => $paymentUnzerTransfer->getIdPaymentUnzer(),
-            PaymentUnzerOrderItemTransfer::STATUS => UnzerConstants::OMS_STATUS_CHARGE_FAILED,
+            PaymentUnzerOrderItemTransfer::STATUS => UnzerConstants::OMS_STATUS_AUTHORIZE_FAILED,
         ]);
 
         //Act
-        $isChargeFailedOmsConditionOmsCondition = $this->tester
+        $isAuthorizeFailedOmsCondition = $this->tester
             ->getFacade()
-            ->checkIsChargeFailedOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
+            ->checkIsAuthorizeFailedOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
 
         //Assert
-        $this->assertTrue($isChargeFailedOmsConditionOmsCondition);
+        $this->assertTrue($isAuthorizeFailedOmsCondition);
     }
 
     /**
      * @return void
      */
-    public function testCheckIsChargeFailedOmsConditionReturnsFalseWhileOmsStatusIsNotChargedFailed(): void
+    public function testCheckIsAuthorizeFailedOmsConditionReturnsFalseWhileOmsStatusIsNotAuthorizeFailed(): void
     {
         //Arrange
         $customerTransfer = $this->tester->haveCustomer();
@@ -101,11 +101,11 @@ class CheckIsChargeFailedOmsConditionTest extends UnzerFacadeBaseTest
         ]);
 
         //Act
-        $isChargeFailedOmsConditionOmsCondition = $this->tester
+        $isAuthorizeFailedOmsCondition = $this->tester
             ->getFacade()
-            ->checkIsChargeFailedOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
+            ->checkIsAuthorizeFailedOmsCondition($paymentUnzerOrderItemTransfer->getIdSalesOrderItem());
 
         //Assert
-        $this->assertFalse($isChargeFailedOmsConditionOmsCondition);
+        $this->assertFalse($isAuthorizeFailedOmsCondition);
     }
 }
