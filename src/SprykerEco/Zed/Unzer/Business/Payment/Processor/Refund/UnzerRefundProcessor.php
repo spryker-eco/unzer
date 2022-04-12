@@ -113,7 +113,7 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
         $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
             ->setPaymentUnzerTransactionConditions(
                 (new PaymentUnzerTransactionConditionsTransfer())
-                    ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
+                    ->addPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
                     ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE)
                     ->addStatus(UnzerConstants::TRANSACTION_STATUS_SUCCESS),
             );
