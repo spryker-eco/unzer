@@ -21,9 +21,9 @@ use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
- * @group SaveOrderPaymentFacadeTest
+ * @group SaveOrderPaymentTest
  */
-class SaveOrderPaymentFacadeTest extends UnzerFacadeBaseTest
+class SaveOrderPaymentTest extends UnzerFacadeBaseTest
 {
     /**
      * @var string

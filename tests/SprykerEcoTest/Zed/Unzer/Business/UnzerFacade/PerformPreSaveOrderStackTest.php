@@ -22,9 +22,9 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
- * @group PerformPreSaveOrderStackFacadeTest
+ * @group PerformPreSaveOrderStackTest
  */
-class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
+class PerformPreSaveOrderStackTest extends UnzerFacadeBaseTest
 {
     /**
      * @return void

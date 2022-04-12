@@ -17,9 +17,9 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
- * @group PerformPaymentMethodsImportFacadeTest
+ * @group PerformPaymentMethodsImportTest
  */
-class PerformPaymentMethodsImportFacadeTest extends UnzerFacadeBaseTest
+class PerformPaymentMethodsImportTest extends UnzerFacadeBaseTest
 {
     /**
      * @return void
