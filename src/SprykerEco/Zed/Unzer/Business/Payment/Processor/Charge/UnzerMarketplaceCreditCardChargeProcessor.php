@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\ItemCollectionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
+use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
@@ -113,18 +114,39 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
                 continue;
             }
 
-            foreach ($orderTransfer->getItems() as $itemTransfer) {
-                if ($itemTransfer->getIdSalesOrderItem() !== $paymentUnzerOrderItem->getIdSalesOrderItem()) {
-                    continue;
-                }
+            $groupedOrderItems = $this->addOrderItemToGroupByParticipantId(
+                $orderTransfer,
+                $paymentUnzerOrderItem,
+                $groupedOrderItems
+            );
+        }
 
-                $itemCollectionTransfer = $groupedOrderItems[$paymentUnzerOrderItem->getParticipantId()] ?? new ItemCollectionTransfer();
-                $itemCollectionTransfer->addItem($itemTransfer);
-                $groupedOrderItems[$paymentUnzerOrderItem->getParticipantId()] = $itemCollectionTransfer;
-                $itemTransfer->setUnzerParticipantId($paymentUnzerOrderItem->getParticipantId());
+        return $groupedOrderItems;
+    }
 
-                break;
+    /**
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
+     * @param array<string, \Generated\Shared\Transfer\ItemCollectionTransfer> $groupedOrderItems
+     *
+     * @return array<string, \Generated\Shared\Transfer\ItemCollectionTransfer>
+     */
+    protected function addOrderItemToGroupByParticipantId(
+        OrderTransfer $orderTransfer,
+        PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer,
+        array $groupedOrderItems
+    ): array {
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            if ($itemTransfer->getIdSalesOrderItem() !== $paymentUnzerOrderItemTransfer->getIdSalesOrderItem()) {
+                continue;
             }
+
+            $itemCollectionTransfer = $groupedOrderItems[$paymentUnzerOrderItemTransfer->getParticipantId()] ?? new ItemCollectionTransfer();
+            $itemCollectionTransfer->addItem($itemTransfer);
+            $groupedOrderItems[$paymentUnzerOrderItemTransfer->getParticipantId()] = $itemCollectionTransfer;
+            $itemTransfer->setUnzerParticipantId($paymentUnzerOrderItemTransfer->getParticipantId());
+
+            break;
         }
 
         return $groupedOrderItems;
