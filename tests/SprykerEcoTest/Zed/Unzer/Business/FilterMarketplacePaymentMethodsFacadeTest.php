@@ -7,7 +7,7 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
-use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
+use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
 
 /**
  * Auto-generated group annotations
@@ -53,7 +53,7 @@ class FilterMarketplacePaymentMethodsFacadeTest extends UnzerFacadeBaseTest
 
         //Assert
         $this->assertSame(
-            $paymentMethodsCount - count(UnzerZedTester::UNZER_MARKETPLACE_PAYMENT_METHODS),
+            $paymentMethodsCount - count(UnzerBusinessTester::UNZER_MARKETPLACE_PAYMENT_METHODS),
             $paymentMethodsTransfer->getMethods()->count(),
         );
     }

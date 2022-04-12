@@ -50,7 +50,7 @@ class UpdateUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $storeTransfer = $this->tester->haveStore();
         $unzerCredentialsTransfer = $this->tester
-            ->haveMarketplaceUnzerCredentials()
+            ->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails()
             ->setParticipantId(static::ANOTHER_PARTICIPANT_ID);
 
         $unzerCredentialsTransfer->getStoreRelation()

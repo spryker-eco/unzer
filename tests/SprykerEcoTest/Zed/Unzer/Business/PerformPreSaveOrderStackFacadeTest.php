@@ -7,6 +7,7 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
+use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
@@ -32,14 +33,11 @@ class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
     public function testPerformPreSaveOrderStackMarketplace(): void
     {
         //Arrange
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(true, false);
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER)->setUnzerPayment($unzerPaymentTransfer);
-        $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
-        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials([
-            UnzerCredentialsTransfer::STORE_RELATION => $this->tester->createStoreRelation($quoteTransfer->getStore()),
-        ], [
-            UnzerCredentialsTransfer::STORE_RELATION => $this->tester->createStoreRelation($quoteTransfer->getStore()),
-        ]);
+        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
+        $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer)->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0));
         $quoteTransfer->getPayment()->getUnzerPayment()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypair());
 
         //Act
@@ -62,12 +60,11 @@ class PerformPreSaveOrderStackFacadeTest extends UnzerFacadeBaseTest
     public function testPerformPreSaveOrderStackStandard(): void
     {
         //Arrange
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, false);
-        $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER)->setUnzerPayment($unzerPaymentTransfer);
-        $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
-        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials([
-            UnzerCredentialsTransfer::STORE_RELATION => $this->tester->createStoreRelation($quoteTransfer->getStore()),
-        ]);
+        $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
+        $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer)->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0));
 
         //Act
         $quoteTransfer = $this->tester->getFacade()->performPreSaveOrderStack($quoteTransfer);

@@ -15,7 +15,7 @@ coverage:
 suites:
     Business:
         path: Business
-        class_name: UnzerZedTester
+        class_name: UnzerBusinessTester
         modules:
             enabled:
                 - Asserts
@@ -35,6 +35,7 @@ suites:
                 - \SprykerTest\Shared\Testify\Helper\DependencyHelper
                 - \SprykerTest\Shared\Propel\Helper\TransactionHelper
                 - \SprykerTest\Zed\Merchant\Helper\MerchantHelper
+                - \SprykerEcoTest\Zed\Unzer\Helper\UnzerHelper
                 - \SprykerTest\Shared\Store\Helper\StoreDataHelper
                 - \SprykerTest\Shared\Sales\Helper\SalesDataHelper
                 - \SprykerTest\Shared\Customer\Helper\CustomerDataHelper

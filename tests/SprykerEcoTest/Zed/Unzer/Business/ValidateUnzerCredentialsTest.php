@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Spryker\Shared\Kernel\Transfer\Exception\NullValueException;
 use SprykerEco\Shared\Unzer\UnzerConstants;
+use SprykerEco\Shared\Unzer\UnzerConstants as UnzerSharedConstants;
 
 /**
  * Auto-generated group annotations
@@ -43,6 +44,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsSuccessfulUnzerCredentialsResponse(): void
     {
         // Arrange
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $storeTransfer = (new StoreBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
@@ -68,6 +70,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileUnzerKeypairIsNull(): void
     {
         // Arrange
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $storeTransfer = (new StoreBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
@@ -92,6 +95,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileStoreRelationAlreadyUsed(): void
     {
         // Arrange
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $standardUnzerCredentials = $this->tester->haveStandardUnzerCredentials();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
@@ -116,16 +120,16 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeMarketplaceMainMerchantReturnsUnsuccessfulUnzerCredentialsResponseWhileMerchantReferenceDoesNotExist(): void
     {
         // Arrange
-        $storeTransfer = (new StoreBuilder())->build();
+        $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $marketplaceUnzerCredentailsTransfer = $this->tester->haveMarketplaceUnzerCredentials();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
                 UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $marketplaceUnzerCredentailsTransfer->getIdUnzerCredentials(),
+                UnzerCredentialsTransfer::STORE_RELATION => [
+                    StoreRelationTransfer::ID_STORES => [$marketplaceUnzerCredentailsTransfer->getStoreRelation()->getStores()->offsetGet(0)->getIdStore()],
+                    StoreRelationTransfer::STORES => [$marketplaceUnzerCredentailsTransfer->getStoreRelation()->getStores()->offsetGet(0)],
+                ]
             ]))
-            ->withStoreRelation([
-                StoreRelationTransfer::STORES => [$storeTransfer],
-                StoreRelationTransfer::ID_STORES => [$storeTransfer->getIdStore()],
-            ])
             ->withUnzerKeypair()
             ->build();
 

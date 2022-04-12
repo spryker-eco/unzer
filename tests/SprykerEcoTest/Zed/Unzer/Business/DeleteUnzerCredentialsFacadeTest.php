@@ -27,7 +27,7 @@ class DeleteUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     public function testDeleteUnzerCredentialsWithChildrenFailed(): void
     {
         //Arrange
-        $marketplaceUnzerCredentials = $this->tester->haveMarketplaceUnzerCredentials();
+        $marketplaceUnzerCredentials = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
         $this->tester->haveMarketplaceMerchantUnzerCredentials([
             UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $marketplaceUnzerCredentials->getIdUnzerCredentials(),
             UnzerCredentialsTransfer::MERCHANT_REFERENCE => '',
@@ -46,7 +46,7 @@ class DeleteUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     public function testDeleteMarketplaceUnzerCredentialsSuccess(): void
     {
         //Arrange
-        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials();
+        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
 
         //Act
         $unzerCredentialsResponseTransfer = $this->tester->getFacade()->deleteUnzerCredentials($unzerCredentialsTransfer);

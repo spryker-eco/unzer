@@ -46,7 +46,8 @@
     },
     "autoload": {
         "psr-4": {
-            "SprykerEco\\": "src/SprykerEco/"
+            "SprykerEco\\": "src/SprykerEco/",
+            "SprykerEcoTest\\Zed\\Unzer\\Helper\\": "tests/SprykerEcoTest/Zed/Unzer/_support/Helper/"
         }
     },
     "autoload-dev": {

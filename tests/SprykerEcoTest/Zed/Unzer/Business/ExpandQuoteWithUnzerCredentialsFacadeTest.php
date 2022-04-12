@@ -13,7 +13,7 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
+use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
 
 /**
  * Auto-generated group annotations
@@ -56,10 +56,7 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     {
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
-        $storeRelationTransfer = $this->tester->createStoreRelation();
-        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials([
-            UnzerCredentialsTransfer::STORE_RELATION => $storeRelationTransfer,
-        ])->setStoreRelation($storeRelationTransfer);
+        $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
         $quoteTransfer = (new QuoteTransfer())
             ->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0))
             ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => null]))->build())
@@ -81,14 +78,11 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     {
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
-        $storeRelationTransfer = $this->tester->createStoreRelation();
-        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentials([
-            UnzerCredentialsTransfer::STORE_RELATION => $storeRelationTransfer,
-        ]);
+        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
         $quoteTransfer = (new QuoteTransfer())
             ->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0))
             ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => null]))->build())
-            ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE]))->build());
+            ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerBusinessTester::MERCHANT_REFERENCE]))->build());
 
         // Act
         $quoteTransfer = $this->tester->getFacade()->expandQuoteWithUnzerCredentials($quoteTransfer);
@@ -105,15 +99,13 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
     {
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
-        $storeRelationTransfer = $this->tester->createStoreRelation();
         $unzerCredentialsTransfer = $this->tester->haveMarketplaceMerchantUnzerCredentials([
-            UnzerCredentialsTransfer::STORE_RELATION => $storeRelationTransfer,
-            UnzerCredentialsTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE,
+            UnzerCredentialsTransfer::MERCHANT_REFERENCE => UnzerBusinessTester::MERCHANT_REFERENCE,
         ]);
         $quoteTransfer = (new QuoteTransfer())
             ->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0))
-            ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE]))->build())
-            ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerZedTester::MERCHANT_REFERENCE]))->build());
+            ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerBusinessTester::MERCHANT_REFERENCE]))->build())
+            ->addItem((new ItemBuilder([ItemTransfer::MERCHANT_REFERENCE => UnzerBusinessTester::MERCHANT_REFERENCE]))->build());
 
         // Act
         $quoteTransfer = $this->tester->getFacade()->expandQuoteWithUnzerCredentials($quoteTransfer);
@@ -121,6 +113,6 @@ class ExpandQuoteWithUnzerCredentialsFacadeTest extends UnzerFacadeBaseTest
         // Assert
         $this->assertNotNull($quoteTransfer->getUnzerCredentials());
         $this->assertSame(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT, $quoteTransfer->getUnzerCredentials()->getType());
-        $this->assertSame(UnzerZedTester::MERCHANT_REFERENCE, $quoteTransfer->getUnzerCredentials()->getMerchantReference());
+        $this->assertSame(UnzerBusinessTester::MERCHANT_REFERENCE, $quoteTransfer->getUnzerCredentials()->getMerchantReference());
     }
 }

@@ -10,7 +10,7 @@ namespace SprykerEcoTest\Zed\Unzer\Business;
 use Generated\Shared\Transfer\SaveOrderTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
-use SprykerEcoTest\Zed\Unzer\UnzerZedTester;
+use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
 
 /**
  * Auto-generated group annotations
@@ -40,7 +40,7 @@ class SaveOrderPaymentFacadeTest extends UnzerFacadeBaseTest
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
         $this->tester->configureTestStateMachine([static::OMS_PROCESS]);
         $saveOrderTransfer = $this->tester->haveOrder([
-            SaveOrderTransfer::ORDER_REFERENCE => UnzerZedTester::ORDER_REFERENCE,
+            SaveOrderTransfer::ORDER_REFERENCE => UnzerBusinessTester::ORDER_REFERENCE,
         ], static::OMS_PROCESS);
 
         //Act
@@ -61,7 +61,7 @@ class SaveOrderPaymentFacadeTest extends UnzerFacadeBaseTest
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
         $this->tester->configureTestStateMachine([static::OMS_PROCESS]);
         $saveOrderTransfer = $this->tester->haveOrder([
-            SaveOrderTransfer::ORDER_REFERENCE => UnzerZedTester::ORDER_REFERENCE,
+            SaveOrderTransfer::ORDER_REFERENCE => UnzerBusinessTester::ORDER_REFERENCE,
         ], static::OMS_PROCESS);
 
         //Act
