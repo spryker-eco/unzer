@@ -131,8 +131,7 @@ class UnzerFacadeBaseTest extends Test
     protected function createUnzerApiFacadeMock(): UnzerApiFacade
     {
         return $this->makeEmpty(
-            UnzerApiFacade::class, function () {
-            return
+            UnzerApiFacade::class,
                 [
                     'performSetNotificationUrlApiCall' => $this->tester->createUnzerApiResponseTransfer(),
                     'performCreateCustomerApiCall' => $this->tester->createUnzerApiResponseTransfer(),
@@ -152,8 +151,7 @@ class UnzerFacadeBaseTest extends Test
                     'performRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
                     'performMarketplaceRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
                     'performGetPaymentMethodsApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                ];
-        }
+                ],
         );
     }
 

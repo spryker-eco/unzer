@@ -34,10 +34,12 @@ use Generated\Shared\Transfer\UnzerApiCreateBasketResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateCustomerResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiCreateMetadataResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiCreatePaymentResourceResponseTransfer;
+use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiGetPaymentMethodsResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiGetPaymentResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiPaymentMethodTransfer;
+use Generated\Shared\Transfer\UnzerApiResponseErrorTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiSetWebhookResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiUpdateCustomerResponseTransfer;
@@ -186,6 +188,16 @@ class UnzerBusinessTester extends Actor
     protected const CURRENCY_CODE = 'EUR';
 
     /**
+     * @var string
+     */
+    protected const ERROR_MESSAGE = 'error';
+
+    /**
+     * @var string
+     */
+    protected const ERROR_CODE = 'code';
+
+    /**
      * @var \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface
      */
     protected $facade;
@@ -193,7 +205,7 @@ class UnzerBusinessTester extends Actor
     /**
      * @var bool
      */
-    protected $unzerApiSucessresponse = true;
+    protected $unzerApiSucessResponse = true;
 
     /**
      * @param \Codeception\Scenario $scenario
@@ -288,7 +300,7 @@ class UnzerBusinessTester extends Actor
     public function createUnzerApiResponseTransfer(): UnzerApiResponseTransfer
     {
         return (new UnzerApiResponseTransfer())
-            ->setIsSuccessful($this->unzerApiSucessresponse)
+            ->setIsSuccessful($this->unzerApiSucessResponse)
             ->setCreateCustomerResponse($this->createUnzerApiCreateCustomerResponseTransfer())
             ->setUpdateCustomerResponse($this->createUnzerApiUpdateCustomerResponseTransfer())
             ->setCreateMetadataResponse($this->createUnzerApiCreateMetadataResponseTransfer())
@@ -299,7 +311,8 @@ class UnzerBusinessTester extends Actor
             ->setGetPaymentResponse($this->createUnzerApiGetPaymentResponseTransfer())
             ->setMarketplaceAuthorizeResponse($this->createUnzerApiMarketplaceAuthorizeResponseTransfer())
             ->setChargeResponse($this->createUnzerApiChargeResponseTransfer())
-            ->setAuthorizeResponse($this->createUnzerApiAuthorizeResponseTransfer());
+            ->setAuthorizeResponse($this->createUnzerApiAuthorizeResponseTransfer())
+            ->setErrorResponse($this->createUnzerApiErrorResponseTransfer());
     }
 
     /**
@@ -584,6 +597,20 @@ class UnzerBusinessTester extends Actor
             ->setRedirectUrl(static::UNZER_REDIRECT_URL)
             ->setCustomerId(static::UNZER_API_RESPONSE_CUSTOMER_ID)
             ->setBasketId(static::UNZER_API_RESPONSE_BASKET_ID);
+    }
+
+    /**
+     * @return UnzerApiErrorResponseTransfer
+     */
+    protected function createUnzerApiErrorResponseTransfer(): UnzerApiErrorResponseTransfer
+    {
+        return (new UnzerApiErrorResponseTransfer())
+            ->addError(
+                (new UnzerApiResponseErrorTransfer())
+                    ->setCode(static::ERROR_CODE)
+                    ->setCustomerMessage(static::ERROR_MESSAGE)
+                    ->setMerchantMessage(static::ERROR_MESSAGE)
+            );
     }
 
     /**
