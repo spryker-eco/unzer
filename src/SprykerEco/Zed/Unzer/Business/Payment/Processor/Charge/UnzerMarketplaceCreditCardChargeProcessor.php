@@ -117,7 +117,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
             $groupedOrderItems = $this->addOrderItemToGroupByParticipantId(
                 $orderTransfer,
                 $paymentUnzerOrderItem,
-                $groupedOrderItems
+                $groupedOrderItems,
             );
         }
 

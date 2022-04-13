@@ -11,8 +11,6 @@ use Codeception\TestCase\Test;
 use Generated\Shared\Transfer\LocaleTransfer;
 use Spryker\Service\UtilText\UtilTextService;
 use Spryker\Zed\Locale\Business\LocaleFacade;
-use Spryker\Zed\Merchant\Business\MerchantFacadeInterface;
-use Spryker\Zed\Payment\Business\PaymentFacadeInterface;
 use Spryker\Zed\Vault\Business\VaultFacade;
 use SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToLocaleFacadeBridge;
@@ -229,7 +227,7 @@ class UnzerFacadeBaseTest extends Test
     protected function getMerchantFacade(): UnzerToMerchantFacadeInterface
     {
         return new UnzerToMerchantFacadeBridge(
-            $this->tester->getLocator()->merchant()->facade()
+            $this->tester->getLocator()->merchant()->facade(),
         );
     }
 
@@ -239,7 +237,7 @@ class UnzerFacadeBaseTest extends Test
     protected function getPaymentFacade(): UnzerToPaymentFacadeInterface
     {
         return new UnzerToPaymentFacadeBridge(
-            $this->tester->getLocator()->payment()->facade()
+            $this->tester->getLocator()->payment()->facade(),
         );
     }
 }
