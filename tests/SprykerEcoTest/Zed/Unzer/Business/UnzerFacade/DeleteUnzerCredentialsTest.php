@@ -7,7 +7,9 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business\UnzerFacade;
 
+use Generated\Shared\DataBuilder\UnzerCredentialsBuilder;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use SprykerEco\Shared\Unzer\UnzerConstants as UnzerSharedConstants;
 use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
 
 /**
@@ -54,6 +56,24 @@ class DeleteUnzerCredentialsTest extends UnzerFacadeBaseTest
 
         // Assert
         $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteUnzerCredentialsWithStandardUnzerCredentialsFailWhileUnzerCredentialsUnknown(): void
+    {
+        $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_STANDARD,
+        ]))->build();
+
+        // Act
+        $unzerCredentialsResponseTransfer = $this->tester->getFacade()->deleteUnzerCredentials($unzerCredentialsTransfer);
+
+        // Assert
+        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
+        $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
+        $this->assertSame('Unzer Credentials deletion failed.', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
     }
 
     /**
