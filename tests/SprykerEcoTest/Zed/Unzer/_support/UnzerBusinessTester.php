@@ -600,7 +600,7 @@ class UnzerBusinessTester extends Actor
     }
 
     /**
-     * @return UnzerApiErrorResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer
      */
     protected function createUnzerApiErrorResponseTransfer(): UnzerApiErrorResponseTransfer
     {
@@ -609,7 +609,7 @@ class UnzerBusinessTester extends Actor
                 (new UnzerApiResponseErrorTransfer())
                     ->setCode(static::ERROR_CODE)
                     ->setCustomerMessage(static::ERROR_MESSAGE)
-                    ->setMerchantMessage(static::ERROR_MESSAGE)
+                    ->setMerchantMessage(static::ERROR_MESSAGE),
             );
     }
 

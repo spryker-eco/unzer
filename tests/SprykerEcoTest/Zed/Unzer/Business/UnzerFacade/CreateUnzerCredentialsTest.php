@@ -34,10 +34,10 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::ID_UNZER_CREDENTIALS => null
+            UnzerCredentialsTransfer::ID_UNZER_CREDENTIALS => null,
         ]))
             ->withUnzerKeypair([
-                UnzerKeypairTransfer::KEYPAIR_ID => null
+                UnzerKeypairTransfer::KEYPAIR_ID => null,
             ])->build();
 
         // Act
@@ -85,7 +85,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::ID_UNZER_CREDENTIALS => null
+            UnzerCredentialsTransfer::ID_UNZER_CREDENTIALS => null,
         ]))
             ->withUnzerKeypair([
                 UnzerKeypairTransfer::PUBLIC_KEY => null,
@@ -106,7 +106,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::ID_UNZER_CREDENTIALS => null
+            UnzerCredentialsTransfer::ID_UNZER_CREDENTIALS => null,
         ]))
             ->withUnzerKeypair([
                 UnzerKeypairTransfer::PRIVATE_KEY => null,
@@ -127,7 +127,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
         // Arrange
         $this->tester->ensureUnzerCredentialsTableIsEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => null
+            UnzerCredentialsTransfer::TYPE => null,
         ]))
             ->withUnzerKeypair()
             ->build();
@@ -181,10 +181,9 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
                 ]))
                     ->withUnzerKeypair()
                     ->build(),
-            ]
-        ))
+            ]))
             ->withUnzerKeypair([
-                UnzerKeypairTransfer::KEYPAIR_ID => null
+                UnzerKeypairTransfer::KEYPAIR_ID => null,
             ])->build();
 
         // Act
@@ -224,10 +223,9 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
                 ]))
                     ->withUnzerKeypair()
                     ->build(),
-            ]
-        ))
+            ]))
             ->withUnzerKeypair([
-                UnzerKeypairTransfer::KEYPAIR_ID => null
+                UnzerKeypairTransfer::KEYPAIR_ID => null,
             ])->build();
 
         // Act
@@ -265,7 +263,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
             UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $marketplaceUnzerCredentials->getIdUnzerCredentials(),
         ]))
             ->withUnzerKeypair([
-                UnzerKeypairTransfer::KEYPAIR_ID => null
+                UnzerKeypairTransfer::KEYPAIR_ID => null,
             ])
             ->build();
 

@@ -132,7 +132,7 @@ class UnzerFacadeBaseTest extends Test
     {
         return $this->makeEmpty(
             UnzerApiFacade::class,
-                [
+            [
                     'performSetNotificationUrlApiCall' => $this->tester->createUnzerApiResponseTransfer(),
                     'performCreateCustomerApiCall' => $this->tester->createUnzerApiResponseTransfer(),
                     'performUpdateCustomerApiCall' => $this->tester->createUnzerApiResponseTransfer(),
