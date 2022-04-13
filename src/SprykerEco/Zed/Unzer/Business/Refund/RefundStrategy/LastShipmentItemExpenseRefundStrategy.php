@@ -68,7 +68,7 @@ class LastShipmentItemExpenseRefundStrategy implements UnzerExpenseRefundStrateg
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array<int> $salesOrderItemIds
      *
-     * @return \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer>
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer>
      */
     protected function collectExpenseTransfersForRefund(OrderTransfer $orderTransfer, array $salesOrderItemIds): ArrayObject
     {
