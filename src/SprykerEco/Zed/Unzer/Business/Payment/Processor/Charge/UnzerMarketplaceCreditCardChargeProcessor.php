@@ -143,7 +143,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
 
             $itemCollectionTransfer = $groupedOrderItems[$paymentUnzerOrderItemTransfer->getParticipantId()] ?? new ItemCollectionTransfer();
             $itemCollectionTransfer->addItem($itemTransfer);
-            $groupedOrderItems[$paymentUnzerOrderItemTransfer->getParticipantId()] = $itemCollectionTransfer;
+            $groupedOrderItems[(string)$paymentUnzerOrderItemTransfer->getParticipantId()] = $itemCollectionTransfer;
             $itemTransfer->setUnzerParticipantId($paymentUnzerOrderItemTransfer->getParticipantId());
 
             break;
