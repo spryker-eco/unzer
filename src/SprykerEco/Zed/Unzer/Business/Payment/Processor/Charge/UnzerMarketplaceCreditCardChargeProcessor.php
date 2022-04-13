@@ -197,7 +197,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
             if ($itemTransfer->getUnzerParticipantId() === $participantId && $itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
                 $expensesAmount += $expenseTransfer->getSumGrossPrice();
 
-                break;
+                return $expensesAmount;
             }
         }
 
