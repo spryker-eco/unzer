@@ -140,7 +140,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
     }
 
     /**
-     * @param ExpenseTransfer $expenseTransfer
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
      *
      * @return int
      */
