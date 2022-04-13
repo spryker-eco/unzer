@@ -22,7 +22,6 @@ use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
- * @group ExecutePostSaveHookTest
  */
 class ExecutePostSaveHookTest extends UnzerFacadeBaseTest
 {

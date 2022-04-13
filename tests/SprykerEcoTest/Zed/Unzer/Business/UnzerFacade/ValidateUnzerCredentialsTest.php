@@ -24,7 +24,6 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
- * @group ValidateUnzerCredentialsTest
  */
 class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
 {

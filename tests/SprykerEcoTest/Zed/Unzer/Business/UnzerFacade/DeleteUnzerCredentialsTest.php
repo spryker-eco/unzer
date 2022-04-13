@@ -18,7 +18,6 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
- * @group DeleteUnzerCredentialsTest
  */
 class DeleteUnzerCredentialsTest extends UnzerFacadeBaseTest
 {
@@ -26,25 +25,6 @@ class DeleteUnzerCredentialsTest extends UnzerFacadeBaseTest
      * @var string
      */
     protected const EMPTY_MERCHANT_REFERENCE = '';
-
-    /**
-     * @return void
-     */
-    public function testDeleteUnzerCredentialsWithChildrenFailed(): void
-    {
-        // Arrange
-        $marketplaceUnzerCredentials = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
-        $this->tester->haveMarketplaceMerchantUnzerCredentials([
-            UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $marketplaceUnzerCredentials->getIdUnzerCredentials(),
-            UnzerCredentialsTransfer::MERCHANT_REFERENCE => static::EMPTY_MERCHANT_REFERENCE,
-        ]);
-
-        // Act
-        $unzerCredentialsResponseTransfer = $this->tester->getFacade()->deleteUnzerCredentials($marketplaceUnzerCredentials);
-
-        // Assert
-        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
-    }
 
     /**
      * @return void
@@ -74,5 +54,24 @@ class DeleteUnzerCredentialsTest extends UnzerFacadeBaseTest
 
         // Assert
         $this->assertTrue($unzerCredentialsResponseTransfer->getIsSuccessful());
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteUnzerCredentialsWithChildrenFailed(): void
+    {
+        // Arrange
+        $marketplaceUnzerCredentials = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
+        $this->tester->haveMarketplaceMerchantUnzerCredentials([
+            UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $marketplaceUnzerCredentials->getIdUnzerCredentials(),
+            UnzerCredentialsTransfer::MERCHANT_REFERENCE => static::EMPTY_MERCHANT_REFERENCE,
+        ]);
+
+        // Act
+        $unzerCredentialsResponseTransfer = $this->tester->getFacade()->deleteUnzerCredentials($marketplaceUnzerCredentials);
+
+        // Assert
+        $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
     }
 }
