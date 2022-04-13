@@ -690,7 +690,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerExpensesRefundStrategyResolver(): UnzerExpenseRefundStrategyResolverInterface
     {
         return new UnzerExpenseRefundStrategyResolver(
-            $this->createUnzerExpenseRefundStrategies(),
+            $this->getUnzerExpenseRefundStrategies(),
             $this->getConfig(),
         );
     }
@@ -698,7 +698,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return array<int, \Closure>
      */
-    public function createUnzerExpenseRefundStrategies(): array
+    public function getUnzerExpenseRefundStrategies(): array
     {
         return [
             UnzerConstants::NO_EXPENSES_REFUND_STRATEGY => function () {
