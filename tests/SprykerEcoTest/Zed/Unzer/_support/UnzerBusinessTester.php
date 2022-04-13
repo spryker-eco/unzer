@@ -191,6 +191,11 @@ class UnzerBusinessTester extends Actor
     protected $facade;
 
     /**
+     * @var bool
+     */
+    protected $unzerApiSucessresponse = true;
+
+    /**
      * @param \Codeception\Scenario $scenario
      */
     public function __construct(Scenario $scenario)
@@ -283,7 +288,7 @@ class UnzerBusinessTester extends Actor
     public function createUnzerApiResponseTransfer(): UnzerApiResponseTransfer
     {
         return (new UnzerApiResponseTransfer())
-            ->setIsSuccessful(true)
+            ->setIsSuccessful($this->unzerApiSucessresponse)
             ->setCreateCustomerResponse($this->createUnzerApiCreateCustomerResponseTransfer())
             ->setUpdateCustomerResponse($this->createUnzerApiUpdateCustomerResponseTransfer())
             ->setCreateMetadataResponse($this->createUnzerApiCreateMetadataResponseTransfer())

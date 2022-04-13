@@ -131,27 +131,29 @@ class UnzerFacadeBaseTest extends Test
     protected function createUnzerApiFacadeMock(): UnzerApiFacade
     {
         return $this->makeEmpty(
-            UnzerApiFacade::class,
-            [
-                'performSetNotificationUrlApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performCreateCustomerApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performUpdateCustomerApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performCreateMetadataApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performCreateBasketApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performCreateMarketplaceBasketApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performMarketplaceAuthorizeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performAuthorizeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performMarketplaceGetPaymentApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performGetPaymentApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performMarketplaceChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performMarketplaceAuthorizableChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performAuthorizableChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performCreatePaymentResourceApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performMarketplaceRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-                'performGetPaymentMethodsApiCall' => $this->tester->createUnzerApiResponseTransfer(),
-            ],
+            UnzerApiFacade::class, function () {
+            return
+                [
+                    'performSetNotificationUrlApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performCreateCustomerApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performUpdateCustomerApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performCreateMetadataApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performCreateBasketApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performCreateMarketplaceBasketApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performMarketplaceAuthorizeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performAuthorizeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performMarketplaceGetPaymentApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performGetPaymentApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performMarketplaceChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performMarketplaceAuthorizableChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performAuthorizableChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performChargeApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performCreatePaymentResourceApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performMarketplaceRefundApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                    'performGetPaymentMethodsApiCall' => $this->tester->createUnzerApiResponseTransfer(),
+                ];
+        }
         );
     }
 
