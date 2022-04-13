@@ -158,6 +158,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         ExpenseTransfer $expenseTransfer
     ): UnzerRefundTransfer {
         return (new UnzerRefundTransfer())
+            ->setIsMarketplace(true)
             ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
             ->setChargeId($expenseTransfer->getUnzerChargeIdOrFail())
             ->addItem(
@@ -198,7 +199,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
             ->setPaymentUnzerTransactionConditions(
                 (new PaymentUnzerTransactionConditionsTransfer())
-                    ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
+                    ->addPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
                     ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE),
             );
 
@@ -264,6 +265,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         }
 
         return (new UnzerRefundTransfer())
+            ->setIsMarketplace(false)
             ->setAmount($refundAmountTotal / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
             ->setChargeId($this->getChargeIdByPaymentUnzer($paymentUnzerTransfer));
@@ -281,7 +283,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
             ->setPaymentUnzerTransactionConditions(
                 (new PaymentUnzerTransactionConditionsTransfer())
-                    ->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
+                    ->addPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
                     ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE),
             );
 

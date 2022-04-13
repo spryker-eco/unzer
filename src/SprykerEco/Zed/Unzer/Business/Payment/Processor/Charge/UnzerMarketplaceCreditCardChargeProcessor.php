@@ -89,7 +89,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
     protected function getPaymentUnzerTransactionCollection(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransactionCollectionTransfer
     {
         $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())->setPaymentUnzerTransactionConditions(
-            (new PaymentUnzerTransactionConditionsTransfer())->addFkPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail()),
+            (new PaymentUnzerTransactionConditionsTransfer())->addPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail()),
         );
 
         return $this->unzerRepository
