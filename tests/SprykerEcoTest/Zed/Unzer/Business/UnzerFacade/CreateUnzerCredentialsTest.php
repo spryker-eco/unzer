@@ -70,7 +70,6 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
 
         // Assert
         $this->expectException(NullValueException::class);
-        $this->expectExceptionMessage('Property "unzerKeypair" of transfer `Generated\Shared\Transfer\UnzerCredentialsTransfer` is null.');
 
         // Act
         $this->tester
@@ -94,7 +93,6 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
 
         // Assert
         $this->expectException(NullValueException::class);
-        $this->expectExceptionMessage('Property "publicKey" of transfer `Generated\Shared\Transfer\UnzerKeypairTransfer` is null.');
 
         // Act
         $this->tester->getFacade()->createUnzerCredentials($unzerCredentialsTransfer);
@@ -116,7 +114,6 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
 
         // Assert
         $this->expectException(NullValueException::class);
-        $this->expectExceptionMessage('Property "privateKey" of transfer `Generated\Shared\Transfer\UnzerKeypairTransfer` is null.');
 
         // Act
         $this->tester->getFacade()->createUnzerCredentials($unzerCredentialsTransfer);
@@ -137,7 +134,6 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
 
         // Assert
         $this->expectException(NullValueException::class);
-        $this->expectExceptionMessage('Property "type" of transfer `Generated\Shared\Transfer\UnzerCredentialsTransfer` is null.');
 
         // Act
         $this->tester->getFacade()->createUnzerCredentials($unzerCredentialsTransfer);
@@ -164,7 +160,6 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
 
         // Assert
         $this->expectException(NullValueException::class);
-        $this->expectExceptionMessage('Property "parentIdUnzerCredentials" of transfer `Generated\Shared\Transfer\UnzerCredentialsTransfer` is null.');
 
         // Act
         $this->tester->getFacade()->createUnzerCredentials($unzerCredentialsTransfer);
