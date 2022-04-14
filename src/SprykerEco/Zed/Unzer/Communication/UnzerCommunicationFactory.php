@@ -7,15 +7,16 @@
 
 namespace SprykerEco\Zed\Unzer\Communication;
 
-use Spryker\Zed\Calculation\Business\CalculationFacadeInterface;
 use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
-use Spryker\Zed\Refund\Business\RefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\ChargeUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\RefundUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\UnzerOmsCommandInterface;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapper;
 use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface;
 use SprykerEco\Zed\Unzer\UnzerDependencyProvider;
 
 /**
@@ -45,6 +46,7 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
         return new RefundUnzerOmsCommand(
             $this->getFacade(),
             $this->getRefundFacade(),
+            $this->getShipmentFacade(),
             $this->createUnzerOmsMapper(),
         );
     }
@@ -65,31 +67,30 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
      */
     public function getSalesFacade(): UnzerToSalesFacadeInterface
     {
-        /** @var \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface $salesFacade */
-        $salesFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SALES);
-
-        return $salesFacade;
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SALES);
     }
 
     /**
-     * @return \Spryker\Zed\Calculation\Business\CalculationFacadeInterface
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface
      */
-    public function getCalculationFacade(): CalculationFacadeInterface
+    public function getCalculationFacade(): UnzerToCalculationFacadeInterface
     {
-        /** @var \Spryker\Zed\Calculation\Business\CalculationFacadeInterface $calculationFacade */
-        $calculationFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_CALCULATION);
-
-        return $calculationFacade;
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_CALCULATION);
     }
 
     /**
-     * @return \Spryker\Zed\Refund\Business\RefundFacadeInterface
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface
      */
-    public function getRefundFacade(): RefundFacadeInterface
+    public function getRefundFacade(): UnzerToRefundFacadeInterface
     {
-        /** @var \Spryker\Zed\Refund\Business\RefundFacadeInterface $refundFacade */
-        $refundFacade = $this->getProvidedDependency(UnzerDependencyProvider::FACADE_REFUND);
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_REFUND);
+    }
 
-        return $refundFacade;
+    /**
+     * @return \SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface
+     */
+    public function getShipmentFacade(): UnzerToShipmentFacadeInterface
+    {
+        return $this->getProvidedDependency(UnzerDependencyProvider::FACADE_SHIPMENT);
     }
 }

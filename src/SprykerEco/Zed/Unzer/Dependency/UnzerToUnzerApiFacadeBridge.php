@@ -80,6 +80,16 @@ class UnzerToUnzerApiFacadeBridge implements UnzerToUnzerApiFacadeInterface
      *
      * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
      */
+    public function performCreateMarketplaceBasketApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer
+    {
+        return $this->unzerApiFacade->performCreateMarketplaceBasketApiCall($unzerApiRequestTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiRequestTransfer $unzerApiRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
+     */
     public function performCreatePaymentResourceApiCall(UnzerApiRequestTransfer $unzerApiRequestTransfer): UnzerApiResponseTransfer
     {
         return $this->unzerApiFacade->performCreatePaymentResourceApiCall($unzerApiRequestTransfer);

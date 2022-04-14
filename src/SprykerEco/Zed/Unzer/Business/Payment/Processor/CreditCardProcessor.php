@@ -14,13 +14,12 @@ use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
 
-class CreditCardProcessor extends AbstractPaymentProcessor implements UnzerChargeablePaymentProcessorInterface
+class CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface
@@ -43,27 +42,29 @@ class CreditCardProcessor extends AbstractPaymentProcessor implements UnzerCharg
     protected $unzerRefundProcessor;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface $unzerBasketAdapter
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
+     */
+    protected $unzerPreparePaymentProcessor;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface $unzerAuthorizeAdapter
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface $unzerChargeProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
      */
     public function __construct(
-        UnzerCheckoutMapperInterface $unzerCheckoutMapper,
-        UnzerBasketAdapterInterface $unzerBasketAdapter,
         UnzerAuthorizeAdapterInterface $unzerAuthorizeAdapter,
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
         UnzerChargeProcessorInterface $unzerChargeProcessor,
-        UnzerRefundProcessorInterface $unzerRefundProcessor
+        UnzerRefundProcessorInterface $unzerRefundProcessor,
+        UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
     ) {
-        parent::__construct($unzerCheckoutMapper, $unzerBasketAdapter);
-
         $this->unzerAuthorizeAdapter = $unzerAuthorizeAdapter;
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerChargeProcessor = $unzerChargeProcessor;
         $this->unzerRefundProcessor = $unzerRefundProcessor;
+        $this->unzerPreparePaymentProcessor = $unzerPreparePaymentProcessor;
     }
 
     /**
@@ -74,7 +75,7 @@ class CreditCardProcessor extends AbstractPaymentProcessor implements UnzerCharg
      */
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
+        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer->setPaymentResource($this->getUnzerPaymentResourceFromQuote($quoteTransfer));
 
         $unzerPaymentTransfer = $this->unzerAuthorizeAdapter->authorizePayment($unzerPaymentTransfer);
@@ -84,7 +85,7 @@ class CreditCardProcessor extends AbstractPaymentProcessor implements UnzerCharg
 
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */
@@ -96,7 +97,7 @@ class CreditCardProcessor extends AbstractPaymentProcessor implements UnzerCharg
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */

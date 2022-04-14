@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": ">=7.4",
-        "spryker-eco/unzer-api": "dev-feature/cc-14610/dev-unzer-psp",
+        "spryker-eco/unzer-api": "dev-feature/cc-14610/cc-14716-order-commands",
         "spryker-shop/shop-ui": "^1.56.0",
         "spryker/calculation": "^4.11.0",
         "spryker/cart-extension": "^4.1.0",
@@ -14,7 +14,6 @@
         "spryker/kernel": "^3.30.0",
         "spryker/locale": "^3.8.0",
         "spryker/merchant": "^3.1.0",
-        "spryker/merchant-extension": "^1.1.0",
         "spryker/oms": "^11.15.0",
         "spryker/payment": "^5.4.2",
         "spryker/payment-extension": "^1.0.0",
@@ -22,6 +21,7 @@
         "spryker/quote": "^2.15.0",
         "spryker/refund": "^5.4.0",
         "spryker/sales": "^11.27.0",
+        "spryker/shipment": "^8.4.0",
         "spryker/step-engine": "^3.3.0",
         "spryker/store": "^1.0.0",
         "spryker/symfony": "^3.7.0",
@@ -35,16 +35,19 @@
         "phpstan/phpstan": "*",
         "spryker/checkout": "*",
         "spryker/code-sniffer": "*",
-        "spryker/customer": "*",
-        "spryker/locale": "*",
         "spryker/propel": "*",
         "spryker/router": "*",
         "spryker/state-machine": "*",
         "spryker/testify": "*"
     },
+    "suggest": {
+        "spryker/checkout": "Use this module if you want to use Checkout plugins.",
+        "spryker/router": "Use this module if you want use the RouterProviderPlugin."
+    },
     "autoload": {
         "psr-4": {
-            "SprykerEco\\": "src/SprykerEco/"
+            "SprykerEco\\": "src/SprykerEco/",
+            "SprykerEcoTest\\Zed\\Unzer\\Helper\\": "tests/SprykerEcoTest/Zed/Unzer/_support/Helper/"
         }
     },
     "autoload-dev": {
@@ -59,7 +62,9 @@
         "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
         "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
         "stan": "phpstan analyse -c phpstan.neon src/",
-        "stan-setup": "cp composer.json composer.backup && COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpstan/phpstan:^0.12 && mv composer.backup composer.json"
+        "stan-setup": "cp composer.json composer.backup && COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpstan/phpstan:^0.12 && mv composer.backup composer.json",
+        "lowest": "validate-prefer-lowest",
+        "lowest-setup": "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
     },
     "repositories": [
         {
@@ -79,9 +84,5 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
-    },
-    "suggest": {
-        "spryker/checkout": "Use this module if you want to use Checkout plugins.",
-        "spryker/router": "Use this module if you want use the RouterProviderPlugin."
     }
 }

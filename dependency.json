@@ -1,5 +1,6 @@
 {
     "include": {
-        "spryker/transfer": "Provides transfer objects definition with `::get*OrFail()` functionality."
+        "spryker/transfer": "Provides transfer objects definition with `::get*OrFail()` functionality.",
+        "spryker-shop/shop-ui": "ShopUi provides basic frontend infrastructure."
     }
 }

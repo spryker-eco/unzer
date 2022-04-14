@@ -10,7 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 
-class MarketplaceCreditCardProcessor extends CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
+class MarketplaceCreditCardProcessor extends CreditCardProcessor
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer

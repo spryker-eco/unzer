@@ -38,8 +38,6 @@ class UnzerRefundMapper implements UnzerRefundMapperInterface
         UnzerRefundTransfer $unzerRefundTransfer,
         UnzerApiRefundRequestTransfer $unzerApiRefundRequestTransfer
     ): UnzerApiRefundRequestTransfer {
-        //@todo adjust mapper for regular refund
-
-        return $unzerApiRefundRequestTransfer;
+        return $unzerApiRefundRequestTransfer->fromArray($unzerRefundTransfer->toArray(), true);
     }
 }

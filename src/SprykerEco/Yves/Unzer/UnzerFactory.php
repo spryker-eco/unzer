@@ -13,12 +13,18 @@ use Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface;
 use SprykerEco\Client\Unzer\UnzerClientInterface;
 use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
 use SprykerEco\Yves\Unzer\Dependency\Service\UnzerToUtilEncodingServiceInterface;
+use SprykerEco\Yves\Unzer\Form\BankTransferSubForm;
 use SprykerEco\Yves\Unzer\Form\CreditCardSubForm;
+use SprykerEco\Yves\Unzer\Form\DataProvider\BankTransferFormDataProvider;
 use SprykerEco\Yves\Unzer\Form\DataProvider\CreditCardFormDataProvider;
 use SprykerEco\Yves\Unzer\Form\DataProvider\MarketplaceBankTransferFormDataProvider;
 use SprykerEco\Yves\Unzer\Form\DataProvider\MarketplaceCreditCardFormDataProvider;
+use SprykerEco\Yves\Unzer\Form\DataProvider\MarketplaceSofortFormDataProvider;
+use SprykerEco\Yves\Unzer\Form\DataProvider\SofortFormDataProvider;
 use SprykerEco\Yves\Unzer\Form\MarketplaceBankTransferSubForm;
 use SprykerEco\Yves\Unzer\Form\MarketplaceCreditCardSubForm;
+use SprykerEco\Yves\Unzer\Form\MarketplaceSofortSubForm;
+use SprykerEco\Yves\Unzer\Form\SofortSubForm;
 use SprykerEco\Yves\Unzer\Handler\UnzerHandler;
 use SprykerEco\Yves\Unzer\Handler\UnzerHandlerInterface;
 
@@ -37,9 +43,39 @@ class UnzerFactory extends AbstractFactory
     /**
      * @return \Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface
      */
+    public function createMarketplaceSofortFormDataProvider(): StepEngineFormDataProviderInterface
+    {
+        return new MarketplaceSofortFormDataProvider(
+            $this->getQuoteClient(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface
+     */
     public function createMarketplaceCreditCardFormDataProvider(): StepEngineFormDataProviderInterface
     {
         return new MarketplaceCreditCardFormDataProvider(
+            $this->getQuoteClient(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface
+     */
+    public function createBankTransferFormDataProvider(): StepEngineFormDataProviderInterface
+    {
+        return new BankTransferFormDataProvider(
+            $this->getQuoteClient(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface
+     */
+    public function createSofortFormDataProvider(): StepEngineFormDataProviderInterface
+    {
+        return new SofortFormDataProvider(
             $this->getQuoteClient(),
         );
     }
@@ -76,6 +112,30 @@ class UnzerFactory extends AbstractFactory
     public function createCreditCardSubForm(): SubFormInterface
     {
         return new CreditCardSubForm();
+    }
+
+    /**
+     * @return \Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface
+     */
+    public function createMarketplaceSofortSubForm(): SubFormInterface
+    {
+        return new MarketplaceSofortSubForm();
+    }
+
+    /**
+     * @return \Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface
+     */
+    public function createBankTransferSubForm(): SubFormInterface
+    {
+        return new BankTransferSubForm();
+    }
+
+    /**
+     * @return \Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface
+     */
+    public function createSofortSubForm(): SubFormInterface
+    {
+        return new SofortSubForm();
     }
 
     /**

@@ -7,22 +7,21 @@
 
 namespace SprykerEco\Yves\Unzer\Form;
 
-use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Generated\Shared\Transfer\PaymentTransfer;
 
-class MarketplaceBankTransferSubForm extends AbstractUnzerSubForm
+class MarketplaceBankTransferSubForm extends BankTransferSubForm
 {
     /**
      * @var string
      */
-    public const PAYMENT_METHOD = 'marketplace-bank-transfer';
+    protected const TEMPLATE_VIEW_PATH = 'views/marketplace-bank-transfer/marketplace-bank-transfer';
 
     /**
      * @return string
      */
     public function getName(): string
     {
-        return 'unzerMarketplaceBankTransfer';
+        return PaymentTransfer::UNZER_MARKETPLACE_BANK_TRANSFER;
     }
 
     /**
@@ -30,26 +29,6 @@ class MarketplaceBankTransferSubForm extends AbstractUnzerSubForm
      */
     public function getPropertyPath(): string
     {
-        return 'unzerMarketplaceBankTransfer';
-    }
-
-    /**
-     * @return string
-     */
-    public function getTemplatePath(): string
-    {
-        return 'unzer' . '/' . 'marketplaceBankTransfer';
-    }
-
-    /**
-     * @param \Symfony\Component\OptionsResolver\OptionsResolver $resolver
-     *
-     * @return void
-     */
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => UnzerPaymentTransfer::class,
-        ])->setRequired(static::OPTIONS_FIELD_NAME);
+        return PaymentTransfer::UNZER_MARKETPLACE_BANK_TRANSFER;
     }
 }

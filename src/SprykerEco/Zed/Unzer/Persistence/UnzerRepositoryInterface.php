@@ -9,7 +9,8 @@ namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
-use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
@@ -48,19 +49,6 @@ interface UnzerRepositoryInterface
     public function findPaymentUnzerOrderItemByIdSalesOrderItem(int $idSalesOrderItem): ?PaymentUnzerOrderItemTransfer;
 
     /**
-     * @param string $paymentId
-     * @param string $transactionType
-     * @param string|null $participantId
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer|null
-     */
-    public function findPaymentUnzerTransactionByPaymentIdAndParticipantId(
-        string $paymentId,
-        string $transactionType,
-        ?string $participantId = null
-    ): ?PaymentUnzerTransactionTransfer;
-
-    /**
      * @param int $idCustomer
      *
      * @return \Generated\Shared\Transfer\UnzerCustomerTransfer|null
@@ -82,4 +70,13 @@ interface UnzerRepositoryInterface
     public function findUnzerCredentialsCollectionByCriteria(
         UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
     ): UnzerCredentialsCollectionTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
+     */
+    public function getPaymentUnzerTransactionCollectionByCriteria(
+        PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
+    ): PaymentUnzerTransactionCollectionTransfer;
 }

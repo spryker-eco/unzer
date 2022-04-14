@@ -10,7 +10,6 @@ namespace SprykerEco\Zed\Unzer\Business\Reader;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
-use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
@@ -95,23 +94,6 @@ class UnzerReader implements UnzerReaderInterface
     {
         return $this->unzerRepository
                 ->findPaymentUnzerOrderItemByIdSalesOrderItem($idSalesOrderItem) ?? new PaymentUnzerOrderItemTransfer();
-    }
-
-    /**
-     * @param string $paymentId
-     * @param string $transactionType
-     * @param string|null $participantId
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer
-     */
-    public function getPaymentUnzerTransactionByPaymentIdAndParticipantId(
-        string $paymentId,
-        string $transactionType,
-        ?string $participantId = null
-    ): PaymentUnzerTransactionTransfer {
-        return $this->unzerRepository
-                ->findPaymentUnzerTransactionByPaymentIdAndParticipantId($paymentId, $transactionType, $participantId)
-            ?? new PaymentUnzerTransactionTransfer();
     }
 
     /**

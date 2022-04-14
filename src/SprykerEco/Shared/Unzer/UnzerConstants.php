@@ -13,39 +13,60 @@ namespace SprykerEco\Shared\Unzer;
 interface UnzerConstants
 {
     /**
+     * @api
+     *
      * @var string
      */
     public const UNZER_AUTHORIZE_RETURN_URL = 'UNZER:UNZER_AUTHORIZE_RETURN_URL';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const UNZER_CHARGE_RETURN_URL = 'UNZER:UNZER_CHARGE_RETURN_URL';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const WEBHOOK_RETRIEVE_URL = 'UNZER:WEBHOOK_RETRIEVE_URL';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const MASTER_MERCHANT_PARTICIPANT_ID = 'UNZER:MASTER_MERCHANT_PARTICIPANT_ID';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const MAIN_REGULAR_KEYPAIR_ID = 'UNZER:PRIMARY_KEYPAIR_ID';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const MAIN_MARKETPLACE_KEYPAIR_ID = 'UNZER:PRIMARY_KEYPAIR_ID';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const VAULT_DATA_TYPE = 'UNZER:VAULT_DATA_TYPE';
+
+    /**
+     * @api
+     *
+     * @var string
+     */
+    public const EXPENSES_REFUND_STRATEGY_KEY = 'UNZER:EXPENSES_REFUND_STRATEGY_KEY';
 
     /**
      * @var int
@@ -84,4 +105,19 @@ interface UnzerConstants
         self::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
         self::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
     ];
+
+    /**
+     * @var int
+     */
+    public const NO_EXPENSES_REFUND_STRATEGY = 0;
+
+    /**
+     * @var int
+     */
+    public const LAST_SHIPMENT_ITEM_EXPENSES_REFUND_STRATEGY = 1;
+
+    /**
+     * @var int
+     */
+    public const LAST_ORDER_ITEM_EXPENSES_REFUND_STRATEGY = 2;
 }

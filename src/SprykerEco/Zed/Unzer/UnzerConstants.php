@@ -105,6 +105,11 @@ interface UnzerConstants
     public const UNZER_PAYMENT_METHOD_WECHAT_PAY = 'wechatpay';
 
     /**
+     * @var string
+     */
+    public const UNZER_PAYMENT_METHOD_INSTALLMENT_SECURED = 'installment-secured';
+
+    /**
      * @var int
      */
     public const UNZER_PAYMENT_STATUS_PENDING = 0;
@@ -240,6 +245,16 @@ interface UnzerConstants
     public const TRANSACTION_TYPE_CHARGE = 'charge';
 
     /**
+     * @var string
+     */
+    public const TRANSACTION_TYPE_AUTHORIZE = 'authorize';
+
+    /**
+     * @var string
+     */
+    public const TRANSACTION_STATUS_SUCCESS = 'success';
+
+    /**
      * @var int
      */
     public const INT_TO_FLOAT_DIVIDER = 100;
@@ -248,4 +263,29 @@ interface UnzerConstants
      * @var string
      */
     public const WEBHOOK_EVENT_TYPE = 'all';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_TYPE_GOODS = 'goods';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_TYPE_SHIPMENTS = 'shipments';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_SHIPMENT_TITLE = 'Shipping costs';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_SHIPMENT_REFERENCE_ID = 'shipment_costs';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE = self::UNZER_BASKET_SHIPMENT_REFERENCE_ID . '_%s';
 }

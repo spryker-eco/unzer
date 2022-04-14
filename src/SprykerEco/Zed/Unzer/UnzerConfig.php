@@ -15,6 +15,25 @@ use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 class UnzerConfig extends AbstractBundleConfig
 {
     /**
+     * @api
+     *
+     * @var array<string, string>
+     */
+    public const SALUTATION_MAP = [
+        'Mr' => 'mr',
+        'Mrs' => 'mrs',
+        'Ms' => 'mrs',
+        'Dr' => 'mr',
+    ];
+
+    /**
+     * @api
+     *
+     * @var string
+     */
+    public const SALUTATION_DEFAULT = 'unknown';
+
+    /**
      * @var array<int, string>
      */
     protected const UNZER_PAYMENT_STATE_OMS_STATUS_MAP = [
@@ -101,6 +120,9 @@ class UnzerConfig extends AbstractBundleConfig
         UnzerConstants::UNZER_PAYMENT_METHOD_WECHAT_PAY => [
             UnzerSharedConfig::PAYMENT_METHOD_KEY_WECHAT_PAY,
         ],
+        UnzerConstants::UNZER_PAYMENT_METHOD_INSTALLMENT_SECURED => [
+            UnzerSharedConfig::PAYMENT_METHOD_KEY_INSTALLMENT_SECURED,
+        ],
     ];
 
     /**
@@ -108,6 +130,7 @@ class UnzerConfig extends AbstractBundleConfig
      */
     protected const AUTHORIZE_PAYMENT_METHODS = [
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_CREDIT_CARD,
     ];
 
     /**
@@ -136,6 +159,7 @@ class UnzerConfig extends AbstractBundleConfig
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER => UnzerSharedConfig::PAYMENT_METHOD_NAME_MARKETPLACE_BANK_TRANSFER,
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD => UnzerSharedConfig::PAYMENT_METHOD_NAME_MARKETPLACE_CREDIT_CARD,
         UnzerSharedConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT => UnzerSharedConfig::PAYMENT_METHOD_NAME_MARKETPLACE_SOFORT,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_INSTALLMENT_SECURED => UnzerSharedConfig::PAYMENT_METHOD_NAME_INSTALLMENT_SECURE,
     ];
 
     /**
@@ -224,8 +248,12 @@ class UnzerConfig extends AbstractBundleConfig
      *
      * @return array<array-key, string>
      */
-    public function getPaymentMethodKeys(string $unzerPaymentMethodKey): array
+    public function getMappedUnzerPaymentMethodsByUnzerPaymentMethodKey(string $unzerPaymentMethodKey): array
     {
+        if (!isset(static::UNZER_PAYMENT_METHOD_KEYS_MAP[$unzerPaymentMethodKey])) {
+            return [];
+        }
+
         return static::UNZER_PAYMENT_METHOD_KEYS_MAP[$unzerPaymentMethodKey];
     }
 
@@ -433,5 +461,15 @@ class UnzerConfig extends AbstractBundleConfig
     public function getWebhookEventType(): string
     {
         return UnzerConstants::WEBHOOK_EVENT_TYPE;
+    }
+
+    /**
+     * @api
+     *
+     * @return int
+     */
+    public function getExpensesRefundStrategyKey(): int
+    {
+        return $this->get(UnzerSharedConstants::EXPENSES_REFUND_STRATEGY_KEY);
     }
 }

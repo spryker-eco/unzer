@@ -8,7 +8,6 @@
 namespace SprykerEco\Yves\Unzer\Form;
 
 use Generated\Shared\Transfer\PaymentTransfer;
-use SprykerEco\Shared\Unzer\UnzerConfig;
 
 class MarketplaceCreditCardSubForm extends CreditCardSubForm
 {
@@ -36,13 +35,5 @@ class MarketplaceCreditCardSubForm extends CreditCardSubForm
     public function getName(): string
     {
         return PaymentTransfer::UNZER_MARKETPLACE_CREDIT_CARD;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTemplatePath(): string
-    {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
     }
 }

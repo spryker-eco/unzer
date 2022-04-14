@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 use Generated\Shared\Transfer\UnzerApiChargeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
+use Generated\Shared\Transfer\UnzerChargeTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerChargeMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
@@ -60,12 +61,13 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
 
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    public function chargeAuthorizablePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
+    public function chargePartialAuthorizablePayment(UnzerPaymentTransfer $unzerPaymentTransfer, UnzerChargeTransfer $unzerChargeTransfer): UnzerPaymentTransfer
     {
-        $unzerApiRequestTransfer = $this->prepareChargeRequest($unzerPaymentTransfer);
+        $unzerApiRequestTransfer = $this->prepareAuthorizableChargeRequest($unzerPaymentTransfer, $unzerChargeTransfer);
 
         $unzerApiResponseTransfer = $this->performAuthorizableCharge($unzerApiRequestTransfer, $unzerPaymentTransfer);
         $this->assertSuccessResponse($unzerApiResponseTransfer);
@@ -89,6 +91,28 @@ class UnzerChargeAdapter extends UnzerAbstractApiAdapter implements UnzerChargeA
             ->unzerChargeMapper
             ->mapUnzerPaymentTransferToUnzerApiChargeRequestTransfer(
                 $unzerPaymentTransfer,
+                new UnzerApiChargeRequestTransfer(),
+            );
+
+        return (new UnzerApiRequestTransfer())
+            ->setChargeRequest($unzerApiChargeRequestTransfer)
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiRequestTransfer
+     */
+    protected function prepareAuthorizableChargeRequest(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        UnzerChargeTransfer $unzerChargeTransfer
+    ): UnzerApiRequestTransfer {
+        $unzerApiChargeRequestTransfer = $this
+            ->unzerChargeMapper
+            ->mapUnzerChargeTransferToUnzerApiChargeRequestTransfer(
+                $unzerChargeTransfer,
                 new UnzerApiChargeRequestTransfer(),
             );
 

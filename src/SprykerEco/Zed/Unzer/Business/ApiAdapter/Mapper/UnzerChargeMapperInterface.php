@@ -9,6 +9,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiChargeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
+use Generated\Shared\Transfer\UnzerChargeTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
 interface UnzerChargeMapperInterface
@@ -45,4 +46,15 @@ interface UnzerChargeMapperInterface
         UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiChargeRequestTransfer
+     */
+    public function mapUnzerChargeTransferToUnzerApiChargeRequestTransfer(
+        UnzerChargeTransfer $unzerChargeTransfer,
+        UnzerApiChargeRequestTransfer $unzerApiChargeRequestTransfer
+    ): UnzerApiChargeRequestTransfer;
 }

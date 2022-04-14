@@ -8,12 +8,28 @@
 namespace SprykerEco\Zed\Unzer\Business\Quote\Mapper;
 
 use Generated\Shared\Transfer\AddressTransfer;
+use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerAddressTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
+use SprykerEco\Zed\Unzer\UnzerConfig;
 
 class UnzerQuoteMapper implements UnzerQuoteMapperInterface
 {
+    /**
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface
+     */
+    protected $utilTextService;
+
+    /**
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface $utilTextService
+     */
+    public function __construct(UnzerToUtilTextServiceInterface $utilTextService)
+    {
+        $this->utilTextService = $utilTextService;
+    }
+
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param \Generated\Shared\Transfer\UnzerCustomerTransfer $unzerCustomerTransfer
@@ -25,23 +41,38 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
         UnzerCustomerTransfer $unzerCustomerTransfer
     ): UnzerCustomerTransfer {
         $shippingAddress = $this->getShippingAddressFromQuote($quoteTransfer);
+        $customerTransfer = $quoteTransfer->getCustomerOrFail();
 
         return $unzerCustomerTransfer
-            ->setId($quoteTransfer->getCustomerReferenceOrFail() . uniqid('', true))
-            ->setLastname($quoteTransfer->getCustomerOrFail()->getLastName())
-            ->setFirstname($quoteTransfer->getCustomerOrFail()->getFirstName())
-            ->setSalutation($quoteTransfer->getCustomerOrFail()->getSalutation())
-            ->setCompany($quoteTransfer->getCustomerOrFail()->getCompany())
-            ->setBirthDate($quoteTransfer->getCustomerOrFail()->getDateOfBirth())
-            ->setEmail($quoteTransfer->getCustomerOrFail()->getEmail())
-            ->setPhone($shippingAddress->getPhone())
-            ->setMobile($quoteTransfer->getCustomerOrFail()->getPhone())
+            ->setId($this->utilTextService->generateUniqueId((string)$customerTransfer->getCustomerReference()))
+            ->setLastname($customerTransfer->getLastNameOrFail())
+            ->setFirstname($customerTransfer->getFirstNameOrFail())
+            ->setSalutation($this->mapSalutationToUnzerSalutation($customerTransfer))
+            ->setCompany((string)$customerTransfer->getCompany())
+            ->setBirthDate($customerTransfer->getDateOfBirth())
+            ->setEmail((string)$customerTransfer->getEmail())
+            ->setPhone((string)$shippingAddress->getPhone())
+            ->setMobile((string)$customerTransfer->getPhone())
             ->setShippingAddress(
                 $this->mapAddressTransferToUnzerAddressTransfer($shippingAddress, new UnzerAddressTransfer()),
             )
             ->setBillingAddress(
                 $this->mapAddressTransferToUnzerAddressTransfer($quoteTransfer->getBillingAddressOrFail(), new UnzerAddressTransfer()),
             );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
+     *
+     * @return string
+     */
+    protected function mapSalutationToUnzerSalutation(CustomerTransfer $customerTransfer): string
+    {
+        if ($customerTransfer->getSalutation() && array_key_exists($customerTransfer->getSalutation(), UnzerConfig::SALUTATION_MAP)) {
+            return UnzerConfig::SALUTATION_MAP[$customerTransfer->getSalutation()];
+        }
+
+        return UnzerConfig::SALUTATION_DEFAULT;
     }
 
     /**
@@ -56,12 +87,12 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
     ): UnzerAddressTransfer {
         $name = trim(sprintf('%s %s', (string)$addressTransfer->getFirstName(), (string)$addressTransfer->getLastName()));
 
-        return $unzerAddressTransfer->setCountry($addressTransfer->getIso2Code())
-            ->setState($addressTransfer->getState())
-            ->setCity($addressTransfer->getCity())
+        return $unzerAddressTransfer->setCountry((string)$addressTransfer->getIso2Code())
+            ->setState((string)$addressTransfer->getState())
+            ->setCity((string)$addressTransfer->getCity())
             ->setName($name)
-            ->setZip($addressTransfer->getZipCode())
-            ->setStreet($addressTransfer->getAddress1());
+            ->setZip((string)$addressTransfer->getZipCode())
+            ->setStreet((string)$addressTransfer->getAddress1());
     }
 
     /**

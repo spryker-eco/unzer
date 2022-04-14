@@ -13,7 +13,7 @@ interface UnzerChargeablePaymentProcessorInterface extends UnzerPaymentProcessor
 {
     /**
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array $salesOrderItemIds
+     * @param array<int> $salesOrderItemIds
      *
      * @return void
      */

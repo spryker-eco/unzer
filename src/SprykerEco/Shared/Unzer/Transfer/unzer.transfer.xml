@@ -23,7 +23,7 @@
         <property name="basketItemReferenceId" type="string"/>
         <property name="quantity" type="int"/>
         <property name="amountDiscount" type="float"/>
-        <property name="vat" type="float"/>
+        <property name="vat" type="string"/>
         <property name="amountGross" type="float"/>
         <property name="amountVat" type="float"/>
         <property name="amountPerUnit" type="float"/>
@@ -50,6 +50,11 @@
         <property name="quantity" type="int"/>
         <property name="amountGross" type="float"/>
         <property name="participantId" type="string"/>
+        <property name="idSalesOrderItem" type="int"/>
+    </transfer>
+
+    <transfer name="UnzerRefundItemCollection">
+        <property name="unzerRefundItems" type="UnzerRefundItem[]" singular="unzerRefundItem"/>
     </transfer>
 
     <transfer name="UnzerCustomer">
@@ -117,6 +122,15 @@
         <property name="unzerKeypair" type="UnzerKeypair"/>
     </transfer>
 
+    <transfer name="UnzerCharge">
+        <property name="paymentId" type="string"/>
+        <property name="authorizeId" type="string"/>
+        <property name="amount" type="int"/>
+        <property name="orderId" type="string"/>
+        <property name="invoiceId" type="string"/>
+        <property name="paymentReference" type="string"/>
+    </transfer>
+
     <transfer name="UnzerKeypair">
         <property name="keypairId" type="string"/>
         <property name="publicKey" type="string"/>
@@ -150,6 +164,7 @@
     <transfer name="Message">
         <property name="value" type="string"/>
         <property name="message" type="string"/>
+        <property name="parameters" type="array" singular="parameters"/>
     </transfer>
 
     <transfer name="UnzerCredentialsResponse">
@@ -161,6 +176,9 @@
     <transfer name="Payment">
         <property name="unzerPayment" type="UnzerPayment"/>
         <property name="unzerMarketplaceBankTransfer" type="UnzerPayment"/>
+        <property name="unzerMarketplaceSofort" type="UnzerPayment"/>
+        <property name="unzerBankTransfer" type="UnzerPayment"/>
+        <property name="unzerSofort" type="UnzerPayment"/>
         <property name="unzerMarketplaceCreditCard" type="UnzerPayment"/>
         <property name="unzerCreditCard" type="UnzerPayment"/>
         <property name="paymentProvider" type="string"/>
@@ -205,6 +223,21 @@
         <property name="merchantReference" type="string"/>
         <property name="idSalesOrderItem" type="int"/>
         <property name="shipment" type="Shipment"/>
+        <property name="calculatedExpensesCost" type="int"/>
+        <property name="expenseId" type="string"/>
+        <property name="groupKey" type="string"/>
+        <property name="taxRate" type="float"/>
+        <property name="sumPriceToPayAggregation" type="int"/>
+    </transfer>
+
+    <transfer name="Expense">
+        <property name="unzerParticipantId" type="string"/>
+        <property name="unzerChargeId" type="string"/>
+        <property name="sumGrossPrice" type="int"/>
+        <property name="taxRate" type="float"/>
+        <property name="refundableAmount" type="int"/>
+        <property name="shipment" type="Shipment"/>
+        <property name="merchantReference" type="string"/>
     </transfer>
 
     <transfer name="PaymentUnzer">
@@ -254,6 +287,21 @@
         <property name="paymentUnzerTransactions" type="PaymentUnzerTransaction[]" singular="paymentUnzerTransaction"/>
     </transfer>
 
+    <transfer name="PaymentUnzerTransactionCriteria">
+        <property name="paymentUnzerTransactionConditions" type="PaymentUnzerTransactionConditions"/>
+        <property name="sortCollection" type="Sort[]" singular="sort"/>
+        <property name="pagination" type="Pagination"/>
+    </transfer>
+
+    <transfer name="PaymentUnzerTransactionConditions">
+        <property name="ids" type="int[]" singular="id"/>
+        <property name="participantIds" type="string[]" singular="participantId"/>
+        <property name="paymentUnzerIds" type="int[]" singular="paymentUnzerId"/>
+        <property name="types" type="string[]" singular="type"/>
+        <property name="statuses" type="string[]" singular="status"/>
+        <property name="unzerKeypairIds" type="string[]" singular="unzerKeypairId"/>
+    </transfer>
+
     <transfer name="PaymentUnzerOrderItemCollection">
         <property name="paymentUnzerOrderItems" type="PaymentUnzerOrderItem[]" singular="paymentUnzerOrderItem"/>
     </transfer>
@@ -277,6 +325,7 @@
         <property name="createPaymentResourceResponse" type="UnzerApiCreatePaymentResourceResponse"/>
         <property name="updateCustomerResponse" type="UnzerApiUpdateCustomerResponse"/>
         <property name="createMetadataResponse" type="UnzerApiCreateMetadataResponse"/>
+        <property name="authorizeResponse" type="UnzerApiAuthorizeResponse"/>
     </transfer>
 
     <transfer name="UnzerApiErrorResponse">
@@ -441,6 +490,12 @@
 
     <transfer name="UnzerApiGetPaymentResponse">
         <property name="transactions" type="UnzerApiPaymentTransaction[]" singular="transaction"/>
+        <property name="stateId" type="int"/>
+        <property name="stateName" type="string"/>
+        <property name="amountTotal" type="float"/>
+        <property name="amountCanceled" type="float"/>
+        <property name="amountRemaining" type="float"/>
+        <property name="amountCharged" type="float"/>
     </transfer>
 
     <transfer name="UnzerApiGetPaymentMethodsResponse">
@@ -490,6 +545,7 @@
         <property name="currency" type="Currency"/>
         <property name="payment" type="Payment" deprecated="Use payments property instead."/>
         <property name="items" type="Item[]" singular="item"/>
+        <property name="orderReference" type="string"/>
         <property name="store" type="Store"/>
         <property name="customerReference" type="string"/>
         <property name="customer" type="Customer"/>
@@ -497,6 +553,7 @@
         <property name="shippingAddress" type="Address" deprecated="Use item level shipping addresses (item.shipment.shippingAddress) instead."/>
         <property name="priceMode" type="string"/>
         <property name="unzerCredentials" type="UnzerCredentials"/>
+        <property name="expenses" type="Expense[]" singular="expense"/>
     </transfer>
 
     <transfer name="CheckoutResponse">
@@ -519,6 +576,7 @@
 
     <transfer name="PaymentProviderCollectionRequest">
         <property name="paymentProviders" type="PaymentProvider[]" singular="paymentProvider"/>
+        <property name="isTransactional" type="bool"/>
     </transfer>
 
     <transfer name="PaymentProvider">
@@ -530,11 +588,14 @@
 
     <transfer name="PaymentMethodCollectionRequest">
         <property name="paymentMethods" type="PaymentMethod[]" singular="paymentMethod"/>
+        <property name="isTransactional" type="bool"/>
     </transfer>
 
     <transfer name="Order">
         <property name="payments" type="Payment[]" singular="payment"/>
         <property name="orderReference" type="string"/>
+        <property name="items" type="Item[]" singular="item"/>
+        <property name="expenses" type="Expense[]" singular="expense"/>
     </transfer>
 
     <transfer name="SaveOrder">
@@ -544,6 +605,8 @@
     </transfer>
 
     <transfer name="Refund">
+        <property name="unzerRefunds" singular="unzerRefund" type="UnzerRefund[]"/>
+
         <property name="items" singular="item" type="Item[]"/>
     </transfer>
 
@@ -572,6 +635,7 @@
         <property name="email" type="string"/>
         <property name="phone" type="string"/>
         <property name="isGuest" type="bool"/>
+        <property name="customerReference" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiSetWebhookRequest">
@@ -627,6 +691,13 @@
 
     <transfer name="Shipment">
         <property name="shippingAddress" type="Address"/>
+        <property name="merchantReference" type="string"/>
+        <property name="idSalesShipment" type="int"/>
+        <property name="method" type="ShipmentMethod"/>
+    </transfer>
+
+    <transfer name="ShipmentMethod">
+        <property name="fkSalesExpense" type="int"/>
     </transfer>
 
     <transfer name="TaxTotal">
@@ -644,5 +715,15 @@
 
     <transfer name="OrderFilter">
         <property name="salesOrderId" type="int"/>
+    </transfer>
+
+    <transfer name="OrderItemFilter">
+        <property name="salesOrderItemIds" type="int[]" singular="salesOrderItemId"/>
+        <property name="orderReferences" type="string[]" singular="orderReference"/>
+        <property name="salesOrderIds" type="int[]" singular="salesOrderId"/>
+    </transfer>
+
+    <transfer name="ItemCollection">
+        <property name="items" type="Item[]" singular="item"/>
     </transfer>
 </transfers>

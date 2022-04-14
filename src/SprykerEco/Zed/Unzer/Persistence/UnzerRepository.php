@@ -7,17 +7,18 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
-use Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
-use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer;
+use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\StoreRelationTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
-use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
@@ -113,44 +114,6 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
-     * @param string $paymentId
-     * @param string $transactionType
-     * @param string|null $participantId
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer|null
-     */
-    public function findPaymentUnzerTransactionByPaymentIdAndParticipantId(
-        string $paymentId,
-        string $transactionType,
-        ?string $participantId = null
-    ): ?PaymentUnzerTransactionTransfer {
-        /** @var \Orm\Zed\Unzer\Persistence\Base\SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery */
-        $paymentUnzerTransactionQuery = $this->getFactory()
-            ->createPaymentUnzerTransactionQuery()
-            ->filterByType($transactionType)
-            ->usePaymentUnzerQuery()
-                ->filterByPaymentId($paymentId)
-                ->filterByIsMarketplace(true)
-            ->endUse();
-
-        if ($participantId !== null) {
-            $paymentUnzerTransactionQuery = $paymentUnzerTransactionQuery->filterByParticipantId($participantId);
-        }
-
-        $paymentUnzerTransactionEntity = $paymentUnzerTransactionQuery->findOne();
-
-        if ($paymentUnzerTransactionEntity === null) {
-            return null;
-        }
-
-        return $this->getFactory()->createUnzerPersistenceMapper()
-            ->mapPaymentUnzerTransactionEntityToPaymentUnzerTransactionTransfer(
-                $paymentUnzerTransactionEntity,
-                new PaymentUnzerTransactionTransfer(),
-            );
-    }
-
-    /**
      * @module Customer
      *
      * @param int $idCustomer
@@ -176,28 +139,6 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
                 $paymentUnzerCustomerEntity,
                 new UnzerCustomerTransfer(),
             );
-    }
-
-    /**
-     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery $merchantUnzerParticipantQuery
-     * @param \Generated\Shared\Transfer\MerchantUnzerParticipantConditionsTransfer $merchantUnzerParticipantConditionsTransfer
-     *
-     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery
-     */
-    protected function setMerchantUnzerParticipantFilters(
-        SpyMerchantUnzerParticipantQuery $merchantUnzerParticipantQuery,
-        MerchantUnzerParticipantConditionsTransfer $merchantUnzerParticipantConditionsTransfer
-    ): SpyMerchantUnzerParticipantQuery {
-        if ($merchantUnzerParticipantConditionsTransfer->getReferences()) {
-            $merchantUnzerParticipantQuery
-                ->useMerchantQuery()
-                ->filterByMerchantReference_In(
-                    $merchantUnzerParticipantConditionsTransfer->getReferences(),
-                )
-            ->endUse();
-        }
-
-        return $merchantUnzerParticipantQuery;
     }
 
     /**
@@ -240,6 +181,28 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             ->mapUnzerCredentialsEntityCollectionToUnzerCredentialsTransferCollection(
                 $unzerCredentialsEntities,
                 new UnzerCredentialsCollectionTransfer(),
+            );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
+     */
+    public function getPaymentUnzerTransactionCollectionByCriteria(
+        PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
+    ): PaymentUnzerTransactionCollectionTransfer {
+        $paymentUnzerTransactionQuery = $this->getFactory()->createPaymentUnzerTransactionQuery();
+        $paymentUnzerTransactionQuery = $this->applyPaymentUnzerTransactionConditions(
+            $paymentUnzerTransactionQuery,
+            $paymentUnzerTransactionCriteriaTransfer->getPaymentUnzerTransactionConditionsOrFail(),
+        );
+        $paymentUnzerTransactionEntities = $paymentUnzerTransactionQuery->find();
+
+        return $this->getFactory()->createUnzerPersistenceMapper()
+            ->mapPaymentUnzerTransactionEntityCollectionToPaymentUnzerTransactionCollectionTransfer(
+                $paymentUnzerTransactionEntities,
+                new PaymentUnzerTransactionCollectionTransfer(),
             );
     }
 
@@ -300,5 +263,44 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         }
 
         return $unzerCredentialsQuery;
+    }
+
+    /**
+     * @param \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
+     *
+     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery
+     */
+    protected function applyPaymentUnzerTransactionConditions(
+        SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery,
+        PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
+    ): SpyPaymentUnzerTransactionQuery {
+        if ($paymentUnzerTransactionConditionsTransfer->getIds()) {
+            $paymentUnzerTransactionQuery->filterByIdPaymentUnzerTransaction_In($paymentUnzerTransactionConditionsTransfer->getIds());
+        }
+
+        if ($paymentUnzerTransactionConditionsTransfer->getTypes()) {
+            $paymentUnzerTransactionQuery->filterByType_In($paymentUnzerTransactionConditionsTransfer->getTypes());
+        }
+
+        if ($paymentUnzerTransactionConditionsTransfer->getPaymentUnzerIds()) {
+            $paymentUnzerTransactionQuery->filterByFkPaymentUnzer_In($paymentUnzerTransactionConditionsTransfer->getPaymentUnzerIds());
+        }
+
+        if ($paymentUnzerTransactionConditionsTransfer->getParticipantIds()) {
+            $paymentUnzerTransactionQuery->filterByParticipantId_In($paymentUnzerTransactionConditionsTransfer->getParticipantIds());
+        }
+
+        if ($paymentUnzerTransactionConditionsTransfer->getStatuses()) {
+            $paymentUnzerTransactionQuery->filterByStatus_In($paymentUnzerTransactionConditionsTransfer->getStatuses());
+        }
+
+        if ($paymentUnzerTransactionConditionsTransfer->getUnzerKeypairIds()) {
+            $paymentUnzerTransactionQuery->usePaymentUnzerQuery()
+                ->filterByUnzerKeypairId_In($paymentUnzerTransactionConditionsTransfer->getUnzerKeypairIds())
+                ->endUse();
+        }
+
+        return $paymentUnzerTransactionQuery;
     }
 }

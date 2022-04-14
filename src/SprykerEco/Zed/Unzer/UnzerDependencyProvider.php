@@ -15,6 +15,7 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToPaymentFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeBridge;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceBridge;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
@@ -43,6 +44,11 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
      * @var string
      */
     public const FACADE_REFUND = 'FACADE_REFUND';
+
+    /**
+     * @var string
+     */
+    public const FACADE_SHIPMENT = 'FACADE_SHIPMENT';
 
     /**
      * @var string
@@ -80,6 +86,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addSalesFacade($container);
         $container = $this->addCalculationFacade($container);
         $container = $this->addRefundFacade($container);
+        $container = $this->addShipmentFacade($container);
         $container = $this->addMerchantFacade($container);
 
         return $container;
@@ -100,6 +107,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addLocaleFacade($container);
         $container = $this->addVaultFacade($container);
         $container = $this->addUtilTextService($container);
+        $container = $this->addSalesFacade($container);
         $container = $this->addMerchantFacade($container);
 
         return $container;
@@ -156,6 +164,20 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container->set(static::FACADE_REFUND, function (Container $container) {
             return new UnzerToRefundFacadeBridge($container->getLocator()->refund()->facade());
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addShipmentFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_SHIPMENT, function (Container $container) {
+            return new UnzerToShipmentFacadeBridge($container->getLocator()->shipment()->facade());
         });
 
         return $container;

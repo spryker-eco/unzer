@@ -8,6 +8,7 @@
 namespace SprykerEco\Yves\Unzer\Form\DataProvider;
 
 use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 
 class MarketplaceBankTransferFormDataProvider extends AbstractFormDataProvider
@@ -20,6 +21,7 @@ class MarketplaceBankTransferFormDataProvider extends AbstractFormDataProvider
     public function getData(AbstractTransfer $quoteTransfer): QuoteTransfer
     {
         $quoteTransfer = $this->updateQuoteWithPaymentData($quoteTransfer);
+        $quoteTransfer->getPaymentOrFail()->setUnzerMarketplaceBankTransfer(new UnzerPaymentTransfer());
 
         $this->quoteClient->setQuote($quoteTransfer);
 
