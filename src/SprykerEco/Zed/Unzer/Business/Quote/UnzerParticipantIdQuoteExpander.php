@@ -181,7 +181,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
                     ->addParentId($parentIdUnzerCredentials)
                     ->setTypes([
                         UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
-                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT
+                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
                     ]),
             );
 
