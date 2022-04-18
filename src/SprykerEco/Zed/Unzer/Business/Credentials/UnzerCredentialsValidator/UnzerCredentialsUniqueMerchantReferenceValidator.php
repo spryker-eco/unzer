@@ -13,7 +13,7 @@ use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEco\Zed\Unzer\Business\Reader\UnzerReader;
+use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
 class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentialsValidatorInterface
 {
@@ -23,14 +23,14 @@ class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentia
     protected const ERROR_MESSAGE_MERCHANT_REFERENCE_ALREADY_EXIST = 'Provided merchant reference already exists!';
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReader|\SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerToMerchantFacadeInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReader $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
-    public function __construct(UnzerReader $unzerReader)
+    public function __construct(UnzerReaderInterface $unzerReader)
     {
         $this->unzerReader = $unzerReader;
     }
