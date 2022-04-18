@@ -48,6 +48,10 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
     public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
+        if (in_array((int)$unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
+            return $unzerCredentialsResponseTransfer;
+        }
+
         if (!$this->isUnzerCredentialsHaveStoreRelations($unzerCredentialsTransfer)) {
             return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
                 ->addMessage(
@@ -85,10 +89,6 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
      */
     protected function isUnzerCredentialsHaveStoreRelations(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
     {
-        if (in_array((int)$unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
-            return true;
-        }
-
         return count($unzerCredentialsTransfer->getStoreRelationOrFail()->getIdStores()) !== 0;
     }
 }
