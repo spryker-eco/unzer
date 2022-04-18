@@ -44,8 +44,8 @@ class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentia
     {
         $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
         if (
-            !in_array((int)$unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)
-            || $unzerCredentialsTransfer->getMerchantReference() === null
+            $unzerCredentialsTransfer->getMerchantReference() === null
+            || !in_array((int)$unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)
         ) {
             return $unzerCredentialsResponseTransfer;
         }
