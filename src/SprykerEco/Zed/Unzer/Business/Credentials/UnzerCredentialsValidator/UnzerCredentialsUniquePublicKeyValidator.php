@@ -20,7 +20,12 @@ class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValida
     /**
      * @var string
      */
-    protected const ERROR_MESSAGE_ALREADY_EXISTS = 'Provided public key publicKey already exists!';
+    protected const ERROR_MESSAGE_ALREADY_EXISTS = 'Provided public key %publicKey% already exists!';
+
+    /**
+     * @var string
+     */
+    protected const ERROR_MESSAGE_PARAMETER_PUBLIC_KEY = '%publicKey%';
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
@@ -77,7 +82,7 @@ class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValida
         return (new MessageTransfer())
             ->setMessage(static::ERROR_MESSAGE_ALREADY_EXISTS)
             ->setParameters([
-                UnzerKeypairTransfer::PUBLIC_KEY => $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
+                static::ERROR_MESSAGE_PARAMETER_PUBLIC_KEY => $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
             ]);
     }
 }

@@ -20,7 +20,12 @@ class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentia
     /**
      * @var string
      */
-    protected const ERROR_MESSAGE_MERCHANT_REFERENCE_ALREADY_EXIST = 'Provided merchant reference merchantReference already exists!';
+    protected const ERROR_MESSAGE_MERCHANT_REFERENCE_ALREADY_EXIST = 'Provided merchant reference %merchantReference% already exists!';
+
+    /**
+     * @var string
+     */
+    protected const ERROR_MESSAGE_PARAMETER_MERCHANT_REFERENCE = '%merchantReference%';
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
@@ -82,7 +87,7 @@ class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentia
         return (new MessageTransfer())
             ->setMessage(static::ERROR_MESSAGE_MERCHANT_REFERENCE_ALREADY_EXIST)
             ->setParameters([
-                UnzerCredentialsTransfer::MERCHANT_REFERENCE => $unzerCredentialsTransfer->getMerchantReferenceOrFail(),
+                static::ERROR_MESSAGE_PARAMETER_MERCHANT_REFERENCE => $unzerCredentialsTransfer->getMerchantReferenceOrFail(),
             ]);
     }
 }
