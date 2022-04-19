@@ -19,7 +19,7 @@ class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsVali
     /**
      * @var string
      */
-    protected const ERROR_MESSAGE_MERCHANT_DOES_NOT_EXIST = 'Merchant with provided reference %merchantReference% does not exist!';
+    protected const ERROR_MESSAGE_MERCHANT_DOES_NOT_EXIST = 'Merchant with provided reference "%merchantReference%" does not exist!';
 
     /**
      * @var string
