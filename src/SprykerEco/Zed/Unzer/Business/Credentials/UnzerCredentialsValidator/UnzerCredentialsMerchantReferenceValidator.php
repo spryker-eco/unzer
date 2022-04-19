@@ -19,7 +19,12 @@ class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsVali
     /**
      * @var string
      */
-    protected const ERROR_MESSAGE_MERCHANT_DOES_NOT_EXIST = 'Merchant with provided reference does not exist!';
+    protected const ERROR_MESSAGE_MERCHANT_DOES_NOT_EXIST = 'Merchant with provided reference "%merchantReference%" does not exist!';
+
+    /**
+     * @var string
+     */
+    protected const ERROR_MESSAGE_PARAMETER_MERCHANT_REFERENCE = '%merchantReference%';
 
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToMerchantFacadeInterface
@@ -42,7 +47,7 @@ class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsVali
     public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
-        if (!in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
+        if (in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
             return $unzerCredentialsResponseTransfer;
         }
 
@@ -68,7 +73,7 @@ class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsVali
         return (new MessageTransfer())
             ->setMessage(static::ERROR_MESSAGE_MERCHANT_DOES_NOT_EXIST)
             ->setParameters([
-                UnzerCredentialsTransfer::MERCHANT_REFERENCE => $unzerCredentialsTransfer->getMerchantReferenceOrFail(),
+                static::ERROR_MESSAGE_PARAMETER_MERCHANT_REFERENCE => $unzerCredentialsTransfer->getMerchantReferenceOrFail(),
             ]);
     }
 }

@@ -67,6 +67,7 @@ use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsMerchantReferenceValidator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsParentCredentialsValidator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsStoreRelationsValidator;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsUniqueMerchantReferenceValidator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsUniquePublicKeyValidator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsValidatorComposite;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsValidatorInterface;
@@ -1046,6 +1047,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerCredentialsValidatorComposite([
             $this->createUnzerCredentialsMerchantReferenceValidator(),
+            $this->createUnzerCredentialsUniqueMerchantReferenceValidator(),
             $this->createUnzerCredentialsParentCredentialsValidator(),
             $this->createUnzerCredentialsStoreRelationsValidator(),
             $this->createUnzerCredentialsUniquePublicKeyValidator(),
@@ -1058,6 +1060,14 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerCredentialsMerchantReferenceValidator(): UnzerCredentialsValidatorInterface
     {
         return new UnzerCredentialsMerchantReferenceValidator($this->getMerchantFacade());
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsValidatorInterface
+     */
+    public function createUnzerCredentialsUniqueMerchantReferenceValidator(): UnzerCredentialsValidatorInterface
+    {
+        return new UnzerCredentialsUniqueMerchantReferenceValidator($this->createUnzerReader());
     }
 
     /**

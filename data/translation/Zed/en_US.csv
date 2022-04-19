@@ -1,5 +1,6 @@
-"Provided public key already exists!","Provided public key already exists!"
-"Merchant with provided reference does not exist!","Merchant with provided reference does not exist!"
+"Provided public key ""%publicKey%"" already exists!","Provided public key ""%publicKey%"" already exists!"
+"Merchant with provided reference ""%merchantReference%"" does not exist!","Merchant with provided reference ""%merchantReference%"" does not exist!"
 "Parent Unzer credentials not found!","Parent Unzer credentials not found!"
 "Store relations can not be empty","Store relations can not be empty"
 "Chosen Store relation is already used","Chosen Store relation is already used"
+"Provided merchant reference ""%merchantReference%"" already exists!","Provided merchant reference ""%merchantReference%"" already exists!"

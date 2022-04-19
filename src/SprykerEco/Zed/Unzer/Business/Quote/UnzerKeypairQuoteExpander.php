@@ -171,7 +171,10 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions(
                 (new UnzerCredentialsConditionsTransfer())
-                    ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT)
+                    ->setTypes([
+                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
+                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+                    ])
                     ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
                     ->addMerchantReference($merchantReference),
             );

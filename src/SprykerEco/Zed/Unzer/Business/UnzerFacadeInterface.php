@@ -348,6 +348,9 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
+     * - Requires `UnzerCredentialsTransfer.unzerKeypair.publicKey` to be set.
+     * - Requires `UnzerCredentialsTransfer.unzerKeypair.privateKey` to be set.
+     * - Requires `UnzerCredentialsTransfer.type` to be set.
      * - Validates `UnzerCredentialsTransfer` properties using internal rules.
      * - Returns validation errors if validation fails.
      *

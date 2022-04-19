@@ -12,20 +12,20 @@ use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Generated\Shared\Transfer\UnzerKeypairTransfer;
+use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
-class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValidatorInterface
+class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentialsValidatorInterface
 {
     /**
      * @var string
      */
-    protected const ERROR_MESSAGE_ALREADY_EXISTS = 'Provided public key "%publicKey%" already exists!';
+    protected const ERROR_MESSAGE_MERCHANT_REFERENCE_ALREADY_EXIST = 'Provided merchant reference "%merchantReference%" already exists!';
 
     /**
      * @var string
      */
-    protected const ERROR_MESSAGE_PARAMETER_PUBLIC_KEY = '%publicKey%';
+    protected const ERROR_MESSAGE_PARAMETER_MERCHANT_REFERENCE = '%merchantReference%';
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
@@ -48,24 +48,29 @@ class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValida
     public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
-        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
-            ->addPublicKey($unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKeyOrFail());
-        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
-            ->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
-
-        $unzerCredentialsCollectionTransfer = $this->unzerReader
-            ->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
-        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() === 0) {
+        if (
+            $unzerCredentialsTransfer->getMerchantReference() === null
+            || !in_array((int)$unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)
+        ) {
             return $unzerCredentialsResponseTransfer;
         }
 
-        foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $existingUnzerCredentialsTransfer) {
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+            ->setUnzerCredentialsConditions(
+                (new UnzerCredentialsConditionsTransfer())
+                    ->addParentId($unzerCredentialsTransfer->getParentIdUnzerCredentialsOrFail()),
+            );
+
+        $unzerCredentialsCollectionTransfer = $this->unzerReader
+            ->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
+
+        foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $storedUnzerCredentials) {
             if (
-                $existingUnzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey() === $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKey() &&
-                $existingUnzerCredentialsTransfer->getIdUnzerCredentials() !== (int)$unzerCredentialsTransfer->getIdUnzerCredentials()
+                $storedUnzerCredentials->getMerchantReference() === $unzerCredentialsTransfer->getMerchantReference()
+                && $storedUnzerCredentials->getIdUnzerCredentialsOrFail() !== $unzerCredentialsTransfer->getIdUnzerCredentials()
             ) {
-                $unzerCredentialsResponseTransfer->setIsSuccessful(false)
-                    ->addMessage($this->createUniquePublicKeyViolationMessage($unzerCredentialsTransfer));
+                return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
+                    ->addMessage($this->createMerchantReferenceAlreadyUsedViolationMessage($unzerCredentialsTransfer));
             }
         }
 
@@ -77,12 +82,12 @@ class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValida
      *
      * @return \Generated\Shared\Transfer\MessageTransfer
      */
-    protected function createUniquePublicKeyViolationMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
+    protected function createMerchantReferenceAlreadyUsedViolationMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
     {
         return (new MessageTransfer())
-            ->setMessage(static::ERROR_MESSAGE_ALREADY_EXISTS)
+            ->setMessage(static::ERROR_MESSAGE_MERCHANT_REFERENCE_ALREADY_EXIST)
             ->setParameters([
-                static::ERROR_MESSAGE_PARAMETER_PUBLIC_KEY => $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
+                static::ERROR_MESSAGE_PARAMETER_MERCHANT_REFERENCE => $unzerCredentialsTransfer->getMerchantReferenceOrFail(),
             ]);
     }
 }

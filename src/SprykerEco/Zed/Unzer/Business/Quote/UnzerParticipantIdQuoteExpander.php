@@ -179,7 +179,10 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
             ->setUnzerCredentialsConditions(
                 (new UnzerCredentialsConditionsTransfer())
                     ->addParentId($parentIdUnzerCredentials)
-                    ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT),
+                    ->setTypes([
+                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
+                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+                    ]),
             );
 
         return $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
