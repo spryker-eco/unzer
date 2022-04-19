@@ -20,7 +20,7 @@ class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValida
     /**
      * @var string
      */
-    protected const ERROR_MESSAGE_ALREADY_EXISTS = 'Provided public key already exists!';
+    protected const ERROR_MESSAGE_ALREADY_EXISTS = 'Provided public key publicKey already exists!';
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface

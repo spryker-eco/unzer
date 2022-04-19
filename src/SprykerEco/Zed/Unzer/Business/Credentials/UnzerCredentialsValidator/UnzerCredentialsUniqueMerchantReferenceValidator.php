@@ -20,7 +20,7 @@ class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentia
     /**
      * @var string
      */
-    protected const ERROR_MESSAGE_MERCHANT_REFERENCE_ALREADY_EXIST = 'Provided merchant reference already exists!';
+    protected const ERROR_MESSAGE_MERCHANT_REFERENCE_ALREADY_EXIST = 'Provided merchant reference merchantReference already exists!';
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
