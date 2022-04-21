@@ -21,6 +21,7 @@ class UnzerIntersectionPaymentMethodFilterPlugin extends AbstractPlugin implemen
 {
     /**
      * {@inheritDoc}
+     * - Requires `QuoteTransfer.store.name` to be set.
      * - Takes allowed payment methods from the `QuoteTransfer` received from Unzer local config.
      * - Filters payment methods based on allowed payment methods.
      *
