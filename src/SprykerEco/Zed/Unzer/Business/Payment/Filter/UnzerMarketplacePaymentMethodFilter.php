@@ -24,14 +24,11 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        $hasMultipleMerchants = $this->hasMultipleMerchants($quoteTransfer);
-        $filteredPaymentMethods = $this->getStandardUnzerPaymentMethods($paymentMethodsTransfer);
-
-        if ($hasMultipleMerchants) {
-            $filteredPaymentMethods = $this->getMarketplaceUnzerPaymentMethods($paymentMethodsTransfer);
+        if ($this->hasMultipleMerchants($quoteTransfer)) {
+            return $paymentMethodsTransfer->setMethods($this->getMarketplaceUnzerPaymentMethods($paymentMethodsTransfer));
         }
 
-        return $paymentMethodsTransfer->setMethods($filteredPaymentMethods);
+        return $paymentMethodsTransfer->setMethods($this->getStandardUnzerPaymentMethods($paymentMethodsTransfer));
     }
 
     /**

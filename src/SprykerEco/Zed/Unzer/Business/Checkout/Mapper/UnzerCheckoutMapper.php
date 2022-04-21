@@ -111,8 +111,7 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
             ->setVat((string)$itemTransfer->getTaxRate())
             ->setAmountDiscount($itemTransfer->getSumDiscountAmountAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountPerUnit(
-                ($itemTransfer->getUnitPriceToPayAggregation() + $itemTransfer->getCalculatedExpensesCost()) /
-                UnzerConstants::INT_TO_FLOAT_DIVIDER,
+                $itemTransfer->getUnitSubtotalAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
             )
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())

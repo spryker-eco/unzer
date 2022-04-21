@@ -240,7 +240,9 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Filters available payment methods and checks intersections based on merchants.
+     * - Requires `QuoteTransfer.store.name` to be set.
+     * - Takes allowed payment methods from the `QuoteTransfer` received from Unzer local config.
+     * - Filters payment methods based on allowed payment methods.
      *
      * @api
      *

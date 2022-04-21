@@ -62,6 +62,8 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         PaymentUnzerTransfer $paymentUnzerTransfer,
         ArrayObject $expenseTransfersCollectionForRefund
     ): RefundTransfer {
+        $refundTransfer = $this->addExpenseRefunds($refundTransfer, $expenseTransfersCollectionForRefund);
+
         if ($paymentUnzerTransfer->getIsMarketplace()) {
             return $this->processMarketplaceExpensesRefund($refundTransfer, $paymentUnzerTransfer, $expenseTransfersCollectionForRefund);
         }
@@ -324,5 +326,22 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
                 $expenseTransfer->setUnzerParticipantId($unzerCredentialsTransfer->getParticipantIdOrFail());
             }
         }
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
+     * @param \ArrayObject<\Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     *
+     * @return \Generated\Shared\Transfer\RefundTransfer
+     */
+    protected function addExpenseRefunds(RefundTransfer $refundTransfer, ArrayObject $expenseTransfersCollectionForRefund): RefundTransfer
+    {
+        $expenseRefundAmount = 0;
+        foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
+            $refundTransfer->addExpense($expenseTransfer);
+            $expenseRefundAmount += $expenseTransfer->getRefundableAmountOrFail();
+        }
+
+        return $refundTransfer->setAmount($refundTransfer->getAmount() + $expenseRefundAmount);
     }
 }
