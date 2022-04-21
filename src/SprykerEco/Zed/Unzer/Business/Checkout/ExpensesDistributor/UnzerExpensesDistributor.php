@@ -138,7 +138,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
         foreach ($expenseTransfers as $expenseTransfer) {
             $unzerBasketItemTransfer->setAmountPerUnit(
                 $unzerBasketItemTransfer->getAmountPerUnit() +
-                $expenseTransfer->getSumPriceToPayAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
+                $expenseTransfer->getSumPriceToPayAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
             );
             $unzerBasketItemTransfer->setVat((string)$this->buildVatValue($expenseTransfer));
         }
