@@ -12,7 +12,6 @@ use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
 class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValidatorInterface

@@ -66,10 +66,7 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
         $unzerCredentialsCollectionTransfer = $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
 
         foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $existingUnzerCredentialsTransfer) {
-            if (
-                $existingUnzerCredentialsTransfer->getType() === (int)$unzerCredentialsTransfer->getType() &&
-                $existingUnzerCredentialsTransfer->getIdUnzerCredentials() !== (int)$unzerCredentialsTransfer->getIdUnzerCredentials()
-            ) {
+            if ($existingUnzerCredentialsTransfer->getIdUnzerCredentials() !== (int)$unzerCredentialsTransfer->getIdUnzerCredentials()) {
                 $unzerCredentialsResponseTransfer->setIsSuccessful(false)
                     ->addMessage(
                         (new MessageTransfer())->setMessage(static::ERROR_MESSAGE_STORE_RELATION_ALREADY_USED),

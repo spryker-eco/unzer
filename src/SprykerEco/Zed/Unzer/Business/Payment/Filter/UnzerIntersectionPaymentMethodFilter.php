@@ -77,7 +77,10 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): ArrayObject {
-        $unzerKeypairTransfer = $this->getMainMerchantUnzerKeypair($quoteTransfer->getStoreOrFail(), UnzerConstants::UNZER_CONFIG_TYPE_STANDARD);
+        $unzerKeypairTransfer = $this->getUnzerKeypair(
+            $quoteTransfer->getStoreOrFail(),
+            [UnzerConstants::UNZER_CONFIG_TYPE_STANDARD, UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT],
+        );
         $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
 
         return $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);
@@ -93,7 +96,10 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): ArrayObject {
-        $unzerKeypairTransfer = $this->getMainMerchantUnzerKeypair($quoteTransfer->getStoreOrFail(), UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT);
+        $unzerKeypairTransfer = $this->getUnzerKeypair(
+            $quoteTransfer->getStoreOrFail(),
+            [UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE],
+        );
         $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
         $filteredPaymentMethods = $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);
 
@@ -160,24 +166,23 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
 
     /**
      * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param int $type
+     * @param array<int> $unzerCredentialsTypes
      *
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
      * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
      */
-    protected function getMainMerchantUnzerKeypair(StoreTransfer $storeTransfer, int $type): UnzerKeypairTransfer
+    protected function getUnzerKeypair(StoreTransfer $storeTransfer, array $unzerCredentialsTypes): UnzerKeypairTransfer
     {
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())
                 ->addStoreName($storeTransfer->getNameOrFail())
-                ->addType($type),
+                ->setTypes($unzerCredentialsTypes),
         );
 
         $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
-
         if ($unzerCredentialsTransfer === null) {
-            throw new UnzerException('Unable to request main merchant keypair while credentials unknown.');
+            throw new UnzerException('Unzer Credentials for current Store configuration not found.');
         }
 
         return $unzerCredentialsTransfer->getUnzerKeypairOrFail();
