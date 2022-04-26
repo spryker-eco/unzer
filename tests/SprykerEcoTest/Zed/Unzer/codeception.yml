@@ -41,3 +41,13 @@ suites:
                 - \SprykerTest\Shared\Customer\Helper\CustomerDataHelper
                 - \SprykerTest\Zed\StateMachine\Helper\StateMachineHelper
                 - \SprykerTest\Zed\Oms\Helper\OmsHelper
+                - \SprykerTest\Shared\Transfer\Helper\TransferGenerateHelper:
+                      isolated: true
+                      schemaDirectories:
+                          - src/*/Shared/*/Transfer/
+                          - vendor/spryker/*/src/Spryker/Shared/*/Transfer/
+                - \SprykerTest\Shared\Propel\Helper\PropelHelper:
+                      isolated: true
+                      schemaSourceDirectoryList:
+                          - src/*/Zed/*/Persistence/Propel/Schema
+                          - vendor/*/*/src/*/Zed/*/Persistence/Propel/Schema

@@ -33,13 +33,21 @@
     },
     "require-dev": {
         "codeception/module-asserts": "^2.0",
-        "phpstan/phpstan": "*",
+        "phpstan/phpstan": "^1.5.0",
+        "spryker-shop/shop-application": "*",
         "spryker/checkout": "*",
         "spryker/code-sniffer": "*",
-        "spryker/propel": "*",
-        "spryker/router": "*",
-        "spryker/state-machine": "*",
-        "spryker/testify": "*"
+        "spryker/customer": "*",
+        "spryker/error-handler": "^2.1.0",
+        "spryker/event": "^2.3.0",
+        "spryker/guzzle": "*",
+        "spryker/log": "^3.0.0",
+        "spryker/monolog": "^2.0.4",
+        "spryker/payment": "*",
+        "spryker/propel": "^3.34.0",
+        "spryker/queue": "^1.5.0",
+        "spryker/silex": "*",
+        "spryker/testify": "^3.43.0"
     },
     "suggest": {
         "spryker/checkout": "Use this module if you want to use Checkout plugins.",
