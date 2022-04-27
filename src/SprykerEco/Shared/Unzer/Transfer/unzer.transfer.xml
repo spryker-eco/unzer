@@ -314,18 +314,24 @@
     </transfer>
 
     <transfer name="UnzerApiResponse">
+        <property name="httpCode" type="int"/>
         <property name="isSuccessful" type="bool"/>
-        <property name="errorResponse" type="UnzerApiErrorResponse"/>
-        <property name="marketplaceAuthorizeResponse" type="UnzerApiMarketplaceAuthorizeResponse"/>
+        <property name="setWebhookResponse" type="UnzerApiSetWebhookResponse"/>
+        <property name="getWebhookResponse" type="UnzerApiGetWebhookResponse"/>
+        <property name="deleteWebhookResponse" type="UnzerApiDeleteWebhookResponse"/>
         <property name="createBasketResponse" type="UnzerApiCreateBasketResponse"/>
-        <property name="chargeResponse" type="UnzerApiChargeResponse"/>
         <property name="createCustomerResponse" type="UnzerApiCreateCustomerResponse"/>
-        <property name="getPaymentResponse" type="UnzerApiGetPaymentResponse"/>
-        <property name="getPaymentMethodsResponse" type="UnzerApiGetPaymentMethodsResponse"/>
-        <property name="createPaymentResourceResponse" type="UnzerApiCreatePaymentResourceResponse"/>
         <property name="updateCustomerResponse" type="UnzerApiUpdateCustomerResponse"/>
         <property name="createMetadataResponse" type="UnzerApiCreateMetadataResponse"/>
+        <property name="createPaymentResourceResponse" type="UnzerApiCreatePaymentResourceResponse"/>
         <property name="authorizeResponse" type="UnzerApiAuthorizeResponse"/>
+        <property name="marketplaceAuthorizeResponse" type="UnzerApiMarketplaceAuthorizeResponse"/>
+        <property name="chargeResponse" type="UnzerApiChargeResponse"/>
+        <property name="refundResponse" type="UnzerApiRefundResponse"/>
+        <property name="marketplaceRefundResponse" type="UnzerApiMarketplaceRefundResponse"/>
+        <property name="getPaymentResponse" type="UnzerApiGetPaymentResponse"/>
+        <property name="getPaymentMethodsResponse" type="UnzerApiGetPaymentMethodsResponse"/>
+        <property name="errorResponse" type="UnzerApiErrorResponse"/>
     </transfer>
 
     <transfer name="UnzerApiErrorResponse">
@@ -438,18 +444,33 @@
     </transfer>
 
     <transfer name="UnzerApiAuthorizeResponse">
-        <property name="paymentId" type="string"/>
+        <property name="id" type="string"/>
+        <property name="isSuccessful" type="bool"/>
+        <property name="isPending" type="bool"/>
+        <property name="isError" type="bool"/>
+        <property name="card3ds" type="bool"/>
+        <property name="redirectUrl" type="string"/>
+        <property name="message" type="UnzerApiMessage"/>
         <property name="amount" type="float"/>
         <property name="currency" type="string"/>
-        <property name="redirectUrl" type="string"/>
+        <property name="returnUrl" type="string"/>
+        <property name="date" type="string"/>
         <property name="customerId" type="string"/>
+        <property name="paymentId" type="string"/>
+        <property name="basketId" type="string"/>
+        <property name="traceId" type="string"/>
         <property name="typeId" type="string"/>
+        <property name="paymentReference" type="string"/>
+        <property name="uniqueId" type="string"/>
+        <property name="shortId" type="string"/>
+        <property name="participantId" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiCreateBasketRequest">
     </transfer>
 
     <transfer name="UnzerApiCreateBasketResponse">
+        <property name="id" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiChargeRequest">
@@ -466,22 +487,12 @@
         <property name="metadataId" type="string"/>
     </transfer>
 
-    <transfer name="UnzerApiChargeResponse">
-        <property name="stateId" type="int"/>
-        <property name="paymentId" type="string"/>
-        <property name="amount" type="string"/>
-        <property name="currency" type="string"/>
-        <property name="redirectUrl" type="string"/>
-        <property name="customerId" type="string"/>
-        <property name="basketId" type="string"/>
-        <property name="typeId" type="string"/>
-    </transfer>
-
     <transfer name="UnzerApiCreateCustomerRequest">
         <property name="customerId" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiCreateCustomerResponse">
+        <property name="id" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiGetPaymentRequest">
@@ -517,6 +528,7 @@
     </transfer>
 
     <transfer name="UnzerApiCreatePaymentResourceResponse">
+        <property name="id" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiMarketplaceRefundRequest">
@@ -659,6 +671,7 @@
     </transfer>
 
     <transfer name="UnzerApiUpdateCustomerResponse">
+        <property name="id" type="string"/>
     </transfer>
 
     <transfer name="UnzerApiPaymentTransaction">
@@ -725,5 +738,86 @@
 
     <transfer name="ItemCollection">
         <property name="items" type="Item[]" singular="item"/>
+    </transfer>
+
+    <transfer name="UnzerApiSetWebhookResponse">
+        <property name="id" type="string"/>
+        <property name="url" type="string"/>
+        <property name="event" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerApiGetPaymentResponse">
+        <property name="id" type="string"/>
+        <property name="stateId" type="int"/>
+        <property name="stateName" type="string"/>
+        <property name="amountTotal" type="float"/>
+        <property name="amountCharged" type="float"/>
+        <property name="amountCanceled" type="float"/>
+        <property name="amountRemaining" type="float"/>
+        <property name="currency" type="string"/>
+        <property name="orderId" type="string"/>
+        <property name="invoiceId" type="string"/>
+        <property name="customerId" type="string"/>
+        <property name="paymentId" type="string"/>
+        <property name="basketId" type="string"/>
+        <property name="metadataId" type="string"/>
+        <property name="payPageId" type="string"/>
+        <property name="traceId" type="string"/>
+        <property name="typeId" type="string"/>
+        <property name="transactions" type="UnzerApiPaymentTransaction[]" singular="transaction"/>
+    </transfer>
+
+    <transfer name="UnzerApiMarketplaceAuthorizeResponse">
+        <property name="id" type="string"/>
+        <property name="isSuccessful" type="bool"/>
+        <property name="isPending" type="bool"/>
+        <property name="isError" type="bool"/>
+        <property name="card3ds" type="bool"/>
+        <property name="redirectUrl" type="string"/>
+        <property name="message" type="UnzerApiMessage"/>
+        <property name="amount" type="float"/>
+        <property name="currency" type="string"/>
+        <property name="returnUrl" type="string"/>
+        <property name="date" type="string"/>
+        <property name="customerId" type="string"/>
+        <property name="paymentId" type="string"/>
+        <property name="basketId" type="string"/>
+        <property name="traceId" type="string"/>
+        <property name="typeId" type="string"/>
+        <property name="paymentReference" type="string"/>
+        <property name="uniqueId" type="string"/>
+        <property name="shortId" type="string"/>
+        <property name="participantId" type="string"/>
+    </transfer>
+
+    <transfer name="UnzerApiChargeResponse">
+        <property name="id" type="string"/>
+        <property name="isSuccessful" type="bool"/>
+        <property name="isPending" type="bool"/>
+        <property name="isError" type="bool"/>
+        <property name="stateId" type="int"/>
+        <property name="stateName" type="string"/>
+        <property name="amountTotal" type="float"/>
+        <property name="amountCharged" type="float"/>
+        <property name="amountCanceled" type="float"/>
+        <property name="amountRemaining" type="float"/>
+        <property name="redirectUrl" type="string"/>
+        <property name="message" type="UnzerApiMessage"/>
+        <property name="amount" type="string"/>
+        <property name="currency" type="string"/>
+        <property name="returnUrl" type="string"/>
+        <property name="date" type="string"/>
+        <property name="customerId" type="string"/>
+        <property name="paymentId" type="string"/>
+        <property name="basketId" type="string"/>
+        <property name="metadataId" type="string"/>
+        <property name="traceId" type="string"/>
+        <property name="typeId" type="string"/>
+        <property name="orderId" type="string"/>
+        <property name="invoiceId" type="string"/>
+        <property name="paymentReference" type="string"/>
+        <property name="uniqueId" type="string"/>
+        <property name="shortId" type="string"/>
+        <property name="transactions" type="UnzerApiMarketplaceTransaction[]" singular="transaction"/>
     </transfer>
 </transfers>
