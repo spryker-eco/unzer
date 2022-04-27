@@ -67,7 +67,7 @@ class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentia
         foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $storedUnzerCredentials) {
             if (
                 $storedUnzerCredentials->getMerchantReference() === $unzerCredentialsTransfer->getMerchantReference()
-                && $storedUnzerCredentials->getIdUnzerCredentialsOrFail() !== $unzerCredentialsTransfer->getIdUnzerCredentials()
+                && $storedUnzerCredentials->getIdUnzerCredentialsOrFail() !== (int)$unzerCredentialsTransfer->getIdUnzerCredentials()
             ) {
                 return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
                     ->addMessage($this->createMerchantReferenceAlreadyUsedViolationMessage($unzerCredentialsTransfer));
