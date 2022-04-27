@@ -93,7 +93,7 @@ use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsChargebackOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsChargeFailedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\IsPaymentCompletedOmsCondition;
 use SprykerEco\Zed\Unzer\Business\Oms\Condition\UnzerConditionInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerIntersectionPaymentMethodFilter;
+use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerEnabledPaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
@@ -937,9 +937,9 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface
      */
-    public function createUnzerIntersectionPaymentMethodFilter(): UnzerPaymentMethodFilterInterface
+    public function createUnzerEnabledPaymentMethodFilter(): UnzerPaymentMethodFilterInterface
     {
-        return new UnzerIntersectionPaymentMethodFilter(
+        return new UnzerEnabledPaymentMethodFilter(
             $this->getConfig(),
             $this->createUnzerReader(),
             $this->createUnzerPaymentMethodsAdapter(),

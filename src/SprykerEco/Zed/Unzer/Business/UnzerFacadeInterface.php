@@ -241,8 +241,8 @@ interface UnzerFacadeInterface
     /**
      * Specification:
      * - Requires `QuoteTransfer.store.name` to be set.
-     * - Takes allowed payment methods from the `QuoteTransfer` received from Unzer local config.
-     * - Filters payment methods based on allowed payment methods.
+     * - Takes enabled payment methods from the `QuoteTransfer` received from Unzer local config.
+     * - Filters payment methods based on enabled payment methods.
      *
      * @api
      *
@@ -251,7 +251,7 @@ interface UnzerFacadeInterface
      *
      * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
-    public function filterIntersectionPaymentMethods(
+    public function filterEnabledPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer;
