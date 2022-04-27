@@ -29,24 +29,28 @@ if (!defined('MODULE_UNDER_TEST_ROOT_DIR')) {
 }
 
 spl_autoload_register(function ($className) {
-    if (strrpos($className, 'Transfer') === false && strpos($className, 'Spy') === false) {
+    if (
+        strrpos($className, 'Transfer') === false
+        && strrpos($className, 'Builder') === false
+        && strrpos($className, 'Spy') === false
+    ) {
         return false;
     }
 
     $classNameParts = explode('\\', $className);
-    $transferFileName = implode(DIRECTORY_SEPARATOR, $classNameParts) . '.php';
-    $transferFilePath = APPLICATION_ROOT_DIR . 'src' . DIRECTORY_SEPARATOR . $transferFileName;
 
-    if (!file_exists($transferFilePath)) {
+    $fileName = implode(DIRECTORY_SEPARATOR, $classNameParts) . '.php';
+    $filePath = APPLICATION_ROOT_DIR . 'src' . DIRECTORY_SEPARATOR . $fileName;
+
+    if (!file_exists($filePath)) {
         return false;
     }
 
-    require_once $transferFilePath;
+    require_once $filePath;
 
     return true;
 });
 
-// Copy config files
 $configSourceDirectory = APPLICATION_ROOT_DIR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'Shared' . DIRECTORY_SEPARATOR;
 $configTargetDirectory = APPLICATION_ROOT_DIR . 'config' . DIRECTORY_SEPARATOR . 'Shared' . DIRECTORY_SEPARATOR;
 
