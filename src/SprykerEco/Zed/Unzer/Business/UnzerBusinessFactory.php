@@ -583,6 +583,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new DirectPaymentProcessor(
             $this->createUnzerChargeAdapter(),
+            $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentResourceAdapter(),
             $this->createUnzerRefundProcessor(),
             $this->createUnzerPreparePaymentProcessor(),
