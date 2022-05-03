@@ -338,6 +338,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     {
         $expenseRefundAmount = 0;
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
+            $expenseTransfer->setCanceledAmount($expenseTransfer->getRefundableAmount());
             $refundTransfer->addExpense($expenseTransfer);
             $expenseRefundAmount += $expenseTransfer->getRefundableAmountOrFail();
         }

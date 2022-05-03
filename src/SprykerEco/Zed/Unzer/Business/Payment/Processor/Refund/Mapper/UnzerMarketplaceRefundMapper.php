@@ -31,23 +31,7 @@ class UnzerMarketplaceRefundMapper implements UnzerMarketplaceRefundMapperInterf
         UnzerRefundItemCollectionTransfer $unzerRefundItemCollectionTransfer
     ): UnzerRefundItemCollectionTransfer {
         foreach ($itemCollectionTransfer->getItems() as $itemTransfer) {
-            $groupKey = (string)$itemTransfer->getGroupKey();
-            if ($unzerRefundItemCollectionTransfer->getUnzerRefundItems()->offsetExists($groupKey)) {
-                /** @var \Generated\Shared\Transfer\UnzerRefundItemTransfer $unzerRefundItemTransfer */
-                $unzerRefundItemTransfer = $unzerRefundItemCollectionTransfer->getUnzerRefundItems()->offsetGet($groupKey);
-                $unzerRefundItemTransfer
-                    ->setQuantity(static::DEFAULT_QUANTITY)
-                    ->setAmountGross(
-                        $unzerRefundItemTransfer->getAmountGross() + $itemTransfer->getSumPriceToPayAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
-                    );
-
-                continue;
-            }
-
-            $unzerRefundItemCollectionTransfer->getUnzerRefundItems()->offsetSet(
-                $groupKey,
-                $this->mapItemTransferToUnzerRefundItemTransfer($itemTransfer, new UnzerRefundItemTransfer()),
-            );
+            $unzerRefundItemCollectionTransfer->addUnzerRefundItem($this->mapItemTransferToUnzerRefundItemTransfer($itemTransfer, new UnzerRefundItemTransfer()));
         }
 
         return $unzerRefundItemCollectionTransfer;
@@ -65,8 +49,14 @@ class UnzerMarketplaceRefundMapper implements UnzerMarketplaceRefundMapperInterf
     ): UnzerRefundItemTransfer {
         return $unzerRefundItemTransfer
             ->setParticipantId($itemTransfer->getUnzerParticipantIdOrFail())
-            ->setAmountGross($itemTransfer->getSumPriceToPayAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmountGross($itemTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setQuantity($itemTransfer->getQuantityOrFail())
-            ->setBasketItemReferenceId($itemTransfer->getGroupKeyOrFail());
+            ->setBasketItemReferenceId(
+                sprintf(
+                    UnzerConstants::UNZER_BASKET_ITEM_REFERENCE_ID_TEMPLATE,
+                    $itemTransfer->getGroupKeyOrFail(),
+                    $itemTransfer->getIdSalesOrderItemOrFail(),
+                ),
+            );
     }
 }

@@ -14,7 +14,7 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
- * @method \SprykerEco\Zed\Unzer\Business\UnzerBusinessFactory getFactory()
+ * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
  */
 class UnzerPostSaveOrderPlugin extends AbstractPlugin implements CheckoutPostSaveInterface

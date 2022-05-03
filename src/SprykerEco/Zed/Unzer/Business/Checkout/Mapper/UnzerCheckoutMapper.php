@@ -77,19 +77,7 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
     {
         $unzerBasketItemTransferCollection = new ArrayObject();
         foreach ($quoteTransfer->getItems() as $quoteItemTransfer) {
-            $groupKey = (string)$quoteItemTransfer->getGroupKey();
-            if ($unzerBasketItemTransferCollection->offsetExists($groupKey)) {
-                $unzerBasketItemTransfer = $unzerBasketItemTransferCollection->offsetGet($groupKey);
-                $unzerBasketItemTransfer
-                    ->setQuantity($unzerBasketItemTransfer->getQuantity() + $quoteItemTransfer->getQuantity());
-
-                continue;
-            }
-
-            $unzerBasketItemTransferCollection->offsetSet(
-                $groupKey,
-                $this->mapQuoteItemTransferToUnzerBasketItemTransfer($quoteItemTransfer, new UnzerBasketItemTransfer()),
-            );
+            $unzerBasketItemTransferCollection->append($this->mapQuoteItemTransferToUnzerBasketItemTransfer($quoteItemTransfer, new UnzerBasketItemTransfer()));
         }
 
         return $unzerBasketItemTransferCollection;
@@ -106,12 +94,17 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
         UnzerBasketItemTransfer $unzerBasketItemTransfer
     ): UnzerBasketItemTransfer {
         return $unzerBasketItemTransfer
-            ->setBasketItemReferenceId($itemTransfer->getGroupKey())
+            ->setBasketItemReferenceId(
+                sprintf(
+                    UnzerConstants::UNZER_BASKET_ITEM_REFERENCE_ID_TEMPLATE,
+                    $itemTransfer->getGroupKeyOrFail(),
+                    $itemTransfer->getIdSalesOrderItemOrFail(),
+                ),
+            )
             ->setQuantity($itemTransfer->getQuantity())
             ->setVat((string)$itemTransfer->getTaxRate())
-            ->setAmountDiscount($itemTransfer->getSumDiscountAmountAggregation() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setAmountPerUnit(
-                $itemTransfer->getUnitSubtotalAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
+                $itemTransfer->getUnitPriceToPayAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
             )
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
