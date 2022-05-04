@@ -54,6 +54,7 @@ class UnzerConfig extends AbstractBundleConfig
         UnzerConstants::NOTIFICATION_TYPE_CHARGE_PENDING => UnzerConstants::OMS_STATUS_CHARGE_PENDING,
         UnzerConstants::NOTIFICATION_TYPE_CHARGE_FAILED => UnzerConstants::OMS_STATUS_CHARGE_FAILED,
         UnzerConstants::NOTIFICATION_TYPE_PAYMENT_COMPLETED => UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
+        UnzerConstants::NOTIFICATION_TYPE_PAYMENT_CANCELED => UnzerConstants::OMS_STATUS_PAYMENT_CANCELLED,
     ];
 
     /**

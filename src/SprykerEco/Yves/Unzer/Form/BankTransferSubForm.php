@@ -12,6 +12,9 @@ use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @method \SprykerEco\Yves\Unzer\UnzerConfig getConfig()
+ */
 class BankTransferSubForm extends AbstractUnzerSubForm
 {
     /**

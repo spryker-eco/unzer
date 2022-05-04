@@ -202,6 +202,11 @@ interface UnzerFacadeInterface
      * - Requires `OrderTransfer.payments.paymentProvider.paymentMethod` to be set.
      * - Requires `OrderTransfer.orderReference` to be set.
      * - Requires `OrderTransfer.idSalesOrderItem` to be set.
+     * - Requires `ItemTransfer.groupKey` to be set for each element at `RefundTransfer.items`
+     * - Requires `ItemTransfer.unzerParticipantId` to be set for each element at `RefundTransfer.items`
+     * - Requires `ItemTransfer.refundableAmount` to be set for each element at `RefundTransfer.items`
+     * - Requires `ItemTransfer.quantity` to be set for each element at `RefundTransfer.items`
+     * - Requires `ItemTransfer.idSalesOrderItem` to be set for each element at `RefundTransfer.items`
      * - Uses a strategy to resolve Unzer Expense Refund.
      * - Executes Unzer API Refund request.
      * - Saves Unzer payment details to Persistence.
@@ -241,8 +246,8 @@ interface UnzerFacadeInterface
     /**
      * Specification:
      * - Requires `QuoteTransfer.store.name` to be set.
-     * - Takes allowed payment methods from the `QuoteTransfer` received from Unzer local config.
-     * - Filters payment methods based on allowed payment methods.
+     * - Takes enabled payment methods from the `QuoteTransfer` received from Unzer local config.
+     * - Filters payment methods based on enabled payment methods.
      *
      * @api
      *
@@ -251,7 +256,7 @@ interface UnzerFacadeInterface
      *
      * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
-    public function filterIntersectionPaymentMethods(
+    public function filterEnabledPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer;

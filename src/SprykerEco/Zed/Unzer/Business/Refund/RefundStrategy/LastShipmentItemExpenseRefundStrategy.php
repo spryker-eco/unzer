@@ -73,8 +73,7 @@ class LastShipmentItemExpenseRefundStrategy implements UnzerExpenseRefundStrateg
     protected function collectExpenseTransfersForRefund(OrderTransfer $orderTransfer, array $salesOrderItemIds): ArrayObject
     {
         $orderItemsGroupedByIdSalesShipment = $this->getOrderItemsGroupedByIdSalesShipment($orderTransfer);
-        $paymentUnzerOrderItemCollection = $this->unzerRepository->getPaymentUnzerOrderItemCollectionByOrderId($orderTransfer->getOrderReferenceOrFail());
-        $idsSalesShipmentForRefund = $this->detectShipmentsForRefund($orderItemsGroupedByIdSalesShipment, $paymentUnzerOrderItemCollection, $salesOrderItemIds);
+        $idsSalesShipmentForRefund = $this->detectShipmentsForRefund($orderItemsGroupedByIdSalesShipment, $salesOrderItemIds);
 
         $expenseTransfers = new ArrayObject();
         foreach ($orderTransfer->getExpenses() as $expenseTransfer) {
@@ -88,38 +87,21 @@ class LastShipmentItemExpenseRefundStrategy implements UnzerExpenseRefundStrateg
 
     /**
      * @param array<int, array<\Generated\Shared\Transfer\ItemTransfer>> $orderItemsGroupedByIdSalesShipment
-     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
      * @param array<int> $salesOrderItemIds
      *
      * @return array<int>
      */
     protected function detectShipmentsForRefund(
         array $orderItemsGroupedByIdSalesShipment,
-        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         array $salesOrderItemIds
     ): array {
         $idsSalesShipment = [];
         foreach ($orderItemsGroupedByIdSalesShipment as $idSalesShipment => $itemTransfers) {
-            $totalItemsCount = count($itemTransfers);
-            foreach ($itemTransfers as $itemTransfer) {
-                if (in_array($itemTransfer->getIdSalesOrderItemOrFail(), $salesOrderItemIds, true)) {
-                    $totalItemsCount--;
-
-                    continue;
-                }
-
-                $itemAlreadyRefunded = $this
-                    ->isPaymentUnzerOrderItemAlreadyRefunded(
-                        $paymentUnzerOrderItemCollectionTransfer,
-                        $itemTransfer->getIdSalesOrderItemOrFail(),
-                    );
-
-                if ($itemAlreadyRefunded) {
-                    $totalItemsCount--;
-                }
+            if ($this->allItemsAreRefunded($itemTransfers)) {
+                continue;
             }
 
-            if ($totalItemsCount === 0) {
+            if ($this->expenseShouldBeRefunded($itemTransfers, $salesOrderItemIds)) {
                 $idsSalesShipment[] = $idSalesShipment;
             }
         }
@@ -163,5 +145,45 @@ class LastShipmentItemExpenseRefundStrategy implements UnzerExpenseRefundStrateg
         }
 
         return false;
+    }
+
+    /**
+     * @param array<\Generated\Shared\Transfer\ItemTransfer> $itemTransfers
+     * @param array<int> $salesOrderItemIds
+     *
+     * @return bool
+     */
+    protected function expenseShouldBeRefunded(array $itemTransfers, array $salesOrderItemIds): bool
+    {
+        $itemsCountForRefund = 0;
+        foreach ($itemTransfers as $itemTransfer) {
+            if (in_array($itemTransfer->getIdSalesOrderItemOrFail(), $salesOrderItemIds, true)) {
+                $itemsCountForRefund++;
+
+                continue;
+            }
+
+            if ($itemTransfer->getCanceledAmountOrFail() !== 0) {
+                $itemsCountForRefund++;
+            }
+        }
+
+        return $itemsCountForRefund === count($itemTransfers);
+    }
+
+    /**
+     * @param array<\Generated\Shared\Transfer\ItemTransfer> $itemTransfers
+     *
+     * @return bool
+     */
+    protected function allItemsAreRefunded(array $itemTransfers): bool
+    {
+        foreach ($itemTransfers as $itemTransfer) {
+            if ($itemTransfer->getCanceledAmountOrFail() !== 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
