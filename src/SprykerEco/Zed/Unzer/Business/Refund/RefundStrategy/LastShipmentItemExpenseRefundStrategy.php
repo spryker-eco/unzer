@@ -179,7 +179,7 @@ class LastShipmentItemExpenseRefundStrategy implements UnzerExpenseRefundStrateg
     protected function allItemsAreRefunded(array $itemTransfers): bool
     {
         foreach ($itemTransfers as $itemTransfer) {
-            if ($itemTransfer->getCanceledAmountOrFail() !== 0) {
+            if ($itemTransfer->getCanceledAmountOrFail() === 0) {
                 return false;
             }
         }
