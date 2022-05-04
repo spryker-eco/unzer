@@ -94,13 +94,7 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
         UnzerBasketItemTransfer $unzerBasketItemTransfer
     ): UnzerBasketItemTransfer {
         return $unzerBasketItemTransfer
-            ->setBasketItemReferenceId(
-                sprintf(
-                    UnzerConstants::UNZER_BASKET_ITEM_REFERENCE_ID_TEMPLATE,
-                    $itemTransfer->getGroupKeyOrFail(),
-                    $itemTransfer->getIdSalesOrderItemOrFail(),
-                ),
-            )
+            ->setBasketItemReferenceId($this->createBasketItemReferenceId($itemTransfer))
             ->setQuantity($itemTransfer->getQuantity())
             ->setVat((string)$itemTransfer->getTaxRate())
             ->setAmountPerUnit(
@@ -109,5 +103,19 @@ class UnzerCheckoutMapper implements UnzerCheckoutMapperInterface
             ->setTitle($itemTransfer->getName())
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
             ->setType(UnzerConstants::UNZER_BASKET_TYPE_GOODS);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     *
+     * @return string
+     */
+    protected function createBasketItemReferenceId(ItemTransfer $itemTransfer): string
+    {
+        return sprintf(
+            UnzerConstants::UNZER_BASKET_ITEM_REFERENCE_ID_TEMPLATE,
+            $itemTransfer->getGroupKeyOrFail(),
+            $itemTransfer->getIdSalesOrderItemOrFail(),
+        );
     }
 }

@@ -101,6 +101,14 @@ interface UnzerConstants
     /**
      * @var array<int>
      */
+    public const UNZER_MAIN_CONFIG_TYPES = [
+        self::UNZER_CONFIG_TYPE_STANDARD,
+        self::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
+    ];
+
+    /**
+     * @var array<int>
+     */
     public const UNZER_CHILD_CONFIG_TYPES = [
         self::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
         self::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,

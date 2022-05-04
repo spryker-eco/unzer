@@ -51,12 +51,20 @@ class UnzerMarketplaceRefundMapper implements UnzerMarketplaceRefundMapperInterf
             ->setParticipantId($itemTransfer->getUnzerParticipantIdOrFail())
             ->setAmountGross($itemTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setQuantity($itemTransfer->getQuantityOrFail())
-            ->setBasketItemReferenceId(
-                sprintf(
-                    UnzerConstants::UNZER_BASKET_ITEM_REFERENCE_ID_TEMPLATE,
-                    $itemTransfer->getGroupKeyOrFail(),
-                    $itemTransfer->getIdSalesOrderItemOrFail(),
-                ),
-            );
+            ->setBasketItemReferenceId($this->createBasketItemReferenceId($itemTransfer));
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     *
+     * @return string
+     */
+    protected function createBasketItemReferenceId(ItemTransfer $itemTransfer): string
+    {
+        return sprintf(
+            UnzerConstants::UNZER_BASKET_ITEM_REFERENCE_ID_TEMPLATE,
+            $itemTransfer->getGroupKeyOrFail(),
+            $itemTransfer->getIdSalesOrderItemOrFail(),
+        );
     }
 }
