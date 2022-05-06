@@ -25,12 +25,12 @@
         "spryker/zed-request": "^3.0.0"
     },
     "require-dev": {
-        "codeception/module-asserts": "^1.3.0",
+        "codeception/module-asserts": "^2.0",
         "phpstan/phpstan": "^1.2.0",
         "spryker-shop/shop-application": "^1.0.0",
         "spryker/state-machine": "*",
-        "spryker/application": "^3.0.0",
-        "spryker/checkout": "^3.0.0 || ^4.0.0 || ^6.0.0",
+        "spryker-shop/shop-application": "*",
+        "spryker/checkout": "*",
         "spryker/code-sniffer": "*",
         "spryker/container": "*",
         "spryker/customer": "*",
