@@ -1,11 +1,12 @@
 parameters:
     level: 8
-    checkGenericClassInNonGenericObjectType: false
-    checkMissingIterableValueType: false
-    excludes_analyse:
-
+    paths:
+        - src/
     bootstrapFiles:
         - tests/bootstrap.php
-
-    treatPhpDocTypesAsCertain: false
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+    excludePaths:
     ignoreErrors:
+        - '#Call to method .+\(\) on an unknown class Generated\\.+\\Ide\\AutoCompletion.#'
+

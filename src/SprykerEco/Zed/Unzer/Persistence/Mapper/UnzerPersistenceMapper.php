@@ -257,7 +257,7 @@ class UnzerPersistenceMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection|\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction[] $paymentUnzerTransactionEntities
+     * @param \Propel\Runtime\Collection\ObjectCollection<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction> $paymentUnzerTransactionEntities
      * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer

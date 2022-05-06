@@ -13,7 +13,9 @@ use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Zed\Kernel\Communication\Controller\AbstractGatewayController;
 
 /**
- * @method \SprykerEco\Zed\Unzer\Business\UnzerFacade getFacade()
+ * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
+ * @method \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface getRepository()
+ * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
  */
 class GatewayController extends AbstractGatewayController
 {

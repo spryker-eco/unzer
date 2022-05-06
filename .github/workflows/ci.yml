@@ -51,7 +51,7 @@ jobs:
             matrix:
                 php-versions:
                     - '7.4'
-                    - '8.0'
+                    - '8.1'
 
         services:
             mariadb:
@@ -97,14 +97,15 @@ jobs:
             - name: PHP syntax validation
               run: find ./src -path src -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
 
+            - name: Check codestyle checks
+              run: composer cs-check
+
             - name: Run codeception tests
               run: composer test
 
             - name: Run PHPStan checks
               run: composer stan
 
-            - name: Check codestyle checks
-              run: composer cs-check
 
     lowest:
         name: Unzer Prefer Lowest (PHP ${{ matrix.php-versions }})

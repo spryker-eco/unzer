@@ -9,6 +9,9 @@ namespace SprykerEco\Yves\Unzer\Form;
 
 use Generated\Shared\Transfer\PaymentTransfer;
 
+/**
+ * @method \SprykerEco\Yves\Unzer\UnzerConfig getConfig()
+ */
 class MarketplaceCreditCardSubForm extends CreditCardSubForm
 {
     /**

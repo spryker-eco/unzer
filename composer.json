@@ -26,7 +26,6 @@
     },
     "require-dev": {
         "codeception/module-asserts": "^1.3.0",
-        "codeception/module-webdriver": "^1.4",
         "phpstan/phpstan": "^1.2.0",
         "spryker-shop/shop-application": "^1.0.0",
         "spryker/state-machine": "*",
@@ -69,7 +68,7 @@
     "scripts": {
         "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
         "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
-        "stan": "vendor/bin/phpstan analyse",
+        "stan": "vendor/bin/phpstan analyse src/",
         "test": "vendor/bin/codecept run",
         "lowest": "validate-prefer-lowest",
         "lowest-setup": "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
