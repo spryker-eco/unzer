@@ -60,7 +60,8 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
         }
 
         $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
-            ->setStoreIds($unzerCredentialsTransfer->getStoreRelationOrFail()->getIdStores());
+            ->setStoreIds($unzerCredentialsTransfer->getStoreRelationOrFail()->getIdStores())
+            ->setTypes(UnzerConstants::UNZER_MAIN_CONFIG_TYPES);
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
         $unzerCredentialsCollectionTransfer = $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);

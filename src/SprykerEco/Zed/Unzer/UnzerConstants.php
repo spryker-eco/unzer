@@ -288,4 +288,9 @@ interface UnzerConstants
      * @var string
      */
     public const UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE = self::UNZER_BASKET_SHIPMENT_REFERENCE_ID . '_%s';
+
+    /**
+     * @var string
+     */
+    public const UNZER_BASKET_ITEM_REFERENCE_ID_TEMPLATE = '%s_%s';
 }

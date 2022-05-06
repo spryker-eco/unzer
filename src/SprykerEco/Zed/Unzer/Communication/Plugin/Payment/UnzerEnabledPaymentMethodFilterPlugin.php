@@ -17,13 +17,13 @@ use Spryker\Zed\PaymentExtension\Dependency\Plugin\PaymentMethodFilterPluginInte
  * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
  */
-class UnzerIntersectionPaymentMethodFilterPlugin extends AbstractPlugin implements PaymentMethodFilterPluginInterface
+class UnzerEnabledPaymentMethodFilterPlugin extends AbstractPlugin implements PaymentMethodFilterPluginInterface
 {
     /**
      * {@inheritDoc}
      * - Requires `QuoteTransfer.store.name` to be set.
-     * - Takes allowed payment methods from the `QuoteTransfer` received from Unzer local config.
-     * - Filters payment methods based on allowed payment methods.
+     * - Takes enabled payment methods from the `QuoteTransfer` received from Unzer local config.
+     * - Filters payment methods based on enabled payment methods.
      *
      * @api
      *
@@ -36,6 +36,6 @@ class UnzerIntersectionPaymentMethodFilterPlugin extends AbstractPlugin implemen
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        return $this->getFacade()->filterIntersectionPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
+        return $this->getFacade()->filterEnabledPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
     }
 }

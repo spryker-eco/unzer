@@ -22,7 +22,7 @@ use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
-class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter implements UnzerPaymentMethodFilterInterface
+class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter implements UnzerPaymentMethodFilterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
@@ -101,9 +101,8 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
             [UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE],
         );
         $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
-        $filteredPaymentMethods = $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);
 
-        return $this->filterMerchantIntersections($quoteTransfer, $filteredPaymentMethods);
+        return $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);
     }
 
     /**
@@ -126,30 +125,6 @@ class UnzerIntersectionPaymentMethodFilter extends AbstractUnzerPaymentMethodFil
         }
 
         return $activePaymentMethods;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \ArrayObject<array-key, \Generated\Shared\Transfer\PaymentMethodTransfer> $filteredPaymentMethods
-     *
-     * @return \ArrayObject<array-key, \Generated\Shared\Transfer\PaymentMethodTransfer>
-     */
-    protected function filterMerchantIntersections(QuoteTransfer $quoteTransfer, ArrayObject $filteredPaymentMethods): ArrayObject
-    {
-        $unzerCredentialsCollectionTransfer = $this->getMerchantUnzerCredentialsCollection($quoteTransfer);
-
-        foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
-            $merchantUnzerKeypair = $unzerCredentialsTransfer->getUnzerKeypairOrFail();
-            $merchantPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($merchantUnzerKeypair);
-            $merchantPaymentMethodKeys = $this->getPaymentMethodKeys($merchantPaymentMethodsTransfer);
-            $filteredPaymentMethods = new ArrayObject(
-                array_filter((array)$filteredPaymentMethods, function (PaymentMethodTransfer $paymentMethodTransfer) use ($merchantPaymentMethodKeys) {
-                        return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || in_array($paymentMethodTransfer->getPaymentMethodKey(), $merchantPaymentMethodKeys);
-                }),
-            );
-        }
-
-        return $filteredPaymentMethods;
     }
 
     /**

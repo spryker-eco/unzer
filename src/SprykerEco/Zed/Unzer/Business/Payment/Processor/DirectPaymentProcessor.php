@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
@@ -47,7 +48,13 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
     protected $unzerCheckoutMapper;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
+     */
+    protected $unzerPaymentAdapter;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface $unzerChargeAdapter
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
@@ -55,12 +62,14 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
      */
     public function __construct(
         UnzerChargeAdapterInterface $unzerChargeAdapter,
+        UnzerPaymentAdapterInterface $unzerPaymentAdapter,
         UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter,
         UnzerRefundProcessorInterface $unzerRefundProcessor,
         UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor,
         UnzerCheckoutMapperInterface $unzerCheckoutMapper
     ) {
         $this->unzerChargeAdapter = $unzerChargeAdapter;
+        $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerPaymentResourceAdapter = $unzerPaymentResourceAdapter;
         $this->unzerRefundProcessor = $unzerRefundProcessor;
         $this->unzerPreparePaymentProcessor = $unzerPreparePaymentProcessor;
@@ -77,8 +86,9 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
     {
         $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
+        $unzerPaymentTransfer = $this->unzerChargeAdapter->chargePayment($unzerPaymentTransfer);
 
-        return $this->unzerChargeAdapter->chargePayment($unzerPaymentTransfer);
+        return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
     }
 
     /**
