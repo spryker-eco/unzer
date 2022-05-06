@@ -33,7 +33,7 @@
         "spryker/checkout": "^3.0.0 || ^4.0.0 || ^6.0.0",
         "spryker/code-sniffer": "*",
         "spryker/container": "*",
-        "spryker/customer": "^7.41.0",
+        "spryker/customer": "*",
         "spryker/error-handler": "*",
         "spryker/event": "*",
         "spryker/log": "*",
