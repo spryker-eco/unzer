@@ -7,5 +7,4 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
     excludePaths:
     ignoreErrors:
-        - '#Call to method .+\(\) on an unknown class Generated\\.+\\Ide\\AutoCompletion.#'
 
