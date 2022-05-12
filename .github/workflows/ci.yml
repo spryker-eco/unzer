@@ -1,159 +1,137 @@
 name: CI
 
 env:
-  APPLICATION_ENV: 'development'
-  APPLICATION_STORE: 'DE'
-  PROJECT: 'Unzer'
-  DATABASE_VERSION: 10.2
-  DATABASE_HOST: 127.0.0.1
-  DATABASE_PORT: 3306
-  DATABASE_NAME: eu-docker
-  DATABASE_USERNAME: root
-  DATABASE_PASSWORD: secret
-  DATABASE_ROOT_PASSWORD: secret
-  DATABASE_ALLOW_EMPTY_PASSWORD: false
-  DATABASE_CHARACTER_SET: utf8
-  DATABASE_COLLATE: utf8_general_ci
-  MYSQL_ALLOW_EMPTY_PASSWORD: false
-  MYSQL_ROOT_PASSWORD: secret
-  MYSQL_DATABASE: eu-docker
+    APPLICATION_ENV: 'development'
+    APPLICATION_STORE: 'DE'
+    PROJECT: 'Unzer'
+    DATABASE_VERSION: 10.2
+    DATABASE_HOST: 127.0.0.1
+    DATABASE_PORT: 3306
+    DATABASE_NAME: eu-docker
+    DATABASE_USERNAME: root
+    DATABASE_PASSWORD: secret
+    DATABASE_ROOT_PASSWORD: secret
+    DATABASE_ALLOW_EMPTY_PASSWORD: false
+    DATABASE_CHARACTER_SET: utf8
+    DATABASE_COLLATE: utf8_general_ci
 
 on:
-  pull_request:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
+    pull_request:
+    push:
+        branches:
+            - 'master'
+    workflow_dispatch:
 
 jobs:
-  setup:
-    name: Setup MariaDB
-    runs-on: ubuntu-18.04
+    setup:
+        name: Setup Database MariaDB
+        runs-on: ubuntu-18.04
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: getong/mariadb-action@v1.1
-        with:
-          host port: ${{ env.DATABASE_PORT }}
-          container port: ${{ env.DATABASE_PORT }}
-          character set server: ${{ env.DATABASE_CHARACTER_SET }}
-          collation server: ${{ env.DATABASE_COLLATE }}
-          mariadb version: ${{ env.DATABASE_VERSION }}
-          mysql database: ${{ env.DATABASE_NAME }}
-          mysql root password: ${{ env.DATABASE_ROOT_PASSWORD }}
-          mysql user: ${{ env.DATABASE_USERNAME }}
-          mysql password: ${{ env.DATABASE_PASSWORD }}
+        steps:
+            - uses: actions/checkout@v2
+            - uses: getong/mariadb-action@v1.1
+              with:
+                  host port: ${{ env.DATABASE_PORT }}
+                  container port: ${{ env.DATABASE_PORT }}
+                  character set server: ${{ env.DATABASE_CHARACTER_SET }}
+                  collation server: ${{ env.DATABASE_COLLATE }}
+                  mariadb version: ${{ env.DATABASE_VERSION }}
+                  mysql database: ${{ env.DATABASE_NAME }}
+                  mysql root password: ${{ env.DATABASE_ROOT_PASSWORD }}
+                  mysql user: ${{ env.DATABASE_USERNAME }}
+                  mysql password: ${{ env.DATABASE_PASSWORD }}
 
-  ci:
-    name: Unzer
-    needs: setup
-    runs-on: ubuntu-18.04
+    ci:
+        name: Unzer (PHP ${{ matrix.php-versions }})
+        needs: setup
+        runs-on: ubuntu-18.04
 
-    services:
-      mariadb:
-        image: mariadb:10.2
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: false
-          MYSQL_ROOT_PASSWORD: secret
-          MYSQL_DATABASE: eu-docker
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        strategy:
+            fail-fast: false
+            matrix:
+                php-versions:
+                    - '7.4'
+                    - '8.1'
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php-versions:
-          - '7.4'
-          - '8.1'
+        services:
+            mariadb:
+                image: mariadb:10.2
+                env:
+                    MYSQL_ALLOW_EMPTY_PASSWORD: false
+                    MYSQL_ROOT_PASSWORD: secret
+                    MYSQL_DATABASE: eu-docker
+                ports:
+                    - 3306:3306
+                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
-    steps:
-      - name: Checkout@v2
-        uses: actions/checkout@v2
+        steps:
+            - name: Checkout@v2
+              uses: actions/checkout@v2
 
-      - name: Setup PHP ${{ matrix.php-versions }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, intl, bcmath, pdo_mysql
+            - name: Setup PHP ${{ matrix.php-versions }}
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  extensions: mbstring, intl, bcmath, pdo_mysql
 
-      - name: Configure sysctl limits
-        run: |
-          sudo swapoff -a
-          sudo sysctl -w vm.swappiness=1
-          sudo sysctl -w fs.file-max=262144
-          sudo sysctl -w vm.max_map_count=262144
-      - name: Composer get cache directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - name: Composer cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+            - name: Get composer cache directory
+              id: composer-cache
+              run: |
+                  echo "::set-output name=dir::$(composer config cache-files-dir)"
+            - uses: actions/cache@v2
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-${{ matrix.php-versions }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-${{ matrix.php-versions }}-composer-
 
-      - name: Composer validate
-        run: composer validate
+            - name: Composer validate
+              run: composer validate
 
-      - name: Composer version
-        run: composer --version
+            - name: Composer version
+              run: composer --version
 
-      - name: Composer install
-        run: composer install --prefer-dist --no-interaction --optimize-autoloader
+            - name: Composer install
+                #        if: steps.cache.outputs.cache-hit != 'true'
+              run: composer install --prefer-dist --no-interaction --optimize-autoloader
 
-      - name: PHP syntax validation
-        run: find ./src -path src -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+            - name: PHP syntax validation
+              run: find ./src -path src -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
 
-      - name: Run codeception tests
-        run: composer test
+            - name: Check codestyle checks
+              run: composer cs-check
 
-      - name: Run PHPStan checks
-        run: composer stan
+            - name: Run codeception tests
+              run: composer test
 
-      - name: Check codestyle checks
-        run: composer cs-check
+            - name: Run PHPStan checks
+              run: composer stan
 
-  prefer-lowest:
-    runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        php-version: [
-          '7.4'
-        ]
 
-    steps:
-      - uses: actions/checkout@v2
+    lowest:
+        name: Unzer Prefer Lowest (PHP ${{ matrix.php-versions }})
+        runs-on: ubuntu-18.04
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '7.4'
+                  extensions: mbstring, intl, bcmath, pdo_mysql
 
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+            - name: Composer Install
+              run: composer install --prefer-dist --no-interaction --profile
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl, pdo_mysql
+            - name: Composer Update
+              run: composer update --prefer-lowest --prefer-dist --no-interaction --profile -vvv
 
-      - name: Composer prefer lowest
-        run: composer lowest-setup
+            - name: Prefer lowest installation
+              run: composer require --dev dereuromark/composer-prefer-lowest;
 
-      - name: Run PHPStan (currently not running properly)
-        run: composer stan || true
+            - name: PHP syntax validation
+              run: find ./src -path src -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
 
-      - name: Validate prefer lowest
-        run: vendor/bin/validate-prefer-lowest -m
+            - name: Prefer lowest validation
+              run: vendor/bin/validate-prefer-lowest -m

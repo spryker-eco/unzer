@@ -79,6 +79,9 @@ interface UnzerFacadeInterface
     /**
      * Specification:
      * - Requires `QuoteTransfer.payment.unzerPayment.idSalesOrder` to be set.
+     * - Requires `QuoteTransfer.payment.paymentSelection` to be set.
+     * - Requires `QuoteTransfer.currency.code` to be set.
+     * - Requires `QuoteTransfer.totals.grandTotal` to be set.
      * - Expands `QuoteTransfer` with `UnzerBasketTransfer`.
      * - Expands `QuoteTransfer` with `UnzerPaymentResourceTransfer`.
      * - Performs Unzer Create Basket API call.

@@ -10,11 +10,10 @@
         "spryker/calculation": "^4.11.0",
         "spryker/cart-extension": "^4.1.0",
         "spryker/checkout-extension": "^1.3.0",
-        "spryker/customer": "^7.0.0",
-        "spryker/kernel": "^3.30.0",
         "spryker/locale": "^3.8.0",
+        "spryker/kernel": "^3.30.0",
         "spryker/merchant": "^3.1.0",
-        "spryker/oms": "^11.15.0",
+        "spryker/oms": "^11.0.0",
         "spryker/payment": "^5.4.2",
         "spryker/payment-extension": "^1.0.0",
         "spryker/propel-orm": "^1.6.0",
@@ -32,13 +31,23 @@
         "spryker/zed-request": "^3.0.0"
     },
     "require-dev": {
-        "phpstan/phpstan": "*",
+        "codeception/module-asserts": "^1.3.0",
+        "phpstan/phpstan": "^1.2.0",
+        "spryker-shop/shop-application": "^1.0.0",
+        "spryker/state-machine": "*",
         "spryker/checkout": "*",
         "spryker/code-sniffer": "*",
+        "spryker/container": "*",
+        "spryker/customer": "*",
+        "spryker/error-handler": "*",
+        "spryker/event": "*",
+        "spryker/log": "*",
+        "spryker/monolog": "*",
         "spryker/propel": "*",
-        "spryker/router": "*",
-        "spryker/state-machine": "*",
-        "spryker/testify": "*"
+        "spryker/queue": "*",
+        "spryker/silex": "*",
+        "spryker/testify": "^3.43.0",
+        "spryker/zed-navigation": "^1.0.0"
     },
     "suggest": {
         "spryker/checkout": "Use this module if you want to use Checkout plugins.",
@@ -52,17 +61,21 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "SprykerEcoTest\\": "tests/SprykerEcoTest/"
+            "SprykerEcoTest\\": "tests/SprykerEcoTest/",
+            "Config\\Module\\": "vendor/spryker/config/tests/_support/Module",
+            "Oms\\Module\\": "vendor/spryker/oms/tests/_support/Module",
+            "Propel\\Module\\": "vendor/spryker/propel/tests/_support/Module",
+            "Sales\\Module\\": "vendor/spryker/sales/tests/_support/Module",
+            "Transfer\\Module\\": "vendor/spryker/transfer/tests/_support/Module"
         }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "test": "vendor/bin/codecept run",
         "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
         "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml src/ tests/",
-        "stan": "phpstan analyse -c phpstan.neon src/",
-        "stan-setup": "cp composer.json composer.backup && COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpstan/phpstan:^0.12 && mv composer.backup composer.json",
+        "stan": "vendor/bin/phpstan analyse src/",
+        "test": "vendor/bin/codecept run --quiet --fail-fast --no-exit",
         "lowest": "validate-prefer-lowest",
         "lowest-setup": "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
     },

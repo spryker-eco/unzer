@@ -85,7 +85,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return array
+     * @return array<string>
      */
     protected function extractUniqueMerchantReferences(QuoteTransfer $quoteTransfer): array
     {

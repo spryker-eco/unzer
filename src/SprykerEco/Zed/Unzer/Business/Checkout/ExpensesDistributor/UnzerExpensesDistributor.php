@@ -71,7 +71,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
                 ->setBasketItemReferenceId($referenceId);
 
             $unzerBasketItemTransfer = $this->addExpensesToUnzerBasketItem($expenseTransfers, $unzerBasketItemTransfer);
-            if ($unzerBasketItemTransfer->getAmountPerUnit() === 0) {
+            if ($unzerBasketItemTransfer->getAmountPerUnit() === 0.0) {
                 continue;
             }
 
@@ -107,7 +107,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
         $unzerBasketItemTransfer = $this->createUnzerBasketItemTransfer()
             ->setBasketItemReferenceId(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID);
         $unzerBasketItemTransfer = $this->addExpensesToUnzerBasketItem($expenseTransfers->getArrayCopy(), $unzerBasketItemTransfer);
-        if ($unzerBasketItemTransfer->getAmountPerUnit() === 0) {
+        if ($unzerBasketItemTransfer->getAmountPerUnit() === 0.0) {
             return $unzerBasketTransfer;
         }
 
