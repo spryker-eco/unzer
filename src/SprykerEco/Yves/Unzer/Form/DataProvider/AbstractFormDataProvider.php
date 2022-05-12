@@ -37,7 +37,7 @@ abstract class AbstractFormDataProvider implements StepEngineFormDataProviderInt
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getOptions(AbstractTransfer $quoteTransfer): array
     {

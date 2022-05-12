@@ -44,7 +44,7 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
         UnzerApiMarketplaceAuthorizeRequestTransfer $unzerApiMarketplaceAuthorizeRequestTransfer
     ): UnzerApiMarketplaceAuthorizeRequestTransfer {
         return $unzerApiMarketplaceAuthorizeRequestTransfer->fromArray($unzerPaymentTransfer->toArray(), true)
-            ->setAmount($unzerPaymentTransfer->getAmountTotal())
+            ->setAmount($unzerPaymentTransfer->getAmountTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setPaymentReference($unzerPaymentTransfer->getOrderId())
             ->setTypeId($unzerPaymentTransfer->getPaymentResourceOrFail()->getId())
             ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
@@ -63,7 +63,7 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
         UnzerApiAuthorizeRequestTransfer $unzerApiAuthorizeRequestTransfer
     ): UnzerApiAuthorizeRequestTransfer {
         return $unzerApiAuthorizeRequestTransfer->fromArray($unzerPaymentTransfer->toArray(), true)
-            ->setAmount($unzerPaymentTransfer->getAmountTotal())
+            ->setAmount($unzerPaymentTransfer->getAmountTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setTypeId($unzerPaymentTransfer->getPaymentResourceOrFail()->getId())
             ->setCustomerId($unzerPaymentTransfer->getCustomerOrFail()->getId())
             ->setReturnUrl($this->unzerConfig->getAuthorizeReturnUrl());

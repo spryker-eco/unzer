@@ -59,14 +59,11 @@ class UnzerPreparePaymentProcessor implements UnzerPreparePaymentProcessorInterf
     {
         $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setOrderId($saveOrderTransfer->getOrderReference());
         $unzerPaymentTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail();
-
         $unzerBasket = $this->createUnzerBasket($quoteTransfer, $unzerPaymentTransfer->getUnzerKeypairOrFail());
-        $amountTotal = (float)$quoteTransfer->getTotalsOrFail()->getGrandTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER;
-        $unzerPaymentTransfer->setBasket($unzerBasket);
-        $unzerPaymentTransfer->setCurrency($quoteTransfer->getCurrencyOrFail()->getCode());
-        $unzerPaymentTransfer->setAmountTotal($amountTotal);
 
-        return $unzerPaymentTransfer;
+        return $unzerPaymentTransfer->setBasket($unzerBasket)
+            ->setCurrency($quoteTransfer->getCurrencyOrFail()->getCode())
+            ->setAmountTotal($quoteTransfer->getTotalsOrFail()->getGrandTotal());
     }
 
     /**

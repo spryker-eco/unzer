@@ -48,7 +48,7 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
             ->setBasketId($unzerPaymentTransfer->getBasketOrFail()->getId())
             ->setTypeId($unzerPaymentTransfer->getPaymentResourceOrFail()->getId())
             ->setReturnUrl($this->unzerConfig->getChargeReturnUrl())
-            ->setAmount($unzerPaymentTransfer->getAmountTotal())
+            ->setAmount($unzerPaymentTransfer->getAmountTotal() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setCurrency($unzerPaymentTransfer->getCurrency())
             ->setOrderId($unzerPaymentTransfer->getOrderId())
             ->setInvoiceId($unzerPaymentTransfer->getInvoiceId())

@@ -5,7 +5,6 @@ parameters:
     bootstrapFiles:
         - tests/bootstrap.php
     checkGenericClassInNonGenericObjectType: false
-    checkMissingIterableValueType: false
     excludePaths:
     ignoreErrors:
         - '#Call to method .+\(\) on an unknown class Generated\\.+\\Ide\\AutoCompletion.#'
