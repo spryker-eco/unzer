@@ -341,9 +341,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      */
     public function findUpdatedUnzerPaymentForOrder(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer
     {
-        return $this->getFactory()
-            ->createUnzerNotificationProcessor()
-            ->findUpdatedUnzerPaymentForOrder($orderTransfer);
+        return $this->getFactory()->createUnzerPaymentReader()->findUnzerPaymentForOrder($orderTransfer);
     }
 
     /**

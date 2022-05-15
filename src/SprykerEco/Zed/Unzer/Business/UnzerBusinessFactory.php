@@ -119,6 +119,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorI
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolver;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Reader\UnzerPaymentReader;
+use SprykerEco\Zed\Unzer\Business\Payment\Reader\UnzerPaymentReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdater;
 use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapper;
@@ -1126,6 +1128,19 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentUpdater(),
+        );
+    }
+
+    /**
+     * @return UnzerPaymentReaderInterface
+     */
+    public function createUnzerPaymentReader(): UnzerPaymentReaderInterface
+    {
+        return new UnzerPaymentReader(
+            $this->createUnzerReader(),
+            $this->createUnzerPaymentMapper(),
+            $this->createUnzerPaymentAdapter(),
+            $this->createUnzerCredentialsResolver()
         );
     }
 }

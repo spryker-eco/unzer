@@ -19,11 +19,4 @@ interface UnzerNotificationProcessorInterface
      * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
      */
     public function processNotification(UnzerNotificationTransfer $unzerNotificationTransfer): UnzerNotificationTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
-     */
-    public function findUpdatedUnzerPaymentForOrder(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer;
 }
