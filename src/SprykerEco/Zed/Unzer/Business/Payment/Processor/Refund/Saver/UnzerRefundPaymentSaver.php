@@ -12,7 +12,7 @@ use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerRefundPaymentSaver implements UnzerRefundPaymentSaverInterface
@@ -28,23 +28,23 @@ class UnzerRefundPaymentSaver implements UnzerRefundPaymentSaverInterface
     protected $unzerPaymentAdapter;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface
      */
-    protected $unzerPaymentSaver;
+    protected $unzerPaymentUpdater;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface $unzerPaymentUpdater
      */
     public function __construct(
         UnzerPaymentMapperInterface $unzerPaymentMapper,
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
-        UnzerPaymentSaverInterface $unzerPaymentSaver
+        UnzerPaymentUpdaterInterface $unzerPaymentUpdater
     ) {
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
-        $this->unzerPaymentSaver = $unzerPaymentSaver;
+        $this->unzerPaymentUpdater = $unzerPaymentUpdater;
     }
 
     /**
@@ -64,7 +64,7 @@ class UnzerRefundPaymentSaver implements UnzerRefundPaymentSaverInterface
         $unzerPaymentTransfer->setUnzerKeypair($unzerKeypairTransfer);
         $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
 
-        $this->unzerPaymentSaver->saveUnzerPaymentDetails(
+        $this->unzerPaymentUpdater->updateUnzerPaymentDetails(
             $unzerPaymentTransfer,
             UnzerConstants::OMS_STATUS_CHARGE_REFUNDED,
             $salesOrderItemIds,

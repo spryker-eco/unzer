@@ -119,8 +119,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorI
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolver;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaver;
-use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdater;
+use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapper;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\UnzerCustomerQuoteExpander;
@@ -187,7 +187,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerPostSaveCheckoutHook(): UnzerCheckoutHookExecutorInterface
     {
         return new UnzerPostSaveCheckoutHookExecutor(
-            $this->createUnzerPaymentSaver(),
+            $this->createUnzerPaymentUpdater(),
             $this->createUnzerPaymentProcessorResolver(),
         );
     }
@@ -224,11 +224,11 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface
      */
-    public function createUnzerPaymentSaver(): UnzerPaymentSaverInterface
+    public function createUnzerPaymentUpdater(): UnzerPaymentUpdaterInterface
     {
-        return new UnzerPaymentSaver(
+        return new UnzerPaymentUpdater(
             $this->createUnzerReader(),
             $this->createUnzerWriter(),
             $this->createUnzerPaymentMapper(),
@@ -397,7 +397,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->getConfig(),
             $this->createUnzerReader(),
             $this->createUnzerPaymentMapper(),
-            $this->createUnzerPaymentSaver(),
+            $this->createUnzerPaymentUpdater(),
             $this->createUnzerCredentialsResolver(),
         );
     }
@@ -1125,7 +1125,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerRefundPaymentSaver(
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentAdapter(),
-            $this->createUnzerPaymentSaver(),
+            $this->createUnzerPaymentUpdater(),
         );
     }
 }

@@ -11,15 +11,15 @@ use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInterface
 {
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface
      */
-    protected $unzerPaymentSaver;
+    protected $unzerPaymentUpdater;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface
@@ -27,14 +27,14 @@ class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInte
     protected $unzerPaymentProcessorResolver;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface $unzerPaymentUpdater
      * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface $unzerPaymentProcessorResolver
      */
     public function __construct(
-        UnzerPaymentSaverInterface $unzerPaymentSaver,
+        UnzerPaymentUpdaterInterface           $unzerPaymentUpdater,
         UnzerPaymentProcessorResolverInterface $unzerPaymentProcessorResolver
     ) {
-        $this->unzerPaymentSaver = $unzerPaymentSaver;
+        $this->unzerPaymentUpdater = $unzerPaymentUpdater;
         $this->unzerPaymentProcessorResolver = $unzerPaymentProcessorResolver;
     }
 
@@ -63,6 +63,6 @@ class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInte
             ->setIsExternalRedirect(true);
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
 
-        $this->unzerPaymentSaver->saveUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
+        $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
     }
 }

@@ -5,7 +5,7 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Business\Payment\Saver;
+namespace SprykerEco\Zed\Unzer\Business\Payment\Updater;
 
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
@@ -16,7 +16,7 @@ use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
 
-class UnzerPaymentSaver implements UnzerPaymentSaverInterface
+class UnzerPaymentUpdater implements UnzerPaymentUpdaterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
@@ -55,7 +55,7 @@ class UnzerPaymentSaver implements UnzerPaymentSaverInterface
      *
      * @return void
      */
-    public function saveUnzerPaymentDetails(
+    public function updateUnzerPaymentDetails(
         UnzerPaymentTransfer $unzerPaymentTransfer,
         string $orderItemStatus,
         array $filteredSalesOrderItemIds = []
