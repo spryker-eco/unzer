@@ -89,6 +89,26 @@ interface UnzerConstants
     public const UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT = 4;
 
     /**
+     * @var int
+     */
+    public const NO_EXPENSES_REFUND_STRATEGY = 0;
+
+    /**
+     * @var int
+     */
+    public const LAST_SHIPMENT_ITEM_EXPENSES_REFUND_STRATEGY = 1;
+
+    /**
+     * @var int
+     */
+    public const LAST_ORDER_ITEM_EXPENSES_REFUND_STRATEGY = 2;
+
+    /**
+     * @var string
+     */
+    public const MAIN_SELLER_REFERENCE = 'main';
+
+    /**
      * @var array<int, string>
      */
     public const UNZER_CONFIG_TYPES = [
@@ -113,19 +133,4 @@ interface UnzerConstants
         self::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
         self::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
     ];
-
-    /**
-     * @var int
-     */
-    public const NO_EXPENSES_REFUND_STRATEGY = 0;
-
-    /**
-     * @var int
-     */
-    public const LAST_SHIPMENT_ITEM_EXPENSES_REFUND_STRATEGY = 1;
-
-    /**
-     * @var int
-     */
-    public const LAST_ORDER_ITEM_EXPENSES_REFUND_STRATEGY = 2;
 }

@@ -39,7 +39,7 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         UnzerApiGetPaymentResponseTransfer $unzerApiGetPaymentResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
-        // do not change to fromArray-toArray because Unzer send some already known fields as empty!
+        // do not change to fromArray-toArray because Unzer sends some already known fields as empty!
         $unzerPaymentTransfer = $unzerPaymentTransfer
             ->setStateId($unzerApiGetPaymentResponseTransfer->getStateId())
             ->setStateName($unzerApiGetPaymentResponseTransfer->getStateName())

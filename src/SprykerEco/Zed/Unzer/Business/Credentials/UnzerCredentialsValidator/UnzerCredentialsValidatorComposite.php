@@ -36,7 +36,7 @@ class UnzerCredentialsValidatorComposite implements UnzerCredentialsValidatorInt
 
         foreach ($this->unzerCredentialsValidators as $unzerCredentialsValidator) {
             $unzerCredentialsIterationResponseTransfer = $unzerCredentialsValidator->validate($unzerCredentialsTransfer);
-            $unzerCredentialsResponseTransfer = $this->processIterationUnzerCredentialsResponse(
+            $unzerCredentialsResponseTransfer = $this->mergeIterationUnzerCredentialsResponse(
                 $unzerCredentialsResponseTransfer,
                 $unzerCredentialsIterationResponseTransfer,
             );
@@ -51,13 +51,14 @@ class UnzerCredentialsValidatorComposite implements UnzerCredentialsValidatorInt
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    protected function processIterationUnzerCredentialsResponse(
+    protected function mergeIterationUnzerCredentialsResponse(
         UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer,
         UnzerCredentialsResponseTransfer $unzerCredentialsIterationResponseTransfer
     ): UnzerCredentialsResponseTransfer {
-        if ($unzerCredentialsResponseTransfer->getIsSuccessful()) {
-            $unzerCredentialsResponseTransfer->setIsSuccessful($unzerCredentialsIterationResponseTransfer->getIsSuccessful());
-        }
+        $unzerCredentialsResponseTransfer->setIsSuccessful(
+            $unzerCredentialsResponseTransfer->getIsSuccessful()
+            && $unzerCredentialsIterationResponseTransfer->getIsSuccessful(),
+        );
 
         foreach ($unzerCredentialsIterationResponseTransfer->getMessages() as $messageTransfer) {
             $unzerCredentialsResponseTransfer->addMessage($messageTransfer);

@@ -391,7 +391,7 @@ class UnzerBusinessTester extends Actor
     /**
      * @return void
      */
-    public function ensureUnzerCredentialsTableIsEmpty(): void
+    public function ensureUnzerCredentialsTablesAreEmpty(): void
     {
         SpyUnzerCredentialsStoreQuery::create()->deleteAll();
         SpyUnzerCredentialsQuery::create()->deleteAll();
@@ -629,8 +629,6 @@ class UnzerBusinessTester extends Actor
         $unzerCredentialsTransfer = $this->getFacade()
             ->createUnzerCredentials($unzerCredentialsTransfer)
             ->getUnzerCredentials();
-
-        //$unzerCredentialsTransfer->getStoreRelation()->setIdEntity($unzerCredentialsTransfer->getIdUnzerCredentials());
 
         return $unzerCredentialsTransfer;
     }

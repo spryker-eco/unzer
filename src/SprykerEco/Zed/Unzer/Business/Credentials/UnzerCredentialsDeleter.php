@@ -21,12 +21,12 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     /**
      * @var string
      */
-    protected const MESSAGE_DELETE_NOT_AVAILABLE = 'Unzer Credentials cannot be deleted until has child elements.';
+    protected const MESSAGE_DELETE_IS_NOT_AVAILABLE = 'Unzer Credentials cannot be deleted until has child elements.';
 
     /**
      * @var string
      */
-    protected const MESSAGE_DELETE_FAILED = 'Unzer Credentials deletion failed.';
+    protected const MESSAGE_DELETE_HAS_FAILED = 'Unzer Credentials deletion failed.';
 
     /**
      * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
@@ -60,7 +60,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
         $unzerCredentialsResponseTransfer = new UnzerCredentialsResponseTransfer();
 
         if ($this->hasChildCredentials($unzerCredentialsTransfer)) {
-            $unzerCredentialsResponseTransfer->addMessage((new MessageTransfer())->setMessage(static::MESSAGE_DELETE_NOT_AVAILABLE));
+            $unzerCredentialsResponseTransfer->addMessage((new MessageTransfer())->setMessage(static::MESSAGE_DELETE_IS_NOT_AVAILABLE));
 
             return $unzerCredentialsResponseTransfer->setIsSuccessful(false);
         }
@@ -121,7 +121,8 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
             return false;
         }
 
-        $mainMerchantUnzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()[0];
+        $mainMerchantUnzerCredentialsTransfer = $unzerCredentialsCollectionTransfer
+            ->getUnzerCredentials()->getIterator()->current();
 
         return $this->unzerEntityManager->deleteUnzerCredentials($mainMerchantUnzerCredentialsTransfer);
     }
@@ -134,7 +135,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     protected function buildFailedUnzerCredentialsResponseTransfer(
         UnzerCredentialsResponseTransfer $unzerCredentialsResponseTransfer
     ): UnzerCredentialsResponseTransfer {
-        $unzerCredentialsResponseTransfer->addMessage((new MessageTransfer())->setMessage(static::MESSAGE_DELETE_FAILED));
+        $unzerCredentialsResponseTransfer->addMessage((new MessageTransfer())->setMessage(static::MESSAGE_DELETE_HAS_FAILED));
 
         return $unzerCredentialsResponseTransfer->setIsSuccessful(false);
     }

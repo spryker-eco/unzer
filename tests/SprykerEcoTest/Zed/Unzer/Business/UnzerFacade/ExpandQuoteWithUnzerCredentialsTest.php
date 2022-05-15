@@ -55,7 +55,7 @@ class ExpandQuoteWithUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testWillExpandQuoteWithUnzerCredentialForStandardSeller(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
         $quoteTransfer = (new QuoteTransfer())
             ->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0))
@@ -77,7 +77,7 @@ class ExpandQuoteWithUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testWillExpandQuoteWithUnzerCredentialForQuoteWithDifferentSellers(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
         $quoteTransfer = (new QuoteTransfer())
             ->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0))
@@ -98,7 +98,7 @@ class ExpandQuoteWithUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testWillExpandQuoteWithUnzerCredentialForQuoteMerchantSellers(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = $this->tester->haveMarketplaceMerchantUnzerCredentials([
             UnzerCredentialsTransfer::MERCHANT_REFERENCE => UnzerBusinessTester::MERCHANT_REFERENCE,
         ]);

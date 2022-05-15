@@ -14,6 +14,8 @@ use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
+use SprykerEco\Shared\Unzer\UnzerConfig as UnzerSharedConfig;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
@@ -54,12 +56,22 @@ class UnzerWriter implements UnzerWriterInterface
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
      *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
      * @return void
      */
     public function createUnzerPaymentDetails(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): void
     {
-        $paymentUnzerTransfer = $this->createPaymentUnzer($quoteTransfer, $saveOrderTransfer);
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== UnzerSharedConfig::PAYMENT_PROVIDER_NAME) {
+            return;
+        }
 
+        $paymentUnzerTransfer = $this->unzerReader->getPaymentUnzerByOrderReference($saveOrderTransfer->getOrderReferenceOrFail());
+        if ($paymentUnzerTransfer->getIdPaymentUnzer() !== null) {
+            throw new UnzerException(sprintf('Order with reference %s already exists!', $saveOrderTransfer->getOrderReferenceOrFail()));
+        }
+
+        $paymentUnzerTransfer = $this->createPaymentUnzer($quoteTransfer, $saveOrderTransfer);
         foreach ($saveOrderTransfer->getOrderItems() as $orderItemTransfer) {
             $this->createPaymentUnzerOrderItemTransfer($paymentUnzerTransfer, $orderItemTransfer);
         }

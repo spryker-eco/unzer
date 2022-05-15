@@ -31,7 +31,7 @@ class UnzerToSalesFacadeBridge implements UnzerToSalesFacadeInterface
      *
      * @return \Generated\Shared\Transfer\OrderTransfer
      */
-    public function getOrderByIdSalesOrder($idSalesOrder): OrderTransfer
+    public function getOrderByIdSalesOrder(int $idSalesOrder): OrderTransfer
     {
         return $this->salesFacade->getOrderByIdSalesOrder($idSalesOrder);
     }

@@ -92,7 +92,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         $propelConnection->beginTransaction();
 
         try {
-            $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentials($unzerCredentialsTransfer);
+            $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction($unzerCredentialsTransfer);
             $propelConnection->commit();
         } catch (UnzerApiException $unzerApiException) {
             $propelConnection->rollBack();
@@ -112,7 +112,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsResponseTransfer
      */
-    protected function executeCreateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
+    protected function executeCreateUnzerCredentialsTransaction(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         $unzerCredentialsTransfer = $this->unzerEntityManager
             ->createUnzerCredentials(
@@ -184,7 +184,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
             ->setParentIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials())
             ->setType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT);
 
-        $childUnzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentials(
+        $childUnzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction(
             $childUnzerCredentialsTransfer,
         );
 

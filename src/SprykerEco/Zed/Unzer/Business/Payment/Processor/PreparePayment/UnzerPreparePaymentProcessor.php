@@ -13,9 +13,8 @@ use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface;
+use SprykerEco\Zed\Unzer\Business\Checkout\ExpenseDistributor\UnzerExpenseDistributorInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
-use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerPreparePaymentProcessor implements UnzerPreparePaymentProcessorInterface
 {
@@ -30,19 +29,19 @@ class UnzerPreparePaymentProcessor implements UnzerPreparePaymentProcessorInterf
     protected $unzerBasketAdapter;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Checkout\ExpenseDistributor\UnzerExpenseDistributorInterface
      */
     protected $unzerExpensesDistributor;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerBasketAdapterInterface $unzerBasketAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface $unzerExpensesDistributor
+     * @param \SprykerEco\Zed\Unzer\Business\Checkout\ExpenseDistributor\UnzerExpenseDistributorInterface $unzerExpensesDistributor
      */
     public function __construct(
         UnzerCheckoutMapperInterface $unzerCheckoutMapper,
         UnzerBasketAdapterInterface $unzerBasketAdapter,
-        UnzerExpensesDistributorInterface $unzerExpensesDistributor
+        UnzerExpenseDistributorInterface $unzerExpensesDistributor
     ) {
         $this->unzerCheckoutMapper = $unzerCheckoutMapper;
         $this->unzerBasketAdapter = $unzerBasketAdapter;

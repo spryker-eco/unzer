@@ -10,9 +10,10 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiSetWebhookRequestTransfer;
 use Generated\Shared\Transfer\UnzerNotificationConfigTransfer;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
-class UnzerNotificationAdapter extends UnzerAbstractApiAdapter implements UnzerNotificationAdapterInterface
+class UnzerNotificationAdapter implements UnzerNotificationAdapterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
@@ -20,11 +21,20 @@ class UnzerNotificationAdapter extends UnzerAbstractApiAdapter implements UnzerN
     protected $unzerApiFacade;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
      */
-    public function __construct(UnzerToUnzerApiFacadeInterface $unzerApiFacade)
-    {
+    protected $unzerApiAdapterResponseValidator;
+
+    /**
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
+     */
+    public function __construct(
+        UnzerToUnzerApiFacadeInterface $unzerApiFacade,
+        UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
+    ) {
         $this->unzerApiFacade = $unzerApiFacade;
+        $this->unzerApiAdapterResponseValidator = $unzerApiAdapterResponseValidator;
     }
 
     /**
@@ -43,6 +53,6 @@ class UnzerNotificationAdapter extends UnzerAbstractApiAdapter implements UnzerN
             ->setUnzerKeypair($unzerNotificationConfigTransfer->getUnzerKeyPairOrFail());
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performSetNotificationUrlApiCall($unzerApiRequestTransfer);
-        $this->assertSuccessResponse($unzerApiResponseTransfer);
+        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
     }
 }

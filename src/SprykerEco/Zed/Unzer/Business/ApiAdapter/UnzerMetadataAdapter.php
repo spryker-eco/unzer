@@ -12,9 +12,10 @@ use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerMetadataTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapperInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
-class UnzerMetadataAdapter extends UnzerAbstractApiAdapter implements UnzerMetadataAdapterInterface
+class UnzerMetadataAdapter implements UnzerMetadataAdapterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapperInterface
@@ -27,15 +28,23 @@ class UnzerMetadataAdapter extends UnzerAbstractApiAdapter implements UnzerMetad
     protected $unzerApiFacade;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
+     */
+    protected $unzerApiAdapterResponseValidator;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerMetadataMapperInterface $unzerMetadataMapper
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
      */
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
-        UnzerMetadataMapperInterface $unzerMetadataMapper
+        UnzerMetadataMapperInterface $unzerMetadataMapper,
+        UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
     ) {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerMetadataMapper = $unzerMetadataMapper;
+        $this->unzerApiAdapterResponseValidator = $unzerApiAdapterResponseValidator;
     }
 
     /**
@@ -59,7 +68,7 @@ class UnzerMetadataAdapter extends UnzerAbstractApiAdapter implements UnzerMetad
             ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateMetadataApiCall($unzerApiRequestTransfer);
-        $this->assertSuccessResponse($unzerApiResponseTransfer);
+        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
         $unzerApiCreateMetadataResponseTransfer = $unzerApiResponseTransfer->getCreateMetadataResponseOrFail();
 
         return $this->unzerMetadataMapper

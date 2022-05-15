@@ -15,7 +15,7 @@ use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
-class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidatorInterface
+class UnzerCredentialsStoreRelationValidator implements UnzerCredentialsValidatorInterface
 {
     /**
      * @var string
@@ -52,7 +52,7 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
             return $unzerCredentialsResponseTransfer;
         }
 
-        if (!$this->isUnzerCredentialsHaveStoreRelations($unzerCredentialsTransfer)) {
+        if (!$this->hasStoreRelations($unzerCredentialsTransfer)) {
             return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
                 ->addMessage(
                     (new MessageTransfer())->setMessage(static::ERROR_MESSAGE_STORE_RELATION_EMPTY),
@@ -85,7 +85,7 @@ class UnzerCredentialsStoreRelationsValidator implements UnzerCredentialsValidat
      *
      * @return bool
      */
-    protected function isUnzerCredentialsHaveStoreRelations(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
+    protected function hasStoreRelations(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
     {
         return count($unzerCredentialsTransfer->getStoreRelationOrFail()->getIdStores()) !== 0;
     }

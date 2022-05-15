@@ -32,7 +32,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testCreateUnzerCredentialsReturnsSuccessfulUnzerCredentialsResponseWhileValidUnzerCredentialsGiven(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::ID_UNZER_CREDENTIALS => null,
         ]))
@@ -65,7 +65,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testCreateUnzerCredentialsThrowsNullValueExceptionWhileUnzerKeypairIsMissing(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder())->build();
 
         // Assert
@@ -83,7 +83,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testCreateUnzerCredentialsThrowsNullValueExceptionWhileUnzerKeypairPublicKeyIsMissing(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::ID_UNZER_CREDENTIALS => null,
         ]))
@@ -104,7 +104,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testCreateUnzerCredentialsThrowsNullValueExceptionWhileUnzerKeypairPrivateKeyIsMissing(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::ID_UNZER_CREDENTIALS => null,
         ]))
@@ -125,7 +125,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testCreateUnzerCredentialsThrowsNullValueExceptionWhileTypeIsMissing(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::TYPE => null,
         ]))
@@ -145,7 +145,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testCreateMarketplaceMainMerchantUnzerCredentialsThrowsNullValueExceptionWhileParentIdUnzerCredentialsIsMissing(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $marketplaceUnzerCredentials = $this->tester->haveMarketplaceUnzerCredentials();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
             UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
@@ -171,7 +171,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testCreateMainMarketplaceUnzerCredentialsWhithChildUnzerCredentialsReturnsSuccessfulUnzerCredentialsResponseWhileValidUnzerCredentialsGiven(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
                 UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => null,
@@ -213,7 +213,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testCreateMainMerchantUnzerCredentialsReturnsSuccessfulUnzerCredentialsResponseWhileValidUnzerCredentialsGiven(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
                 UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => null,
@@ -255,7 +255,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testCreateMarketplaceMerchantUnzerCredentialsReturnsSuccessfulUnzerCredentialsResponseWhileValidUnzerCredentialsGiven(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $marketplaceUnzerCredentials = $this->tester->haveMarketplaceUnzerCredentials();
 
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([

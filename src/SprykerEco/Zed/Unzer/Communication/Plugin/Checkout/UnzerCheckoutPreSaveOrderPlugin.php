@@ -16,10 +16,21 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
  */
-class UnzerPreSaveOrderPlugin extends AbstractPlugin implements CheckoutPreSaveInterface
+class UnzerCheckoutPreSaveOrderPlugin extends AbstractPlugin implements CheckoutPreSaveInterface
 {
     /**
      * {@inheritDoc}
+     * - Requires `QuoteTransfer.payment.unzerPayment` to be set.
+     * - Requires `QuoteTransfer.customer` to be set.
+     * - Requires `QuoteTransfer.store` to be set.
+     * - Expands `QuoteTransfer` with `UnzerPaymentTransfer`.
+     * - Expands `QuoteTransfer` with `UnzerKeypairTransfer`.
+     * - Expands `QuoteTransfer` with `UnzerCustomerTransfer`.
+     * - Expands `QuoteTransfer` with `UnzerMetadataTransfer`.
+     * - If `QuoteTransfer` contains marketplace items - expands `QuoteTransfer.items` with Unzer Participant ID.
+     * - Performs Unzer Create Customer API call.
+     * - Performs Unzer Update Customer API call.
+     * - Performs Unzer Create Metadata API call.
      *
      * @api
      *

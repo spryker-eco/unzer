@@ -45,7 +45,7 @@ class FindUpdatedUnzerPaymentForOrderTest extends UnzerFacadeBaseTest
     public function testWillReturnPaymentTransferForExistingOrder(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentials = $this->tester->haveStandardUnzerCredentials();
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, false)->setUnzerKeypair($unzerCredentials->getUnzerKeypair());
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
@@ -74,7 +74,7 @@ class FindUpdatedUnzerPaymentForOrderTest extends UnzerFacadeBaseTest
     public function testWillThrowExceptionWhenOrderReferenceIsMissing(): void
     {
         // Arrange
-        $orderTransfer = (new OrderTransfer());
+        $orderTransfer = new OrderTransfer();
 
         // Assert
         $this->expectException(NullValueException::class);

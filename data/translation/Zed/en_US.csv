@@ -4,3 +4,6 @@
 "Store relations can not be empty","Store relations can not be empty"
 "Chosen Store relation is already used","Chosen Store relation is already used"
 "Provided merchant reference ""%merchantReference%"" already exists!","Provided merchant reference ""%merchantReference%"" already exists!"
+"Unzer Credentials cannot be deleted until has child elements.","Unzer Credentials cannot be deleted until has child elements."
+"Unzer Credentials deletion failed.","Unzer Credentials deletion failed."
+"It is impossible to update this Unzer config","It is impossible to update this Unzer config"

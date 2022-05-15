@@ -5,12 +5,12 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor;
+namespace SprykerEco\Zed\Unzer\Business\Checkout\ExpenseDistributor;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 
-interface UnzerExpensesDistributorInterface
+interface UnzerExpenseDistributorInterface
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer

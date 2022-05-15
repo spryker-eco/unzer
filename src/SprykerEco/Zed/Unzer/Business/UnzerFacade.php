@@ -70,7 +70,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      */
     public function saveOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): void
     {
-        $this->getFactory()->createUnzerPaymentSaver()->saveOrderPayment($quoteTransfer, $saveOrderTransfer);
+        $this->getFactory()->createUnzerWriter()->createUnzerPaymentDetails($quoteTransfer, $saveOrderTransfer);
     }
 
     /**
@@ -198,7 +198,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      */
     public function executeChargeOmsCommand(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
-        $this->getFactory()->createChargeOmsCommand()->execute($orderTransfer, $salesOrderItemIds);
+        $this->getFactory()->createChargeUnzerOmsCommand()->execute($orderTransfer, $salesOrderItemIds);
     }
 
     /**
@@ -217,7 +217,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
         OrderTransfer $orderTransfer,
         array $salesOrderItemIds
     ): void {
-        $this->getFactory()->createRefundOmsCommand()->execute($refundTransfer, $orderTransfer, $salesOrderItemIds);
+        $this->getFactory()->createRefundUnzerOmsCommand()->execute($refundTransfer, $orderTransfer, $salesOrderItemIds);
     }
 
     /**
@@ -311,7 +311,7 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      */
     public function performPaymentMethodsImport(UnzerKeypairTransfer $unzerKeypairTransfer): void
     {
-        $this->getFactory()->createUnzerPaymentMethodsImporter()->performPaymentMethodsImport($unzerKeypairTransfer);
+        $this->getFactory()->createUnzerPaymentMethodImporter()->performPaymentMethodsImport($unzerKeypairTransfer);
     }
 
     /**

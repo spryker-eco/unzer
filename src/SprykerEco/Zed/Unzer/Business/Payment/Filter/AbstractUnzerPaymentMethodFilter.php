@@ -10,15 +10,11 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
+use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
 abstract class AbstractUnzerPaymentMethodFilter
 {
-    /**
-     * @var string
-     */
-    protected const MAIN_SELLER_REFERENCE = 'main';
-
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
@@ -64,8 +60,8 @@ abstract class AbstractUnzerPaymentMethodFilter
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
             $merchantReference = $itemTransfer->getMerchantReference();
 
-            if (!$merchantReference && !in_array(static::MAIN_SELLER_REFERENCE, $merchantReferences, true)) {
-                $merchantReferences[] = static::MAIN_SELLER_REFERENCE;
+            if (!$merchantReference && !in_array(UnzerConstants::MAIN_SELLER_REFERENCE, $merchantReferences, true)) {
+                $merchantReferences[] = UnzerConstants::MAIN_SELLER_REFERENCE;
 
                 continue;
             }

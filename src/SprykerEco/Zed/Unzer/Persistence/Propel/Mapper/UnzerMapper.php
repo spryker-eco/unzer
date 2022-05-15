@@ -5,7 +5,7 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Persistence\Mapper;
+namespace SprykerEco\Zed\Unzer\Persistence\Propel\Mapper;
 
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
@@ -26,7 +26,7 @@ use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
 use Propel\Runtime\Collection\ObjectCollection;
 
-class UnzerPersistenceMapper
+class UnzerMapper
 {
     /**
      * @param \Propel\Runtime\Collection\ObjectCollection $paymentUnzerOrderItemEntities

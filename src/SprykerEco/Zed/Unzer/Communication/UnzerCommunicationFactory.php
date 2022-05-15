@@ -11,8 +11,6 @@ use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\ChargeUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\RefundUnzerOmsCommand;
 use SprykerEco\Zed\Unzer\Communication\Oms\Command\UnzerOmsCommandInterface;
-use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapper;
-use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
@@ -30,33 +28,24 @@ class UnzerCommunicationFactory extends AbstractCommunicationFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Communication\Oms\Command\UnzerOmsCommandInterface
      */
-    public function createChargeOmsCommand(): UnzerOmsCommandInterface
+    public function createChargeUnzerOmsCommand(): UnzerOmsCommandInterface
     {
         return new ChargeUnzerOmsCommand(
             $this->getFacade(),
-            $this->createUnzerOmsMapper(),
+            $this->getSalesFacade(),
+            $this->getCalculationFacade(),
         );
     }
 
     /**
      * @return \SprykerEco\Zed\Unzer\Communication\Oms\Command\UnzerOmsCommandInterface
      */
-    public function createRefundOmsCommand(): UnzerOmsCommandInterface
+    public function createRefundUnzerOmsCommand(): UnzerOmsCommandInterface
     {
         return new RefundUnzerOmsCommand(
             $this->getFacade(),
             $this->getRefundFacade(),
             $this->getShipmentFacade(),
-            $this->createUnzerOmsMapper(),
-        );
-    }
-
-    /**
-     * @return \SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface
-     */
-    public function createUnzerOmsMapper(): UnzerOmsMapperInterface
-    {
-        return new UnzerOmsMapper(
             $this->getSalesFacade(),
             $this->getCalculationFacade(),
         );

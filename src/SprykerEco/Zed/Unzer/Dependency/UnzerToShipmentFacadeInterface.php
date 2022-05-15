@@ -16,5 +16,5 @@ interface UnzerToShipmentFacadeInterface
      *
      * @return \Generated\Shared\Transfer\OrderTransfer
      */
-    public function hydrateOrderShipment(OrderTransfer $orderTransfer);
+    public function hydrateOrderShipment(OrderTransfer $orderTransfer): OrderTransfer;
 }

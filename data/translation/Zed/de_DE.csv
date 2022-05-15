@@ -4,3 +4,6 @@
 "Store relations can not be empty","Geschäftsbeziehungen dürfen nicht leer sein"
 "Chosen Store relation is already used","Ausgewählte Filialbeziehung wird bereits verwendet"
 "Provided merchant reference ""%merchantReference%"" already exists!","Vorausgesetzt, es existiert bereits eine Händlerreferenz ""%merchantReference%""!"
+"Unzer Credentials cannot be deleted until has child elements.","Unzer Referenzen können erst gelöscht werden, wenn untergeordnete Elemente vorhanden sind."
+"Unzer Credentials deletion failed.","Löschen der Unzer Referenzen fehlgeschlagen."
+"It is impossible to update this Unzer config.","Es ist unmöglich, diese Unzer-Konfiguration zu aktualisieren."

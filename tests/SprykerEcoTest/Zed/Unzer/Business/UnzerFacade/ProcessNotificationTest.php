@@ -7,6 +7,8 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business\UnzerFacade;
 
+use Generated\Shared\Transfer\ItemTransfer;
+use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
@@ -39,9 +41,9 @@ class ProcessNotificationTest extends UnzerFacadeBaseTest
 
         $saveOrderTransfer = $this->tester->haveOrder(
             [
-            'unitPrice' => 72350,
-            'sumPrice' => 72350,
-            'orderReference' => $unzerPaymentTransfer->getOrderId(),
+                ItemTransfer::UNIT_PRICE => 72350,
+                ItemTransfer::SUM_PRICE => 72350,
+                OrderTransfer::ORDER_REFERENCE => $unzerPaymentTransfer->getOrderId(),
             ],
             'UnzerSofort01',
         );

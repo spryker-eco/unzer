@@ -34,7 +34,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      */
     public function findPaymentUnzerByOrderReference(string $orderReference): ?PaymentUnzerTransfer
     {
-        $paymentUnzerEntity = $this->getFactory()->createPaymentUnzerQuery()
+        $paymentUnzerEntity = $this->getFactory()->getPaymentUnzerQuery()
             ->filterByOrderId($orderReference)
             ->findOne();
 
@@ -42,7 +42,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->getFactory()->createUnzerPersistenceMapper()->mapPaymentUnzerEntityToPaymentUnzerTransfer(
+        return $this->getFactory()->getUnzerMapper()->mapPaymentUnzerEntityToPaymentUnzerTransfer(
             $paymentUnzerEntity,
             new PaymentUnzerTransfer(),
         );
@@ -56,13 +56,13 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     public function getPaymentUnzerOrderItemCollectionByOrderId(string $orderId): PaymentUnzerOrderItemCollectionTransfer
     {
         $paymentUnzerOrderItemEntities = $this->getFactory()
-            ->createPaymentUnzerOrderItemQuery()
+            ->getPaymentUnzerOrderItemQuery()
             ->usePaymentUnzerQuery()
                 ->filterByOrderId($orderId)
             ->endUse()
             ->find();
 
-        return $this->getFactory()->createUnzerPersistenceMapper()
+        return $this->getFactory()->getUnzerMapper()
             ->mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
                 $paymentUnzerOrderItemEntities,
                 new PaymentUnzerOrderItemCollectionTransfer(),
@@ -77,7 +77,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      */
     public function findPaymentUnzerByPaymentIdAndKeypairId(string $paymentId, string $unzerKeypairId): ?PaymentUnzerTransfer
     {
-        $paymentUnzerEntity = $this->getFactory()->createPaymentUnzerQuery()
+        $paymentUnzerEntity = $this->getFactory()->getPaymentUnzerQuery()
             ->filterByPaymentId($paymentId)
             ->filterByUnzerKeypairId($unzerKeypairId)
             ->findOne();
@@ -86,7 +86,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->getFactory()->createUnzerPersistenceMapper()
+        return $this->getFactory()->getUnzerMapper()
             ->mapPaymentUnzerEntityToPaymentUnzerTransfer($paymentUnzerEntity, new PaymentUnzerTransfer());
     }
 
@@ -98,7 +98,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     public function findPaymentUnzerOrderItemByIdSalesOrderItem(int $idSalesOrderItem): ?PaymentUnzerOrderItemTransfer
     {
         $paymentUnzerOrderItemEntity = $this->getFactory()
-            ->createPaymentUnzerOrderItemQuery()
+            ->getPaymentUnzerOrderItemQuery()
             ->filterByFkSalesOrderItem($idSalesOrderItem)
             ->findOne();
 
@@ -106,7 +106,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->getFactory()->createUnzerPersistenceMapper()
+        return $this->getFactory()->getUnzerMapper()
             ->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
                 $paymentUnzerOrderItemEntity,
                 new PaymentUnzerOrderItemTransfer(),
@@ -124,7 +124,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     {
         /** @var \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer|null $paymentUnzerCustomerEntity */
         $paymentUnzerCustomerEntity = $this->getFactory()
-            ->createPaymentUnzerCustomerQuery()
+            ->getPaymentUnzerCustomerQuery()
             ->useCustomerQuery()
                 ->filterByIdCustomer($idCustomer)
             ->endUse()
@@ -134,7 +134,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             return null;
         }
 
-        return $this->getFactory()->createUnzerPersistenceMapper()
+        return $this->getFactory()->getUnzerMapper()
             ->mapPaymentUnzerCustomerEntityToUnzerCustomerTransfer(
                 $paymentUnzerCustomerEntity,
                 new UnzerCustomerTransfer(),
@@ -142,6 +142,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
+     * @module Store
+     *
      * @param int $idUnzerCredentials
      *
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
@@ -149,7 +151,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     public function getStoreRelationByIdUnzerCredentials(int $idUnzerCredentials): StoreRelationTransfer
     {
         $unzerCredentialsStoreEntities = $this->getFactory()
-            ->createUnzerCredentialsStoreQuery()
+            ->getUnzerCredentialsStoreQuery()
             ->filterByFkUnzerCredentials($idUnzerCredentials)
             ->leftJoinWithStore()
             ->find();
@@ -157,7 +159,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         $storeRelationTransfer = (new StoreRelationTransfer())->setIdEntity($idUnzerCredentials);
 
         return $this->getFactory()
-            ->createUnzerPersistenceMapper()
+            ->getUnzerMapper()
             ->mapUnzerCredentialsStoreEntitiesToStoreRelationTransfer($unzerCredentialsStoreEntities, $storeRelationTransfer);
     }
 
@@ -169,7 +171,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     public function findUnzerCredentialsCollectionByCriteria(
         UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
     ): UnzerCredentialsCollectionTransfer {
-        $unzerCredentialsQuery = $this->getFactory()->createUnzerCredentialsQuery()->joinWithUnzerCredentialsStore();
+        $unzerCredentialsQuery = $this->getFactory()->getUnzerCredentialsQuery()->joinWithUnzerCredentialsStore();
         $unzerCredentialsQuery = $this->setUnzerConfigFilters(
             $unzerCredentialsQuery,
             $unzerCredentialsCriteriaTransfer->getUnzerCredentialsConditionsOrFail(),
@@ -177,7 +179,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
 
         $unzerCredentialsEntities = $unzerCredentialsQuery->find();
 
-        return $this->getFactory()->createUnzerPersistenceMapper()
+        return $this->getFactory()->getUnzerMapper()
             ->mapUnzerCredentialsEntityCollectionToUnzerCredentialsTransferCollection(
                 $unzerCredentialsEntities,
                 new UnzerCredentialsCollectionTransfer(),
@@ -192,14 +194,14 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     public function getPaymentUnzerTransactionCollectionByCriteria(
         PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
     ): PaymentUnzerTransactionCollectionTransfer {
-        $paymentUnzerTransactionQuery = $this->getFactory()->createPaymentUnzerTransactionQuery();
-        $paymentUnzerTransactionQuery = $this->applyPaymentUnzerTransactionConditions(
+        $paymentUnzerTransactionQuery = $this->getFactory()->getPaymentUnzerTransactionQuery();
+        $paymentUnzerTransactionQuery = $this->setPaymentUnzerTransactionFilters(
             $paymentUnzerTransactionQuery,
             $paymentUnzerTransactionCriteriaTransfer->getPaymentUnzerTransactionConditionsOrFail(),
         );
         $paymentUnzerTransactionEntities = $paymentUnzerTransactionQuery->find();
 
-        return $this->getFactory()->createUnzerPersistenceMapper()
+        return $this->getFactory()->getUnzerMapper()
             ->mapPaymentUnzerTransactionEntityCollectionToPaymentUnzerTransactionCollectionTransfer(
                 $paymentUnzerTransactionEntities,
                 new PaymentUnzerTransactionCollectionTransfer(),
@@ -271,7 +273,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      *
      * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery
      */
-    protected function applyPaymentUnzerTransactionConditions(
+    protected function setPaymentUnzerTransactionFilters(
         SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery,
         PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
     ): SpyPaymentUnzerTransactionQuery {

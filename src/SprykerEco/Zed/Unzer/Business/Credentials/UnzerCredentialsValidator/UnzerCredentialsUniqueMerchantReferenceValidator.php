@@ -70,7 +70,7 @@ class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentia
                 && $storedUnzerCredentials->getIdUnzerCredentialsOrFail() !== (int)$unzerCredentialsTransfer->getIdUnzerCredentials()
             ) {
                 return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
-                    ->addMessage($this->createMerchantReferenceAlreadyUsedViolationMessage($unzerCredentialsTransfer));
+                    ->addMessage($this->createMerchantReferenceAlreadyUsedErrorMessage($unzerCredentialsTransfer));
             }
         }
 
@@ -82,7 +82,7 @@ class UnzerCredentialsUniqueMerchantReferenceValidator implements UnzerCredentia
      *
      * @return \Generated\Shared\Transfer\MessageTransfer
      */
-    protected function createMerchantReferenceAlreadyUsedViolationMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
+    protected function createMerchantReferenceAlreadyUsedErrorMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
     {
         return (new MessageTransfer())
             ->setMessage(static::ERROR_MESSAGE_MERCHANT_REFERENCE_ALREADY_EXIST)

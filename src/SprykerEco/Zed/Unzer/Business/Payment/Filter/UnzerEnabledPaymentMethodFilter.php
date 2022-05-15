@@ -188,13 +188,12 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
     protected function getUniqueMerchantReferences(QuoteTransfer $quoteTransfer): array
     {
         $merchantReferences = [];
-
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
             if ($itemTransfer->getMerchantReference() !== null) {
-                $merchantReferences[] = $itemTransfer->getMerchantReferenceOrFail();
+                $merchantReferences[$itemTransfer->getMerchantReferenceOrFail()] = $itemTransfer->getMerchantReferenceOrFail();
             }
         }
 
-        return array_unique($merchantReferences);
+        return $merchantReferences;
     }
 }

@@ -10,7 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\Checkout;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 
-interface UnzerCheckoutHookInterface
+interface UnzerCheckoutHookExecutorInterface
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer

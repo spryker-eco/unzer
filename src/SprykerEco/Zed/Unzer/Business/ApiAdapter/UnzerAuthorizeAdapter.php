@@ -12,9 +12,10 @@ use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
-class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuthorizeAdapterInterface
+class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
@@ -27,15 +28,23 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
     protected $unzerAuthorizePaymentMapper;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
+     */
+    protected $unzerApiAdapterResponseValidator;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
      */
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
-        UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper
+        UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper,
+        UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
     ) {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerAuthorizePaymentMapper = $unzerAuthorizePaymentMapper;
+        $this->unzerApiAdapterResponseValidator = $unzerApiAdapterResponseValidator;
     }
 
     /**
@@ -71,7 +80,7 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
 
         $unzerApiRequestTransfer->setMarketplaceAuthorizeRequest($unzerApiMarketplaceAuthorizeRequestTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceAuthorizeApiCall($unzerApiRequestTransfer);
-        $this->assertSuccessResponse($unzerApiResponseTransfer);
+        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
 
         $unzerApiMarketplaceAuthorizeResponseTransfer = $unzerApiResponseTransfer->getMarketplaceAuthorizeResponseOrFail();
 
@@ -102,7 +111,7 @@ class UnzerAuthorizeAdapter extends UnzerAbstractApiAdapter implements UnzerAuth
 
         $unzerApiRequestTransfer->setAuthorizeRequest($unzerApiAuthorizeRequestTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performAuthorizeApiCall($unzerApiRequestTransfer);
-        $this->assertSuccessResponse($unzerApiResponseTransfer);
+        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
 
         $unzerApiAuthorizeResponseTransfer = $unzerApiResponseTransfer->getAuthorizeResponseOrFail();
 

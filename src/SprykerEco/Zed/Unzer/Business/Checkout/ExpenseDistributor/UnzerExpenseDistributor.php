@@ -5,7 +5,7 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor;
+namespace SprykerEco\Zed\Unzer\Business\Checkout\ExpenseDistributor;
 
 use ArrayObject;
 use Generated\Shared\Transfer\ExpenseTransfer;
@@ -14,7 +14,7 @@ use Generated\Shared\Transfer\UnzerBasketItemTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
-class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
+class UnzerExpenseDistributor implements UnzerExpenseDistributorInterface
 {
     /**
      * @var int
@@ -48,7 +48,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
         if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplace()) {
             $expenseTransfersGroupedByParticipantId = $this->getExpenseTransfersGroupedByParticipantId($expenseTransfers);
 
-            return $this->addExpensesGroupedByParticipantId($unzerBasketTransfer, $expenseTransfersGroupedByParticipantId);
+            return $this->addExpensesGroupedByParticipantIdToUnzerBasket($unzerBasketTransfer, $expenseTransfersGroupedByParticipantId);
         }
 
         return $this->addStandardExpenses($unzerBasketTransfer, $expenseTransfers);
@@ -60,8 +60,10 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
      *
      * @return \Generated\Shared\Transfer\UnzerBasketTransfer
      */
-    protected function addExpensesGroupedByParticipantId(UnzerBasketTransfer $unzerBasketTransfer, array $expensesGroupedByParticipantId): UnzerBasketTransfer
-    {
+    protected function addExpensesGroupedByParticipantIdToUnzerBasket(
+        UnzerBasketTransfer $unzerBasketTransfer,
+        array $expensesGroupedByParticipantId
+    ): UnzerBasketTransfer {
         foreach ($expensesGroupedByParticipantId as $participantId => $expenseTransfers) {
             $referenceId = sprintf(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE, $participantId);
 
@@ -140,7 +142,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
                 $unzerBasketItemTransfer->getAmountPerUnit() +
                 $expenseTransfer->getSumPriceToPayAggregationOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER,
             );
-            $unzerBasketItemTransfer->setVat((string)$this->buildVatValue($expenseTransfer));
+            $unzerBasketItemTransfer->setVat((string)$this->getVatValue($expenseTransfer));
         }
 
         return $unzerBasketItemTransfer;
@@ -151,7 +153,7 @@ class UnzerExpensesDistributor implements UnzerExpensesDistributorInterface
      *
      * @return int
      */
-    protected function buildVatValue(ExpenseTransfer $expenseTransfer): int
+    protected function getVatValue(ExpenseTransfer $expenseTransfer): int
     {
         if ($expenseTransfer->getTaxRate() !== null) {
             return (int)$expenseTransfer->getTaxRate();

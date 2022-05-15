@@ -15,10 +15,23 @@ use SprykerEco\Shared\Unzer\UnzerConfig;
 abstract class AbstractUnzerSubForm extends AbstractSubFormType implements SubFormInterface, SubFormProviderNameInterface
 {
     /**
+     * @var string
+     */
+    protected const TEMPLATE_VIEW_PATH = '';
+
+    /**
      * @return string
      */
     public function getProviderName(): string
     {
         return UnzerConfig::PAYMENT_PROVIDER_NAME;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTemplatePath(): string
+    {
+        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
     }
 }

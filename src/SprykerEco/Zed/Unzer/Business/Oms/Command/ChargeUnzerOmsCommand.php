@@ -16,15 +16,15 @@ class ChargeUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface
      */
-    protected $unzerPaymentProcessorStrategyResolver;
+    protected $unzerPaymentProcessorResolver;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface $unzerPaymentProcessorResolver
      */
     public function __construct(
-        UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
+        UnzerPaymentProcessorResolverInterface $unzerPaymentProcessorResolver
     ) {
-        $this->unzerPaymentProcessorStrategyResolver = $paymentProcessorStrategyResolver;
+        $this->unzerPaymentProcessorResolver = $unzerPaymentProcessorResolver;
     }
 
     /**
@@ -36,7 +36,7 @@ class ChargeUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
     public function execute(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         $paymentMethodName = $this->getPaymentMethodName($orderTransfer);
-        $paymentProcessor = $this->unzerPaymentProcessorStrategyResolver->resolvePaymentProcessor($paymentMethodName);
+        $paymentProcessor = $this->unzerPaymentProcessorResolver->resolvePaymentProcessor($paymentMethodName);
 
         if ($paymentProcessor instanceof UnzerChargeablePaymentProcessorInterface) {
             $paymentProcessor->processCharge($orderTransfer, $salesOrderItemIds);

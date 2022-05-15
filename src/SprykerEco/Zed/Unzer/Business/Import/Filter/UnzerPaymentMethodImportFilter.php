@@ -8,7 +8,6 @@
 namespace SprykerEco\Zed\Unzer\Business\Import\Filter;
 
 use ArrayObject;
-use Generated\Shared\Transfer\PaymentMethodTransfer;
 
 class UnzerPaymentMethodImportFilter implements UnzerPaymentMethodImportFilterInterface
 {
@@ -18,7 +17,7 @@ class UnzerPaymentMethodImportFilter implements UnzerPaymentMethodImportFilterIn
      *
      * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>
      */
-    public function filterStoredPaymentMethods(
+    public function filterOutStoredPaymentMethods(
         ArrayObject $paymentMethodTransfers,
         ArrayObject $storedPaymentMethodTransfers
     ): ArrayObject {
@@ -26,7 +25,7 @@ class UnzerPaymentMethodImportFilter implements UnzerPaymentMethodImportFilterIn
         $storedPaymentMethodKeys = $this->getStoredPaymentMethodKeys($storedPaymentMethodTransfers);
 
         foreach ($paymentMethodTransfers as $paymentMethodTransfer) {
-            if (!in_array($paymentMethodTransfer->getPaymentMethodKey(), $storedPaymentMethodKeys)) {
+            if (!in_array($paymentMethodTransfer->getPaymentMethodKey(), $storedPaymentMethodKeys, true)) {
                 $filteredPaymentMethodTransfers->append($paymentMethodTransfer);
             }
         }
@@ -41,8 +40,13 @@ class UnzerPaymentMethodImportFilter implements UnzerPaymentMethodImportFilterIn
      */
     protected function getStoredPaymentMethodKeys(ArrayObject $storedPaymentMethodTransfers): array
     {
-        return array_map(function (PaymentMethodTransfer $paymentMethodTransfer) {
-            return $paymentMethodTransfer->getPaymentMethodKeyOrFail();
-        }, (array)$storedPaymentMethodTransfers);
+        $storedPaymentMethodKeys = [];
+        foreach ($storedPaymentMethodTransfers as $paymentMethodTransfer) {
+            if ($paymentMethodTransfer->getPaymentMethodKey() !== null) {
+                $storedPaymentMethodKeys[] = $paymentMethodTransfer->getPaymentMethodKey();
+            }
+        }
+
+        return $storedPaymentMethodKeys;
     }
 }

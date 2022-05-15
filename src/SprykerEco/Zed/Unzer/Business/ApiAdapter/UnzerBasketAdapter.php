@@ -13,9 +13,10 @@ use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerBasketMapperInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
-class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketAdapterInterface
+class UnzerBasketAdapter implements UnzerBasketAdapterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
@@ -28,15 +29,23 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
     protected $unzerBasketMapper;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
+     */
+    protected $unzerApiAdapterResponseValidator;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerBasketMapperInterface $unzerBasketMapper
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
      */
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
-        UnzerBasketMapperInterface $unzerBasketMapper
+        UnzerBasketMapperInterface $unzerBasketMapper,
+        UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
     ) {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerBasketMapper = $unzerBasketMapper;
+        $this->unzerApiAdapterResponseValidator = $unzerApiAdapterResponseValidator;
     }
 
     /**
@@ -47,7 +56,7 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
      */
     public function createBasket(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer
     {
-        $unzerApiRequestTransfer = $this->prepareUnzerApiRequestTransfer($unzerBasketTransfer, $unzerKeypairTransfer);
+        $unzerApiRequestTransfer = $this->createUnzerApiRequestTransfer($unzerBasketTransfer, $unzerKeypairTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateBasketApiCall($unzerApiRequestTransfer);
 
         return $this->parseUnzerApiResponseTransfer($unzerApiResponseTransfer, $unzerBasketTransfer);
@@ -61,7 +70,7 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
      */
     public function createMarketplaceBasket(UnzerBasketTransfer $unzerBasketTransfer, UnzerKeypairTransfer $unzerKeypairTransfer): UnzerBasketTransfer
     {
-        $unzerApiRequestTransfer = $this->prepareUnzerApiRequestTransfer($unzerBasketTransfer, $unzerKeypairTransfer);
+        $unzerApiRequestTransfer = $this->createUnzerApiRequestTransfer($unzerBasketTransfer, $unzerKeypairTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performCreateMarketplaceBasketApiCall($unzerApiRequestTransfer);
 
         return $this->parseUnzerApiResponseTransfer($unzerApiResponseTransfer, $unzerBasketTransfer);
@@ -73,7 +82,7 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
      *
      * @return \Generated\Shared\Transfer\UnzerApiRequestTransfer
      */
-    protected function prepareUnzerApiRequestTransfer(
+    protected function createUnzerApiRequestTransfer(
         UnzerBasketTransfer $unzerBasketTransfer,
         UnzerKeypairTransfer $unzerKeypairTransfer
     ): UnzerApiRequestTransfer {
@@ -98,7 +107,7 @@ class UnzerBasketAdapter extends UnzerAbstractApiAdapter implements UnzerBasketA
         UnzerApiResponseTransfer $unzerApiResponseTransfer,
         UnzerBasketTransfer $unzerBasketTransfer
     ): UnzerBasketTransfer {
-        $this->assertSuccessResponse($unzerApiResponseTransfer);
+        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
         $createBasketResponseTransfer = $unzerApiResponseTransfer->getCreateBasketResponseOrFail();
 
         return $this->unzerBasketMapper

@@ -47,7 +47,7 @@ class UpdateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testUpdateMarketplaceMainUnzerCredentialsStoreRelationsAndParticipantIdReturnsSuccessful(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $storeTransfer = $this->tester->haveStore();
         $unzerCredentialsTransfer = $this->tester
             ->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails()
@@ -78,7 +78,7 @@ class UpdateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testUpdateStandardUnzerCredentialsKeypairReturnsResponseSuccessful(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerKeypairTransfer = (new UnzerKeypairBuilder())->build();
         $unzerCredentialsTransfer = $this->tester
             ->haveStandardUnzerCredentials()

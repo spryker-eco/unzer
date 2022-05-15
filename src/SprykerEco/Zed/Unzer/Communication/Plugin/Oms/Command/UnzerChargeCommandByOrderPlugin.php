@@ -16,12 +16,17 @@ use Spryker\Zed\Oms\Dependency\Plugin\Command\CommandByOrderInterface;
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
  * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
- * @method \SprykerEco\Zed\Unzer\Persistence\UnzerQueryContainerInterface getQueryContainer()
  */
-class UnzerRefundPlugin extends AbstractPlugin implements CommandByOrderInterface
+class UnzerChargeCommandByOrderPlugin extends AbstractPlugin implements CommandByOrderInterface
 {
     /**
      * {@inheritDoc}
+     * - Requires `OrderTransfer.orderReference` to be set.
+     * - Requires `OrderTransfer.idSalesOrderItem` to be set.
+     * - Executes Unzer API Charge request.
+     * - Saves Unzer payment details to Persistence.
+     * - Throws `UnzerApiException` if API call failed.
+     * - Throws `UnzerException` if Unzer payment not found in Persistence.
      *
      * @api
      *
@@ -33,7 +38,7 @@ class UnzerRefundPlugin extends AbstractPlugin implements CommandByOrderInterfac
      */
     public function run(array $orderItems, SpySalesOrder $orderEntity, ReadOnlyArrayObject $data): array
     {
-        $this->getFactory()->createRefundOmsCommand()->execute($orderItems, $orderEntity, $data);
+        $this->getFactory()->createChargeUnzerOmsCommand()->execute($orderItems, $orderEntity, $data);
 
         return [];
     }

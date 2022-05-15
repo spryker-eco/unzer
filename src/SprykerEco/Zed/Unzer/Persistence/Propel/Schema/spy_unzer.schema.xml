@@ -23,6 +23,18 @@
         <column name="is_authorizable" type="BOOLEAN" required="true"/>
         <column name="unzer_keypair_id" type="VARCHAR" size="255" required="true"/>
 
+        <index name="index-spy_payment_unzer_keypair_id">
+            <index-column name="unzer_keypair_id"/>
+        </index>
+
+        <index name="index-spy_payment_unzer_order_id">
+            <index-column name="order_id"/>
+        </index>
+
+        <index name="index-spy_payment_unzer_payment_id">
+            <index-column name="payment_id"/>
+        </index>
+
         <foreign-key name="spy_payment_unzer-fk_sales_order" foreignTable="spy_sales_order" phpName="Order" refPhpName="PaymentUnzer">
             <reference local="fk_sales_order" foreign="id_sales_order"/>
         </foreign-key>
@@ -104,6 +116,14 @@
         <unique name="un_public_key">
             <unique-column name="public_key"/>
         </unique>
+
+        <index name="index-spy_unzer_credentials_public_key">
+            <index-column name="public_key"/>
+        </index>
+
+        <index name="index-spy_unzer_credentials_keypair_id">
+            <index-column name="keypair_id"/>
+        </index>
 
     </table>
 

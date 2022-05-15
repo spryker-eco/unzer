@@ -15,12 +15,12 @@ use Spryker\Zed\Oms\Dependency\Plugin\Condition\ConditionInterface;
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
  * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
- * @method \SprykerEco\Zed\Unzer\Persistence\UnzerQueryContainerInterface getQueryContainer()
  */
-class UnzerIsAuthorizeFailedPlugin extends AbstractPlugin implements ConditionInterface
+class UnzerIsPaymentChargebackConditionPlugin extends AbstractPlugin implements ConditionInterface
 {
     /**
      * {@inheritDoc}
+     * - Checks if Unzer Payment is charged-back.
      *
      * @api
      *
@@ -30,6 +30,6 @@ class UnzerIsAuthorizeFailedPlugin extends AbstractPlugin implements ConditionIn
      */
     public function check(SpySalesOrderItem $orderItem): bool
     {
-        return $this->getFacade()->checkIsAuthorizeFailedOmsCondition($orderItem->getIdSalesOrderItem());
+        return $this->getFacade()->checkIsPaymentChargebackOmsCondition($orderItem->getIdSalesOrderItem());
     }
 }

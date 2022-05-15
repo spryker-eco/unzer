@@ -26,7 +26,7 @@ class PerformPaymentMethodsImportTest extends UnzerFacadeBaseTest
     public function testPerformPaymentMethodsImportTest(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $this->tester->ensurePaymentMethodTableIsEmpty();
         $this->tester->ensurePaymentProviderTableIsEmpty();
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();

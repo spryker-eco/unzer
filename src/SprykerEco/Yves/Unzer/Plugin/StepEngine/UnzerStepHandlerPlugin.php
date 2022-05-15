@@ -5,7 +5,7 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Yves\Unzer\Plugin;
+namespace SprykerEco\Yves\Unzer\Plugin\StepEngine;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @method \SprykerEco\Yves\Unzer\UnzerFactory getFactory()
  */
-class UnzerHandlerPlugin extends AbstractPlugin implements StepHandlerPluginInterface
+class UnzerStepHandlerPlugin extends AbstractPlugin implements StepHandlerPluginInterface
 {
     /**
      * {@inheritDoc}

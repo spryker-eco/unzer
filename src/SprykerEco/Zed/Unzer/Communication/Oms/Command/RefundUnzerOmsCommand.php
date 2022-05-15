@@ -7,11 +7,13 @@
 
 namespace SprykerEco\Zed\Unzer\Communication\Oms\Command;
 
+use Generated\Shared\Transfer\OrderTransfer;
 use Orm\Zed\Sales\Persistence\SpySalesOrder;
 use Spryker\Zed\Oms\Business\Util\ReadOnlyArrayObject;
 use SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface;
-use SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface;
+use SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface;
 
 class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsCommandInterface
@@ -32,26 +34,34 @@ class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
     protected $shipmentFacade;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface
      */
-    protected $unzerOmsMapper;
+    protected $salesFacade;
+
+    /**
+     * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface
+     */
+    protected $calculationFacade;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface $unzerFacade
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToRefundFacadeInterface $refundFacade
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToShipmentFacadeInterface $shipmentFacade
-     * @param \SprykerEco\Zed\Unzer\Communication\Oms\UnzerOmsMapperInterface $unzerOmsMapper
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToSalesFacadeInterface $salesFacade
+     * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToCalculationFacadeInterface $calculationFacade
      */
     public function __construct(
         UnzerFacadeInterface $unzerFacade,
         UnzerToRefundFacadeInterface $refundFacade,
         UnzerToShipmentFacadeInterface $shipmentFacade,
-        UnzerOmsMapperInterface $unzerOmsMapper
+        UnzerToSalesFacadeInterface $salesFacade,
+        UnzerToCalculationFacadeInterface $calculationFacade
     ) {
         $this->unzerFacade = $unzerFacade;
         $this->refundFacade = $refundFacade;
         $this->shipmentFacade = $shipmentFacade;
-        $this->unzerOmsMapper = $unzerOmsMapper;
+        $this->salesFacade = $salesFacade;
+        $this->calculationFacade = $calculationFacade;
     }
 
     /**
@@ -63,8 +73,8 @@ class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
      */
     public function execute(array $salesOrderItems, SpySalesOrder $salesOrderEntity, ReadOnlyArrayObject $data): void
     {
-        $orderTransfer = $this->unzerOmsMapper->mapSpySalesOrderToOrderTransfer($salesOrderEntity);
-        $salesOrderItemIds = $this->mapSalesOrderItemsIds($salesOrderItems);
+        $orderTransfer = $this->getSalesOrderItemBySalesOrderItemEntity($salesOrderEntity);
+        $salesOrderItemIds = $this->extractSalesOrderItemsIds($salesOrderItems);
 
         $orderTransfer = $this->shipmentFacade->hydrateOrderShipment($orderTransfer);
         $refundTransfer = $this->refundFacade
@@ -72,5 +82,19 @@ class RefundUnzerOmsCommand extends AbstractUnzerOmsCommand implements UnzerOmsC
 
         $this->unzerFacade
             ->executeRefundOmsCommand($refundTransfer, $orderTransfer, $salesOrderItemIds);
+    }
+
+    /**
+     * @param \Orm\Zed\Sales\Persistence\SpySalesOrder $salesOrderEntity
+     *
+     * @return \Generated\Shared\Transfer\OrderTransfer
+     */
+    protected function getSalesOrderItemBySalesOrderItemEntity(SpySalesOrder $salesOrderEntity): OrderTransfer
+    {
+        $orderTransfer = $this->salesFacade
+            ->getOrderByIdSalesOrder($salesOrderEntity->getIdSalesOrder());
+
+        return $this->calculationFacade
+            ->recalculateOrder($orderTransfer);
     }
 }

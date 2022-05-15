@@ -15,14 +15,14 @@ class UnzerPaymentProcessorResolver implements UnzerPaymentProcessorResolverInte
     /**
      * @var array<\Closure>
      */
-    protected $unzerPaymentProcessorsCollection;
+    protected $unzerPaymentProcessorCollection;
 
     /**
-     * @param array<\Closure> $unzerPaymentProcessorsCollection
+     * @param array<\Closure> $unzerPaymentProcessorCollection
      */
-    public function __construct(array $unzerPaymentProcessorsCollection)
+    public function __construct(array $unzerPaymentProcessorCollection)
     {
-        $this->unzerPaymentProcessorsCollection = $unzerPaymentProcessorsCollection;
+        $this->unzerPaymentProcessorCollection = $unzerPaymentProcessorCollection;
     }
 
     /**
@@ -34,8 +34,8 @@ class UnzerPaymentProcessorResolver implements UnzerPaymentProcessorResolverInte
      */
     public function resolvePaymentProcessor(string $paymentMethodName): UnzerPaymentProcessorInterface
     {
-        if (isset($this->unzerPaymentProcessorsCollection[$paymentMethodName])) {
-            return call_user_func($this->unzerPaymentProcessorsCollection[$paymentMethodName]);
+        if (isset($this->unzerPaymentProcessorCollection[$paymentMethodName])) {
+            return call_user_func($this->unzerPaymentProcessorCollection[$paymentMethodName]);
         }
 
         throw new UnzerException(sprintf('Payment processor for %s not found!', $paymentMethodName));

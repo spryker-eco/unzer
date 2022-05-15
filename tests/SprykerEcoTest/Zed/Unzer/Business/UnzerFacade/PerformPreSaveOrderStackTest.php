@@ -31,7 +31,7 @@ class PerformPreSaveOrderStackTest extends UnzerFacadeBaseTest
     public function testPerformPreSaveOrderStackMarketplace(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(true, false);
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER)->setUnzerPayment($unzerPaymentTransfer);
         $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
@@ -58,7 +58,7 @@ class PerformPreSaveOrderStackTest extends UnzerFacadeBaseTest
     public function testPerformPreSaveOrderStackStandard(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, false);
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();

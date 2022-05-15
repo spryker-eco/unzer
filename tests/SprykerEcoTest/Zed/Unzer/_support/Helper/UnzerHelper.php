@@ -40,9 +40,10 @@ class UnzerHelper extends Module
 
         $paymentUnzerTransfer->setIdPaymentUnzer($spyPaymentUnzer->getIdPaymentUnzer());
 
-        $this->getDataCleanupHelper()->_addCleanup(function () use ($paymentUnzerTransfer) {
+        $this->getDataCleanupHelper()->_addCleanup(function () use ($paymentUnzerTransfer): void {
             SpyPaymentUnzerQuery::create()
                 ->filterByIdPaymentUnzer($paymentUnzerTransfer->getIdPaymentUnzer())
+                ->find()
                 ->delete();
         });
 
@@ -65,9 +66,10 @@ class UnzerHelper extends Module
 
         $paymentUnzerOrderItemTransfer->setIdPaymentUnzerOrderItem($spyPaymentUnzerOrderItem->getIdPaymentUnzerOrderItem());
 
-        $this->getDataCleanupHelper()->_addCleanup(function () use ($paymentUnzerOrderItemTransfer) {
+        $this->getDataCleanupHelper()->_addCleanup(function () use ($paymentUnzerOrderItemTransfer): void {
             SpyPaymentUnzerOrderItemQuery::create()
                 ->filterByIdPaymentUnzerOrderItem($paymentUnzerOrderItemTransfer->getIdPaymentUnzerOrderItem())
+                ->find()
                 ->delete();
         });
 

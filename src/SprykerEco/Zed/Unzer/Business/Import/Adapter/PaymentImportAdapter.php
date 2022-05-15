@@ -47,7 +47,7 @@ class PaymentImportAdapter implements PaymentImportAdapterInterface
             return null;
         }
 
-        return $paymentProviderCollectionTransfer->getPaymentProviders()->offsetGet(0);
+        return $paymentProviderCollectionTransfer->getPaymentProviders()->getIterator()->current();
     }
 
     /**

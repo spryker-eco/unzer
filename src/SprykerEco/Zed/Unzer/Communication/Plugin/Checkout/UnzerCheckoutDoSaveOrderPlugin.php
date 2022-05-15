@@ -21,7 +21,11 @@ class UnzerCheckoutDoSaveOrderPlugin extends AbstractPlugin implements CheckoutD
 {
     /**
      * {@inheritDoc}
-     *  - Prepares Unzer payment details and saves to persistence.
+     * - Requires `SaveOrderTransfer.IdSalesOrder` to be set.
+     * - Requires `QuoteTransfer.payment.unzerPayment.customer` to be set.
+     * - Requires `QuoteTransfer.payment.unzerPayment.unzerKeypair.keypairId` to be set.
+     * - Requires `SaveOrderTransfer.orderReference` to bet set.
+     * - Saves Unzer payment details to Persistence.
      *
      * @api
      *

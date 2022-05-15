@@ -77,7 +77,7 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
             return;
         }
 
-        $paymentMethodTransfers = $this->unzerPaymentMethodImportFilter->filterStoredPaymentMethods(
+        $paymentMethodTransfers = $this->unzerPaymentMethodImportFilter->filterOutStoredPaymentMethods(
             $paymentMethodsTransfer->getMethods(),
             $paymentProviderTransfer->getPaymentMethods(),
         );

@@ -17,11 +17,6 @@ use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
 class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
 {
     /**
-     * @var string
-     */
-    protected const MAIN_SELLER_REFERENCE = 'main';
-
-    /**
      * @var \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
      */
     protected $unzerCredentialsResolver;
@@ -46,7 +41,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
         }
 
         $uniqueMerchantReferences = $this->extractUniqueMerchantReferences($quoteTransfer);
-        if (count($uniqueMerchantReferences) === 1 && $uniqueMerchantReferences[0] !== static::MAIN_SELLER_REFERENCE) {
+        if (count($uniqueMerchantReferences) === 1 && $uniqueMerchantReferences[0] !== UnzerConstants::MAIN_SELLER_REFERENCE) {
             return $this->setMarketplaceMerchantUnzerKeypair($quoteTransfer, $uniqueMerchantReferences[0]);
         }
 
@@ -71,7 +66,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
             return $quoteTransfer->setUnzerCredentials($unzerCredentialsTransfer);
         }
 
-        if (count($uniqueMerchantReferences) === 1 && $uniqueMerchantReferences[0] !== static::MAIN_SELLER_REFERENCE) {
+        if (count($uniqueMerchantReferences) === 1 && $uniqueMerchantReferences[0] !== UnzerConstants::MAIN_SELLER_REFERENCE) {
             $unzerCredentialsTransfer = $this->getMarketplaceMerchantUnzerCredentialsTransfer($quoteTransfer, $uniqueMerchantReferences[0]);
 
             return $quoteTransfer->setUnzerCredentials($unzerCredentialsTransfer);
@@ -91,7 +86,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     {
         $uniqueMerchantReferences = [];
         foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            $merchantReference = $itemTransfer->getMerchantReference() ?? static::MAIN_SELLER_REFERENCE;
+            $merchantReference = $itemTransfer->getMerchantReference() ?? UnzerConstants::MAIN_SELLER_REFERENCE;
             if (!in_array($merchantReference, $uniqueMerchantReferences, true)) {
                 $uniqueMerchantReferences[] = $merchantReference;
             }

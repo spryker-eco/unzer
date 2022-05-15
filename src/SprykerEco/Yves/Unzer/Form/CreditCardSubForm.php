@@ -10,7 +10,6 @@ namespace SprykerEco\Yves\Unzer\Form;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Yves\StepEngine\Dependency\Form\SubFormInterface;
-use SprykerEco\Shared\Unzer\UnzerConfig;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -64,6 +63,8 @@ class CreditCardSubForm extends AbstractUnzerSubForm
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
             'data_class' => UnzerPaymentTransfer::class,
         ])->setRequired(static::OPTIONS_FIELD_NAME);
@@ -114,13 +115,5 @@ class CreditCardSubForm extends AbstractUnzerSubForm
         ]);
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTemplatePath(): string
-    {
-        return UnzerConfig::PAYMENT_PROVIDER_NAME . DIRECTORY_SEPARATOR . static::TEMPLATE_VIEW_PATH;
     }
 }

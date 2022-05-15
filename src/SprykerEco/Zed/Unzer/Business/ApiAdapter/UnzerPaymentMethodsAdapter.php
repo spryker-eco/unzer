@@ -13,9 +13,10 @@ use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMethodsMapperInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
-class UnzerPaymentMethodsAdapter extends UnzerAbstractApiAdapter implements UnzerPaymentMethodsAdapterInterface
+class UnzerPaymentMethodsAdapter implements UnzerPaymentMethodsAdapterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
@@ -28,15 +29,23 @@ class UnzerPaymentMethodsAdapter extends UnzerAbstractApiAdapter implements Unze
     protected $unzerGetPaymentMethodsMapper;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
+     */
+    protected $unzerApiAdapterResponseValidator;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMethodsMapperInterface $unzerGetPaymentMethodsMapper
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
      */
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
-        UnzerGetPaymentMethodsMapperInterface $unzerGetPaymentMethodsMapper
+        UnzerGetPaymentMethodsMapperInterface $unzerGetPaymentMethodsMapper,
+        UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
     ) {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerGetPaymentMethodsMapper = $unzerGetPaymentMethodsMapper;
+        $this->unzerApiAdapterResponseValidator = $unzerApiAdapterResponseValidator;
     }
 
     /**
@@ -47,7 +56,7 @@ class UnzerPaymentMethodsAdapter extends UnzerAbstractApiAdapter implements Unze
     public function getPaymentMethods(UnzerKeypairTransfer $unzerKeypairTransfer): PaymentMethodsTransfer
     {
         $unzerApiResponseTransfer = $this->performGetPaymentMethodsApiCall($unzerKeypairTransfer);
-        $this->assertSuccessResponse($unzerApiResponseTransfer);
+        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
 
         return $this->unzerGetPaymentMethodsMapper->mapUnzerApiGetPaymentMethodsResponseTransferToPaymentMethodsTransfer(
             $unzerApiResponseTransfer->getGetPaymentMethodsResponseOrFail(),

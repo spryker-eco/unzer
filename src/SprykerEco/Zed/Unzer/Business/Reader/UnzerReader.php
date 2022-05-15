@@ -77,7 +77,7 @@ class UnzerReader implements UnzerReaderInterface
         if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count() !== 1) {
             return null;
         }
-        $unzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()[0];
+        $unzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()->getIterator()->current();
 
         return $this->unzerRepository->findPaymentUnzerByPaymentIdAndKeypairId(
             $unzerPaymentId,

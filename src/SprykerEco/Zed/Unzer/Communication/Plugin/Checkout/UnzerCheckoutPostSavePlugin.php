@@ -17,10 +17,20 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
  */
-class UnzerPostSaveOrderPlugin extends AbstractPlugin implements CheckoutPostSaveInterface
+class UnzerCheckoutPostSavePlugin extends AbstractPlugin implements CheckoutPostSaveInterface
 {
     /**
      * {@inheritDoc}
+     * - Requires `QuoteTransfer.payment.unzerPayment.idSalesOrder` to be set.
+     * - Requires `QuoteTransfer.payment.paymentSelection` to be set.
+     * - Requires `QuoteTransfer.currency.code` to be set.
+     * - Requires `QuoteTransfer.totals.grandTotal` to be set.
+     * - Expands `QuoteTransfer` with `UnzerBasketTransfer`.
+     * - Expands `QuoteTransfer` with `UnzerPaymentResourceTransfer`.
+     * - Performs Unzer Create Basket API call.
+     * - Performs Unzer Create payment resource API call.
+     * - Performs Unzer Authorize or Change API call depending on payment type.
+     * - Saves payment detailed info to Persistence.
      *
      * @api
      *

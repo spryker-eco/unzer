@@ -289,8 +289,6 @@
 
     <transfer name="PaymentUnzerTransactionCriteria">
         <property name="paymentUnzerTransactionConditions" type="PaymentUnzerTransactionConditions"/>
-        <property name="sortCollection" type="Sort[]" singular="sort"/>
-        <property name="pagination" type="Pagination"/>
     </transfer>
 
     <transfer name="PaymentUnzerTransactionConditions">
@@ -348,8 +346,6 @@
 
     <transfer name="UnzerCredentialsCriteria">
         <property name="unzerCredentialsConditions" type="UnzerCredentialsConditions"/>
-        <property name="sortCollection" type="Sort[]" singular="sort"/>
-        <property name="pagination" type="Pagination"/>
     </transfer>
 
     <transfer name="UnzerCredentialsConditions">
@@ -365,26 +361,11 @@
 
     <transfer name="UnzerCredentialsCollection">
         <property name="unzerCredentials" type="UnzerCredentials[]" singular="unzerCredentials"/>
-        <property name="pagination" type="Pagination"/>
     </transfer>
 
     <transfer name="Sort">
         <property name="field" type="string"/>
         <property name="isAscending" type="bool"/>
-    </transfer>
-
-    <transfer name="Pagination">
-        <property name="limit" type="int"/>
-        <property name="offset" type="int"/>
-        <property name="page" type="int"/>
-        <property name="maxPerPage" type="int"/>
-        <property name="nbResults" type="int"/>
-        <property name="firstIndex" type="int"/>
-        <property name="lastIndex" type="int"/>
-        <property name="firstPage" type="int"/>
-        <property name="lastPage" type="int"/>
-        <property name="nextPage" type="int"/>
-        <property name="previousPage" type="int"/>
     </transfer>
 
     <transfer name="Merchant">
@@ -400,8 +381,6 @@
 
     <transfer name="MerchantUnzerParticipantCriteria">
         <property name="merchantUnzerParticipantConditions" type="MerchantUnzerParticipantConditions"/>
-        <property name="sortCollection" type="Sort[]" singular="sort"/>
-        <property name="pagination" type="Pagination"/>
     </transfer>
 
     <transfer name="MerchantUnzerParticipantConditions">
@@ -410,7 +389,6 @@
 
     <transfer name="MerchantUnzerParticipantCollection">
         <property name="merchantUnzerParticipants" type="MerchantUnzerParticipant[]" singular="merchantUnzerParticipant"/>
-        <property name="pagination" type="Pagination"/>
     </transfer>
 
     <transfer name="UnzerApiMarketplaceAuthorizeRequest">
@@ -514,7 +492,7 @@
     </transfer>
 
     <transfer name="PaymentMethods">
-        <property name="methods" singular="method" type="PaymentMethod[]"/>
+        <property name="methods" type="PaymentMethod[]" singular="method"/>
     </transfer>
 
     <transfer name="PaymentMethod">
@@ -594,7 +572,7 @@
     <transfer name="PaymentProvider">
         <property name="idPaymentProvider" type="int"/>
         <property name="name" type="string"/>
-        <property name="paymentMethods" singular="paymentMethod" type="PaymentMethod[]"/>
+        <property name="paymentMethods" type="PaymentMethod[]" singular="paymentMethod"/>
         <property name="paymentProviderKey" type="string"/>
     </transfer>
 
@@ -617,9 +595,9 @@
     </transfer>
 
     <transfer name="Refund">
-        <property name="unzerRefunds" singular="unzerRefund" type="UnzerRefund[]"/>
+        <property name="unzerRefunds" type="UnzerRefund[]" singular="unzerRefund"/>
 
-        <property name="items" singular="item" type="Item[]"/>
+        <property name="items" type="Item[]" singular="item"/>
     </transfer>
 
     <transfer name="MerchantResponse">

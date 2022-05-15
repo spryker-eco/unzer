@@ -68,12 +68,12 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @var string
      */
-    public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
+    public const FACADE_MERCHANT = 'FACADE_MERCHANT';
 
     /**
      * @var string
      */
-    public const FACADE_MERCHANT = 'FACADE_MERCHANT';
+    public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -83,6 +83,7 @@ class UnzerDependencyProvider extends AbstractBundleDependencyProvider
     public function provideCommunicationLayerDependencies(Container $container): Container
     {
         $container = parent::provideCommunicationLayerDependencies($container);
+
         $container = $this->addSalesFacade($container);
         $container = $this->addCalculationFacade($container);
         $container = $this->addRefundFacade($container);

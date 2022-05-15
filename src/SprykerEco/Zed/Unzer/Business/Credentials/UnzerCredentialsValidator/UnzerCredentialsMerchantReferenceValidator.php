@@ -60,7 +60,7 @@ class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsVali
         }
 
         return $unzerCredentialsResponseTransfer->setIsSuccessful(false)
-            ->addMessage($this->createMerchantDoesNotExistViolationMessage($unzerCredentialsTransfer));
+            ->addMessage($this->createMerchantDoesNotExistErrorMessage($unzerCredentialsTransfer));
     }
 
     /**
@@ -68,7 +68,7 @@ class UnzerCredentialsMerchantReferenceValidator implements UnzerCredentialsVali
      *
      * @return \Generated\Shared\Transfer\MessageTransfer
      */
-    protected function createMerchantDoesNotExistViolationMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
+    protected function createMerchantDoesNotExistErrorMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
     {
         return (new MessageTransfer())
             ->setMessage(static::ERROR_MESSAGE_MERCHANT_DOES_NOT_EXIST)

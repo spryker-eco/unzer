@@ -5,22 +5,22 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
+namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator;
 
 use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerApiException;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
-abstract class UnzerAbstractApiAdapter
+class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidatorInterface
 {
     /**
      * @param \Generated\Shared\Transfer\UnzerApiResponseTransfer $unzerApiResponseTransfer
      *
-     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerApiException
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
      * @return void
      */
-    protected function assertSuccessResponse(UnzerApiResponseTransfer $unzerApiResponseTransfer): void
+    public function assertSuccessResponse(UnzerApiResponseTransfer $unzerApiResponseTransfer): void
     {
         if ($unzerApiResponseTransfer->getIsSuccessful()) {
             return;
@@ -28,7 +28,7 @@ abstract class UnzerAbstractApiAdapter
 
         $unzerApiErrorResponseTransfer = $unzerApiResponseTransfer->getErrorResponseOrFail();
 
-        throw new UnzerApiException($this->concatErrors($unzerApiErrorResponseTransfer));
+        throw new UnzerException($this->concatErrors($unzerApiErrorResponseTransfer));
     }
 
     /**

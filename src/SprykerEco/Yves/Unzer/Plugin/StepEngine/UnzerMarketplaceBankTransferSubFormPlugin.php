@@ -14,6 +14,7 @@ use Spryker\Yves\StepEngine\Dependency\Plugin\Form\SubFormPluginInterface;
 
 /**
  * @method \SprykerEco\Yves\Unzer\UnzerFactory getFactory()
+ * @method \SprykerEco\Yves\Unzer\UnzerConfig getConfig()
  */
 class UnzerMarketplaceBankTransferSubFormPlugin extends AbstractPlugin implements SubFormPluginInterface
 {

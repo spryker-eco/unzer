@@ -7,7 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Persistence;
 
-use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItemQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerQuery;
@@ -15,7 +14,7 @@ use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStoreQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
-use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
+use SprykerEco\Zed\Unzer\Persistence\Propel\Mapper\UnzerMapper;
 
 /**
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
@@ -25,17 +24,9 @@ use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 class UnzerPersistenceFactory extends AbstractPersistenceFactory
 {
     /**
-     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipantQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerQuery<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzer>
      */
-    public function createMerchantUnzerParticipantQuery(): SpyMerchantUnzerParticipantQuery
-    {
-        return SpyMerchantUnzerParticipantQuery::create();
-    }
-
-    /**
-     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerQuery
-     */
-    public function createPaymentUnzerQuery(): SpyPaymentUnzerQuery
+    public function getPaymentUnzerQuery(): SpyPaymentUnzerQuery
     {
         return SpyPaymentUnzerQuery::create();
     }
@@ -43,7 +34,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     /**
      * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItemQuery
      */
-    public function createPaymentUnzerOrderItemQuery(): SpyPaymentUnzerOrderItemQuery
+    public function getPaymentUnzerOrderItemQuery(): SpyPaymentUnzerOrderItemQuery
     {
         return SpyPaymentUnzerOrderItemQuery::create();
     }
@@ -51,7 +42,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     /**
      * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery
      */
-    public function createPaymentUnzerTransactionQuery(): SpyPaymentUnzerTransactionQuery
+    public function getPaymentUnzerTransactionQuery(): SpyPaymentUnzerTransactionQuery
     {
         return SpyPaymentUnzerTransactionQuery::create();
     }
@@ -59,23 +50,23 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     /**
      * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery
      */
-    public function createPaymentUnzerCustomerQuery(): SpyPaymentUnzerCustomerQuery
+    public function getPaymentUnzerCustomerQuery(): SpyPaymentUnzerCustomerQuery
     {
         return SpyPaymentUnzerCustomerQuery::create();
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
+     * @return \SprykerEco\Zed\Unzer\Persistence\Propel\Mapper\UnzerMapper
      */
-    public function createUnzerPersistenceMapper(): UnzerPersistenceMapper
+    public function getUnzerMapper(): UnzerMapper
     {
-        return new UnzerPersistenceMapper();
+        return new UnzerMapper();
     }
 
     /**
      * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStoreQuery
      */
-    public function createUnzerCredentialsStoreQuery(): SpyUnzerCredentialsStoreQuery
+    public function getUnzerCredentialsStoreQuery(): SpyUnzerCredentialsStoreQuery
     {
         return SpyUnzerCredentialsStoreQuery::create();
     }
@@ -83,7 +74,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     /**
      * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery
      */
-    public function createUnzerCredentialsQuery(): SpyUnzerCredentialsQuery
+    public function getUnzerCredentialsQuery(): SpyUnzerCredentialsQuery
     {
         return SpyUnzerCredentialsQuery::create();
     }

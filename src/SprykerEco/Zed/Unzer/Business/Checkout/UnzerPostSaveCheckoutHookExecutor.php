@@ -14,7 +14,7 @@ use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcesso
 use SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
-class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
+class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface
@@ -24,18 +24,18 @@ class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface
      */
-    protected $paymentProcessorStrategyResolver;
+    protected $unzerPaymentProcessorResolver;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Saver\UnzerPaymentSaverInterface $unzerPaymentSaver
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface $unzerPaymentProcessorResolver
      */
     public function __construct(
         UnzerPaymentSaverInterface $unzerPaymentSaver,
-        UnzerPaymentProcessorResolverInterface $paymentProcessorStrategyResolver
+        UnzerPaymentProcessorResolverInterface $unzerPaymentProcessorResolver
     ) {
         $this->unzerPaymentSaver = $unzerPaymentSaver;
-        $this->paymentProcessorStrategyResolver = $paymentProcessorStrategyResolver;
+        $this->unzerPaymentProcessorResolver = $unzerPaymentProcessorResolver;
     }
 
     /**
@@ -55,7 +55,7 @@ class UnzerPostSaveCheckoutHook implements UnzerCheckoutHookInterface
         }
 
         $paymentMethod = $quoteTransfer->getPaymentOrFail()->getPaymentSelectionOrFail();
-        $paymentProcessor = $this->paymentProcessorStrategyResolver->resolvePaymentProcessor($paymentMethod);
+        $paymentProcessor = $this->unzerPaymentProcessorResolver->resolvePaymentProcessor($paymentMethod);
         $unzerPaymentTransfer = $paymentProcessor->processOrderPayment($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
 
         $checkoutResponseTransfer

@@ -48,12 +48,14 @@ use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapter;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerRefundAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributor;
-use SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidator;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
+use SprykerEco\Zed\Unzer\Business\Checkout\ExpenseDistributor\UnzerExpenseDistributor;
+use SprykerEco\Zed\Unzer\Business\Checkout\ExpenseDistributor\UnzerExpenseDistributorInterface;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapper;
 use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHook;
+use SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookExecutorInterface;
+use SprykerEco\Zed\Unzer\Business\Checkout\UnzerPostSaveCheckoutHookExecutor;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsCreatorInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsDeleter;
@@ -66,7 +68,7 @@ use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdater;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsMerchantReferenceValidator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsParentCredentialsValidator;
-use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsStoreRelationsValidator;
+use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsStoreRelationValidator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsUniqueMerchantReferenceValidator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsUniquePublicKeyValidator;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsValidator\UnzerCredentialsValidatorComposite;
@@ -135,8 +137,8 @@ use SprykerEco\Zed\Unzer\Business\Reader\UnzerReader;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerVaultReader;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerVaultReaderInterface;
-use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpenseRefundStrategyResolver;
-use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpenseRefundStrategyResolverInterface;
+use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpenseRefundStrategyResolver\UnzerExpenseRefundStrategyResolver;
+use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpenseRefundStrategyResolver\UnzerExpenseRefundStrategyResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\LastOrderItemExpenseRefundStrategy;
 use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\LastShipmentItemExpenseRefundStrategy;
 use SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\NoExpenseRefundStrategy;
@@ -180,13 +182,13 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Checkout\UnzerCheckoutHookExecutorInterface
      */
-    public function createUnzerPostSaveCheckoutHook(): UnzerCheckoutHookInterface
+    public function createUnzerPostSaveCheckoutHook(): UnzerCheckoutHookExecutorInterface
     {
-        return new UnzerPostSaveCheckoutHook(
+        return new UnzerPostSaveCheckoutHookExecutor(
             $this->createUnzerPaymentSaver(),
-            $this->createPaymentProcessorResolver(),
+            $this->createUnzerPaymentProcessorResolver(),
         );
     }
 
@@ -234,6 +236,14 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
+     */
+    public function createUnzerApiAdapterResponseValidator(): UnzerApiAdapterResponseValidatorInterface
+    {
+        return new UnzerApiAdapterResponseValidator();
+    }
+
+    /**
      * @return \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerCustomerAdapterInterface
      */
     public function createUnzerCustomerAdapter(): UnzerCustomerAdapterInterface
@@ -241,6 +251,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerCustomerAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerCustomerMapper(),
+            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -260,6 +271,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerBasketAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerBasketMapper(),
+            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -279,6 +291,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerPaymentResourceAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerPaymentResourceMapper(),
+            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -298,6 +311,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerAuthorizeAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerAuthorizePaymentMapper(),
+            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -319,6 +333,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerChargeAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerChargeMapper(),
+            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -340,6 +355,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerPaymentAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerGetPaymentMapper(),
+            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -359,6 +375,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerRefundAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerRefundMapper(),
+            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -465,10 +482,10 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Oms\Command\UnzerOmsCommandInterface
      */
-    public function createChargeOmsCommand(): UnzerOmsCommandInterface
+    public function createChargeUnzerOmsCommand(): UnzerOmsCommandInterface
     {
         return new ChargeUnzerOmsCommand(
-            $this->createPaymentProcessorResolver(),
+            $this->createUnzerPaymentProcessorResolver(),
         );
     }
 
@@ -483,11 +500,11 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Oms\Command\RefundUnzerOmsCommandInterface
      */
-    public function createRefundOmsCommand(): RefundUnzerOmsCommandInterface
+    public function createRefundUnzerOmsCommand(): RefundUnzerOmsCommandInterface
     {
         return new RefundUnzerOmsCommand(
             $this->getRefundFacade(),
-            $this->createPaymentProcessorResolver(),
+            $this->createUnzerPaymentProcessorResolver(),
         );
     }
 
@@ -502,7 +519,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface
      */
-    public function createPaymentProcessorResolver(): UnzerPaymentProcessorResolverInterface
+    public function createUnzerPaymentProcessorResolver(): UnzerPaymentProcessorResolverInterface
     {
         return new UnzerPaymentProcessorResolver($this->getUnzerPaymentProcessors());
     }
@@ -514,13 +531,13 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return [
             UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER => function () {
-                return $this->createMarketplaceBankTransferPaymentProcessor();
+                return $this->createMarketplaceDirectPaymentProcessor();
             },
             UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD => function () {
-                return $this->createMarketplaceCreditCardPaymentProcessor();
+                return $this->createMarketplaceCreditCardProcessor();
             },
             UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT => function () {
-                return $this->createMarketplaceBankTransferPaymentProcessor();
+                return $this->createMarketplaceDirectPaymentProcessor();
             },
             UnzerConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER => function () {
                 return $this->createDirectPaymentProcessor();
@@ -537,7 +554,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface
      */
-    public function createMarketplaceBankTransferPaymentProcessor(): UnzerPaymentProcessorInterface
+    public function createMarketplaceDirectPaymentProcessor(): UnzerPaymentProcessorInterface
     {
         return new MarketplaceDirectPaymentProcessor(
             $this->createUnzerCheckoutMapper(),
@@ -551,7 +568,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerPaymentProcessorInterface
      */
-    public function createMarketplaceCreditCardPaymentProcessor(): UnzerPaymentProcessorInterface
+    public function createMarketplaceCreditCardProcessor(): UnzerPaymentProcessorInterface
     {
         return new MarketplaceCreditCardProcessor(
             $this->createUnzerAuthorizeAdapter(),
@@ -642,11 +659,11 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Checkout\ExpensesDistributor\UnzerExpensesDistributorInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Checkout\ExpenseDistributor\UnzerExpenseDistributorInterface
      */
-    public function createUnzerExpensesDistributor(): UnzerExpensesDistributorInterface
+    public function createUnzerExpensesDistributor(): UnzerExpenseDistributorInterface
     {
-        return new UnzerExpensesDistributor();
+        return new UnzerExpenseDistributor();
     }
 
     /**
@@ -664,7 +681,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerRefundProcessor(
             $this->createUnzerCredentialsResolver(),
-            $this->createUnzerExpensesRefundStrategyResolver(),
+            $this->createUnzerExpenseRefundStrategyResolver(),
             $this->createUnzerRefundAdapter(),
             $this->getRepository(),
             $this->createUnzerRefundPaymentSaver(),
@@ -678,7 +695,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerMarketplaceRefundProcessor(
             $this->createUnzerCredentialsResolver(),
-            $this->createUnzerExpensesRefundStrategyResolver(),
+            $this->createUnzerExpenseRefundStrategyResolver(),
             $this->createUnzerRefundAdapter(),
             $this->getRepository(),
             $this->createUnzerMarketplaceRefundMapper(),
@@ -687,9 +704,9 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpensesRefundStrategyResolver\UnzerExpenseRefundStrategyResolverInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\ExpenseRefundStrategyResolver\UnzerExpenseRefundStrategyResolverInterface
      */
-    public function createUnzerExpensesRefundStrategyResolver(): UnzerExpenseRefundStrategyResolverInterface
+    public function createUnzerExpenseRefundStrategyResolver(): UnzerExpenseRefundStrategyResolverInterface
     {
         return new UnzerExpenseRefundStrategyResolver(
             $this->getUnzerExpenseRefundStrategies(),
@@ -704,13 +721,13 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return [
             UnzerConstants::NO_EXPENSES_REFUND_STRATEGY => function () {
-                return $this->createNoExpensesRefundStrategy();
+                return $this->createNoExpenseRefundStrategy();
             },
             UnzerConstants::LAST_SHIPMENT_ITEM_EXPENSES_REFUND_STRATEGY => function () {
-                return $this->createLastShipmentItemExpensesRefundStrategy();
+                return $this->createLastShipmentItemExpenseRefundStrategy();
             },
             UnzerConstants::LAST_ORDER_ITEM_EXPENSES_REFUND_STRATEGY => function () {
-                return $this->createLastOrderItemExpensesRefundStrategy();
+                return $this->createLastOrderItemExpenseRefundStrategy();
             },
         ];
     }
@@ -718,7 +735,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface
      */
-    public function createNoExpensesRefundStrategy(): UnzerExpenseRefundStrategyInterface
+    public function createNoExpenseRefundStrategy(): UnzerExpenseRefundStrategyInterface
     {
         return new NoExpenseRefundStrategy();
     }
@@ -726,7 +743,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface
      */
-    public function createLastShipmentItemExpensesRefundStrategy()
+    public function createLastShipmentItemExpenseRefundStrategy(): UnzerExpenseRefundStrategyInterface
     {
         return new LastShipmentItemExpenseRefundStrategy(
             $this->getRepository(),
@@ -737,7 +754,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Refund\RefundStrategy\UnzerExpenseRefundStrategyInterface
      */
-    public function createLastOrderItemExpensesRefundStrategy()
+    public function createLastOrderItemExpenseRefundStrategy(): UnzerExpenseRefundStrategyInterface
     {
         return new LastOrderItemExpenseRefundStrategy(
             $this->getRepository(),
@@ -797,6 +814,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerMetadataAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerMetadataMapper(),
+            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -834,7 +852,10 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createUnzerNotificationAdapter(): UnzerNotificationAdapterInterface
     {
-        return new UnzerNotificationAdapter($this->getUnzerApiFacade());
+        return new UnzerNotificationAdapter(
+            $this->getUnzerApiFacade(),
+            $this->createUnzerApiAdapterResponseValidator(),
+        );
     }
 
     /**
@@ -909,7 +930,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \SprykerEco\Zed\Unzer\Business\Import\UnzerPaymentMethodImporterInterface
      */
-    public function createUnzerPaymentMethodsImporter(): UnzerPaymentMethodImporterInterface
+    public function createUnzerPaymentMethodImporter(): UnzerPaymentMethodImporterInterface
     {
         return new UnzerPaymentMethodImporter(
             $this->getConfig(),
@@ -963,6 +984,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerPaymentMethodsAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerGetPaymentMethodsMapper(),
+            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -1084,7 +1106,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
      */
     public function createUnzerCredentialsStoreRelationsValidator(): UnzerCredentialsValidatorInterface
     {
-        return new UnzerCredentialsStoreRelationsValidator($this->createUnzerReader());
+        return new UnzerCredentialsStoreRelationValidator($this->createUnzerReader());
     }
 
     /**

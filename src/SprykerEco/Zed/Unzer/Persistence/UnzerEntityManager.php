@@ -15,7 +15,6 @@ use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
-use SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerPersistenceFactory getFactory()
@@ -30,12 +29,12 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     public function savePaymentUnzerEntity(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransfer
     {
         $paymentUnzerEntity = $this->getFactory()
-            ->createPaymentUnzerQuery()
+            ->getPaymentUnzerQuery()
             ->filterByFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder())
             ->filterByOrderId($paymentUnzerTransfer->getOrderId())
             ->findOneOrCreate();
 
-        $UnzerPersistenceMapper = $this->getFactory()->createUnzerPersistenceMapper();
+        $UnzerPersistenceMapper = $this->getFactory()->getUnzerMapper();
 
         $paymentUnzerEntity = $UnzerPersistenceMapper
             ->mapPaymentUnzerTransferToPaymentUnzerEntity($paymentUnzerTransfer, $paymentUnzerEntity);
@@ -55,12 +54,12 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     ): PaymentUnzerOrderItemTransfer {
         /** @var \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity */
         $paymentUnzerOrderItemEntity = $this->getFactory()
-            ->createPaymentUnzerOrderItemQuery()
+            ->getPaymentUnzerOrderItemQuery()
             ->filterByFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItem())
             ->filterByFkPaymentUnzer($paymentUnzerOrderItemTransfer->getIdPaymentUnzer())
             ->findOneOrCreate();
 
-        $unzerPersistenceMapper = $this->getFactory()->createUnzerPersistenceMapper();
+        $unzerPersistenceMapper = $this->getFactory()->getUnzerMapper();
 
         $paymentUnzerOrderItemEntity = $unzerPersistenceMapper
             ->mapPaymentUnzerOrderItemTransferToPaymentUnzerOrderItemEntity(
@@ -84,7 +83,7 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     public function savePaymentUnzerTransactionEntity(
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer
     ): PaymentUnzerTransactionTransfer {
-        $paymentUnzerTransactionEntity = $this->getFactory()->createPaymentUnzerTransactionQuery()
+        $paymentUnzerTransactionEntity = $this->getFactory()->getPaymentUnzerTransactionQuery()
             ->filterByTransactionUniqueId($paymentUnzerTransactionTransfer->getTransactionUniqueId())
             ->findOneOrCreate();
 
@@ -93,7 +92,7 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
             return $paymentUnzerTransactionTransfer;
         }
 
-        $unzerPersistenceMapper = $this->getFactory()->createUnzerPersistenceMapper();
+        $unzerPersistenceMapper = $this->getFactory()->getUnzerMapper();
 
         $paymentUnzerTransactionEntity = $unzerPersistenceMapper
             ->mapPaymentUnzerTransactionTransferToPaymentUnzerTransactionEntity(
@@ -110,48 +109,18 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Persistence\Mapper\UnzerPersistenceMapper
-     */
-    protected function getMapper(): UnzerPersistenceMapper
-    {
-        return $this->getFactory()->createUnzerPersistenceMapper();
-    }
-
-    /**
-     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
-     *
-     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant
-     */
-    protected function saveOrDeleteMerchantUnzerParticipantEntity(SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity): SpyMerchantUnzerParticipant
-    {
-        if ($merchantUnzerParticipantEntity->getParticipantId()) {
-            $merchantUnzerParticipantEntity->save();
-
-            return $merchantUnzerParticipantEntity;
-        }
-
-        if ($merchantUnzerParticipantEntity->getIdMerchantUnzerParticipant()) {
-            $merchantUnzerParticipantEntity->delete();
-
-            return $merchantUnzerParticipantEntity;
-        }
-
-        return $merchantUnzerParticipantEntity;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
     public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer
     {
-        $unzerCredentialsEntity = $this->getMapper()
+        $unzerCredentialsEntity = $this->getFactory()->getUnzerMapper()
             ->mapUnzerCredentialsTransferToUnzerCredentialsEntity($unzerCredentialsTransfer, new SpyUnzerCredentials());
 
         $unzerCredentialsEntity->save();
 
-        return $this->getMapper()
+        return $this->getFactory()->getUnzerMapper()
             ->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, $unzerCredentialsTransfer);
     }
 
@@ -184,7 +153,7 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
         }
 
         $this->getFactory()
-            ->createUnzerCredentialsStoreQuery()
+            ->getUnzerCredentialsStoreQuery()
             ->filterByFkUnzerCredentials($idUnzerCredentials)
             ->filterByFkStore_In($idStores)
             ->delete();
@@ -198,7 +167,7 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     public function updateUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): ?UnzerCredentialsTransfer
     {
         $unzerCredentialsEntity = $this->getFactory()
-            ->createUnzerCredentialsQuery()
+            ->getUnzerCredentialsQuery()
             ->filterByIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail())
             ->findOne();
 
@@ -206,10 +175,12 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
             return null;
         }
 
-        $unzerCredentialsEntity = $this->getMapper()->mapUnzerCredentialsTransferToUnzerCredentialsEntity($unzerCredentialsTransfer, $unzerCredentialsEntity);
+        $unzerCredentialsEntity = $this->getFactory()->getUnzerMapper()
+            ->mapUnzerCredentialsTransferToUnzerCredentialsEntity($unzerCredentialsTransfer, $unzerCredentialsEntity);
         $unzerCredentialsEntity->save();
 
-        return $this->getMapper()->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, $unzerCredentialsTransfer);
+        return $this->getFactory()->getUnzerMapper()
+            ->mapUnzerCredentialsEntityToUnzerCredentialsTransfer($unzerCredentialsEntity, $unzerCredentialsTransfer);
     }
 
     /**
@@ -220,10 +191,32 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool
     {
         $deletedRowsCount = $this->getFactory()
-            ->createUnzerCredentialsQuery()
+            ->getUnzerCredentialsQuery()
             ->filterByIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials())
             ->delete();
 
         return $deletedRowsCount !== 0;
+    }
+
+    /**
+     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
+     *
+     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant
+     */
+    protected function saveOrDeleteMerchantUnzerParticipantEntity(SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity): SpyMerchantUnzerParticipant
+    {
+        if ($merchantUnzerParticipantEntity->getParticipantId()) {
+            $merchantUnzerParticipantEntity->save();
+
+            return $merchantUnzerParticipantEntity;
+        }
+
+        if ($merchantUnzerParticipantEntity->getIdMerchantUnzerParticipant()) {
+            $merchantUnzerParticipantEntity->delete();
+
+            return $merchantUnzerParticipantEntity;
+        }
+
+        return $merchantUnzerParticipantEntity;
     }
 }

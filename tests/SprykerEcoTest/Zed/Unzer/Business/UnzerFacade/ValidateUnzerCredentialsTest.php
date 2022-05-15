@@ -43,7 +43,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsSuccessfulUnzerCredentialsResponse(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $storeTransfer = (new StoreBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
@@ -69,7 +69,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileUnzerKeypairIsNull(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $storeTransfer = (new StoreBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
@@ -94,7 +94,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeStandardReturnsUnsuccessfulUnzerCredentialsResponseWhileStoreRelationAlreadyUsed(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $standardUnzerCredentials = $this->tester->haveStandardUnzerCredentials();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
@@ -119,7 +119,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testValidateUnzerCredentialsTypeMarketplaceMainMerchantReturnsUnsuccessfulUnzerCredentialsResponseWhileMerchantReferenceDoesNotExist(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $marketplaceUnzerCredentailsTransfer = $this->tester->haveMarketplaceUnzerCredentials();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
                 UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
@@ -138,7 +138,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
         // Assert
         $this->assertFalse($unzerCredentialsResponseTransfer->getIsSuccessful());
         $this->assertCount(1, $unzerCredentialsResponseTransfer->getMessages());
-        $this->assertSame('Merchant with provided reference does not exist!', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
+        $this->assertSame('Merchant with provided reference "%merchantReference%" does not exist!', $unzerCredentialsResponseTransfer->getMessages()->offsetGet(0)->getMessage());
     }
 
     /**

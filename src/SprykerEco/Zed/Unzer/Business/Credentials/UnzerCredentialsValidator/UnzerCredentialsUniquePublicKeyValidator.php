@@ -64,7 +64,7 @@ class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValida
                 $existingUnzerCredentialsTransfer->getIdUnzerCredentials() !== (int)$unzerCredentialsTransfer->getIdUnzerCredentials()
             ) {
                 $unzerCredentialsResponseTransfer->setIsSuccessful(false)
-                    ->addMessage($this->createUniquePublicKeyViolationMessage($unzerCredentialsTransfer));
+                    ->addMessage($this->createUniquePublicKeyErrorMessage($unzerCredentialsTransfer));
             }
         }
 
@@ -76,7 +76,7 @@ class UnzerCredentialsUniquePublicKeyValidator implements UnzerCredentialsValida
      *
      * @return \Generated\Shared\Transfer\MessageTransfer
      */
-    protected function createUniquePublicKeyViolationMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
+    protected function createUniquePublicKeyErrorMessage(UnzerCredentialsTransfer $unzerCredentialsTransfer): MessageTransfer
     {
         return (new MessageTransfer())
             ->setMessage(static::ERROR_MESSAGE_ALREADY_EXISTS)

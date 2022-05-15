@@ -114,7 +114,7 @@ class LastShipmentItemExpenseRefundStrategy implements UnzerExpenseRefundStrateg
      *
      * @return array<int, array<\Generated\Shared\Transfer\ItemTransfer>>
      */
-    protected function getOrderItemsGroupedByIdSalesShipment(OrderTransfer $orderTransfer)
+    protected function getOrderItemsGroupedByIdSalesShipment(OrderTransfer $orderTransfer): array
     {
         $groupedItemTransfers = [];
         foreach ($orderTransfer->getItems() as $itemTransfer) {

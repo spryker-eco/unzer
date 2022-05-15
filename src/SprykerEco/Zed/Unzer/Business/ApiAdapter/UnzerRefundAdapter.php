@@ -13,9 +13,10 @@ use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use Generated\Shared\Transfer\UnzerRefundTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerRefundMapperInterface;
+use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
-class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundAdapterInterface
+class UnzerRefundAdapter implements UnzerRefundAdapterInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
@@ -28,15 +29,23 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
     protected $unzerRefundMapper;
 
     /**
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
+     */
+    protected $unzerApiAdapterResponseValidator;
+
+    /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerRefundMapperInterface $unzerPaymentResourceMapper
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
      */
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
-        UnzerRefundMapperInterface $unzerPaymentResourceMapper
+        UnzerRefundMapperInterface $unzerPaymentResourceMapper,
+        UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
     ) {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerRefundMapper = $unzerPaymentResourceMapper;
+        $this->unzerApiAdapterResponseValidator = $unzerApiAdapterResponseValidator;
     }
 
     /**
@@ -79,7 +88,7 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
             ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceRefundApiCall($unzerApiRequestTransfer);
-        $this->assertSuccessResponse($unzerApiResponseTransfer);
+        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
     }
 
     /**
@@ -103,6 +112,6 @@ class UnzerRefundAdapter extends UnzerAbstractApiAdapter implements UnzerRefundA
             ->setUnzerKeypair($unzerKeypairTransfer);
 
         $unzerApiResponseTransfer = $this->unzerApiFacade->performRefundApiCall($unzerApiRequestTransfer);
-        $this->assertSuccessResponse($unzerApiResponseTransfer);
+        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
     }
 }

@@ -17,5 +17,5 @@ interface UnzerPaymentMethodImportFilterInterface
      *
      * @return \ArrayObject<int, \Generated\Shared\Transfer\PaymentMethodTransfer>
      */
-    public function filterStoredPaymentMethods(ArrayObject $paymentMethodTransfers, ArrayObject $storedPaymentMethodTransfers): ArrayObject;
+    public function filterOutStoredPaymentMethods(ArrayObject $paymentMethodTransfers, ArrayObject $storedPaymentMethodTransfers): ArrayObject;
 }

@@ -28,7 +28,7 @@ class GetUnzerCredentialsCollectionTest extends UnzerFacadeBaseTest
     public function testGetUnzerCredentialsCollectionExists(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
 
         // Act
@@ -50,7 +50,7 @@ class GetUnzerCredentialsCollectionTest extends UnzerFacadeBaseTest
     public function testGetUnzerCredentialsCollectionEmpty(): void
     {
         // Arrange
-        $this->tester->ensureUnzerCredentialsTableIsEmpty();
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $this->tester->haveStandardUnzerCredentials();
 
         // Act

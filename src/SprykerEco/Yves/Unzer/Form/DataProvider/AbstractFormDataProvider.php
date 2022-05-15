@@ -12,15 +12,11 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 use Spryker\Yves\StepEngine\Dependency\Form\StepEngineFormDataProviderInterface;
+use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
 
 abstract class AbstractFormDataProvider implements StepEngineFormDataProviderInterface
 {
-    /**
-     * @var string
-     */
-    protected const PAYMENT_PROVIDER_UNZER = 'Unzer';
-
     /**
      * @var \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface
      */
@@ -54,8 +50,8 @@ abstract class AbstractFormDataProvider implements StepEngineFormDataProviderInt
         $paymentTransfer = $quoteTransfer->getPayment();
 
         if ($paymentTransfer === null) {
-            $paymentTransfer = new PaymentTransfer();
-            $paymentTransfer->setPaymentProvider(static::PAYMENT_PROVIDER_UNZER);
+            $paymentTransfer = (new PaymentTransfer())
+                ->setPaymentProvider(UnzerConfig::PAYMENT_PROVIDER_NAME);
             $quoteTransfer->setPayment($paymentTransfer);
         }
 

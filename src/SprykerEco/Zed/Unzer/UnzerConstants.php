@@ -222,6 +222,11 @@ interface UnzerConstants
     /**
      * @var string
      */
+    public const NOTIFICATION_TYPE_CHARGE_SUCCEEDED = 'charge.succeeded';
+
+    /**
+     * @var string
+     */
     public const NOTIFICATION_TYPE_PAYMENT_COMPLETED = 'payment.completed';
 
     /**

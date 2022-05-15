@@ -16,7 +16,7 @@ abstract class AbstractUnzerOmsCommand
      *
      * @return array<int>
      */
-    protected function mapSalesOrderItemsIds(array $salesOrderItems): array
+    protected function extractSalesOrderItemsIds(array $salesOrderItems): array
     {
         return array_map(
             function (SpySalesOrderItem $orderItem) {
