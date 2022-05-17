@@ -1,7 +1,15 @@
+import Component from 'ShopUi/models/component';
+import ScriptLoader from 'ShopUi/components/molecules/script-loader/script-loader';
+
 declare const unzer: unzerInterface;
 
+interface unzerOptionsInterface {
+    locale: string;
+    [propName: string]: string | boolean;
+}
+
 interface unzerInterface {
-    (publicKey: string, options: object): void;
+    (publicKey: string, options: unzerOptionsInterface): void;
 }
 
 interface cardInterface {
@@ -13,9 +21,6 @@ interface cardInterface {
     };
     createResource: any;
 }
-
-import Component from 'ShopUi/models/component';
-import ScriptLoader from 'ShopUi/components/molecules/script-loader/script-loader';
 
 const CREDIT_CARD_PAYMENT_METHOD = 'unzerCreditCard';
 const MARKETPLACE_CREDIT_CARD_PAYMENT_METHOD = 'unzerMarketplaceCreditCard';
