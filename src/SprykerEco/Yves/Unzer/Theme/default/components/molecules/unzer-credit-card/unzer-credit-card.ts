@@ -5,7 +5,7 @@ declare const unzer: unzerInterface;
 
 interface unzerOptionsInterface {
     locale: string;
-    [propName: string]: string | boolean;
+    [propertyName: string]: string | boolean;
 }
 
 interface unzerInterface {
