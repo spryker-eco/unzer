@@ -1132,7 +1132,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return UnzerPaymentReaderInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Reader\UnzerPaymentReaderInterface
      */
     public function createUnzerPaymentReader(): UnzerPaymentReaderInterface
     {
@@ -1140,7 +1140,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerReader(),
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentAdapter(),
-            $this->createUnzerCredentialsResolver()
+            $this->createUnzerCredentialsResolver(),
         );
     }
 }

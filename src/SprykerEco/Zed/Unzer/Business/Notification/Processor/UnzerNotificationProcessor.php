@@ -7,7 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Notification\Processor;
 
-use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
@@ -60,11 +59,11 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
      */
     public function __construct(
-        UnzerPaymentAdapterInterface      $unzerPaymentAdapter,
-        UnzerConfig                       $unzerConfig,
-        UnzerReaderInterface              $unzerReader,
-        UnzerPaymentMapperInterface       $unzerPaymentMapper,
-        UnzerPaymentUpdaterInterface      $unzerPaymentUpdater,
+        UnzerPaymentAdapterInterface $unzerPaymentAdapter,
+        UnzerConfig $unzerConfig,
+        UnzerReaderInterface $unzerReader,
+        UnzerPaymentMapperInterface $unzerPaymentMapper,
+        UnzerPaymentUpdaterInterface $unzerPaymentUpdater,
         UnzerCredentialsResolverInterface $unzerCredentialsResolver
     ) {
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;

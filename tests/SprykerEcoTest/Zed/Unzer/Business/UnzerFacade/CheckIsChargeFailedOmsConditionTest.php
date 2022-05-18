@@ -7,7 +7,6 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business\UnzerFacade;
 
-use Generated\Shared\DataBuilder\SaveOrderBuilder;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use SprykerEco\Zed\Unzer\UnzerConstants;
@@ -32,13 +31,11 @@ class CheckIsChargeFailedOmsConditionTest extends UnzerFacadeBaseTest
         // Arrange
         $customerTransfer = $this->tester->haveCustomer();
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
-        $saveOrderTransfer = $this->tester->haveOrder(
-            (new SaveOrderBuilder())
-                ->withOrderItem()
-                ->build()
-                ->toArray(),
+        $saveOrderTransfer = $this->tester->haveOrderUsingPreparedQuoteTransfer(
+            $this->tester->createQuoteTransfer(),
             static::UNZER_SOFORT_STATE_MACHINE_PROCESS_NAME,
         );
+
         $paymentUnzerTransfer = $this->tester->havePaymentUnzer([
             PaymentUnzerTransfer::ID_SALES_ORDER => $saveOrderTransfer->getIdSalesOrder(),
             PaymentUnzerTransfer::KEYPAIR_ID => $unzerCredentialsTransfer->getKeypairId(),
@@ -71,13 +68,11 @@ class CheckIsChargeFailedOmsConditionTest extends UnzerFacadeBaseTest
         // Arrange
         $customerTransfer = $this->tester->haveCustomer();
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
-        $saveOrderTransfer = $this->tester->haveOrder(
-            (new SaveOrderBuilder())
-                ->withOrderItem()
-                ->build()
-                ->toArray(),
+        $saveOrderTransfer = $this->tester->haveOrderUsingPreparedQuoteTransfer(
+            $this->tester->createQuoteTransfer(),
             static::UNZER_SOFORT_STATE_MACHINE_PROCESS_NAME,
         );
+
         $paymentUnzerTransfer = $this->tester->havePaymentUnzer([
             PaymentUnzerTransfer::ID_SALES_ORDER => $saveOrderTransfer->getIdSalesOrder(),
             PaymentUnzerTransfer::KEYPAIR_ID => $unzerCredentialsTransfer->getKeypairId(),

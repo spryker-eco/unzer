@@ -7,8 +7,6 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business\UnzerFacade;
 
-use Generated\Shared\Transfer\ItemTransfer;
-use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
@@ -39,13 +37,9 @@ class ProcessNotificationTest extends UnzerFacadeBaseTest
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
 
-        $saveOrderTransfer = $this->tester->haveOrder(
-            [
-                ItemTransfer::UNIT_PRICE => 72350,
-                ItemTransfer::SUM_PRICE => 72350,
-                OrderTransfer::ORDER_REFERENCE => $unzerPaymentTransfer->getOrderId(),
-            ],
-            'UnzerSofort01',
+        $saveOrderTransfer = $this->tester->haveOrderUsingPreparedQuoteTransfer(
+            $quoteTransfer,
+            static::UNZER_SOFORT_STATE_MACHINE_PROCESS_NAME,
         );
 
         $this->tester->haveUnzerEntities($quoteTransfer, $saveOrderTransfer);

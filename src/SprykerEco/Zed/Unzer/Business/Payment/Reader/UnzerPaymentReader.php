@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Business\Payment\Reader;
 
 use Generated\Shared\Transfer\OrderTransfer;
@@ -14,38 +19,37 @@ use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 class UnzerPaymentReader implements UnzerPaymentReaderInterface
 {
     /**
-     * @var UnzerReaderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
     protected $unzerReader;
 
     /**
-     * @var UnzerPaymentMapperInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface
      */
     protected $unzerPaymentMapper;
 
     /**
-     * @var UnzerPaymentAdapterInterface
+     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
      */
     protected $unzerPaymentAdapter;
 
     /**
-     * @var UnzerCredentialsResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
      */
     protected $unzerCredentialsResolver;
 
     /**
-     * @param UnzerReaderInterface $unzerReader
-     * @param UnzerPaymentMapperInterface $unzerPaymentMapper
-     * @param UnzerPaymentAdapterInterface $unzerPaymentAdapter
-     * @param UnzerCredentialsResolverInterface $unzerCredentialsResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
+     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
+     * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
      */
     public function __construct(
         UnzerReaderInterface $unzerReader,
         UnzerPaymentMapperInterface $unzerPaymentMapper,
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
         UnzerCredentialsResolverInterface $unzerCredentialsResolver
-    )
-    {
+    ) {
         $this->unzerReader = $unzerReader;
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
@@ -53,9 +57,9 @@ class UnzerPaymentReader implements UnzerPaymentReaderInterface
     }
 
     /**
-     * @param OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      *
-     * @return UnzerPaymentTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
      */
     public function findUnzerPaymentForOrder(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer
     {

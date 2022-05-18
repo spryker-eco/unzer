@@ -31,7 +31,7 @@ class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInte
      * @param \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface $unzerPaymentProcessorResolver
      */
     public function __construct(
-        UnzerPaymentUpdaterInterface           $unzerPaymentUpdater,
+        UnzerPaymentUpdaterInterface $unzerPaymentUpdater,
         UnzerPaymentProcessorResolverInterface $unzerPaymentProcessorResolver
     ) {
         $this->unzerPaymentUpdater = $unzerPaymentUpdater;

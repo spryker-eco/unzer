@@ -50,14 +50,14 @@ class FindUpdatedUnzerPaymentForOrderTest extends UnzerFacadeBaseTest
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(false, false)->setUnzerKeypair($unzerCredentials->getUnzerKeypair());
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
-
-        $saveOrderTransfer = $this->tester->haveOrderFromQuote(
+        $saveOrderTransfer = $this->tester->haveOrderUsingPreparedQuoteTransfer(
             $quoteTransfer,
             static::UNZER_SOFORT_STATE_MACHINE_PROCESS_NAME,
             [
                 new UnzerCheckoutDoSaveOrderPlugin(),
             ],
         );
+
         $orderTransfer = (new OrderTransfer())->setOrderReference($saveOrderTransfer->getOrderReference());
 
         // Act
