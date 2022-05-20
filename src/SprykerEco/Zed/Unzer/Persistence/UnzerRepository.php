@@ -191,9 +191,9 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      *
      * @return bool
      */
-    public function hasUnzerCredentialsCollectionByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): bool
+    public function hasUnzerCredentials(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): bool
     {
-        $unzerCredentialsQuery = $this->getFactory()->getUnzerCredentialsQuery()->joinWithUnzerCredentialsStore();
+        $unzerCredentialsQuery = $this->getFactory()->getUnzerCredentialsQuery();
         $unzerCredentialsQuery = $this->setUnzerConfigFilters(
             $unzerCredentialsQuery,
             $unzerCredentialsCriteriaTransfer->getUnzerCredentialsConditionsOrFail(),

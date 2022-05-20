@@ -99,7 +99,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
                 ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT),
         );
 
-        return $this->unzerRepository->hasUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
+        return $this->unzerRepository->hasUnzerCredentials($unzerCredentialsCriteriaTransfer);
     }
 
     /**

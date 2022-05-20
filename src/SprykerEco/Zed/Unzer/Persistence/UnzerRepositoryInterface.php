@@ -76,7 +76,7 @@ interface UnzerRepositoryInterface
      *
      * @return bool
      */
-    public function hasUnzerCredentialsCollectionByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): bool;
+    public function hasUnzerCredentials(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): bool;
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
