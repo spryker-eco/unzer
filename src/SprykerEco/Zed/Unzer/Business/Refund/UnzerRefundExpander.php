@@ -235,7 +235,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      *
      * @return void
      */
-    public function updateExpenseTransferWithParticipantId(
+    protected function updateExpenseTransferWithParticipantId(
         UnzerCredentialsCollectionTransfer $childMarketplaceUnzerCredentialsCollectionTransfer,
         ExpenseTransfer $expenseTransfer
     ): void {
