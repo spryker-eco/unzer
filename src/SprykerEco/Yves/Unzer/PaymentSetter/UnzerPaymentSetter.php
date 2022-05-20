@@ -5,13 +5,13 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Yves\Unzer\Handler;
+namespace SprykerEco\Yves\Unzer\PaymentSetter;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use Symfony\Component\HttpFoundation\Request;
 
-class UnzerHandler implements UnzerHandlerInterface
+class UnzerPaymentSetter implements UnzerPaymentSetterInterface
 {
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request

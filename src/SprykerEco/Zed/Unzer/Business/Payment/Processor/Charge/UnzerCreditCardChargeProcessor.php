@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\ItemCollectionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
+use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
 use Generated\Shared\Transfer\UnzerChargeTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
@@ -109,24 +110,27 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
         $unzerChargeTransfer = $this->createUnzerCharge($unzerPaymentTransfer, $itemCollectionTransfer);
         $unzerChargeTransfer = $this->addExpensesToUnzerChargeTransfer($unzerChargeTransfer, $orderTransfer, $paymentUnzerOrderItemCollectionTransfer);
 
-        $this->unzerChargeAdapter->chargePartialAuthorizablePayment($unzerPaymentTransfer, $unzerChargeTransfer);
-        $this->updatePaymentUnzerOrderItemEntities($paymentUnzerOrderItemCollectionTransfer, $salesOrderItemIds);
+        $unzerApiChargeResponseTransfer = $this->unzerChargeAdapter->chargePartialAuthorizablePayment($unzerPaymentTransfer, $unzerChargeTransfer);
+        $this->updatePaymentUnzerOrderItemEntities($paymentUnzerOrderItemCollectionTransfer, $unzerApiChargeResponseTransfer, $salesOrderItemIds);
     }
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer
      * @param array<int> $salesOrderItemIds
      *
      * @return void
      */
     protected function updatePaymentUnzerOrderItemEntities(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
+        UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
         array $salesOrderItemIds
     ): void {
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
             if (in_array($paymentUnzerOrderItemTransfer->getIdSalesOrderItem(), $salesOrderItemIds, true)) {
                 $paymentUnzerOrderItemTransfer->setStatus(UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED);
-                $this->unzerEntityManager->savePaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);
+                $paymentUnzerOrderItemTransfer->setChargeId($unzerApiChargeResponseTransfer->getIdOrFail());
+                $this->unzerEntityManager->updatePaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);
             }
         }
     }

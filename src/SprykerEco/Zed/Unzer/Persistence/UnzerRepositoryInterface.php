@@ -72,6 +72,13 @@ interface UnzerRepositoryInterface
     ): UnzerCredentialsCollectionTransfer;
 
     /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+     *
+     * @return bool
+     */
+    public function hasUnzerCredentialsCollectionByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): bool;
+
+    /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer

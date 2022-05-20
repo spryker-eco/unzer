@@ -33,6 +33,6 @@ class UnzerStepHandlerPlugin extends AbstractPlugin implements StepHandlerPlugin
      */
     public function addToDataClass(Request $request, AbstractTransfer $quoteTransfer): QuoteTransfer
     {
-        return $this->getFactory()->createUnzerHandler()->addPaymentToQuote($request, $quoteTransfer);
+        return $this->getFactory()->createUnzerPaymentSetter()->addPaymentToQuote($request, $quoteTransfer);
     }
 }

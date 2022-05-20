@@ -11,10 +11,24 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
+use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
 use SprykerEco\Yves\Unzer\Form\MarketplaceCreditCardSubForm;
 
 class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
 {
+    /**
+     * @var \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface
+     */
+    protected $quoteClient;
+
+    /**
+     * @param \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface $quoteClient
+     */
+    public function __construct(UnzerToQuoteClientInterface $quoteClient)
+    {
+        $this->quoteClient = $quoteClient;
+    }
+
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *

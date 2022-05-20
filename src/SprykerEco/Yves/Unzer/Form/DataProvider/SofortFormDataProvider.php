@@ -10,9 +10,23 @@ namespace SprykerEco\Yves\Unzer\Form\DataProvider;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
+use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
 
 class SofortFormDataProvider extends AbstractFormDataProvider
 {
+    /**
+     * @var \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface
+     */
+    protected $quoteClient;
+
+    /**
+     * @param \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface $quoteClient
+     */
+    public function __construct(UnzerToQuoteClientInterface $quoteClient)
+    {
+        $this->quoteClient = $quoteClient;
+    }
+
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *

@@ -49,6 +49,7 @@
         <column name="fk_sales_order_item" type="INTEGER" required="true"/>
         <column name="participant_id" type="VARCHAR" size="255"/>
         <column name="status" type="VARCHAR" size="255" required="true"/>
+        <column name="charge_id" type="VARCHAR" size="255" required="false"/>
 
         <foreign-key name="spy_payment_unzer_order_item-fk_payment_unzer" foreignTable="spy_payment_unzer" phpName="PaymentUnzer" refPhpName="PaymentUnzerOrderItem" onDelete="CASCADE">
             <reference local="fk_payment_unzer" foreign="id_payment_unzer"/>

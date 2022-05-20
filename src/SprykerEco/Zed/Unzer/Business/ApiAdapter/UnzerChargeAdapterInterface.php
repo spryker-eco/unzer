@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
+use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
 use Generated\Shared\Transfer\UnzerChargeTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
@@ -23,10 +24,10 @@ interface UnzerChargeAdapterInterface
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer
      */
     public function chargePartialAuthorizablePayment(
         UnzerPaymentTransfer $unzerPaymentTransfer,
         UnzerChargeTransfer $unzerChargeTransfer
-    ): UnzerPaymentTransfer;
+    ): UnzerApiChargeResponseTransfer;
 }

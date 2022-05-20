@@ -19,14 +19,30 @@ interface UnzerEntityManagerInterface
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
      */
-    public function savePaymentUnzerEntity(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransfer;
+    public function createPaymentUnzerEntity(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
+     */
+    public function updatePaymentUnzerEntity(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransfer;
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer
      */
-    public function savePaymentUnzerOrderItemEntity(
+    public function createPaymentUnzerOrderItemEntity(
+        PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
+    ): PaymentUnzerOrderItemTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer
+     */
+    public function updatePaymentUnzerOrderItemEntity(
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
     ): PaymentUnzerOrderItemTransfer;
 
@@ -35,7 +51,7 @@ interface UnzerEntityManagerInterface
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer
      */
-    public function savePaymentUnzerTransactionEntity(
+    public function createPaymentUnzerTransactionEntity(
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer
     ): PaymentUnzerTransactionTransfer;
 

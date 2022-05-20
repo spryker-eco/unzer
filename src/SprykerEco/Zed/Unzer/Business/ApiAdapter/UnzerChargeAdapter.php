@@ -8,6 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
 use Generated\Shared\Transfer\UnzerApiChargeRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerChargeTransfer;
@@ -72,21 +73,18 @@ class UnzerChargeAdapter implements UnzerChargeAdapterInterface
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer
      */
-    public function chargePartialAuthorizablePayment(UnzerPaymentTransfer $unzerPaymentTransfer, UnzerChargeTransfer $unzerChargeTransfer): UnzerPaymentTransfer
-    {
+    public function chargePartialAuthorizablePayment(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        UnzerChargeTransfer $unzerChargeTransfer
+    ): UnzerApiChargeResponseTransfer {
         $unzerApiRequestTransfer = $this->prepareAuthorizableChargeRequest($unzerPaymentTransfer, $unzerChargeTransfer);
 
         $unzerApiResponseTransfer = $this->performAuthorizableCharge($unzerApiRequestTransfer, $unzerPaymentTransfer);
         $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
-        $unzerApiChargeResponseTransfer = $unzerApiResponseTransfer->getChargeResponseOrFail();
 
-        return $this->unzerChargeMapper
-            ->mapAuthorizableUnzerApiChargeResponseTransferToUnzerPaymentTransfer(
-                $unzerApiChargeResponseTransfer,
-                $unzerPaymentTransfer,
-            );
+        return $unzerApiResponseTransfer->getChargeResponseOrFail();
     }
 
     /**

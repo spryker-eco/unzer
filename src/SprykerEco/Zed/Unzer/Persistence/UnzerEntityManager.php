@@ -12,9 +12,12 @@ use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzer;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Persistence\UnzerPersistenceFactory getFactory()
@@ -26,21 +29,48 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
      */
-    public function savePaymentUnzerEntity(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransfer
+    public function createPaymentUnzerEntity(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransfer
+    {
+        $paymentUnzerEntity = $this->getFactory()
+            ->getUnzerMapper()
+            ->mapPaymentUnzerTransferToPaymentUnzerEntity($paymentUnzerTransfer, new SpyPaymentUnzer());
+
+        $paymentUnzerEntity->save();
+
+        return $this->getFactory()
+            ->getUnzerMapper()
+            ->mapPaymentUnzerEntityToPaymentUnzerTransfer($paymentUnzerEntity, $paymentUnzerTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerTransfer
+     */
+    public function updatePaymentUnzerEntity(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransfer
     {
         $paymentUnzerEntity = $this->getFactory()
             ->getPaymentUnzerQuery()
             ->filterByFkSalesOrder($paymentUnzerTransfer->getIdSalesOrder())
             ->filterByOrderId($paymentUnzerTransfer->getOrderId())
-            ->findOneOrCreate();
+            ->findOne();
 
-        $UnzerPersistenceMapper = $this->getFactory()->getUnzerMapper();
+        if ($paymentUnzerEntity === null) {
+            throw new UnzerException(
+                sprintf('Unzer paymentTransfer for order id %s not found!', $paymentUnzerTransfer->getIdSalesOrder()),
+            );
+        }
 
-        $paymentUnzerEntity = $UnzerPersistenceMapper
+        $paymentUnzerEntity = $this->getFactory()
+            ->getUnzerMapper()
             ->mapPaymentUnzerTransferToPaymentUnzerEntity($paymentUnzerTransfer, $paymentUnzerEntity);
+
         $paymentUnzerEntity->save();
 
-        return $UnzerPersistenceMapper
+        return $this->getFactory()
+            ->getUnzerMapper()
             ->mapPaymentUnzerEntityToPaymentUnzerTransfer($paymentUnzerEntity, $paymentUnzerTransfer);
     }
 
@@ -49,19 +79,53 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer
      */
-    public function savePaymentUnzerOrderItemEntity(
+    public function createPaymentUnzerOrderItemEntity(
         PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
     ): PaymentUnzerOrderItemTransfer {
-        /** @var \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem $paymentUnzerOrderItemEntity */
+        $paymentUnzerOrderItemEntity = $this->getFactory()
+            ->getUnzerMapper()
+            ->mapPaymentUnzerOrderItemTransferToPaymentUnzerOrderItemEntity(
+                $paymentUnzerOrderItemTransfer,
+                new SpyPaymentUnzerOrderItem(),
+            );
+
+        $paymentUnzerOrderItemEntity->save();
+
+        return $this->getFactory()
+            ->getUnzerMapper()
+            ->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
+                $paymentUnzerOrderItemEntity,
+                $paymentUnzerOrderItemTransfer,
+            );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer
+     */
+    public function updatePaymentUnzerOrderItemEntity(
+        PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
+    ): PaymentUnzerOrderItemTransfer {
         $paymentUnzerOrderItemEntity = $this->getFactory()
             ->getPaymentUnzerOrderItemQuery()
             ->filterByFkSalesOrderItem($paymentUnzerOrderItemTransfer->getIdSalesOrderItem())
             ->filterByFkPaymentUnzer($paymentUnzerOrderItemTransfer->getIdPaymentUnzer())
-            ->findOneOrCreate();
+            ->findOne();
 
-        $unzerPersistenceMapper = $this->getFactory()->getUnzerMapper();
+        if ($paymentUnzerOrderItemEntity === null) {
+            throw new UnzerException(
+                sprintf(
+                    'Unzer payment order item entity for order id %s not found!',
+                    $paymentUnzerOrderItemTransfer->getIdSalesOrderItem(),
+                ),
+            );
+        }
 
-        $paymentUnzerOrderItemEntity = $unzerPersistenceMapper
+        $paymentUnzerOrderItemEntity = $this->getFactory()
+            ->getUnzerMapper()
             ->mapPaymentUnzerOrderItemTransferToPaymentUnzerOrderItemEntity(
                 $paymentUnzerOrderItemTransfer,
                 $paymentUnzerOrderItemEntity,
@@ -69,10 +133,12 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
 
         $paymentUnzerOrderItemEntity->save();
 
-        return $unzerPersistenceMapper->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
-            $paymentUnzerOrderItemEntity,
-            $paymentUnzerOrderItemTransfer,
-        );
+        return $this->getFactory()
+            ->getUnzerMapper()
+            ->mapPaymentUnzerOrderItemEntityToPaymentUnzerOrderItemTransfer(
+                $paymentUnzerOrderItemEntity,
+                $paymentUnzerOrderItemTransfer,
+            );
     }
 
     /**
@@ -80,7 +146,7 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer
      */
-    public function savePaymentUnzerTransactionEntity(
+    public function createPaymentUnzerTransactionEntity(
         PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer
     ): PaymentUnzerTransactionTransfer {
         $paymentUnzerTransactionEntity = $this->getFactory()->getPaymentUnzerTransactionQuery()

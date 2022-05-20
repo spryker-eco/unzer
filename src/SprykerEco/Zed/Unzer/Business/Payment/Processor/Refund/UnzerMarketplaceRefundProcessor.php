@@ -102,18 +102,13 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
             throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReferenceOrFail()));
         }
 
-        $refundItemTransfersGroupedByParticipantId = $this->getRefundItemsGroupedByParticipantId($paymentUnzerTransfer, $refundTransfer);
-        $paymentUnzerTransactionCollectionTransfer = $this->getPaymentUnzerTransactionCollectionTransfer(
-            $paymentUnzerTransfer,
-            array_keys($refundItemTransfersGroupedByParticipantId),
-        );
-
-        foreach ($refundItemTransfersGroupedByParticipantId as $participantId => $itemCollectionTransfer) {
-            $chargeId = $this->getChargeIdByParticipantId($paymentUnzerTransactionCollectionTransfer, $participantId);
+        $refundItemsGroupedByChargeId = $this->getRefundItemsGroupedByChargeId($paymentUnzerTransfer, $refundTransfer);
+        foreach ($refundItemsGroupedByChargeId as $chargeId => $itemCollectionTransfer) {
             $refundTransfer->addUnzerRefund($this->createUnzerRefundTransfer($paymentUnzerTransfer, $itemCollectionTransfer, $chargeId));
         }
 
         $refundTransfer = $this->applyExpensesRefundStrategy($refundTransfer, $orderTransfer, $salesOrderItemIds);
+
         $this->applyRefundChanges($paymentUnzerTransfer, $refundTransfer, $salesOrderItemIds);
     }
 
@@ -123,7 +118,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
      *
      * @return array<string, \Generated\Shared\Transfer\ItemCollectionTransfer>
      */
-    protected function getRefundItemsGroupedByParticipantId(PaymentUnzerTransfer $paymentUnzerTransfer, RefundTransfer $refundTransfer): array
+    protected function getRefundItemsGroupedByChargeId(PaymentUnzerTransfer $paymentUnzerTransfer, RefundTransfer $refundTransfer): array
     {
         $paymentUnzerOrderItemsCollection = $this->unzerRepository->getPaymentUnzerOrderItemCollectionByOrderId(
             $paymentUnzerTransfer->getOrderIdOrFail(),
@@ -133,10 +128,16 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
 
         foreach ($refundTransfer->getItems() as $itemTransfer) {
             $participantId = $this->getParticipantIdByItem($paymentUnzerOrderItemsCollection, $itemTransfer);
-            if (!isset($groupedRefundItems[$participantId])) {
-                $groupedRefundItems[$participantId] = new ItemCollectionTransfer();
+            $chargeId = $this->retrieveChargeId(
+                $paymentUnzerTransfer,
+                $paymentUnzerOrderItemsCollection,
+                $itemTransfer,
+            );
+
+            if (!isset($groupedRefundItems[$chargeId])) {
+                $groupedRefundItems[$chargeId] = new ItemCollectionTransfer();
             }
-            $groupedRefundItems[$participantId]->addItem($itemTransfer->setUnzerParticipantId($participantId));
+            $groupedRefundItems[$chargeId]->addItem($itemTransfer->setUnzerParticipantId($participantId));
         }
 
         return $groupedRefundItems;
@@ -186,54 +187,22 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param array<string> $participantIds
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
      */
     protected function getPaymentUnzerTransactionCollectionTransfer(
-        PaymentUnzerTransfer $paymentUnzerTransfer,
-        array $participantIds
+        PaymentUnzerTransfer $paymentUnzerTransfer
     ): PaymentUnzerTransactionCollectionTransfer {
-        if (!$paymentUnzerTransfer->getIsAuthorizable()) {
-            //Sofort and BankTransfer transactions do not have participantId
-            $participantIds = null;
-        }
-
         $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
             ->setPaymentUnzerTransactionConditions(
                 (new PaymentUnzerTransactionConditionsTransfer())
                     ->addPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
-                    ->setParticipantIds($participantIds)
                     ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE)
                     ->addStatus(UnzerConstants::TRANSACTION_STATUS_SUCCESS),
             );
 
         return $this->unzerRepository
             ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
-     * @param string $participantId
-     *
-     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
-     *
-     * @return string
-     */
-    protected function getChargeIdByParticipantId(
-        PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer,
-        string $participantId
-    ): string {
-        foreach ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions() as $paymentUnzerTransactionTransfer) {
-            if (
-                $paymentUnzerTransactionTransfer->getParticipantId() === null
-                || $paymentUnzerTransactionTransfer->getParticipantIdOrFail() === $participantId
-            ) {
-                return $paymentUnzerTransactionTransfer->getTransactionIdOrFail();
-            }
-        }
-
-        throw new UnzerException(sprintf('Unzer Charge Id not found for Participant ID %s', $participantId));
     }
 
     /**
@@ -290,5 +259,45 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
             ->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
 
         return $unzerCredentialsTransfer->getUnzerKeypairOrFail();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param int $idSalesOrderItem
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return string
+     */
+    protected function getChargeIdByIdSalesOrderItem(
+        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
+        int $idSalesOrderItem
+    ): string {
+        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
+            if ($paymentUnzerOrderItem->getIdSalesOrderItemOrFail() === $idSalesOrderItem) {
+                return $paymentUnzerOrderItem->getChargeIdOrFail();
+            }
+        }
+
+        throw new UnzerException(sprintf('Unzer Charge Id not found for Sales order item Id %s', $idSalesOrderItem));
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemsCollection
+     * @param \Generated\Shared\Transfer\ItemTransfer $itemTransfer
+     *
+     * @return string
+     */
+    protected function retrieveChargeId(
+        PaymentUnzerTransfer $paymentUnzerTransfer,
+        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemsCollection,
+        ItemTransfer $itemTransfer
+    ): string {
+        if ($paymentUnzerTransfer->getIsAuthorizableOrFail()) {
+            return $this->getChargeIdByIdSalesOrderItem($paymentUnzerOrderItemsCollection, $itemTransfer->getIdSalesOrderItemOrFail());
+        }
+
+        return UnzerConstants::DEFAULT_FIRST_CHARGE_ID;
     }
 }

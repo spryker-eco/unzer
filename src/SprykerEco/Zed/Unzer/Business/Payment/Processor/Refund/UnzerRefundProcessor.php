@@ -7,7 +7,9 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund;
 
+use Generated\Shared\Transfer\ItemCollectionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
@@ -88,11 +90,13 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
             throw new UnzerException(sprintf('Unzer payment for order reference %s not found.', $orderTransfer->getOrderReferenceOrFail()));
         }
 
-        $chargeId = $this->getUnzerPaymentChargeId($paymentUnzerTransfer);
-
-        $refundTransfer->addUnzerRefund($this->createUnzerRefundTransfer($paymentUnzerTransfer, $refundTransfer, $chargeId));
+        $refundItemsGroupedByChargeId = $this->getRefundItemsGroupedByChargeId($paymentUnzerTransfer, $refundTransfer);
+        foreach ($refundItemsGroupedByChargeId as $chargeId => $itemCollectionTransfer) {
+            $refundTransfer->addUnzerRefund($this->createUnzerRefundTransfer($paymentUnzerTransfer, $itemCollectionTransfer, $chargeId));
+        }
 
         $refundTransfer = $this->applyExpensesRefundStrategy($refundTransfer, $orderTransfer, $salesOrderItemIds);
+
         $this->applyRefundChanges($paymentUnzerTransfer, $refundTransfer, $salesOrderItemIds);
     }
 
@@ -127,18 +131,18 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
+     * @param \Generated\Shared\Transfer\ItemCollectionTransfer $itemCollectionTransfer
      * @param string $chargeId
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
     protected function createUnzerRefundTransfer(
         PaymentUnzerTransfer $paymentUnzerTransfer,
-        RefundTransfer $refundTransfer,
+        ItemCollectionTransfer $itemCollectionTransfer,
         string $chargeId
     ): UnzerRefundTransfer {
         $refundAmount = 0;
-        foreach ($refundTransfer->getItems() as $itemTransfer) {
+        foreach ($itemCollectionTransfer->getItems() as $itemTransfer) {
             $refundAmount += $itemTransfer->getRefundableAmountOrFail();
         }
 
@@ -202,5 +206,58 @@ class UnzerRefundProcessor implements UnzerRefundProcessorInterface
             ->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
 
         return $unzerCredentialsTransfer->getUnzerKeypairOrFail();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
+     *
+     * @return array<string, \Generated\Shared\Transfer\ItemCollectionTransfer>
+     */
+    protected function getRefundItemsGroupedByChargeId(PaymentUnzerTransfer $paymentUnzerTransfer, RefundTransfer $refundTransfer): array
+    {
+        $paymentUnzerOrderItemsCollection = $this->unzerRepository->getPaymentUnzerOrderItemCollectionByOrderId(
+            $paymentUnzerTransfer->getOrderIdOrFail(),
+        );
+
+        $groupedRefundItems = [];
+        if (!$paymentUnzerTransfer->getIsAuthorizableOrFail()) {
+            $chargeId = $this->getUnzerPaymentChargeId($paymentUnzerTransfer);
+            $groupedRefundItems[$chargeId] = (new ItemCollectionTransfer())->setItems($refundTransfer->getItems());
+
+            return $groupedRefundItems;
+        }
+
+        foreach ($refundTransfer->getItems() as $itemTransfer) {
+            $chargeId = $this->getChargeIdByIdSalesOrderItem($paymentUnzerOrderItemsCollection, $itemTransfer->getIdSalesOrderItemOrFail());
+
+            if (!isset($groupedRefundItems[$chargeId])) {
+                $groupedRefundItems[$chargeId] = new ItemCollectionTransfer();
+            }
+            $groupedRefundItems[$chargeId]->addItem($itemTransfer);
+        }
+
+        return $groupedRefundItems;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param int $idSalesOrderItem
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return string
+     */
+    protected function getChargeIdByIdSalesOrderItem(
+        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
+        int $idSalesOrderItem
+    ): string {
+        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
+            if ($paymentUnzerOrderItem->getIdSalesOrderItemOrFail() === $idSalesOrderItem) {
+                return $paymentUnzerOrderItem->getChargeIdOrFail();
+            }
+        }
+
+        throw new UnzerException(sprintf('Unzer Charge Id not found for Sales order item Id %s', $idSalesOrderItem));
     }
 }

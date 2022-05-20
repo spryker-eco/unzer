@@ -269,6 +269,7 @@
         <property name="idSalesOrderItem" type="int"/>
         <property name="participantId" type="string"/>
         <property name="status" type="string"/>
+        <property name="chargeId" type="string"/>
     </transfer>
 
     <transfer name="PaymentUnzerTransaction">

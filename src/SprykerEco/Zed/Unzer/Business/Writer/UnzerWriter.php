@@ -89,14 +89,14 @@ class UnzerWriter implements UnzerWriterInterface
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
     ): void {
-        $this->unzerEntityManager->savePaymentUnzerEntity($paymentUnzerTransfer);
+        $this->unzerEntityManager->updatePaymentUnzerEntity($paymentUnzerTransfer);
 
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
-            $this->unzerEntityManager->savePaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);
+            $this->unzerEntityManager->updatePaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);
         }
 
         foreach ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions() as $paymentUnzerTransactionTransfer) {
-            $this->unzerEntityManager->savePaymentUnzerTransactionEntity($paymentUnzerTransactionTransfer);
+            $this->unzerEntityManager->createPaymentUnzerTransactionEntity($paymentUnzerTransactionTransfer);
         }
     }
 
@@ -119,7 +119,7 @@ class UnzerWriter implements UnzerWriterInterface
             ->setIsAuthorizable($unzerPaymentTransfer->getIsAuthorizable())
             ->setKeypairId($unzerPaymentTransfer->getUnzerKeypairOrFail()->getKeypairIdOrFail());
 
-        return $this->unzerEntityManager->savePaymentUnzerEntity($paymentUnzerTransfer);
+        return $this->unzerEntityManager->createPaymentUnzerEntity($paymentUnzerTransfer);
     }
 
     /**
@@ -138,6 +138,6 @@ class UnzerWriter implements UnzerWriterInterface
             ->setParticipantId($itemTransfer->getUnzerParticipantId())
             ->setStatus($this->unzerConfig->getOmsStatusNew());
 
-        return $this->unzerEntityManager->savePaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);
+        return $this->unzerEntityManager->createPaymentUnzerOrderItemEntity($paymentUnzerOrderItemTransfer);
     }
 }

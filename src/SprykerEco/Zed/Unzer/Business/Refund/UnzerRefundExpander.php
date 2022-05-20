@@ -9,9 +9,6 @@ namespace SprykerEco\Zed\Unzer\Business\Refund;
 
 use ArrayObject;
 use Generated\Shared\Transfer\ExpenseTransfer;
-use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
-use Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer;
-use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
@@ -181,57 +178,15 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      */
     protected function expandExpensesWithChargeIds(ArrayObject $expenseTransfersCollectionForRefund, PaymentUnzerTransfer $paymentUnzerTransfer): ArrayObject
     {
-        $paymentUnzerTransactionCollectionCollectionTransfer = $this->getPaymentUnzerTransactionCollectionTransfer($paymentUnzerTransfer);
+        if ($paymentUnzerTransfer->getIsMarketplaceOrFail() && $paymentUnzerTransfer->getIsAuthorizableOrFail()) {
+            return $this->addChargeIdsForMarketplaceExpenses($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
+        }
+
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            $expenseTransfer->setUnzerChargeId(
-                $this->getChargeIdByParticipantId($paymentUnzerTransactionCollectionCollectionTransfer, (string)$expenseTransfer->getUnzerParticipantId()),
-            );
+            $expenseTransfer->setUnzerChargeId(UnzerConstants::DEFAULT_FIRST_CHARGE_ID);
         }
 
         return $expenseTransfersCollectionForRefund;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     *
-     * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
-     */
-    protected function getPaymentUnzerTransactionCollectionTransfer(PaymentUnzerTransfer $paymentUnzerTransfer): PaymentUnzerTransactionCollectionTransfer
-    {
-        $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
-            ->setPaymentUnzerTransactionConditions(
-                (new PaymentUnzerTransactionConditionsTransfer())
-                    ->addPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
-                    ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE),
-            );
-
-        return $this->unzerRepository
-            ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
-     * @param string $participantId
-     *
-     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
-     *
-     * @return string
-     */
-    protected function getChargeIdByParticipantId(
-        PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer,
-        string $participantId
-    ): string {
-        foreach ($paymentUnzerTransactionCollectionTransfer->getPaymentUnzerTransactions() as $paymentUnzerTransactionTransfer) {
-            if ($paymentUnzerTransactionTransfer->getParticipantId() === null) {
-                return $paymentUnzerTransactionTransfer->getTransactionIdOrFail();
-            }
-
-            if ($paymentUnzerTransactionTransfer->getParticipantIdOrFail() === $participantId) {
-                return $paymentUnzerTransactionTransfer->getTransactionIdOrFail();
-            }
-        }
-
-        throw new UnzerException(sprintf('Unzer Charge Id not found for Participant ID %s', $participantId));
     }
 
     /**
@@ -246,6 +201,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         PaymentUnzerTransfer $paymentUnzerTransfer,
         ArrayObject $expenseTransfersCollectionForRefund
     ): RefundTransfer {
+        $expenseTransfersCollectionForRefund = $this->expandExpensesWithChargeIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         $unzerRefundTransfer = $this->createStandardUnzerRefundTransfer($paymentUnzerTransfer, $expenseTransfersCollectionForRefund);
 
         return $refundTransfer->addUnzerRefund($unzerRefundTransfer);
@@ -270,36 +226,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             ->setIsMarketplace(false)
             ->setAmount($refundAmountTotal / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
-            ->setChargeId($this->getChargeIdByPaymentUnzer($paymentUnzerTransfer));
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     *
-     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
-     *
-     * @return string
-     */
-    protected function getChargeIdByPaymentUnzer(PaymentUnzerTransfer $paymentUnzerTransfer): string
-    {
-        $paymentUnzerTransactionCriteriaTransfer = (new PaymentUnzerTransactionCriteriaTransfer())
-            ->setPaymentUnzerTransactionConditions(
-                (new PaymentUnzerTransactionConditionsTransfer())
-                    ->addPaymentUnzerId($paymentUnzerTransfer->getIdPaymentUnzerOrFail())
-                    ->addType(UnzerConstants::TRANSACTION_TYPE_CHARGE),
-            );
-
-        $paymentUnzerTransactionCollection = $this->unzerRepository
-            ->getPaymentUnzerTransactionCollectionByCriteria($paymentUnzerTransactionCriteriaTransfer);
-
-        if ($paymentUnzerTransactionCollection->getPaymentUnzerTransactions()->count() === 0) {
-            throw new UnzerException(sprintf('Unzer Charge Id not found for Unzer Payment ID %s', $paymentUnzerTransfer->getIdPaymentUnzer()));
-        }
-
-        /** @var \Generated\Shared\Transfer\PaymentUnzerTransactionTransfer $paymentUnzerTransactionTransfer */
-        $paymentUnzerTransactionTransfer = $paymentUnzerTransactionCollection->getPaymentUnzerTransactions()->getIterator()->current();
-
-        return $paymentUnzerTransactionTransfer->getTransactionIdOrFail();
+            ->setChargeId(UnzerConstants::DEFAULT_FIRST_CHARGE_ID);
     }
 
     /**
@@ -344,5 +271,45 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         }
 
         return $refundTransfer->setAmount($refundTransfer->getAmount() + $expenseRefundAmount);
+    }
+
+    /**
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer>
+     */
+    protected function addChargeIdsForMarketplaceExpenses(
+        ArrayObject $expenseTransfersCollectionForRefund,
+        PaymentUnzerTransfer $paymentUnzerTransfer
+    ): ArrayObject {
+        $chargeIdsGroupedByParticipantId = $this->getChargeIdsGroupedByParticipantId($paymentUnzerTransfer);
+
+        foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
+            $expenseTransfer->setUnzerChargeId($chargeIdsGroupedByParticipantId[$expenseTransfer->getUnzerParticipantIdOrFail()]);
+        }
+
+        return $expenseTransfersCollectionForRefund;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @return array<string, string>
+     */
+    protected function getChargeIdsGroupedByParticipantId(PaymentUnzerTransfer $paymentUnzerTransfer): array
+    {
+        $paymentUnzerOrderItemCollectionTransfer = $this->unzerRepository
+            ->getPaymentUnzerOrderItemCollectionByOrderId($paymentUnzerTransfer->getOrderIdOrFail());
+
+        $chargeIdsGroupedByParticipantId = [];
+        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
+            $participantId = $paymentUnzerOrderItem->getParticipantIdOrFail();
+            if (!isset($chargeIdsGroupedByParticipantId[$participantId])) {
+                $chargeIdsGroupedByParticipantId[$participantId] = $paymentUnzerOrderItem->getChargeIdOrFail();
+            }
+        }
+
+        return $chargeIdsGroupedByParticipantId;
     }
 }

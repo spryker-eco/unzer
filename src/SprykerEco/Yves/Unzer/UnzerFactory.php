@@ -25,8 +25,8 @@ use SprykerEco\Yves\Unzer\Form\MarketplaceBankTransferSubForm;
 use SprykerEco\Yves\Unzer\Form\MarketplaceCreditCardSubForm;
 use SprykerEco\Yves\Unzer\Form\MarketplaceSofortSubForm;
 use SprykerEco\Yves\Unzer\Form\SofortSubForm;
-use SprykerEco\Yves\Unzer\Handler\UnzerHandler;
-use SprykerEco\Yves\Unzer\Handler\UnzerHandlerInterface;
+use SprykerEco\Yves\Unzer\PaymentSetter\UnzerPaymentSetter;
+use SprykerEco\Yves\Unzer\PaymentSetter\UnzerPaymentSetterInterface;
 
 class UnzerFactory extends AbstractFactory
 {
@@ -139,11 +139,11 @@ class UnzerFactory extends AbstractFactory
     }
 
     /**
-     * @return \SprykerEco\Yves\Unzer\Handler\UnzerHandlerInterface
+     * @return \SprykerEco\Yves\Unzer\PaymentSetter\UnzerPaymentSetterInterface
      */
-    public function createUnzerHandler(): UnzerHandlerInterface
+    public function createUnzerPaymentSetter(): UnzerPaymentSetterInterface
     {
-        return new UnzerHandler();
+        return new UnzerPaymentSetter();
     }
 
     /**

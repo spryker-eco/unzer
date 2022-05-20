@@ -187,6 +187,22 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
+     * @param \Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer
+     *
+     * @return bool
+     */
+    public function hasUnzerCredentialsCollectionByCriteria(UnzerCredentialsCriteriaTransfer $unzerCredentialsCriteriaTransfer): bool
+    {
+        $unzerCredentialsQuery = $this->getFactory()->getUnzerCredentialsQuery()->joinWithUnzerCredentialsStore();
+        $unzerCredentialsQuery = $this->setUnzerConfigFilters(
+            $unzerCredentialsQuery,
+            $unzerCredentialsCriteriaTransfer->getUnzerCredentialsConditionsOrFail(),
+        );
+
+        return $unzerCredentialsQuery->exists();
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer

@@ -118,7 +118,7 @@ class UnzerReader implements UnzerReaderInterface
             return null;
         }
 
-        $unzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()[0];
+        $unzerCredentialsTransfer = $unzerCredentialsCollectionTransfer->getUnzerCredentials()->getIterator()->current();
         $this->attachUnzerPrivateKey($unzerCredentialsTransfer);
 
         return $unzerCredentialsTransfer;

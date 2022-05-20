@@ -56,10 +56,14 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
                 $participantId,
             );
 
-            $this->unzerChargeAdapter->chargePartialAuthorizablePayment($unzerPaymentTransfer, $unzerChargeTransfer);
-        }
+            $unzerApiChargeResponseTransfer = $this->unzerChargeAdapter->chargePartialAuthorizablePayment($unzerPaymentTransfer, $unzerChargeTransfer);
 
-        $this->updatePaymentUnzerOrderItemEntities($paymentUnzerOrderItemCollectionTransfer, $salesOrderItemIds);
+            $orderItemIds = [];
+            foreach ($itemCollectionTransfer->getItems() as $itemTransfer) {
+                $orderItemIds[] = $itemTransfer->getIdSalesOrderItemOrFail();
+            }
+            $this->updatePaymentUnzerOrderItemEntities($paymentUnzerOrderItemCollectionTransfer, $unzerApiChargeResponseTransfer, $orderItemIds);
+        }
     }
 
     /**

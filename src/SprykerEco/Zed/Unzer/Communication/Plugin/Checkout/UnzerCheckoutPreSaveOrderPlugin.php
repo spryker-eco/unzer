@@ -8,7 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Communication\Plugin\Checkout;
 
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Zed\Checkout\Dependency\Plugin\CheckoutPreSaveInterface;
+use Spryker\Zed\CheckoutExtension\Dependency\Plugin\CheckoutPreSaveInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
