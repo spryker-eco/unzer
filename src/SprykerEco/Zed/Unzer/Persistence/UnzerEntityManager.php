@@ -191,14 +191,14 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
-     * @param array<int> $idStores
+     * @param array<int> $storeIds
      * @param int $idUnzerCredentials
      *
      * @return void
      */
-    public function createUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void
+    public function createUnzerCredentialsStoreRelationsForStores(array $storeIds, int $idUnzerCredentials): void
     {
-        foreach ($idStores as $idStore) {
+        foreach ($storeIds as $idStore) {
             $shipmentMethodStoreEntity = new SpyUnzerCredentialsStore();
             $shipmentMethodStoreEntity->setFkStore($idStore)
                 ->setFkUnzerCredentials($idUnzerCredentials)
@@ -207,21 +207,21 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
     }
 
     /**
-     * @param array<int> $idStores
+     * @param array<int> $storeIds
      * @param int $idUnzerCredentials
      *
      * @return void
      */
-    public function deleteUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void
+    public function deleteUnzerCredentialsStoreRelationsForStores(array $storeIds, int $idUnzerCredentials): void
     {
-        if ($idStores === []) {
+        if ($storeIds === []) {
             return;
         }
 
         $this->getFactory()
             ->getUnzerCredentialsStoreQuery()
             ->filterByFkUnzerCredentials($idUnzerCredentials)
-            ->filterByFkStore_In($idStores)
+            ->filterByFkStore_In($storeIds)
             ->delete();
     }
 

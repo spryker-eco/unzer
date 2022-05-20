@@ -63,20 +63,20 @@ interface UnzerEntityManagerInterface
     public function createUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsTransfer;
 
     /**
-     * @param array<int> $idStores
+     * @param array<int> $storeIds
      * @param int $idUnzerCredentials
      *
      * @return void
      */
-    public function createUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void;
+    public function createUnzerCredentialsStoreRelationsForStores(array $storeIds, int $idUnzerCredentials): void;
 
     /**
-     * @param array<int> $idStores
+     * @param array<int> $storeIds
      * @param int $idUnzerCredentials
      *
      * @return void
      */
-    public function deleteUnzerCredentialsStoreRelationsForStores(array $idStores, int $idUnzerCredentials): void;
+    public function deleteUnzerCredentialsStoreRelationsForStores(array $storeIds, int $idUnzerCredentials): void;
 
     /**
      * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer

@@ -283,10 +283,10 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         ArrayObject $expenseTransfersCollectionForRefund,
         PaymentUnzerTransfer $paymentUnzerTransfer
     ): ArrayObject {
-        $chargeIdsGroupedByParticipantId = $this->getChargeIdsGroupedByParticipantId($paymentUnzerTransfer);
+        $chargeIdsIndexedByParticipantId = $this->getChargeIdsIndexedByParticipantId($paymentUnzerTransfer);
 
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            $expenseTransfer->setUnzerChargeId($chargeIdsGroupedByParticipantId[$expenseTransfer->getUnzerParticipantIdOrFail()]);
+            $expenseTransfer->setUnzerChargeId($chargeIdsIndexedByParticipantId[$expenseTransfer->getUnzerParticipantIdOrFail()]);
         }
 
         return $expenseTransfersCollectionForRefund;
@@ -297,19 +297,19 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      *
      * @return array<string, string>
      */
-    protected function getChargeIdsGroupedByParticipantId(PaymentUnzerTransfer $paymentUnzerTransfer): array
+    protected function getChargeIdsIndexedByParticipantId(PaymentUnzerTransfer $paymentUnzerTransfer): array
     {
         $paymentUnzerOrderItemCollectionTransfer = $this->unzerRepository
             ->getPaymentUnzerOrderItemCollectionByOrderId($paymentUnzerTransfer->getOrderIdOrFail());
 
-        $chargeIdsGroupedByParticipantId = [];
+        $chargeIdsIndexedByParticipantId = [];
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
             $participantId = $paymentUnzerOrderItem->getParticipantIdOrFail();
-            if (!isset($chargeIdsGroupedByParticipantId[$participantId])) {
-                $chargeIdsGroupedByParticipantId[$participantId] = $paymentUnzerOrderItem->getChargeIdOrFail();
+            if (!isset($chargeIdsIndexedByParticipantId[$participantId])) {
+                $chargeIdsIndexedByParticipantId[$participantId] = $paymentUnzerOrderItem->getChargeIdOrFail();
             }
         }
 
-        return $chargeIdsGroupedByParticipantId;
+        return $chargeIdsIndexedByParticipantId;
     }
 }
