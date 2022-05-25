@@ -153,6 +153,16 @@ interface UnzerConstants
     public const MAIN_SELLER_REFERENCE = 'main';
 
     /**
+     * @var array<int, string>
+     */
+    public const UNZER_CREDENTIALS_TYPES = [
+        self::UNZER_CREDENTIALS_TYPE_STANDARD => 'Standard',
+        self::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE => 'Marketplace (Main channel)',
+        self::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT => 'Marketplace (Main merchant)',
+        self::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MERCHANT => 'Marketplace (Sub-merchant)',
+    ];
+
+    /**
      * Specification:
      * - Unzer Credentials main types.
      *
