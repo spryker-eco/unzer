@@ -148,7 +148,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
         $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $marketplaceUnzerCredentials = $this->tester->haveMarketplaceUnzerCredentials();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
             UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => null,
             UnzerCredentialsTransfer::STORE_RELATION => [
                 StoreRelationTransfer::STORES => [$marketplaceUnzerCredentials->getStoreRelation()->getStores()->offsetGet(0)],
@@ -173,10 +173,10 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
         // Arrange
         $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-                UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
+                UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
                 UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => null,
                 UnzerCredentialsTransfer::CHILD_UNZER_CREDENTIALS => (new UnzerCredentialsBuilder([
-                    UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+                    UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
                     UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => null,
                 ]))
                     ->withUnzerKeypair()
@@ -215,10 +215,10 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
         // Arrange
         $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-                UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
+                UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
                 UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => null,
                 UnzerCredentialsTransfer::CHILD_UNZER_CREDENTIALS => (new UnzerCredentialsBuilder([
-                    UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+                    UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
                     UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => null,
                 ]))
                     ->withUnzerKeypair()
@@ -259,7 +259,7 @@ class CreateUnzerCredentialsTest extends UnzerFacadeBaseTest
         $marketplaceUnzerCredentials = $this->tester->haveMarketplaceUnzerCredentials();
 
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MERCHANT,
             UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $marketplaceUnzerCredentials->getIdUnzerCredentials(),
         ]))
             ->withUnzerKeypair([

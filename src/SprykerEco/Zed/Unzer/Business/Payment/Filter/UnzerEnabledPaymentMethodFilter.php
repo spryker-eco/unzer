@@ -79,7 +79,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
     ): ArrayObject {
         $unzerKeypairTransfer = $this->getUnzerKeypair(
             $quoteTransfer->getStoreOrFail(),
-            [UnzerConstants::UNZER_CONFIG_TYPE_STANDARD, UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT],
+            [UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD, UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT],
         );
         $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
 
@@ -98,7 +98,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
     ): ArrayObject {
         $unzerKeypairTransfer = $this->getUnzerKeypair(
             $quoteTransfer->getStoreOrFail(),
-            [UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE],
+            [UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE],
         );
         $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
 

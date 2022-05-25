@@ -12,10 +12,16 @@ use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
-use SprykerEco\Yves\Unzer\Form\MarketplaceCreditCardSubForm;
 
 class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
 {
+    /**
+     * @var string
+     *
+     * @uses \SprykerEco\Yves\Unzer\Form\CreditCardSubForm::OPTION_PUBLIC_KEY
+     */
+    protected const OPTION_PUBLIC_KEY = 'public_key';
+
     /**
      * @var \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface
      */
@@ -37,7 +43,7 @@ class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
     public function getOptions(AbstractTransfer $quoteTransfer): array
     {
         return [
-            MarketplaceCreditCardSubForm::OPTION_PUBLIC_KEY => $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
+            static::OPTION_PUBLIC_KEY => $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
         ];
     }
 

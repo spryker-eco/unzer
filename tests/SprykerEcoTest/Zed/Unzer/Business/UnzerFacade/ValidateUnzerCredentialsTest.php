@@ -46,7 +46,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
         $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $storeTransfer = (new StoreBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
+                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD,
             ]))
             ->withStoreRelation([
                 StoreRelationTransfer::STORES => [$storeTransfer],
@@ -72,7 +72,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
         $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $storeTransfer = (new StoreBuilder())->build();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
+                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD,
             ]))
             ->withStoreRelation([
                 StoreRelationTransfer::STORES => [$storeTransfer],
@@ -97,7 +97,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
         $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $standardUnzerCredentials = $this->tester->haveStandardUnzerCredentials();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
+                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD,
                 UnzerCredentialsTransfer::STORE_RELATION => $standardUnzerCredentials->getStoreRelation(),
             ]))
             ->withStoreRelation($standardUnzerCredentials->getStoreRelation()->toArray())
@@ -122,7 +122,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
         $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $marketplaceUnzerCredentailsTransfer = $this->tester->haveMarketplaceUnzerCredentials();
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+                UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
                 UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $marketplaceUnzerCredentailsTransfer->getIdUnzerCredentials(),
                 UnzerCredentialsTransfer::STORE_RELATION => [
                     StoreRelationTransfer::ID_STORES => [$marketplaceUnzerCredentailsTransfer->getStoreRelation()->getStores()->offsetGet(0)->getIdStore()],
@@ -150,7 +150,7 @@ class ValidateUnzerCredentialsTest extends UnzerFacadeBaseTest
         $merchantTransfer = $this->tester->haveMerchant([MerchantTransfer::MERCHANT_REFERENCE => 'MyMerchantReference', MerchantTransfer::STATUS => 'approved']);
         $storeTransfer = (new StoreBuilder())->build();
         $mainMarketplaceMerchantUnzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+            UnzerCredentialsTransfer::TYPE => UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
             UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => static::UNKNOWN_ID_UNZER_CREDENTIALS,
             UnzerCredentialsTransfer::MERCHANT_REFERENCE => $merchantTransfer->getMerchantReference(),
         ]))

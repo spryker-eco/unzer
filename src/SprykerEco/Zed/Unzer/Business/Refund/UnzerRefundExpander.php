@@ -242,7 +242,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         foreach ($childMarketplaceUnzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
             if (
                 $expenseTransfer->getMerchantReference() === null
-                && $unzerCredentialsTransfer->getTypeOrFail() === UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT
+                && $unzerCredentialsTransfer->getTypeOrFail() === UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT
             ) {
                 $expenseTransfer->setUnzerParticipantId($unzerCredentialsTransfer->getParticipantIdOrFail());
 

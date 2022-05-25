@@ -47,7 +47,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `SaveOrderTransfer.IdSalesOrder` to be set.
+     * - Requires `SaveOrderTransfer.idSalesOrder` to be set.
      * - Requires `QuoteTransfer.payment.unzerPayment.customer` to be set.
      * - Requires `QuoteTransfer.payment.unzerPayment.unzerKeypair.keypairId` to be set.
      * - Requires `SaveOrderTransfer.orderReference` to bet set.

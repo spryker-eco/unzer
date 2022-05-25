@@ -134,7 +134,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
             ->setUnzerCredentialsConditions(
                 (new UnzerCredentialsConditionsTransfer())
                     ->addStoreName($storeTransfer->getNameOrFail())
-                    ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE),
+                    ->addType(UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE),
             );
 
         return $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
@@ -154,7 +154,7 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
             ->setUnzerCredentialsConditions(
                 (new UnzerCredentialsConditionsTransfer())
                     ->addParentId($parentIdUnzerCredentials)
-                    ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT),
+                    ->addType(UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT),
             );
 
         $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
@@ -180,8 +180,8 @@ class UnzerParticipantIdQuoteExpander implements UnzerParticipantIdQuoteExpander
                 (new UnzerCredentialsConditionsTransfer())
                     ->addParentId($parentIdUnzerCredentials)
                     ->setTypes([
-                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
-                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+                        UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MERCHANT,
+                        UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
                     ]),
             );
 

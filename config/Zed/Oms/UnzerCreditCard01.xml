@@ -55,12 +55,12 @@
                 <event>charge</event>
             </transition>
 
-            <transition condition="Unzer/IsPaymentCompleted"  happy="true">
+            <transition condition="Unzer/IsPaymentCompleted" happy="true">
                 <source>charge pending</source>
                 <target>payment completed</target>
             </transition>
 
-            <transition condition="Unzer/IsChargeFailed"  happy="true">
+            <transition condition="Unzer/IsChargeFailed" happy="true">
                 <source>charge pending</source>
                 <target>charge failed</target>
             </transition>

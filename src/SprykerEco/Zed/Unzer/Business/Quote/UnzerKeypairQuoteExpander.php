@@ -149,8 +149,8 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
             ->setUnzerCredentialsConditions(
                 (new UnzerCredentialsConditionsTransfer())
                     ->setTypes([
-                        UnzerConstants::UNZER_CONFIG_TYPE_STANDARD,
-                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+                        UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD,
+                        UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
                         ])
                     ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail()),
             );
@@ -170,8 +170,8 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
             ->setUnzerCredentialsConditions(
                 (new UnzerCredentialsConditionsTransfer())
                     ->setTypes([
-                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
-                        UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+                        UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MERCHANT,
+                        UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
                     ])
                     ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
                     ->addMerchantReference($merchantReference),
@@ -190,7 +190,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions(
                 (new UnzerCredentialsConditionsTransfer())
-                    ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE)
+                    ->addType(UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE)
                     ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail()),
             );
 

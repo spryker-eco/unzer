@@ -68,7 +68,7 @@ class ExpandQuoteWithUnzerCredentialsTest extends UnzerFacadeBaseTest
         // Assert
         $this->assertNotNull($quoteTransfer->getUnzerCredentials());
         $this->assertSame($unzerCredentialsTransfer->getIdUnzerCredentials(), $quoteTransfer->getUnzerCredentials()->getIdUnzerCredentials());
-        $this->assertSame(UnzerConstants::UNZER_CONFIG_TYPE_STANDARD, $quoteTransfer->getUnzerCredentials()->getType());
+        $this->assertSame(UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD, $quoteTransfer->getUnzerCredentials()->getType());
     }
 
     /**
@@ -89,7 +89,7 @@ class ExpandQuoteWithUnzerCredentialsTest extends UnzerFacadeBaseTest
 
         // Assert
         $this->assertNotNull($quoteTransfer->getUnzerCredentials());
-        $this->assertSame(UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE, $quoteTransfer->getUnzerCredentials()->getType());
+        $this->assertSame(UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE, $quoteTransfer->getUnzerCredentials()->getType());
     }
 
     /**
@@ -112,7 +112,7 @@ class ExpandQuoteWithUnzerCredentialsTest extends UnzerFacadeBaseTest
 
         // Assert
         $this->assertNotNull($quoteTransfer->getUnzerCredentials());
-        $this->assertSame(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT, $quoteTransfer->getUnzerCredentials()->getType());
+        $this->assertSame(UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MERCHANT, $quoteTransfer->getUnzerCredentials()->getType());
         $this->assertSame(UnzerBusinessTester::MERCHANT_REFERENCE, $quoteTransfer->getUnzerCredentials()->getMerchantReference());
     }
 }

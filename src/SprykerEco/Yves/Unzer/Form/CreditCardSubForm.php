@@ -23,7 +23,7 @@ class CreditCardSubForm extends AbstractUnzerSubForm
     /**
      * @var string
      */
-    public const OPTION_PUBLIC_KEY = 'public_key';
+    protected const OPTION_PUBLIC_KEY = 'public_key';
 
     /**
      * @var string

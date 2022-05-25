@@ -45,14 +45,14 @@ class UnzerCredentialsParentCredentialsValidator implements UnzerCredentialsVali
     public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
-        if (!in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
+        if (!in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CREDENTIALS_CHILD_TYPES, true)) {
             return $unzerCredentialsResponseTransfer;
         }
 
         $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())->addId($unzerCredentialsTransfer->getParentIdUnzerCredentialsOrFail());
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
         $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
-        if ($unzerCredentialsTransfer && $unzerCredentialsTransfer->getType() === UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE) {
+        if ($unzerCredentialsTransfer && $unzerCredentialsTransfer->getType() === UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE) {
             return $unzerCredentialsResponseTransfer;
         }
 

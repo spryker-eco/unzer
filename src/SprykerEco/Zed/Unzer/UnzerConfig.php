@@ -15,6 +15,9 @@ use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 class UnzerConfig extends AbstractBundleConfig
 {
     /**
+     * Specification:
+     * - Salutation map.
+     *
      * @api
      *
      * @var array<string, string>
@@ -27,6 +30,9 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
+     * Specification:
+     * - Default salutation.
+     *
      * @api
      *
      * @var string
@@ -189,6 +195,9 @@ class UnzerConfig extends AbstractBundleConfig
     ];
 
     /**
+     * Specification:
+     * - Is payment method marketplace ready.
+     *
      * @api
      *
      * @param string $paymentMethodName
@@ -201,6 +210,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Is payment authorize required.
+     *
      * @api
      *
      * @param string $paymentMethodName
@@ -213,6 +225,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get Unzer payment method key.
+     *
      * @api
      *
      * @param string $paymentMethodKey
@@ -231,6 +246,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get payment method name from payment method names map.
+     *
      * @api
      *
      * @param string $paymentMethodKey
@@ -243,6 +261,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get mapped Unzer payment methods by Unzer payment method key.
+     *
      * @api
      *
      * @param string $unzerPaymentMethodKey
@@ -259,6 +280,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get authorize return URL.
+     *
      * @api
      *
      * @return string
@@ -269,6 +293,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get charge return URL.
+     *
      * @api
      *
      * @return string
@@ -279,6 +306,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get webhook retrieve URL.
+     *
      * @api
      *
      * @return string
@@ -289,6 +319,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get OMS status `new`.
+     *
      * @api
      *
      * @return string
@@ -299,6 +332,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Map Unzer payment status to OMS status.
+     *
      * @api
      *
      * @param int $unzerStateId
@@ -311,6 +347,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Is notification type enabled.
+     *
      * @api
      *
      * @param string $eventType
@@ -323,6 +362,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Map Unzer event to OMS status.
+     *
      * @api
      *
      * @param string $unzerEvent
@@ -335,6 +377,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get OMS status `Authorize succeeded`.
+     *
      * @api
      *
      * @return string
@@ -345,6 +390,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get OMS status `Authorize pending`.
+     *
      * @api
      *
      * @return string
@@ -355,6 +403,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get OMS status `Authorize failed`.
+     *
      * @api
      *
      * @return string
@@ -365,6 +416,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get OMS status `Authorize canceled`.
+     *
      * @api
      *
      * @return string
@@ -375,6 +429,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get OMS status `Payment completed`.
+     *
      * @api
      *
      * @return string
@@ -385,6 +442,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get OMS status `Charge failed`.
+     *
      * @api
      *
      * @return string
@@ -395,6 +455,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get OMS status `Chargeback`.
+     *
      * @api
      *
      * @return string
@@ -405,6 +468,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get payment provider name.
+     *
      * @api
      *
      * @return string
@@ -415,6 +481,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get payment provider type.
+     *
      * @api
      *
      * @return string
@@ -425,26 +494,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
-     * @api
+     * Specification:
+     * - Get Vault data type.
      *
-     * @return string
-     */
-    public function getMasterMerchantParticipantId(): string
-    {
-        return $this->get(UnzerSharedConstants::MASTER_MERCHANT_PARTICIPANT_ID);
-    }
-
-    /**
-     * @api
-     *
-     * @return string
-     */
-    public function getUnzerPrimaryKeypairId(): string
-    {
-        return $this->get(UnzerSharedConstants::MAIN_REGULAR_KEYPAIR_ID);
-    }
-
-    /**
      * @api
      *
      * @return string
@@ -455,6 +507,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get webhook event type.
+     *
      * @api
      *
      * @return string
@@ -465,6 +520,9 @@ class UnzerConfig extends AbstractBundleConfig
     }
 
     /**
+     * Specification:
+     * - Get expenses refund strategy key.
+     *
      * @api
      *
      * @return int

@@ -64,7 +64,7 @@ class DeleteUnzerCredentialsTest extends UnzerFacadeBaseTest
     public function testDeleteUnzerCredentialsWithStandardUnzerCredentialsFailWhileUnzerCredentialsUnknown(): void
     {
         $unzerCredentialsTransfer = (new UnzerCredentialsBuilder([
-            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_STANDARD,
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_STANDARD,
         ]))->build();
 
         // Act

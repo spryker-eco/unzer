@@ -405,8 +405,6 @@ class UnzerBusinessTester extends Actor
         $this->setConfig(UnzerSharedConstants::UNZER_AUTHORIZE_RETURN_URL, 'https://spryker.com');
         $this->setConfig(UnzerSharedConstants::UNZER_CHARGE_RETURN_URL, 'https://spryker.com');
         $this->setConfig(UnzerSharedConstants::WEBHOOK_RETRIEVE_URL, 'https://spryker.com');
-        $this->setConfig(UnzerSharedConstants::MASTER_MERCHANT_PARTICIPANT_ID, '111111');
-        $this->setConfig(UnzerSharedConstants::MAIN_REGULAR_KEYPAIR_ID, 'id');
         $this->setConfig(UnzerSharedConstants::VAULT_DATA_TYPE, 'unzer-private-key');
         $this->setConfig(VaultConstants::ENCRYPTION_KEY, 'key');
     }
@@ -641,7 +639,7 @@ class UnzerBusinessTester extends Actor
     public function haveStandardUnzerCredentials(array $override = []): UnzerCredentialsTransfer
     {
         return $this->haveUnzerCredentials(array_merge([
-            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_STANDARD,
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_STANDARD,
         ], $override));
     }
 
@@ -656,11 +654,11 @@ class UnzerBusinessTester extends Actor
         array $merchantMainMarketplaceOverride = []
     ): UnzerCredentialsTransfer {
         $mainMarketplaceUnzerCredentialsTransfer = $this->haveUnzerCredentials(array_merge([
-            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
         ], $mainMarketplaceOverride));
 
         $marketplaceMainMerchantUnzerCredentialsTransfer = $this->haveUnzerCredentials(array_merge([
-            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
             UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $mainMarketplaceUnzerCredentialsTransfer->getIdUnzerCredentials(),
             UnzerCredentialsTransfer::STORE_RELATION => [
                 StoreRelationTransfer::STORES => [$mainMarketplaceUnzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0)],
@@ -679,7 +677,7 @@ class UnzerBusinessTester extends Actor
     public function haveMarketplaceUnzerCredentials(array $override = []): UnzerCredentialsTransfer
     {
         return $this->haveUnzerCredentials(array_merge([
-            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE,
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
         ], $override));
     }
 
@@ -691,7 +689,7 @@ class UnzerBusinessTester extends Actor
     public function haveMarketplaceMainMerchantUnzerCredentials(array $override = []): UnzerCredentialsTransfer
     {
         return $this->haveUnzerCredentials(array_merge([
-            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT,
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
         ], $override));
     }
 
@@ -703,7 +701,7 @@ class UnzerBusinessTester extends Actor
     public function haveMarketplaceMerchantUnzerCredentials(array $override = []): UnzerCredentialsTransfer
     {
         return $this->haveUnzerCredentials(array_merge([
-            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT,
+            UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MERCHANT,
         ], $override));
     }
 

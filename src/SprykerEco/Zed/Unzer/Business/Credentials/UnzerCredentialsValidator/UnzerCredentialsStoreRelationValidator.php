@@ -48,7 +48,7 @@ class UnzerCredentialsStoreRelationValidator implements UnzerCredentialsValidato
     public function validate(UnzerCredentialsTransfer $unzerCredentialsTransfer): UnzerCredentialsResponseTransfer
     {
         $unzerCredentialsResponseTransfer = (new UnzerCredentialsResponseTransfer())->setIsSuccessful(true);
-        if (in_array((int)$unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
+        if (in_array((int)$unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CREDENTIALS_CHILD_TYPES, true)) {
             return $unzerCredentialsResponseTransfer;
         }
 
@@ -61,7 +61,7 @@ class UnzerCredentialsStoreRelationValidator implements UnzerCredentialsValidato
 
         $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
             ->setStoreIds($unzerCredentialsTransfer->getStoreRelationOrFail()->getIdStores())
-            ->setTypes(UnzerConstants::UNZER_MAIN_CONFIG_TYPES);
+            ->setTypes(UnzerConstants::UNZER_CREDENTIALS_MAIN_TYPES);
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
             ->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
         $unzerCredentialsCollectionTransfer = $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);

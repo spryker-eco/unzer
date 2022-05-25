@@ -799,4 +799,13 @@
         <property name="shortId" type="string"/>
         <property name="transactions" type="UnzerApiMarketplaceTransaction[]" singular="transaction"/>
     </transfer>
+
+    <transfer name="UnzerApiMarketplaceTransaction">
+        <property name="participantId" type="string"/>
+        <property name="date" type="string"/>
+        <property name="type" type="string"/>
+        <property name="status" type="string"/>
+        <property name="url" type="string"/>
+        <property name="amount" type="float"/>
+    </transfer>
 </transfers>

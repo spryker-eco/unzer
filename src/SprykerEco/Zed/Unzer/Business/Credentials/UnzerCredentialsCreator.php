@@ -15,7 +15,7 @@ use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Propel\Runtime\Propel;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
 use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerApiException;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Notification\Configurator\UnzerNotificationConfiguratorInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerVaultWriterInterface;
@@ -94,7 +94,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
         try {
             $unzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction($unzerCredentialsTransfer);
             $propelConnection->commit();
-        } catch (UnzerApiException $unzerApiException) {
+        } catch (UnzerException $unzerApiException) {
             $propelConnection->rollBack();
 
             return $unzerCredentialsResponseTransfer
@@ -125,7 +125,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
             $unzerCredentialsTransfer->getUnzerKeypairOrFail()->getPrivateKeyOrFail(),
         );
 
-        if (in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CHILD_CONFIG_TYPES, true)) {
+        if (in_array($unzerCredentialsTransfer->getTypeOrFail(), UnzerConstants::UNZER_CREDENTIALS_CHILD_TYPES, true)) {
             $unzerCredentialsTransfer = $this->expandUnzerCredentialsWithParentStoreRelations($unzerCredentialsTransfer);
         }
 
@@ -182,7 +182,7 @@ class UnzerCredentialsCreator implements UnzerCredentialsCreatorInterface
     ): UnzerCredentialsTransfer {
         $childUnzerCredentialsTransfer = $unzerCredentialsTransfer->getChildUnzerCredentialsOrFail()
             ->setParentIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials())
-            ->setType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT);
+            ->setType(UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT);
 
         $childUnzerCredentialsResponseTransfer = $this->executeCreateUnzerCredentialsTransaction(
             $childUnzerCredentialsTransfer,

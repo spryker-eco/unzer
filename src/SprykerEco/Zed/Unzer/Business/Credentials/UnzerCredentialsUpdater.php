@@ -90,7 +90,7 @@ class UnzerCredentialsUpdater implements UnzerCredentialsUpdaterInterface
             $this->unzerCredentialsStoreRelationUpdater->update($storeRelationTransfer);
         }
 
-        if ($unzerCredentialsTransfer->getTypeOrFail() === UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE) {
+        if ($unzerCredentialsTransfer->getTypeOrFail() === UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE) {
             $this->updateChildUnzerCredentialsStoreRelations($unzerCredentialsTransfer);
         }
 

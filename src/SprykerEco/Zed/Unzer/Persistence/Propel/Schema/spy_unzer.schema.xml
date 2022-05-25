@@ -111,21 +111,14 @@
         <column name="participant_id" type="VARCHAR" size="255" />
         <column name="merchant_reference" type="VARCHAR" size="255" />
         <id-method-parameter value="spy_unzer_credentials_pk_seq"/>
+
         <unique name="un_keypair_id">
             <unique-column name="keypair_id"/>
         </unique>
+
         <unique name="un_public_key">
             <unique-column name="public_key"/>
         </unique>
-
-        <index name="index-spy_unzer_credentials_public_key">
-            <index-column name="public_key"/>
-        </index>
-
-        <index name="index-spy_unzer_credentials_keypair_id">
-            <index-column name="keypair_id"/>
-        </index>
-
     </table>
 
     <table name="spy_unzer_credentials_store" idMethod="native" allowPkInsert="true" isCrossRef="true">

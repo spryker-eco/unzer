@@ -65,7 +65,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
             return $unzerCredentialsResponseTransfer->setIsSuccessful(false);
         }
 
-        if ($unzerCredentialsTransfer->getType() === UnzerConstants::UNZER_CONFIG_TYPE_MAIN_MARKETPLACE) {
+        if ($unzerCredentialsTransfer->getType() === UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE) {
             if (!$this->deleteMarketplaceMainMerchantUnzerCredentials($unzerCredentialsTransfer)) {
                 return $this->buildFailedUnzerCredentialsResponseTransfer($unzerCredentialsResponseTransfer);
             }
@@ -87,8 +87,8 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
     {
         $unzerCredentialsType = $unzerCredentialsTransfer->getType();
         if (
-            $unzerCredentialsType === UnzerConstants::UNZER_CONFIG_TYPE_STANDARD ||
-            $unzerCredentialsType === UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT
+            $unzerCredentialsType === UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD ||
+            $unzerCredentialsType === UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MERCHANT
         ) {
             return false;
         }
@@ -96,7 +96,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())
                 ->addParentId($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail())
-                ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MERCHANT),
+                ->addType(UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MERCHANT),
         );
 
         return $this->unzerRepository->hasUnzerCredentials($unzerCredentialsCriteriaTransfer);
@@ -112,7 +112,7 @@ class UnzerCredentialsDeleter implements UnzerCredentialsDeleterInterface
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
             (new UnzerCredentialsConditionsTransfer())
                 ->addParentId($unzerCredentialsTransfer->getIdUnzerCredentialsOrFail())
-                ->addType(UnzerConstants::UNZER_CONFIG_TYPE_MARKETPLACE_MAIN_MERCHANT),
+                ->addType(UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT),
         );
 
         $unzerCredentialsCollectionTransfer = $this->unzerRepository
