@@ -8,7 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Communication\Plugin\Checkout;
 
 use Generated\Shared\Transfer\QuoteTransfer;
-use Spryker\Zed\CheckoutExtension\Dependency\Plugin\CheckoutPreSaveInterface;
+use Spryker\Zed\CheckoutExtension\Dependency\Plugin\CheckoutPreSavePluginInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
@@ -16,7 +16,7 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
  * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
  */
-class UnzerCheckoutPreSaveOrderPlugin extends AbstractPlugin implements CheckoutPreSaveInterface
+class UnzerCheckoutPreSaveOrderPlugin extends AbstractPlugin implements CheckoutPreSavePluginInterface
 {
     /**
      * {@inheritDoc}
