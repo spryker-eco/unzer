@@ -15,6 +15,7 @@ use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\Business\Writer\UnzerWriterInterface;
+use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerPaymentUpdater implements UnzerPaymentUpdaterInterface
 {
@@ -106,7 +107,7 @@ class UnzerPaymentUpdater implements UnzerPaymentUpdaterInterface
                 continue;
             }
 
-            if (count($filteredSalesOrderItemIds) === 0) {
+            if (count($filteredSalesOrderItemIds) === 0 && $omsStatus !== UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED) {
                 $paymentUnzerOrderItem->setStatus($omsStatus);
             }
         }

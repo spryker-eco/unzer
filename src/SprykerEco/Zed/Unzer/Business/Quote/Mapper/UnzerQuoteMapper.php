@@ -12,6 +12,7 @@ use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerAddressTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUtilTextServiceInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 
@@ -99,6 +100,8 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
      * @return \Generated\Shared\Transfer\AddressTransfer
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      */
     protected function getShippingAddressFromQuote(QuoteTransfer $quoteTransfer): AddressTransfer
     {
@@ -108,6 +111,6 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
             }
         }
 
-        return $quoteTransfer->getShippingAddressOrFail();
+        throw new UnzerException('No shipment information found for current quote!');
     }
 }
