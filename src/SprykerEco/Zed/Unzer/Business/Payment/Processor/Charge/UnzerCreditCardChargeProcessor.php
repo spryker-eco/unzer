@@ -225,7 +225,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
             $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
             $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
             if ($itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
-                $expensesAmount += $expenseTransfer->getSumGrossPrice();
+                $expensesAmount += $expenseTransfer->getSumPriceToPayAggregationOrFail();
 
                 return $expensesAmount;
             }

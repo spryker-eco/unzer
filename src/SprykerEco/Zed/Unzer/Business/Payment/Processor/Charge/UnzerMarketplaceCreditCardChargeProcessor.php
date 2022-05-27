@@ -199,7 +199,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
             $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
             $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
             if ($itemTransfer->getUnzerParticipantId() === $participantId && $itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
-                $expensesAmount += $expenseTransfer->getSumGrossPrice();
+                $expensesAmount += $expenseTransfer->getSumPriceToPayAggregationOrFail();
 
                 return $expensesAmount;
             }
@@ -218,10 +218,10 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
         string $participantId
     ): bool {
-        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
+        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
             if (
-                $paymentUnzerOrderItem->getParticipantId() === $participantId
-                && $paymentUnzerOrderItem->getStatus() === UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED
+                $paymentUnzerOrderItemTransfer->getParticipantId() === $participantId
+                && $this->isPaymentUnzerOrderItemAlreadyCharged($paymentUnzerOrderItemTransfer)
             ) {
                 return true;
             }
