@@ -83,6 +83,10 @@
     "repositories": [
         {
             "type": "git",
+            "url": "https://github.com/spryker/spryker.git"
+        },
+        {
+            "type": "git",
             "url": "https://github.com/spryker-eco/unzer-api.git"
         }
     ],
