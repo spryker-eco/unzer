@@ -100,6 +100,10 @@ class UnzerPaymentUpdater implements UnzerPaymentUpdaterInterface
         $unzerPaymentOrderItemCollection = $this->unzerReader
             ->getPaymentUnzerOrderItemCollectionByOrderId($unzerPaymentTransfer->getOrderIdOrFail());
 
+        if ($this->isAuthorizableFullOrderCompletedUpdate($unzerPaymentTransfer, $filteredSalesOrderItemIds, $omsStatus)) {
+            return $unzerPaymentOrderItemCollection;
+        }
+
         foreach ($unzerPaymentOrderItemCollection->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
             if (count($filteredSalesOrderItemIds) !== 0 && in_array($paymentUnzerOrderItem->getIdSalesOrderItem(), $filteredSalesOrderItemIds, true)) {
                 $paymentUnzerOrderItem->setStatus($omsStatus);
@@ -107,7 +111,7 @@ class UnzerPaymentUpdater implements UnzerPaymentUpdaterInterface
                 continue;
             }
 
-            if (count($filteredSalesOrderItemIds) === 0 && $omsStatus !== UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED) {
+            if (count($filteredSalesOrderItemIds) === 0) {
                 $paymentUnzerOrderItem->setStatus($omsStatus);
             }
         }
@@ -139,5 +143,24 @@ class UnzerPaymentUpdater implements UnzerPaymentUpdaterInterface
         }
 
         return $paymentUnzerTransactionCollectionTransfer;
+    }
+
+    /**
+     * @param UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param array<int> $filteredSalesOrderItemIds
+     * @param string $omsStatus
+     *
+     * @return bool
+     */
+    protected function isAuthorizableFullOrderCompletedUpdate(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        array $filteredSalesOrderItemIds,
+        string $omsStatus
+    ): bool
+    {
+        return
+            count($filteredSalesOrderItemIds) === 0
+            && $omsStatus === UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED
+            && $unzerPaymentTransfer->getIsAuthorizableOrFail();
     }
 }

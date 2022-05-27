@@ -5,7 +5,6 @@
     "license": "MIT",
     "require": {
         "php": ">=7.4",
-        "spryker/spryker": "dev-feature/cc-14610/dev-unzer-psp",
         "spryker-eco/unzer-api": "dev-feature/cc-14610/dev-unzer-psp as 1.0",
         "spryker-shop/shop-ui": "^1.56.0",
         "spryker/calculation": "^4.0.0",
@@ -81,10 +80,6 @@
         "lowest-setup": "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
     },
     "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/spryker/spryker.git"
-        },
         {
             "type": "git",
             "url": "https://github.com/spryker-eco/unzer-api.git"
