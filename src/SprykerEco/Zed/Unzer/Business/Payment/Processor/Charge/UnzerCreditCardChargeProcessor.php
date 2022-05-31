@@ -66,13 +66,12 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      * @param \SprykerEco\Zed\Unzer\Persistence\UnzerEntityManagerInterface $unzerEntityManager
      */
     public function __construct(
-        UnzerPaymentMapperInterface       $unzerPaymentMapper,
-        UnzerChargeAdapterInterface       $unzerChargeAdapter,
+        UnzerPaymentMapperInterface $unzerPaymentMapper,
+        UnzerChargeAdapterInterface $unzerChargeAdapter,
         UnzerCredentialsResolverInterface $unzerCredentialsResolver,
-        UnzerRepositoryInterface          $unzerRepository,
-        UnzerEntityManagerInterface       $unzerEntityManager
-    )
-    {
+        UnzerRepositoryInterface $unzerRepository,
+        UnzerEntityManagerInterface $unzerEntityManager
+    ) {
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerChargeAdapter = $unzerChargeAdapter;
         $this->unzerCredentialsResolver = $unzerCredentialsResolver;
@@ -84,9 +83,9 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array<int> $salesOrderItemIds
      *
-     * @return void
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
+     * @return void
      */
     public function charge(OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
@@ -125,10 +124,9 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      */
     protected function updatePaymentUnzerOrderItemEntities(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
-        UnzerApiChargeResponseTransfer          $unzerApiChargeResponseTransfer,
-        array                                   $salesOrderItemIds
-    ): void
-    {
+        UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer,
+        array $salesOrderItemIds
+    ): void {
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
             if (in_array($paymentUnzerOrderItemTransfer->getIdSalesOrderItem(), $salesOrderItemIds, true)) {
                 $paymentUnzerOrderItemTransfer->setStatus(UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED);
@@ -165,11 +163,10 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      * @return \Generated\Shared\Transfer\UnzerChargeTransfer
      */
     protected function createUnzerCharge(
-        UnzerPaymentTransfer   $unzerPaymentTransfer,
+        UnzerPaymentTransfer $unzerPaymentTransfer,
         ItemCollectionTransfer $itemCollectionTransfer,
-        ?string                $authorizeId = null
-    ): UnzerChargeTransfer
-    {
+        ?string $authorizeId = null
+    ): UnzerChargeTransfer {
         $totalAmount = 0;
         foreach ($itemCollectionTransfer->getItems() as $itemTransfer) {
             $totalAmount += $itemTransfer->getSumPriceToPayAggregation();
@@ -192,11 +189,10 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      * @return \Generated\Shared\Transfer\UnzerChargeTransfer
      */
     protected function addExpensesToUnzerChargeTransfer(
-        UnzerChargeTransfer                     $unzerChargeTransfer,
-        OrderTransfer                           $orderTransfer,
+        UnzerChargeTransfer $unzerChargeTransfer,
+        OrderTransfer $orderTransfer,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
-    ): UnzerChargeTransfer
-    {
+    ): UnzerChargeTransfer {
         if (
             $orderTransfer->getExpenses()->count() === 0
             || $this->getChargedItemsCount($paymentUnzerOrderItemCollectionTransfer) > 0
@@ -241,8 +237,7 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      */
     protected function getChargedItemsCount(
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
-    ): int
-    {
+    ): int {
         $counter = 0;
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
             if ($this->isPaymentUnzerOrderItemAlreadyCharged($paymentUnzerOrderItemTransfer)) {

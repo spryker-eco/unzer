@@ -227,10 +227,10 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     /**
      * @module Store
      *
-     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery $unzerCredentialsQuery
+     * @param \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentials> $unzerCredentialsQuery
      * @param \Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer $unzerCredentialsConditionsTransfer
      *
-     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentials>
      */
     protected function setUnzerConfigFilters(
         SpyUnzerCredentialsQuery $unzerCredentialsQuery,
@@ -284,10 +284,10 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
     }
 
     /**
-     * @param \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery
+     * @param \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction> $paymentUnzerTransactionQuery
      * @param \Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer $paymentUnzerTransactionConditionsTransfer
      *
-     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction>
      */
     protected function setPaymentUnzerTransactionFilters(
         SpyPaymentUnzerTransactionQuery $paymentUnzerTransactionQuery,

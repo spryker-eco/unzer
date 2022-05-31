@@ -32,7 +32,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
-     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItemQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItemQuery<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem>
      */
     public function getPaymentUnzerOrderItemQuery(): SpyPaymentUnzerOrderItemQuery
     {
@@ -40,7 +40,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
-     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction>
      */
     public function getPaymentUnzerTransactionQuery(): SpyPaymentUnzerTransactionQuery
     {
@@ -48,7 +48,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
-     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer>
      */
     public function getPaymentUnzerCustomerQuery(): SpyPaymentUnzerCustomerQuery
     {
@@ -64,7 +64,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
-     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStoreQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStoreQuery<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore>
      */
     public function getUnzerCredentialsStoreQuery(): SpyUnzerCredentialsStoreQuery
     {
@@ -72,7 +72,7 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     }
 
     /**
-     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery
+     * @return \Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentials>
      */
     public function getUnzerCredentialsQuery(): SpyUnzerCredentialsQuery
     {
