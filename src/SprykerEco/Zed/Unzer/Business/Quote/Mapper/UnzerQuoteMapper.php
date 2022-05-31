@@ -99,9 +99,9 @@ class UnzerQuoteMapper implements UnzerQuoteMapperInterface
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \Generated\Shared\Transfer\AddressTransfer
-     *
      * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return \Generated\Shared\Transfer\AddressTransfer
      */
     protected function getShippingAddressFromQuote(QuoteTransfer $quoteTransfer): AddressTransfer
     {

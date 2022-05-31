@@ -146,7 +146,7 @@ class UnzerPaymentUpdater implements UnzerPaymentUpdaterInterface
     }
 
     /**
-     * @param UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      * @param array<int> $filteredSalesOrderItemIds
      * @param string $omsStatus
      *
@@ -156,10 +156,8 @@ class UnzerPaymentUpdater implements UnzerPaymentUpdaterInterface
         UnzerPaymentTransfer $unzerPaymentTransfer,
         array $filteredSalesOrderItemIds,
         string $omsStatus
-    ): bool
-    {
-        return
-            count($filteredSalesOrderItemIds) === 0
+    ): bool {
+        return count($filteredSalesOrderItemIds) === 0
             && $omsStatus === UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED
             && $unzerPaymentTransfer->getIsAuthorizableOrFail();
     }
