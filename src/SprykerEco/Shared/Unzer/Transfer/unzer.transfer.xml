@@ -541,7 +541,6 @@
         <property name="customerReference" type="string"/>
         <property name="customer" type="Customer"/>
         <property name="billingAddress" type="Address"/>
-        <property name="shippingAddress" type="Address" deprecated="Use item level shipping addresses (item.shipment.shippingAddress) instead."/>
         <property name="priceMode" type="string"/>
         <property name="unzerCredentials" type="UnzerCredentials"/>
         <property name="expenses" type="Expense[]" singular="expense"/>
