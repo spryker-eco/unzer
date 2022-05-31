@@ -12,21 +12,21 @@ use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
+use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
 class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
 {
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
-    protected $unzerCredentialsResolver;
+    protected $unzerReader;
 
     /**
-     * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
      */
-    public function __construct(UnzerCredentialsResolverInterface $unzerCredentialsResolver)
+    public function __construct(UnzerReaderInterface $unzerReader)
     {
-        $this->unzerCredentialsResolver = $unzerCredentialsResolver;
+        $this->unzerReader = $unzerReader;
     }
 
     /**
@@ -155,7 +155,9 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
                     ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail()),
             );
 
-        return $this->unzerCredentialsResolver->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
+        $unzerCredentials = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+
+        return $unzerCredentials ?? new UnzerCredentialsTransfer();
     }
 
     /**
@@ -177,7 +179,9 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
                     ->addMerchantReference($merchantReference),
             );
 
-        return $this->unzerCredentialsResolver->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
+        $unzerCredentials = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+
+        return $unzerCredentials ?? new UnzerCredentialsTransfer();
     }
 
     /**
@@ -194,6 +198,8 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
                     ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail()),
             );
 
-        return $this->unzerCredentialsResolver->resolveUnzerCredentialsByCriteriaTransfer($unzerCredentialsCriteriaTransfer);
+        $unzerCredentials = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
+
+        return $unzerCredentials ?? new UnzerCredentialsTransfer();
     }
 }

@@ -845,7 +845,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerKeypairQuoteExpander(): UnzerKeypairQuoteExpanderInterface
     {
         return new UnzerKeypairQuoteExpander(
-            $this->createUnzerCredentialsResolver(),
+            $this->createUnzerReader(),
         );
     }
 
