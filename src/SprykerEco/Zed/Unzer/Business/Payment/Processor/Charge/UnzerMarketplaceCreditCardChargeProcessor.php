@@ -221,7 +221,7 @@ class UnzerMarketplaceCreditCardChargeProcessor extends UnzerCreditCardChargePro
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
             if (
                 $paymentUnzerOrderItemTransfer->getParticipantId() === $participantId
-                && $this->isPaymentUnzerOrderItemAlreadyCharged($paymentUnzerOrderItemTransfer)
+                && $paymentUnzerOrderItemTransfer->getChargeId() !== null
             ) {
                 return true;
             }
