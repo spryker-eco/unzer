@@ -404,16 +404,6 @@
         <property name="basketId" type="string"/>
     </transfer>
 
-    <transfer name="UnzerApiMarketplaceAuthorizeResponse">
-        <property name="paymentId" type="string"/>
-        <property name="amount" type="float"/>
-        <property name="currency" type="string"/>
-        <property name="redirectUrl" type="string"/>
-        <property name="customerId" type="string"/>
-        <property name="basketId" type="string"/>
-        <property name="typeId" type="string"/>
-    </transfer>
-
     <transfer name="UnzerApiAuthorizeRequest">
         <property name="amount" type="float"/>
         <property name="currency" type="string"/>
@@ -476,16 +466,6 @@
 
     <transfer name="UnzerApiGetPaymentRequest">
         <property name="paymentId" type="string"/>
-    </transfer>
-
-    <transfer name="UnzerApiGetPaymentResponse">
-        <property name="transactions" type="UnzerApiPaymentTransaction[]" singular="transaction"/>
-        <property name="stateId" type="int"/>
-        <property name="stateName" type="string"/>
-        <property name="amountTotal" type="float"/>
-        <property name="amountCanceled" type="float"/>
-        <property name="amountRemaining" type="float"/>
-        <property name="amountCharged" type="float"/>
     </transfer>
 
     <transfer name="UnzerApiGetPaymentMethodsResponse">
