@@ -263,26 +263,4 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
 
         return $deletedRowsCount !== 0;
     }
-
-    /**
-     * @param \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity
-     *
-     * @return \Orm\Zed\Unzer\Persistence\SpyMerchantUnzerParticipant
-     */
-    protected function saveOrDeleteMerchantUnzerParticipantEntity(SpyMerchantUnzerParticipant $merchantUnzerParticipantEntity): SpyMerchantUnzerParticipant
-    {
-        if ($merchantUnzerParticipantEntity->getParticipantId()) {
-            $merchantUnzerParticipantEntity->save();
-
-            return $merchantUnzerParticipantEntity;
-        }
-
-        if ($merchantUnzerParticipantEntity->getIdMerchantUnzerParticipant()) {
-            $merchantUnzerParticipantEntity->delete();
-
-            return $merchantUnzerParticipantEntity;
-        }
-
-        return $merchantUnzerParticipantEntity;
-    }
 }
