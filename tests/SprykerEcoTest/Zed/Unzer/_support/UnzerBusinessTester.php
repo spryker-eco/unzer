@@ -251,7 +251,6 @@ class UnzerBusinessTester extends Actor
             ->withTotals([
                 TotalsTransfer::TAX_TOTAL => (new TaxTotalBuilder())->build(),
             ])
-            ->withShippingAddress()
             ->withBillingAddress()
             ->withStore()
             ->withCurrency()
@@ -276,7 +275,6 @@ class UnzerBusinessTester extends Actor
                 (new TotalsBuilder())->withTaxTotal(),
             )
             ->withCurrency([CurrencyTransfer::CODE => static::CURRENCY_CODE])
-            ->withShippingAddress()
             ->withBillingAddress()
             ->build();
 
