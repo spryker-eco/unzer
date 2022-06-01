@@ -305,7 +305,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         $chargeIdsIndexedByParticipantId = [];
         foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItem) {
             $participantId = $paymentUnzerOrderItem->getParticipantIdOrFail();
-            if (!isset($chargeIdsIndexedByParticipantId[$participantId])) {
+            if (!isset($chargeIdsIndexedByParticipantId[$participantId]) && $paymentUnzerOrderItem->getChargeId() !== null) {
                 $chargeIdsIndexedByParticipantId[$participantId] = $paymentUnzerOrderItem->getChargeIdOrFail();
             }
         }
