@@ -12,7 +12,6 @@ use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
-use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
@@ -60,6 +59,10 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
+        if (!$this->hasUnzerPaymentMethods($paymentMethodsTransfer)) {
+            return $paymentMethodsTransfer;
+        }
+
         $filteredPaymentMethodTransfers = $this->hasMultipleMerchants($quoteTransfer)
             ? $this->getMarketplaceFilteredPaymentMethods($paymentMethodsTransfer, $quoteTransfer)
             : $this->getStandardFilteredPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
@@ -166,23 +169,6 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
-     */
-    protected function getMerchantUnzerCredentialsCollection(QuoteTransfer $quoteTransfer): UnzerCredentialsCollectionTransfer
-    {
-        $merchantReferences = $this->getUniqueMerchantReferences($quoteTransfer);
-        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions(
-            (new UnzerCredentialsConditionsTransfer())
-                ->setMerchantReferences($merchantReferences)
-                ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail()),
-        );
-
-        return $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
      * @return array<array-key, string>
      */
     protected function getUniqueMerchantReferences(QuoteTransfer $quoteTransfer): array
@@ -195,5 +181,21 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         }
 
         return $merchantReferences;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     *
+     * @return bool
+     */
+    protected function hasUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): bool
+    {
+        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
+            if ($this->isUnzerPaymentProvider($paymentMethodTransfer)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
