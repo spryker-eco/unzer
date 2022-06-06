@@ -1,0 +1,9 @@
+{
+    "include": {
+        "spryker/transfer": "Provides transfer objects definition with `::get*OrFail()` functionality.",
+        "spryker-shop/shop-ui": "ShopUi provides basic frontend infrastructure."
+    },
+    "include-dev": {
+        "codeception/module-asserts": "Codeception module containing various assertions."
+    }
+}
