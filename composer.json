@@ -5,16 +5,16 @@
     "license": "MIT",
     "require": {
         "php": ">=7.4",
-        "spryker-eco/unzer-api": "dev-feature/cc-14610/dev-unzer-psp as 1.0",
+        "spryker-eco/unzer-api": "^1.0.0",
         "spryker-shop/shop-ui": "^1.56.0",
         "spryker/calculation": "^4.0.0",
         "spryker/cart-extension": "^4.1.0",
-        "spryker/checkout-extension": "dev-feature/cc-14610/dev-unzer-psp as 1.4.0",
+        "spryker/checkout-extension": "^1.4.0",
         "spryker/kernel": "^3.30.0",
         "spryker/locale": "^3.8.1",
         "spryker/merchant": "^3.1.0",
         "spryker/oms": "^11.0.0",
-        "spryker/payment": "dev-feature/cc-14610/dev-unzer-psp as 5.8.0",
+        "spryker/payment": "^5.8.0",
         "spryker/payment-extension": "^1.0.0",
         "spryker/propel-orm": "^1.6.0",
         "spryker/quote": "^2.0.0",
@@ -76,12 +76,6 @@
         "lowest": "validate-prefer-lowest",
         "lowest-setup": "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/spryker-eco/unzer-api.git"
-        }
-    ],
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
