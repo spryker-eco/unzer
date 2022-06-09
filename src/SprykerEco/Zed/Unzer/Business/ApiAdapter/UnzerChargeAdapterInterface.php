@@ -16,9 +16,9 @@ interface UnzerChargeAdapterInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer
      */
-    public function chargePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer;
+    public function chargePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiChargeResponseTransfer;
 
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer

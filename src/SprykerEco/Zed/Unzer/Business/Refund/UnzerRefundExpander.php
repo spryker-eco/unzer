@@ -182,8 +182,10 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             return $this->addChargeIdsForMarketplaceExpenses($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         }
 
+        $chargeId = $this->getChargeIdForDirectPayment($paymentUnzerTransfer);
+
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            $expenseTransfer->setUnzerChargeId(UnzerConstants::DEFAULT_FIRST_CHARGE_ID);
+            $expenseTransfer->setUnzerChargeId($chargeId);
         }
 
         return $expenseTransfersCollectionForRefund;
@@ -222,11 +224,13 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
             $refundAmountTotal += (int)$expenseTransfer->getRefundableAmount();
         }
 
+        $chargeId = $this->getChargeIdForDirectPayment($paymentUnzerTransfer);
+
         return (new UnzerRefundTransfer())
             ->setIsMarketplace(false)
             ->setAmount($refundAmountTotal / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
-            ->setChargeId(UnzerConstants::DEFAULT_FIRST_CHARGE_ID);
+            ->setChargeId($chargeId);
     }
 
     /**
@@ -311,5 +315,18 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         }
 
         return $chargeIdsIndexedByParticipantId;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @return string
+     */
+    protected function getChargeIdForDirectPayment(PaymentUnzerTransfer $paymentUnzerTransfer): string
+    {
+        $paymentUnzerOrderItemCollectionTransfer = $this->unzerRepository
+            ->getPaymentUnzerOrderItemCollectionByOrderId($paymentUnzerTransfer->getOrderIdOrFail());
+
+        return $paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems()->getIterator()->current()->getChargeIdOrFail();
     }
 }

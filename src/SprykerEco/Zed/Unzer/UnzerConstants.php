@@ -298,9 +298,4 @@ interface UnzerConstants
      * @var string
      */
     public const UNZER_BASKET_ITEM_REFERENCE_ID_TEMPLATE = '%s_%s';
-
-    /**
-     * @var string
-     */
-    public const DEFAULT_FIRST_CHARGE_ID = 's-chg-1';
 }

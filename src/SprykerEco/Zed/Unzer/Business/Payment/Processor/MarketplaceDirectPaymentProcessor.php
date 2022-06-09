@@ -7,66 +7,12 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 
-use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\RefundTransfer;
 use Generated\Shared\Transfer\SaveOrderTransfer;
-use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
 
-class MarketplaceDirectPaymentProcessor implements UnzerPaymentProcessorInterface
+class MarketplaceDirectPaymentProcessor extends DirectPaymentProcessor
 {
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
-     */
-    protected $unzerCheckoutMapper;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface
-     */
-    protected $unzerChargeAdapter;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface
-     */
-    protected $unzerPaymentResourceAdapter;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface
-     */
-    protected $unzerRefundProcessor;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
-     */
-    protected $preparePaymentProcessor;
-
-    /**
-     * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerChargeAdapterInterface $unzerChargeAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $preparePaymentProcessor
-     */
-    public function __construct(
-        UnzerCheckoutMapperInterface $unzerCheckoutMapper,
-        UnzerChargeAdapterInterface $unzerChargeAdapter,
-        UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter,
-        UnzerRefundProcessorInterface $unzerRefundProcessor,
-        UnzerPreparePaymentProcessorInterface $preparePaymentProcessor
-    ) {
-        $this->unzerCheckoutMapper = $unzerCheckoutMapper;
-        $this->unzerChargeAdapter = $unzerChargeAdapter;
-        $this->unzerPaymentResourceAdapter = $unzerPaymentResourceAdapter;
-        $this->unzerRefundProcessor = $unzerRefundProcessor;
-        $this->preparePaymentProcessor = $preparePaymentProcessor;
-    }
-
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
@@ -75,40 +21,10 @@ class MarketplaceDirectPaymentProcessor implements UnzerPaymentProcessorInterfac
      */
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = $this->preparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
+        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
+        $unzerPaymentTransfer = $this->unzerDirectChargeProcessor->charge($unzerPaymentTransfer);
 
-        return $this->unzerChargeAdapter->chargePayment($unzerPaymentTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param array<int> $salesOrderItemIds
-     *
-     * @return void
-     */
-    public function processRefund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
-    {
-        $this->unzerRefundProcessor->refund($refundTransfer, $orderTransfer, $salesOrderItemIds);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
-     */
-    protected function createUnzerPaymentResource(QuoteTransfer $quoteTransfer): UnzerPaymentResourceTransfer
-    {
-        $unzerPaymentResourceTransfer = $this->unzerCheckoutMapper
-            ->mapQuoteTransferToUnzerPaymentResourceTransfer(
-                $quoteTransfer,
-                new UnzerPaymentResourceTransfer(),
-            );
-
-        return $this->unzerPaymentResourceAdapter->createPaymentResource(
-            $unzerPaymentResourceTransfer,
-            $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getUnzerKeypairOrFail(),
-        );
+        return $unzerPaymentTransfer;
     }
 }
