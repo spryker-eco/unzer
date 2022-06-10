@@ -272,11 +272,10 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
      */
     public function createPaymentUnzerShipmentCharge(PaymentUnzerShipmentChargeTransfer $paymentUnzerShipmentChargeTransfer): PaymentUnzerShipmentChargeTransfer
     {
-        $paymentUnzerShipmentChargeEntity = (new SpyPaymentUnzerShipmentCharge())
+        (new SpyPaymentUnzerShipmentCharge())
             ->setChargeId($paymentUnzerShipmentChargeTransfer->getChargeIdOrFail())
-            ->setFkSalesShipment($paymentUnzerShipmentChargeTransfer->getIdSalesShipmentOrFail());
-
-        $paymentUnzerShipmentChargeEntity->save();
+            ->setFkSalesShipment($paymentUnzerShipmentChargeTransfer->getIdSalesShipmentOrFail())
+            ->save();
 
         return $paymentUnzerShipmentChargeTransfer;
     }

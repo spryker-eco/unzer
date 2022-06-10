@@ -330,8 +330,8 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      */
     public function findPaymentUnzerShipmentCharge(int $idSalesShipment): ?PaymentUnzerShipmentChargeTransfer
     {
-        $paymentUnzerShipmentChargeQuery = $this->getFactory()->getPaymentUnzerShipmentChargeQuery();
-        $paymentUnzerShipmentChargeEntity = $paymentUnzerShipmentChargeQuery
+        $paymentUnzerShipmentChargeEntity = $this->getFactory()
+            ->getPaymentUnzerShipmentChargeQuery()
             ->filterByFkSalesShipment($idSalesShipment)
             ->findOne();
 

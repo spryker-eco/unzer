@@ -10,7 +10,7 @@ namespace SprykerEco\Zed\Unzer\Persistence\Propel;
 use Orm\Zed\Unzer\Persistence\Base\SpyPaymentUnzerShipmentCharge as BaseSpyPaymentUnzerShipmentCharge;
 
 /**
- * Skeleton subclass for representing a row from the 'spy_unzer_credentials_store' table.
+ * Skeleton subclass for representing a row from the 'spy_payment_unzer_shipment_charge' table.
  *
  *
  *
