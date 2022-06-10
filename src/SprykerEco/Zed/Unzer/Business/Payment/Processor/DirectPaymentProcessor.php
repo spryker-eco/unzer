@@ -58,6 +58,7 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor
      */
     public function __construct(
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,

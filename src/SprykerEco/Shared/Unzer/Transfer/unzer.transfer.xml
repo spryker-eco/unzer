@@ -129,6 +129,7 @@
         <property name="orderId" type="string"/>
         <property name="invoiceId" type="string"/>
         <property name="paymentReference" type="string"/>
+        <property name="chargedSalesShipmentIds" type="int[]" singular="chargedSalesShipmentId"/>
     </transfer>
 
     <transfer name="UnzerKeypair">
@@ -786,5 +787,10 @@
         <property name="status" type="string"/>
         <property name="url" type="string"/>
         <property name="amount" type="float"/>
+    </transfer>
+
+    <transfer name="PaymentUnzerShipmentCharge">
+        <property name="idSalesShipment" type="int"/>
+        <property name="chargeId" type="string"/>
     </transfer>
 </transfers>

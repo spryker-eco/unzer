@@ -8,11 +8,13 @@
 namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
+use Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerShipmentCharge;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
@@ -261,5 +263,21 @@ class UnzerEntityManager extends AbstractEntityManager implements UnzerEntityMan
             ->delete();
 
         return $deletedRowsCount !== 0;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer $paymentUnzerShipmentChargeTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer
+     */
+    public function createPaymentUnzerShipmentCharge(PaymentUnzerShipmentChargeTransfer $paymentUnzerShipmentChargeTransfer): PaymentUnzerShipmentChargeTransfer
+    {
+        $paymentUnzerShipmentChargeEntity = (new SpyPaymentUnzerShipmentCharge())
+            ->setChargeId($paymentUnzerShipmentChargeTransfer->getChargeIdOrFail())
+            ->setFkSalesShipment($paymentUnzerShipmentChargeTransfer->getIdSalesShipmentOrFail());
+
+        $paymentUnzerShipmentChargeEntity->save();
+
+        return $paymentUnzerShipmentChargeTransfer;
     }
 }

@@ -8,6 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
+use Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
@@ -91,4 +92,13 @@ interface UnzerEntityManagerInterface
      * @return bool
      */
     public function deleteUnzerCredentials(UnzerCredentialsTransfer $unzerCredentialsTransfer): bool;
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer $paymentUnzerShipmentChargeTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer
+     */
+    public function createPaymentUnzerShipmentCharge(
+        PaymentUnzerShipmentChargeTransfer $paymentUnzerShipmentChargeTransfer
+    ): PaymentUnzerShipmentChargeTransfer;
 }

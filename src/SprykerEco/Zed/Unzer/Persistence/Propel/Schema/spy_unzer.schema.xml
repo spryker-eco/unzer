@@ -140,4 +140,15 @@
         </unique>
     </table>
 
+    <table name="spy_payment_unzer_shipment_charge" idMethod="native" allowPkInsert="true" isCrossRef="true">
+        <column name="id_unzer_shipment_charge" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="fk_sales_shipment" type="INTEGER" required="true"/>
+        <column name="charge_id" type="VARCHAR" size="255" required="true"/>
+
+        <foreign-key name="spy_payment_unzer_shipment_charge-fk_sales_shipment" foreignTable="spy_sales_shipment" phpName="SalesShipment" refPhpName="UnzerShipmentCharge" onDelete="cascade">
+            <reference local="fk_sales_shipment" foreign="id_sales_shipment"/>
+        </foreign-key>
+
+    </table>
+
 </database>

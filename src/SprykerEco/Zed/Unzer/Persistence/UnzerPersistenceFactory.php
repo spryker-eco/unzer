@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Persistence;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomerQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItemQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerQuery;
+use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerShipmentChargeQuery;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransactionQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsQuery;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStoreQuery;
@@ -77,5 +78,13 @@ class UnzerPersistenceFactory extends AbstractPersistenceFactory
     public function getUnzerCredentialsQuery(): SpyUnzerCredentialsQuery
     {
         return SpyUnzerCredentialsQuery::create();
+    }
+
+    /**
+     * @return \Orm\Zed\Unzer\Persistence\SpyPaymentUnzerShipmentChargeQuery<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerShipmentCharge>
+     */
+    public function getPaymentUnzerShipmentChargeQuery(): SpyPaymentUnzerShipmentChargeQuery
+    {
+        return SpyPaymentUnzerShipmentChargeQuery::create();
     }
 }
