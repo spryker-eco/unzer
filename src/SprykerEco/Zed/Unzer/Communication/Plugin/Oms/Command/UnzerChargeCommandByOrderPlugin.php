@@ -23,6 +23,8 @@ class UnzerChargeCommandByOrderPlugin extends AbstractPlugin implements CommandB
      * {@inheritDoc}
      * - Requires `OrderTransfer.orderReference` to be set.
      * - Requires `OrderTransfer.idSalesOrderItem` to be set.
+     * - Requires `ItemTransfer.shipment.idSalesShipment` to be set for each element at `OrderTransfer.items`.
+     * - Requires `ExpenseTransfer.shipment.idSalesShipment` to be set for each element at `OrderTransfer.expenses`.
      * - Executes Unzer API Charge request.
      * - Saves Unzer payment details to Persistence.
      * - Throws `UnzerApiException` if API call failed.
