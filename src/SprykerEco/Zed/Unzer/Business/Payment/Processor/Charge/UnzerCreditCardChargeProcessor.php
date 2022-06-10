@@ -220,8 +220,10 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      */
     protected function isPaymentUnzerOrderItemAlreadyCharged(PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer): bool
     {
-        return $paymentUnzerOrderItemTransfer->getStatus() === UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED
-            || $paymentUnzerOrderItemTransfer->getStatus() === UnzerConstants::OMS_STATUS_CHARGE_REFUNDED;
+        return in_array($paymentUnzerOrderItemTransfer->getStatus(), [
+            UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
+            UnzerConstants::OMS_STATUS_CHARGE_REFUNDED,
+        ], true);
     }
 
     /**
