@@ -227,22 +227,6 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     *
-     * @return array<int, array<\Generated\Shared\Transfer\ItemTransfer>>
-     */
-    protected function groupOrderItemsByIdSalesShipment(OrderTransfer $orderTransfer): array
-    {
-        $itemTransfersGroupedByIdSalesShipment = [];
-        foreach ($orderTransfer->getItems() as $itemTransfer) {
-                $idSalesShipment = $itemTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail();
-            $itemTransfersGroupedByIdSalesShipment[$idSalesShipment][] = $itemTransfer;
-        }
-
-        return $itemTransfersGroupedByIdSalesShipment;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param array<int> $salesOrderItemIds
