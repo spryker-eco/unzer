@@ -9,6 +9,7 @@ namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
+use Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionConditionsTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
@@ -320,5 +321,26 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
         }
 
         return $paymentUnzerTransactionQuery;
+    }
+
+    /**
+     * @param int $idSalesShipment
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer|null
+     */
+    public function findPaymentUnzerShipmentCharge(int $idSalesShipment): ?PaymentUnzerShipmentChargeTransfer
+    {
+        $paymentUnzerShipmentChargeEntity = $this->getFactory()
+            ->getPaymentUnzerShipmentChargeQuery()
+            ->filterByFkSalesShipment($idSalesShipment)
+            ->findOne();
+
+        if ($paymentUnzerShipmentChargeEntity === null) {
+            return null;
+        }
+
+        return (new PaymentUnzerShipmentChargeTransfer())
+            ->setIdSalesShipment($paymentUnzerShipmentChargeEntity->getFkSalesShipment())
+            ->setChargeId($paymentUnzerShipmentChargeEntity->getChargeId());
     }
 }

@@ -12,6 +12,7 @@ use Generated\Shared\Transfer\ItemCollectionTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
+use Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer;
 use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
 use Generated\Shared\Transfer\UnzerChargeTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
@@ -28,11 +29,6 @@ use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
 {
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
-     */
-    protected $unzerReader;
-
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface
      */
@@ -109,10 +105,11 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
         }
 
         $unzerChargeTransfer = $this->createUnzerCharge($unzerPaymentTransfer, $itemCollectionTransfer);
-        $unzerChargeTransfer = $this->addExpensesToUnzerChargeTransfer($unzerChargeTransfer, $orderTransfer, $paymentUnzerOrderItemCollectionTransfer);
+        $unzerChargeTransfer = $this->addExpensesToUnzerChargeTransfer($unzerChargeTransfer, $orderTransfer, $paymentUnzerOrderItemCollectionTransfer, $salesOrderItemIds);
 
         $unzerApiChargeResponseTransfer = $this->unzerChargeAdapter->chargePartialAuthorizablePayment($unzerPaymentTransfer, $unzerChargeTransfer);
         $this->updatePaymentUnzerOrderItemEntities($paymentUnzerOrderItemCollectionTransfer, $unzerApiChargeResponseTransfer, $salesOrderItemIds);
+        $this->createPaymentUnzerShipmentCharges($unzerChargeTransfer, $unzerApiChargeResponseTransfer);
     }
 
     /**
@@ -185,67 +182,35 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
      * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
      * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     * @param array<int> $salesOrderItemIds
      *
      * @return \Generated\Shared\Transfer\UnzerChargeTransfer
      */
     protected function addExpensesToUnzerChargeTransfer(
         UnzerChargeTransfer $unzerChargeTransfer,
         OrderTransfer $orderTransfer,
-        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer,
+        array $salesOrderItemIds
     ): UnzerChargeTransfer {
-        if (
-            $orderTransfer->getExpenses()->count() === 0
-            || $this->getChargedItemsCount($paymentUnzerOrderItemCollectionTransfer) > 0
-        ) {
+        if ($orderTransfer->getExpenses()->count() === 0) {
             return $unzerChargeTransfer;
         }
 
         $expensesAmount = 0;
         foreach ($orderTransfer->getExpenses() as $expenseTransfer) {
-            $expensesAmount += $this->getExpensesAmountForOrderExpense($orderTransfer, $expenseTransfer);
+            if (!$this->expenseHasRelatedChargeItems($expenseTransfer, $orderTransfer, $salesOrderItemIds)) {
+                continue;
+            }
+
+            if ($this->expenseHasAlreadyChargedItems($expenseTransfer, $orderTransfer, $paymentUnzerOrderItemCollectionTransfer)) {
+                continue;
+            }
+
+            $expensesAmount += $expenseTransfer->getSumPriceToPayAggregationOrFail();
+            $unzerChargeTransfer->addChargedSalesShipmentId($expenseTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail());
         }
 
         return $unzerChargeTransfer->setAmount($unzerChargeTransfer->getAmount() + $expensesAmount);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
-     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
-     *
-     * @return int
-     */
-    protected function getExpensesAmountForOrderExpense(OrderTransfer $orderTransfer, ExpenseTransfer $expenseTransfer): int
-    {
-        $expensesAmount = 0;
-        foreach ($orderTransfer->getItems() as $itemTransfer) {
-            $itemTransferFkSalesExpense = $itemTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
-            $expenseTransferFkSalesExpense = $expenseTransfer->getShipmentOrFail()->getMethodOrFail()->getFkSalesExpense();
-            if ($itemTransferFkSalesExpense === $expenseTransferFkSalesExpense) {
-                $expensesAmount += $expenseTransfer->getSumPriceToPayAggregationOrFail();
-
-                return $expensesAmount;
-            }
-        }
-
-        return $expensesAmount;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
-     *
-     * @return int
-     */
-    protected function getChargedItemsCount(
-        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
-    ): int {
-        $counter = 0;
-        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
-            if ($this->isPaymentUnzerOrderItemAlreadyCharged($paymentUnzerOrderItemTransfer)) {
-                $counter++;
-            }
-        }
-
-        return $counter;
     }
 
     /**
@@ -255,7 +220,97 @@ class UnzerCreditCardChargeProcessor implements UnzerChargeProcessorInterface
      */
     protected function isPaymentUnzerOrderItemAlreadyCharged(PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer): bool
     {
-        return $paymentUnzerOrderItemTransfer->getStatus() === UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED
-            || $paymentUnzerOrderItemTransfer->getStatus() === UnzerConstants::OMS_STATUS_CHARGE_REFUNDED;
+        return in_array($paymentUnzerOrderItemTransfer->getStatus(), [
+            UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
+            UnzerConstants::OMS_STATUS_CHARGE_REFUNDED,
+        ], true);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param array<int> $salesOrderItemIds
+     *
+     * @return bool
+     */
+    protected function expenseHasRelatedChargeItems(ExpenseTransfer $expenseTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): bool
+    {
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            if (
+                $itemTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail() === $expenseTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail()
+                && in_array($itemTransfer->getIdSalesOrderItemOrFail(), $salesOrderItemIds, true)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+     *
+     * @return bool
+     */
+    protected function expenseHasAlreadyChargedItems(
+        ExpenseTransfer $expenseTransfer,
+        OrderTransfer $orderTransfer,
+        PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
+    ): bool {
+        foreach ($paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems() as $paymentUnzerOrderItemTransfer) {
+            if (
+                $this->isPaymentUnzerOrderItemAlreadyCharged($paymentUnzerOrderItemTransfer)
+                && $this->isPaymentUnzerOrderItemRelatedToExpense($paymentUnzerOrderItemTransfer, $expenseTransfer, $orderTransfer)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
+     * @param \Generated\Shared\Transfer\OrderTransfer $orderTransfer
+     *
+     * @return bool
+     */
+    protected function isPaymentUnzerOrderItemRelatedToExpense(
+        PaymentUnzerOrderItemTransfer $paymentUnzerOrderItemTransfer,
+        ExpenseTransfer $expenseTransfer,
+        OrderTransfer $orderTransfer
+    ): bool {
+        foreach ($orderTransfer->getItems() as $itemTransfer) {
+            if (
+                $itemTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail() === $expenseTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail()
+                && $paymentUnzerOrderItemTransfer->getIdSalesOrderItemOrFail() === $itemTransfer->getIdSalesOrderItemOrFail()
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerChargeTransfer $unzerChargeTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer
+     *
+     * @return void
+     */
+    protected function createPaymentUnzerShipmentCharges(
+        UnzerChargeTransfer $unzerChargeTransfer,
+        UnzerApiChargeResponseTransfer $unzerApiChargeResponseTransfer
+    ): void {
+        foreach ($unzerChargeTransfer->getChargedSalesShipmentIds() as $chargedSalesShipmentId) {
+            $paymentUnzerShipmentCharge = (new PaymentUnzerShipmentChargeTransfer())
+                ->setChargeId($unzerApiChargeResponseTransfer->getIdOrFail())
+                ->setIdSalesShipment($chargedSalesShipmentId);
+
+            $this->unzerEntityManager->createPaymentUnzerShipmentCharge($paymentUnzerShipmentCharge);
+        }
     }
 }

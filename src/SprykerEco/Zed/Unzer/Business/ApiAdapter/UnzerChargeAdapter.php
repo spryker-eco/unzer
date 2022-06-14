@@ -52,21 +52,16 @@ class UnzerChargeAdapter implements UnzerChargeAdapterInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer
      */
-    public function chargePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
+    public function chargePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiChargeResponseTransfer
     {
         $unzerApiRequestTransfer = $this->prepareChargeRequest($unzerPaymentTransfer);
 
         $unzerApiResponseTransfer = $this->performCharge($unzerApiRequestTransfer, $unzerPaymentTransfer);
         $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
-        $unzerApiChargeResponseTransfer = $unzerApiResponseTransfer->getChargeResponseOrFail();
 
-        return $this->unzerChargeMapper
-            ->mapUnzerApiChargeResponseTransferToUnzerPaymentTransfer(
-                $unzerApiChargeResponseTransfer,
-                $unzerPaymentTransfer,
-            );
+        return $unzerApiResponseTransfer->getChargeResponseOrFail();
     }
 
     /**

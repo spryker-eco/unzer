@@ -81,7 +81,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         ArrayObject $expenseTransfersCollectionForRefund
     ): RefundTransfer {
         $expenseTransfersCollectionForRefund = $this->expandExpensesWithParticipantIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
-        $expenseTransfersCollectionForRefund = $this->expandExpensesWithChargeIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
+        $expenseTransfersCollectionForRefund = $this->expandMarketplaceExpensesWithChargeIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
             $refundTransfer->addUnzerRefund($this->createMarketplaceUnzerRefundTransfer($paymentUnzerTransfer, $expenseTransfer));
         }
@@ -176,14 +176,39 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      *
      * @return \ArrayObject
      */
-    protected function expandExpensesWithChargeIds(ArrayObject $expenseTransfersCollectionForRefund, PaymentUnzerTransfer $paymentUnzerTransfer): ArrayObject
-    {
-        if ($paymentUnzerTransfer->getIsMarketplaceOrFail() && $paymentUnzerTransfer->getIsAuthorizableOrFail()) {
+    protected function expandStandardExpensesWithChargeIds(
+        ArrayObject $expenseTransfersCollectionForRefund,
+        PaymentUnzerTransfer $paymentUnzerTransfer
+    ): ArrayObject {
+        if ($paymentUnzerTransfer->getIsAuthorizableOrFail()) {
+            return $this->addChargeIdsForStandardExpenses($expenseTransfersCollectionForRefund);
+        }
+
+        $chargeId = $this->getChargeIdForDirectPayment($paymentUnzerTransfer);
+        foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
+            $expenseTransfer->setUnzerChargeId($chargeId);
+        }
+
+        return $expenseTransfersCollectionForRefund;
+    }
+
+    /**
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @return \ArrayObject
+     */
+    protected function expandMarketplaceExpensesWithChargeIds(
+        ArrayObject $expenseTransfersCollectionForRefund,
+        PaymentUnzerTransfer $paymentUnzerTransfer
+    ): ArrayObject {
+        if ($paymentUnzerTransfer->getIsAuthorizableOrFail()) {
             return $this->addChargeIdsForMarketplaceExpenses($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         }
 
+        $chargeId = $this->getChargeIdForDirectPayment($paymentUnzerTransfer);
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            $expenseTransfer->setUnzerChargeId(UnzerConstants::DEFAULT_FIRST_CHARGE_ID);
+            $expenseTransfer->setUnzerChargeId($chargeId);
         }
 
         return $expenseTransfersCollectionForRefund;
@@ -201,32 +226,31 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         PaymentUnzerTransfer $paymentUnzerTransfer,
         ArrayObject $expenseTransfersCollectionForRefund
     ): RefundTransfer {
-        $expenseTransfersCollectionForRefund = $this->expandExpensesWithChargeIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
-        $unzerRefundTransfer = $this->createStandardUnzerRefundTransfer($paymentUnzerTransfer, $expenseTransfersCollectionForRefund);
+        $expenseTransfersCollectionForRefund = $this->expandStandardExpensesWithChargeIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
 
-        return $refundTransfer->addUnzerRefund($unzerRefundTransfer);
+        foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
+            $unzerRefundTransfer = $this->createStandardUnzerRefundTransfer($paymentUnzerTransfer, $expenseTransfer);
+            $refundTransfer->addUnzerRefund($unzerRefundTransfer);
+        }
+
+        return $refundTransfer;
     }
 
     /**
      * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
-     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerRefundTransfer
      */
     protected function createStandardUnzerRefundTransfer(
         PaymentUnzerTransfer $paymentUnzerTransfer,
-        ArrayObject $expenseTransfersCollectionForRefund
+        ExpenseTransfer $expenseTransfer
     ): UnzerRefundTransfer {
-        $refundAmountTotal = 0;
-        foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            $refundAmountTotal += (int)$expenseTransfer->getRefundableAmount();
-        }
-
         return (new UnzerRefundTransfer())
             ->setIsMarketplace(false)
-            ->setAmount($refundAmountTotal / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+            ->setAmount($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
             ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
-            ->setChargeId(UnzerConstants::DEFAULT_FIRST_CHARGE_ID);
+            ->setChargeId($expenseTransfer->getUnzerChargeIdOrFail());
     }
 
     /**
@@ -311,5 +335,39 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         }
 
         return $chargeIdsIndexedByParticipantId;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @return string
+     */
+    protected function getChargeIdForDirectPayment(PaymentUnzerTransfer $paymentUnzerTransfer): string
+    {
+        $paymentUnzerOrderItemCollectionTransfer = $this->unzerRepository
+            ->getPaymentUnzerOrderItemCollectionByOrderId($paymentUnzerTransfer->getOrderIdOrFail());
+
+        return $paymentUnzerOrderItemCollectionTransfer->getPaymentUnzerOrderItems()->getIterator()->current()->getChargeIdOrFail();
+    }
+
+    /**
+     * @param \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer> $expenseTransfersCollectionForRefund
+     *
+     * @return \ArrayObject<int, \Generated\Shared\Transfer\ExpenseTransfer>
+     */
+    protected function addChargeIdsForStandardExpenses(
+        ArrayObject $expenseTransfersCollectionForRefund
+    ): ArrayObject {
+        foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
+            /** @var \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer */
+            $paymentUnzerShipmentChargeTransfer = $this->unzerRepository->findPaymentUnzerShipmentCharge($expenseTransfer->getShipmentOrFail()->getIdSalesShipmentOrFail());
+            if ($paymentUnzerShipmentChargeTransfer === null) {
+                continue;
+            }
+
+            $expenseTransfer->setUnzerChargeId($paymentUnzerShipmentChargeTransfer->getChargeIdOrFail());
+        }
+
+        return $expenseTransfersCollectionForRefund;
     }
 }

@@ -104,6 +104,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorI
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerCreditCardChargeProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerMarketplaceCreditCardChargeProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\CreditCardProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessor;
+use SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectPaymentProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceCreditCardProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\MarketplaceDirectPaymentProcessor;
@@ -559,11 +561,12 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createMarketplaceDirectPaymentProcessor(): UnzerPaymentProcessorInterface
     {
         return new MarketplaceDirectPaymentProcessor(
-            $this->createUnzerCheckoutMapper(),
-            $this->createUnzerChargeAdapter(),
+            $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentResourceAdapter(),
             $this->createUnzerMarketplaceRefundProcessor(),
             $this->createUnzerPreparePaymentProcessor(),
+            $this->createUnzerCheckoutMapper(),
+            $this->createUnzerDirectChargeProcessor(),
         );
     }
 
@@ -601,12 +604,12 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createDirectPaymentProcessor(): UnzerPaymentProcessorInterface
     {
         return new DirectPaymentProcessor(
-            $this->createUnzerChargeAdapter(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerPaymentResourceAdapter(),
             $this->createUnzerRefundProcessor(),
             $this->createUnzerPreparePaymentProcessor(),
             $this->createUnzerCheckoutMapper(),
+            $this->createUnzerDirectChargeProcessor(),
         );
     }
 
@@ -1141,6 +1144,19 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentAdapter(),
             $this->createUnzerCredentialsResolver(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessorInterface
+     */
+    public function createUnzerDirectChargeProcessor(): UnzerDirectChargeProcessorInterface
+    {
+        return new UnzerDirectChargeProcessor(
+            $this->createUnzerChargeAdapter(),
+            $this->createUnzerChargeMapper(),
+            $this->getRepository(),
+            $this->getEntityManager(),
         );
     }
 }

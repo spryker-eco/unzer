@@ -9,6 +9,7 @@ namespace SprykerEco\Zed\Unzer\Persistence;
 
 use Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerOrderItemTransfer;
+use Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransactionCriteriaTransfer;
 use Generated\Shared\Transfer\PaymentUnzerTransfer;
@@ -86,4 +87,11 @@ interface UnzerRepositoryInterface
     public function getPaymentUnzerTransactionCollectionByCriteria(
         PaymentUnzerTransactionCriteriaTransfer $paymentUnzerTransactionCriteriaTransfer
     ): PaymentUnzerTransactionCollectionTransfer;
+
+    /**
+     * @param int $idSalesShipment
+     *
+     * @return \Generated\Shared\Transfer\PaymentUnzerShipmentChargeTransfer|null
+     */
+    public function findPaymentUnzerShipmentCharge(int $idSalesShipment): ?PaymentUnzerShipmentChargeTransfer;
 }
