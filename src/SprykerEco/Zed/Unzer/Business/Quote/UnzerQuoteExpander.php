@@ -99,7 +99,7 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      */
     protected function addUnzerPayment(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $paymentResourceTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResource();
+        $paymentResourceTransfer = $this->getUnzerPaymentResource($quoteTransfer);
         $paymentSelection = $quoteTransfer->getPaymentOrFail()->getPaymentSelectionOrFail();
 
         $unzerPaymentTransfer = (new UnzerPaymentTransfer())
@@ -110,5 +110,22 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
 
         return $quoteTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
+     */
+    protected function getUnzerPaymentResource(QuoteTransfer $quoteTransfer): UnzerPaymentResourceTransfer
+    {
+        if (
+            $quoteTransfer->getPaymentOrFail()->getUnzerPayment() !== null
+            && $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResource() !== null
+        ) {
+            return $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResourceOrFail();
+        }
+
+        return new UnzerPaymentResourceTransfer();
     }
 }
