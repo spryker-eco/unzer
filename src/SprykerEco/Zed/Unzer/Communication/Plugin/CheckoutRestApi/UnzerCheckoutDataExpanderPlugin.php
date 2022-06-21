@@ -5,11 +5,12 @@ namespace SprykerEco\Zed\Unzer\Communication\Plugin\CheckoutRestApi;
 use Generated\Shared\Transfer\RestCheckoutDataTransfer;
 use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
 use Spryker\Zed\CheckoutRestApiExtension\Dependency\Plugin\CheckoutDataExpanderPluginInterface;
+use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
  */
-class UnzerCheckoutDataExpanderPlugin implements CheckoutDataExpanderPluginInterface
+class UnzerCheckoutDataExpanderPlugin  extends AbstractPlugin implements CheckoutDataExpanderPluginInterface
 {
     /**
      * Specification:
