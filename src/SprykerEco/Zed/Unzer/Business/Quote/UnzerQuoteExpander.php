@@ -8,6 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
 use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
