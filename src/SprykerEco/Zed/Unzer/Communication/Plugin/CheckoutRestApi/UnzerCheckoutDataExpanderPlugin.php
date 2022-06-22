@@ -10,7 +10,7 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 /**
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
  */
-class UnzerCheckoutDataExpanderPlugin  extends AbstractPlugin implements CheckoutDataExpanderPluginInterface
+class UnzerCheckoutDataExpanderPlugin extends AbstractPlugin implements CheckoutDataExpanderPluginInterface
 {
     /**
      * Specification:
