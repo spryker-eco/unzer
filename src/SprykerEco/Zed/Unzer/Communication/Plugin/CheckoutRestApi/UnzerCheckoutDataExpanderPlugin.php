@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * MIT License
+ * For full license information, please view the LICENSE file that was distributed with this source code.
+ */
+
 namespace SprykerEco\Zed\Unzer\Communication\Plugin\CheckoutRestApi;
 
 use Generated\Shared\Transfer\RestCheckoutDataTransfer;
@@ -9,11 +14,13 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
  * @method \SprykerEco\Zed\Unzer\Business\UnzerFacadeInterface getFacade()
+ * @method \SprykerEco\Zed\Unzer\UnzerConfig getConfig()
+ * @method \SprykerEco\Zed\Unzer\Communication\UnzerCommunicationFactory getFactory()
  */
 class UnzerCheckoutDataExpanderPlugin extends AbstractPlugin implements CheckoutDataExpanderPluginInterface
 {
     /**
-     * Specification:
+     * {@inheritDoc}
      * - Expands `RestCheckoutDataTransfer` quote with `UnzerCredentialsTransfer`.
      *
      * @api
@@ -29,7 +36,7 @@ class UnzerCheckoutDataExpanderPlugin extends AbstractPlugin implements Checkout
     ): RestCheckoutDataTransfer {
         $quoteTransfer = $this->getFacade()
             ->expandQuoteWithUnzerCredentials(
-                $restCheckoutDataTransfer->getQuote()
+                $restCheckoutDataTransfer->getQuote(),
             );
 
         return $restCheckoutDataTransfer->setQuote($quoteTransfer);
