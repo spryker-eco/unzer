@@ -797,7 +797,4 @@
     <transfer name="RestCheckoutData">
         <property name="quote" type="Quote"/>
     </transfer>
-
-    <transfer name="Quote">
-    </transfer>
 </transfers>

@@ -21,7 +21,9 @@ class UnzerCheckoutDataExpanderPlugin extends AbstractPlugin implements Checkout
 {
     /**
      * {@inheritDoc}
-     * - Expands `RestCheckoutDataTransfer` quote with `UnzerCredentialsTransfer`.
+     * - Requires `RestCheckoutDataTransfer.Quote` transfer property to be set.
+     * - Expands `RestCheckoutDataTransfer.QuoteTransfer` with `UnzerCredentialsTransfer` according to added items.
+     * - Does nothing if quote has no items.
      *
      * @api
      *

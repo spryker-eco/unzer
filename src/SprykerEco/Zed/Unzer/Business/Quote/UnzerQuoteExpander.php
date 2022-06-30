@@ -100,13 +100,13 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      */
     protected function addUnzerPayment(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $paymentResourceTransfer = $this->getUnzerPaymentResource($quoteTransfer);
+        $unzerPaymentResourceTransfer = $this->getUnzerPaymentResource($quoteTransfer);
         $paymentSelection = $quoteTransfer->getPaymentOrFail()->getPaymentSelectionOrFail();
 
         $unzerPaymentTransfer = (new UnzerPaymentTransfer())
             ->setIsMarketplace($this->unzerConfig->isPaymentMethodMarketplaceReady($paymentSelection))
             ->setIsAuthorizable($this->unzerConfig->isPaymentAuthorizeRequired($paymentSelection))
-            ->setPaymentResource($paymentResourceTransfer);
+            ->setPaymentResource($unzerPaymentResourceTransfer);
 
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
 
