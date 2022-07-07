@@ -83,7 +83,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         $expenseTransfersCollectionForRefund = $this->expandExpensesWithParticipantIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         $expenseTransfersCollectionForRefund = $this->expandMarketplaceExpensesWithChargeIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            $refundTransfer->addUnzerRefund($this->createMarketplaceUnzerRefundTransfer($paymentUnzerTransfer, $expenseTransfer));
+            $refundTransfer = $this->expandUnzerRefundTransfersWithExpenseTransfers($refundTransfer, $expenseTransfer);
         }
 
         return $refundTransfer;
@@ -147,27 +147,36 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerRefundTransfer
+     * @return \Generated\Shared\Transfer\RefundTransfer
      */
-    protected function createMarketplaceUnzerRefundTransfer(
-        PaymentUnzerTransfer $paymentUnzerTransfer,
+    protected function expandUnzerRefundTransfersWithExpenseTransfers(
+        RefundTransfer $refundTransfer,
         ExpenseTransfer $expenseTransfer
-    ): UnzerRefundTransfer {
-        return (new UnzerRefundTransfer())
-            ->setIsMarketplace(true)
-            ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
-            ->setChargeId($expenseTransfer->getUnzerChargeIdOrFail())
-            ->addItem(
-                (new UnzerRefundItemTransfer())
-                    ->setBasketItemReferenceId(
-                        sprintf(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE, $expenseTransfer->getUnzerParticipantIdOrFail()),
-                    )
-                    ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY)
-                    ->setAmountGross($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER),
-            );
+    ): RefundTransfer {
+        foreach ($refundTransfer->getUnzerRefunds() as $unzerRefundTransfer) {
+            if ($unzerRefundTransfer->getChargeId() === $expenseTransfer->getUnzerChargeId()) {
+                $unzerRefundTransfer->addItem($this->createUnzerRefundItemTransfer($expenseTransfer));
+            }
+        }
+
+        return $refundTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerRefundItemTransfer
+     */
+    protected function createUnzerRefundItemTransfer(ExpenseTransfer $expenseTransfer): UnzerRefundItemTransfer
+    {
+        return (new UnzerRefundItemTransfer())->setBasketItemReferenceId(
+            sprintf(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE, $expenseTransfer->getUnzerParticipantIdOrFail()),
+        )
+            ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY)
+            ->setAmountGross($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER);
     }
 
     /**
