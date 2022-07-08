@@ -158,7 +158,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     ): RefundTransfer {
         foreach ($refundTransfer->getUnzerRefunds() as $unzerRefundTransfer) {
             if ($unzerRefundTransfer->getChargeId() === $expenseTransfer->getUnzerChargeId()) {
-                $unzerRefundTransfer->addItem($this->createUnzerRefundItemTransfer($expenseTransfer));
+                $unzerRefundTransfer->addItem($this->createExpenseUnzerRefundItemTransfer($expenseTransfer));
             }
         }
 
@@ -170,12 +170,12 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
      *
      * @return \Generated\Shared\Transfer\UnzerRefundItemTransfer
      */
-    protected function createUnzerRefundItemTransfer(ExpenseTransfer $expenseTransfer): UnzerRefundItemTransfer
+    protected function createExpenseUnzerRefundItemTransfer(ExpenseTransfer $expenseTransfer): UnzerRefundItemTransfer
     {
         return (new UnzerRefundItemTransfer())->setBasketItemReferenceId(
             sprintf(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE, $expenseTransfer->getUnzerParticipantIdOrFail()),
         )
-            ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY)
+            ->setQuantity(UnzerConstants::FULL_REFUND_QUANTITY)
             ->setAmountGross($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER);
     }
 
