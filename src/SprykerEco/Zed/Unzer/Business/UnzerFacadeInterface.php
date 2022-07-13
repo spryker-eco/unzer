@@ -316,7 +316,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Imports available Unzer payment methods and saves them in persistence.
+     * - Imports available Unzer payment methods for selected credentials with its child credentials and saves them in persistence.
      *
      * @api
      *
