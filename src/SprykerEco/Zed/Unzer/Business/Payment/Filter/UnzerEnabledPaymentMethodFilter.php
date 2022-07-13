@@ -26,12 +26,12 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
-    protected $unzerReader;
+    protected UnzerReaderInterface $unzerReader;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface
      */
-    protected $unzerPaymentMethodsAdapter;
+    protected UnzerPaymentMethodsAdapterInterface $unzerPaymentMethodsAdapter;
 
     /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
@@ -63,61 +63,105 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
             return $paymentMethodsTransfer;
         }
 
-        $filteredPaymentMethodTransfers = $this->hasMultipleMerchants($quoteTransfer)
-            ? $this->getMarketplaceFilteredPaymentMethods($paymentMethodsTransfer, $quoteTransfer)
-            : $this->getStandardFilteredPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
+        if ($quoteTransfer->getUnzerCredentialsOrFail()->getTypeOrFail() === UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
+            return $this->getStandardUnzerPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
+        }
 
-        return $paymentMethodsTransfer->setMethods($filteredPaymentMethodTransfers);
+        if ($this->hasMultipleMerchants($quoteTransfer)) {
+            return $this->getMarketplaceUnzerPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
+        }
+
+        return $this->getMarketplaceMerchantUnzerPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
     }
 
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \ArrayObject<array-key, \Generated\Shared\Transfer\PaymentMethodTransfer>
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
-    protected function getStandardFilteredPaymentMethods(
+    protected function getStandardUnzerPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
-    ): ArrayObject {
-        $unzerKeypairTransfer = $this->getUnzerKeypair(
-            $quoteTransfer->getStoreOrFail(),
-            [UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD, UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT],
-        );
-        $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
+    ): PaymentMethodsTransfer {
+        $standardUnzerKeypairTransfer = $this->getStandardUnzerKeypair($quoteTransfer);
 
-        return $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);
+        return $this->filterEnabledPaymentMethods(
+            $paymentMethodsTransfer,
+            $this->unzerPaymentMethodsAdapter->getPaymentMethods($standardUnzerKeypairTransfer)
+        );
     }
 
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \ArrayObject<array-key, \Generated\Shared\Transfer\PaymentMethodTransfer>
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
-    protected function getMarketplaceFilteredPaymentMethods(
+    protected function getMarketplaceUnzerPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
-    ): ArrayObject {
-        $unzerKeypairTransfer = $this->getUnzerKeypair(
-            $quoteTransfer->getStoreOrFail(),
-            [UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE],
+    ): PaymentMethodsTransfer {
+        $mainMarketplaceUnzerKeypairTransfer = $this->getMainMarketplaceUnzerKeypair($quoteTransfer);
+
+        return $this->filterEnabledPaymentMethods(
+            $paymentMethodsTransfer,
+            $this->unzerPaymentMethodsAdapter->getPaymentMethods($mainMarketplaceUnzerKeypairTransfer)
         );
-        $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
+     */
+    protected function getMarketplaceMerchantUnzerPaymentMethods(
+        PaymentMethodsTransfer $paymentMethodsTransfer,
+        QuoteTransfer $quoteTransfer
+    ): PaymentMethodsTransfer {
+        $mainMarketplaceUnzerKeypairTransfer = $this->getMainMarketplaceUnzerKeypair($quoteTransfer);
+        $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($mainMarketplaceUnzerKeypairTransfer);
+        $childUnzerKeypairTransfer = $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail();
+        $unzerPaymentMethodsTransfer = $this->appendMainMarketplaceChildUnzerPaymentMethods(
+            $unzerPaymentMethodsTransfer,
+            $this->unzerPaymentMethodsAdapter->getPaymentMethods($childUnzerKeypairTransfer)
+        );
 
         return $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $unzerPaymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $childUnzerPaymentMethodsTransfer
+     *
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
+     */
+    protected function appendMainMarketplaceChildUnzerPaymentMethods(
+        PaymentMethodsTransfer $unzerPaymentMethodsTransfer,
+        PaymentMethodsTransfer $childUnzerPaymentMethodsTransfer
+    ): PaymentMethodsTransfer {
+        $unzerPaymentMethodKeys = $this->getPaymentMethodKeys($unzerPaymentMethodsTransfer);
+
+        foreach ($childUnzerPaymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
+            if (!$this->isUnzerPaymentProvider($paymentMethodTransfer) || !in_array($paymentMethodTransfer->getPaymentMethodKey(), $unzerPaymentMethodKeys)) {
+                $unzerPaymentMethodsTransfer->getMethods()->append($paymentMethodTransfer);
+            }
+        }
+
+        return $unzerPaymentMethodsTransfer;
     }
 
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $unzerPaymentMethodsTransfer
      *
-     * @return \ArrayObject<array-key, \Generated\Shared\Transfer\PaymentMethodTransfer>
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
     protected function filterEnabledPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         PaymentMethodsTransfer $unzerPaymentMethodsTransfer
-    ): ArrayObject {
+    ): PaymentMethodsTransfer {
         $activePaymentMethods = new ArrayObject();
         $unzerPaymentMethodKeys = $this->getPaymentMethodKeys($unzerPaymentMethodsTransfer);
 
@@ -127,7 +171,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
             }
         }
 
-        return $activePaymentMethods;
+        return $paymentMethodsTransfer->setMethods($activePaymentMethods);
     }
 
     /**
@@ -140,6 +184,37 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         return array_map(function (PaymentMethodTransfer $paymentMethodTransfer) {
             return $paymentMethodTransfer->getPaymentMethodKey();
         }, (array)$paymentMethodsTransfer->getMethods());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
+     */
+    protected function getStandardUnzerKeypair(QuoteTransfer $quoteTransfer): UnzerKeypairTransfer
+    {
+        return $this->getUnzerKeypair(
+            $quoteTransfer->getStoreOrFail(),
+            [
+                UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD,
+                UnzerConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
+            ],
+        );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerKeypairTransfer
+     */
+    protected function getMainMarketplaceUnzerKeypair(QuoteTransfer $quoteTransfer): UnzerKeypairTransfer
+    {
+        return $this->getUnzerKeypair(
+            $quoteTransfer->getStoreOrFail(),
+            [
+                UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
+            ],
+        );
     }
 
     /**
@@ -181,21 +256,5 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         }
 
         return $merchantReferences;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
-     *
-     * @return bool
-     */
-    protected function hasUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): bool
-    {
-        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
-            if ($this->isUnzerPaymentProvider($paymentMethodTransfer)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

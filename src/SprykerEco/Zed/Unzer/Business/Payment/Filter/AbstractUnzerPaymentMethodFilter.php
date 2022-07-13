@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
+use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
@@ -18,7 +19,7 @@ abstract class AbstractUnzerPaymentMethodFilter
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
-    protected $unzerConfig;
+    protected UnzerConfig $unzerConfig;
 
     /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
@@ -49,11 +50,48 @@ abstract class AbstractUnzerPaymentMethodFilter
     }
 
     /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
+     *
+     * @return bool
+     */
+    protected function isPrioritizedMarketplaceUnzerPaymentMethod(
+        PaymentMethodsTransfer $paymentMethodsTransfer,
+        PaymentMethodTransfer $paymentMethodTransfer
+    ): bool {
+        if (!$this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer)) {
+            foreach ($paymentMethodsTransfer->getMethods() as $availablePaymentMethodTransfer) {
+                $marketplaceEquivalentPaymentMethodKey = str_replace(
+                    SharedUnzerConfig::PAYMENT_PROVIDER_TYPE,
+                    SharedUnzerConfig::PAYMENT_PROVIDER_TYPE.SharedUnzerConfig::PLATFORM_MARKETPLACE,
+                    $paymentMethodTransfer->getPaymentMethodKeyOrFail()
+                );
+
+                if ($availablePaymentMethodTransfer->getPaymentMethodKeyOrFail() === $marketplaceEquivalentPaymentMethodKey) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
      * @return bool
      */
     protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
+    {
+        return count($this->getMerchantReferences($quoteTransfer)) > 1;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return array<array-key, string>
+     */
+    public function getMerchantReferences(QuoteTransfer $quoteTransfer): array
     {
         $merchantReferences = [];
 
@@ -71,6 +109,22 @@ abstract class AbstractUnzerPaymentMethodFilter
             }
         }
 
-        return count($merchantReferences) > 1;
+        return $merchantReferences;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     *
+     * @return bool
+     */
+    protected function hasUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): bool
+    {
+        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
+            if ($this->isUnzerPaymentProvider($paymentMethodTransfer)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
