@@ -174,6 +174,7 @@ class UnzerMarketplaceRefundProcessor implements UnzerRefundProcessorInterface
             ->setIsMarketplace(true)
             ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
             ->setChargeId($chargeId)
+            ->setOrderId($paymentUnzerTransfer->getOrderIdOrFail())
             ->setItems(
                 $this->unzerMarketplaceRefundMapper
                     ->mapItemCollectionTransferToUnzerRefundItemCollection($itemCollectionTransfer, new UnzerRefundItemCollectionTransfer())
