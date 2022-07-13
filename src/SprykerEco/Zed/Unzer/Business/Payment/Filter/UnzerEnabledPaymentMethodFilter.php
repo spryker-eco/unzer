@@ -88,7 +88,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
 
         return $this->filterEnabledPaymentMethods(
             $paymentMethodsTransfer,
-            $this->unzerPaymentMethodsAdapter->getPaymentMethods($standardUnzerKeypairTransfer)
+            $this->unzerPaymentMethodsAdapter->getPaymentMethods($standardUnzerKeypairTransfer),
         );
     }
 
@@ -106,7 +106,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
 
         return $this->filterEnabledPaymentMethods(
             $paymentMethodsTransfer,
-            $this->unzerPaymentMethodsAdapter->getPaymentMethods($mainMarketplaceUnzerKeypairTransfer)
+            $this->unzerPaymentMethodsAdapter->getPaymentMethods($mainMarketplaceUnzerKeypairTransfer),
         );
     }
 
@@ -125,7 +125,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         $childUnzerKeypairTransfer = $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail();
         $unzerPaymentMethodsTransfer = $this->appendMainMarketplaceChildUnzerPaymentMethods(
             $unzerPaymentMethodsTransfer,
-            $this->unzerPaymentMethodsAdapter->getPaymentMethods($childUnzerKeypairTransfer)
+            $this->unzerPaymentMethodsAdapter->getPaymentMethods($childUnzerKeypairTransfer),
         );
 
         return $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);

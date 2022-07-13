@@ -63,8 +63,8 @@ abstract class AbstractUnzerPaymentMethodFilter
             foreach ($paymentMethodsTransfer->getMethods() as $availablePaymentMethodTransfer) {
                 $marketplaceEquivalentPaymentMethodKey = str_replace(
                     SharedUnzerConfig::PAYMENT_PROVIDER_TYPE,
-                    SharedUnzerConfig::PAYMENT_PROVIDER_TYPE.SharedUnzerConfig::PLATFORM_MARKETPLACE,
-                    $paymentMethodTransfer->getPaymentMethodKeyOrFail()
+                    SharedUnzerConfig::PAYMENT_PROVIDER_TYPE . SharedUnzerConfig::PLATFORM_MARKETPLACE,
+                    $paymentMethodTransfer->getPaymentMethodKeyOrFail(),
                 );
 
                 if ($availablePaymentMethodTransfer->getPaymentMethodKeyOrFail() === $marketplaceEquivalentPaymentMethodKey) {

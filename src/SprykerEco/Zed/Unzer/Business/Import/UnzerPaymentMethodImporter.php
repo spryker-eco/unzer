@@ -79,7 +79,7 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
         foreach ($childUnzerCredentialsCollectionTransfer->getUnzerCredentials() as $childUnzerCredentialsTransfer) {
             $paymentMethodsTransfer = $this->appendChildPaymentMethodsTransfer(
                 $paymentMethodsTransfer,
-                $this->unzerPaymentMethodsAdapter->getPaymentMethods($childUnzerCredentialsTransfer->getUnzerKeypair())
+                $this->unzerPaymentMethodsAdapter->getPaymentMethods($childUnzerCredentialsTransfer->getUnzerKeypair()),
             );
         }
 
