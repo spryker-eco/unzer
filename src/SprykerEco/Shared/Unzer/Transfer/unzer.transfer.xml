@@ -133,6 +133,7 @@
     </transfer>
 
     <transfer name="UnzerKeypair">
+        <property name="idUnzerCredentials" type="int"/>
         <property name="keypairId" type="string"/>
         <property name="publicKey" type="string"/>
         <property name="privateKey" type="string"/>
