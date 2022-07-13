@@ -19,7 +19,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
-    protected $unzerReader;
+    protected UnzerReaderInterface $unzerReader;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
@@ -36,11 +36,11 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
      */
     public function expandQuoteWithUnzerKeypair(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplaceOrFail()) {
+        $uniqueMerchantReferences = $this->extractUniqueMerchantReferences($quoteTransfer);
+        if (count($uniqueMerchantReferences) > 1) {
             return $this->setMainMarketplaceUnzerKeypair($quoteTransfer);
         }
 
-        $uniqueMerchantReferences = $this->extractUniqueMerchantReferences($quoteTransfer);
         if (count($uniqueMerchantReferences) === 1 && $uniqueMerchantReferences[0] !== UnzerConstants::MAIN_SELLER_REFERENCE) {
             return $this->setMarketplaceMerchantUnzerKeypair($quoteTransfer, $uniqueMerchantReferences[0]);
         }
