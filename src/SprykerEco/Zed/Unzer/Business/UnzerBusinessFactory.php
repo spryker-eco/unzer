@@ -942,6 +942,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentMethodImportFilter(),
             $this->createPaymentImportAdapter(),
             $this->createUnzerPaymentMethodsAdapter(),
+            $this->createUnzerReader(),
         );
     }
 
