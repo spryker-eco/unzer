@@ -148,12 +148,12 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
      *
-     * @return array<string|null>
+     * @return array<string>
      */
     protected function getPaymentMethodKeys(PaymentMethodsTransfer $paymentMethodsTransfer): array
     {
         return array_map(function (PaymentMethodTransfer $paymentMethodTransfer) {
-            return $paymentMethodTransfer->getPaymentMethodKey();
+            return $paymentMethodTransfer->getPaymentMethodKeyOrFail();
         }, (array)$paymentMethodsTransfer->getMethods());
     }
 }
