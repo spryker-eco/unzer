@@ -55,21 +55,23 @@ abstract class AbstractUnzerPaymentMethodFilter
      *
      * @return bool
      */
-    protected function isPrioritizedMarketplaceUnzerPaymentMethod(
+    protected function hasPrioritizedMarketplaceUnzerPaymentMethod(
         PaymentMethodsTransfer $paymentMethodsTransfer,
         PaymentMethodTransfer $paymentMethodTransfer
     ): bool {
-        if (!$this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer)) {
-            foreach ($paymentMethodsTransfer->getMethods() as $availablePaymentMethodTransfer) {
-                $marketplaceEquivalentPaymentMethodKey = str_replace(
-                    SharedUnzerConfig::PAYMENT_PROVIDER_TYPE,
-                    SharedUnzerConfig::PAYMENT_PROVIDER_TYPE . SharedUnzerConfig::PLATFORM_MARKETPLACE,
-                    $paymentMethodTransfer->getPaymentMethodKeyOrFail(),
-                );
+        if ($this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer)) {
+            return false;
+        }
 
-                if ($availablePaymentMethodTransfer->getPaymentMethodKeyOrFail() === $marketplaceEquivalentPaymentMethodKey) {
-                    return true;
-                }
+        foreach ($paymentMethodsTransfer->getMethods() as $availablePaymentMethodTransfer) {
+            $marketplaceEquivalentPaymentMethodKey = str_replace(
+                SharedUnzerConfig::PAYMENT_PROVIDER_TYPE,
+                SharedUnzerConfig::PAYMENT_PROVIDER_TYPE . SharedUnzerConfig::PLATFORM_MARKETPLACE,
+                $paymentMethodTransfer->getPaymentMethodKeyOrFail(),
+            );
+
+            if ($availablePaymentMethodTransfer->getPaymentMethodKeyOrFail() === $marketplaceEquivalentPaymentMethodKey) {
+                return true;
             }
         }
 
@@ -82,16 +84,6 @@ abstract class AbstractUnzerPaymentMethodFilter
      * @return bool
      */
     protected function hasMultipleMerchants(QuoteTransfer $quoteTransfer): bool
-    {
-        return count($this->getMerchantReferences($quoteTransfer)) > 1;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return array<array-key, string>
-     */
-    public function getMerchantReferences(QuoteTransfer $quoteTransfer): array
     {
         $merchantReferences = [];
 
@@ -109,7 +101,7 @@ abstract class AbstractUnzerPaymentMethodFilter
             }
         }
 
-        return $merchantReferences;
+        return count($merchantReferences) > 1;
     }
 
     /**

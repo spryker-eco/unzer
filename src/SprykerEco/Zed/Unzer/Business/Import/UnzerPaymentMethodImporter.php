@@ -123,7 +123,7 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
         $unzerPaymentMethodKeys = $this->getPaymentMethodKeys($paymentMethodsTransfer);
 
         foreach ($childPaymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
-            if (!in_array($paymentMethodTransfer->getPaymentMethodKey(), $unzerPaymentMethodKeys)) {
+            if (!in_array($paymentMethodTransfer->getPaymentMethodKeyOrFail(), $unzerPaymentMethodKeys, true)) {
                 $paymentMethodsTransfer->getMethods()->append($paymentMethodTransfer);
             }
         }

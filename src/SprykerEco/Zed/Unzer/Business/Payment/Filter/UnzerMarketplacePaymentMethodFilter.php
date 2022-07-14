@@ -81,7 +81,7 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
     {
         $filteredPaymentMethods = new ArrayObject(
             array_filter((array)$paymentMethodsTransfer->getMethods(), function (PaymentMethodTransfer $paymentMethodTransfer) use ($paymentMethodsTransfer) {
-                return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || !$this->isPrioritizedMarketplaceUnzerPaymentMethod($paymentMethodsTransfer, $paymentMethodTransfer);
+                return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || !$this->hasPrioritizedMarketplaceUnzerPaymentMethod($paymentMethodsTransfer, $paymentMethodTransfer);
             }),
         );
 
