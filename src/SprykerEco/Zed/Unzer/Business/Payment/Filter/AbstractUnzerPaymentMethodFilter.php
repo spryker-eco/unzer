@@ -109,7 +109,7 @@ abstract class AbstractUnzerPaymentMethodFilter
      *
      * @return bool
      */
-    protected function hasUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): bool
+    protected function hasUnzerPaymentMethod(PaymentMethodsTransfer $paymentMethodsTransfer): bool
     {
         foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
             if ($this->isUnzerPaymentProvider($paymentMethodTransfer)) {

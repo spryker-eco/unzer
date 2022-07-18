@@ -25,7 +25,7 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        if (!$this->hasUnzerPaymentMethods($paymentMethodsTransfer)) {
+        if (!$this->hasUnzerPaymentMethod($paymentMethodsTransfer)) {
             return $paymentMethodsTransfer;
         }
 
