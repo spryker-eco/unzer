@@ -144,7 +144,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         $unzerPaymentMethodKeys = $this->getPaymentMethodKeys($unzerPaymentMethodsTransfer);
 
         foreach ($childUnzerPaymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
-            if (!$this->isUnzerPaymentProvider($paymentMethodTransfer) || !in_array($paymentMethodTransfer->getPaymentMethodKey(), $unzerPaymentMethodKeys)) {
+            if (!$this->isUnzerPaymentProvider($paymentMethodTransfer) || !in_array($paymentMethodTransfer->getPaymentMethodKey(), $unzerPaymentMethodKeys, true)) {
                 $unzerPaymentMethodsTransfer->getMethods()->append($paymentMethodTransfer);
             }
         }
