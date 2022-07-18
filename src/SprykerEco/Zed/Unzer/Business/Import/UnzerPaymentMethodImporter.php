@@ -8,7 +8,6 @@
 namespace SprykerEco\Zed\Unzer\Business\Import;
 
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
-use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
