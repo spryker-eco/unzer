@@ -29,7 +29,7 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
             return $paymentMethodsTransfer;
         }
 
-        if ($quoteTransfer->getUnzerCredentialsOrFail()->getTypeOrFail() === UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
+        if ($quoteTransfer->getUnzerCredentials() && $quoteTransfer->getUnzerCredentialsOrFail()->getType() === UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
             return $this->getStandardUnzerPaymentMethods($paymentMethodsTransfer);
         }
 

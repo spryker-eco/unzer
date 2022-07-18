@@ -63,7 +63,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
             return $paymentMethodsTransfer;
         }
 
-        if ($quoteTransfer->getUnzerCredentialsOrFail()->getTypeOrFail() === UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
+        if ($quoteTransfer->getUnzerCredentials() && $quoteTransfer->getUnzerCredentialsOrFail()->getType() === UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
             return $this->getStandardUnzerPaymentMethods($paymentMethodsTransfer, $quoteTransfer);
         }
 
@@ -122,11 +122,13 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
     ): PaymentMethodsTransfer {
         $mainMarketplaceUnzerKeypairTransfer = $this->getMainMarketplaceUnzerKeypair($quoteTransfer);
         $unzerPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($mainMarketplaceUnzerKeypairTransfer);
-        $childUnzerKeypairTransfer = $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail();
-        $unzerPaymentMethodsTransfer = $this->appendMainMarketplaceChildUnzerPaymentMethods(
-            $unzerPaymentMethodsTransfer,
-            $this->unzerPaymentMethodsAdapter->getPaymentMethods($childUnzerKeypairTransfer),
-        );
+        if ($quoteTransfer->getUnzerCredentials() && $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypair()) {
+            $unzerKeypairTransfer = $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypair();
+            $unzerPaymentMethodsTransfer = $this->appendMainMarketplaceChildUnzerPaymentMethods(
+                $unzerPaymentMethodsTransfer,
+                $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer),
+            );
+        }
 
         return $this->filterEnabledPaymentMethods($paymentMethodsTransfer, $unzerPaymentMethodsTransfer);
     }
