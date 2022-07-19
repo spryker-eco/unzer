@@ -793,4 +793,8 @@
         <property name="idSalesShipment" type="int"/>
         <property name="chargeId" type="string"/>
     </transfer>
+
+    <transfer name="RestCheckoutData">
+        <property name="quote" type="Quote"/>
+    </transfer>
 </transfers>
