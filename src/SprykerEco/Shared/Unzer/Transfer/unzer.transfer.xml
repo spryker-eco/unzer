@@ -229,6 +229,7 @@
         <property name="groupKey" type="string"/>
         <property name="taxRate" type="float"/>
         <property name="sumPriceToPayAggregation" type="int"/>
+        <property name="canceledAmount" type="int"/>
     </transfer>
 
     <transfer name="Expense">
@@ -239,6 +240,8 @@
         <property name="refundableAmount" type="int"/>
         <property name="shipment" type="Shipment"/>
         <property name="merchantReference" type="string"/>
+        <property name="canceledAmount" type="int"/>
+        <property name="sumPriceToPayAggregation" type="int"/>
     </transfer>
 
     <transfer name="PaymentUnzer">
@@ -577,8 +580,9 @@
 
     <transfer name="Refund">
         <property name="unzerRefunds" type="UnzerRefund[]" singular="unzerRefund"/>
-
         <property name="items" type="Item[]" singular="item"/>
+        <property name="amount" type="int"/>
+        <property name="expenses" singular="expense" type="Expense[]"/>
     </transfer>
 
     <transfer name="MerchantResponse">
@@ -792,5 +796,21 @@
     <transfer name="PaymentUnzerShipmentCharge">
         <property name="idSalesShipment" type="int"/>
         <property name="chargeId" type="string"/>
+    </transfer>
+
+
+    <transfer name="UnzerApiGetWebhookResponse">
+    </transfer>
+
+    <transfer name="UnzerApiDeleteWebhookResponse">
+    </transfer>
+
+    <transfer name="UnzerApiRefundResponse">
+    </transfer>
+
+    <transfer name="UnzerApiMarketplaceRefundResponse">
+    </transfer>
+
+    <transfer name="UnzerApiMessage">
     </transfer>
 </transfers>
