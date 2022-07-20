@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": ">=7.4",
-        "spryker-eco/unzer-api": "^1.0.0",
+        "spryker-eco/unzer-api": "feature/cc-16934/dev-unzer-glue-support-integration",
         "spryker-shop/shop-ui": "^1.56.0",
         "spryker/calculation": "^4.0.0",
         "spryker/cart-extension": "^4.1.0",
