@@ -16,7 +16,6 @@ use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerRefundItemTransfer;
-use Generated\Shared\Transfer\UnzerRefundTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants as UnzerSharedConstants;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
@@ -257,7 +256,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         foreach ($refundTransfer->getUnzerRefunds() as $unzerRefundTransfer) {
             if ($unzerRefundTransfer->getChargeId() === $expenseTransfer->getUnzerChargeId()) {
                 $unzerRefundTransfer->setAmount(
-                    $unzerRefundTransfer->getAmount() + ($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+                    $unzerRefundTransfer->getAmount() + ($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER),
                 );
             }
         }
