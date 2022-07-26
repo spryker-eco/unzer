@@ -28,12 +28,12 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
-    protected $unzerReader;
+    protected UnzerReaderInterface $unzerReader;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Persistence\UnzerRepositoryInterface
      */
-    protected $unzerRepository;
+    protected UnzerRepositoryInterface $unzerRepository;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
@@ -238,28 +238,31 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         $expenseTransfersCollectionForRefund = $this->expandStandardExpensesWithChargeIds($expenseTransfersCollectionForRefund, $paymentUnzerTransfer);
 
         foreach ($expenseTransfersCollectionForRefund as $expenseTransfer) {
-            $unzerRefundTransfer = $this->createStandardUnzerRefundTransfer($paymentUnzerTransfer, $expenseTransfer);
-            $refundTransfer->addUnzerRefund($unzerRefundTransfer);
+            $refundTransfer = $this->addExpensesToUnzerRefundTransfers($refundTransfer, $expenseTransfer);
         }
 
         return $refundTransfer;
     }
 
     /**
-     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer
      * @param \Generated\Shared\Transfer\ExpenseTransfer $expenseTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerRefundTransfer
+     * @return \Generated\Shared\Transfer\RefundTransfer
      */
-    protected function createStandardUnzerRefundTransfer(
-        PaymentUnzerTransfer $paymentUnzerTransfer,
+    protected function addExpensesToUnzerRefundTransfers(
+        RefundTransfer $refundTransfer,
         ExpenseTransfer $expenseTransfer
-    ): UnzerRefundTransfer {
-        return (new UnzerRefundTransfer())
-            ->setIsMarketplace(false)
-            ->setAmount($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
-            ->setPaymentId($paymentUnzerTransfer->getPaymentIdOrFail())
-            ->setChargeId($expenseTransfer->getUnzerChargeIdOrFail());
+    ): RefundTransfer {
+        foreach ($refundTransfer->getUnzerRefunds() as $unzerRefundTransfer) {
+            if ($unzerRefundTransfer->getChargeId() === $expenseTransfer->getUnzerChargeId()) {
+                $unzerRefundTransfer->setAmount(
+                    $unzerRefundTransfer->getAmount() + ($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER)
+                );
+            }
+        }
+
+        return $refundTransfer;
     }
 
     /**
