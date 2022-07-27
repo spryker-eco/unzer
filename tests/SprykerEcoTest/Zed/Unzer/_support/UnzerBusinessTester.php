@@ -760,7 +760,7 @@ class UnzerBusinessTester extends Actor
     protected function addUnzerKeypair(UnzerCredentialsTransfer $unzerCredentialsTransfer, array $override): UnzerCredentialsTransfer
     {
         return $unzerCredentialsTransfer->setUnzerKeypair(
-            $this->createUnzerKeypiarTransfer($override),
+            $this->createUnzerKeypiarTransfer($override)->setIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials()),
         );
     }
 
