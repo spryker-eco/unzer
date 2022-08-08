@@ -8,6 +8,7 @@
 namespace SprykerEco\Zed\Unzer\Business\Quote;
 
 use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
@@ -99,16 +100,33 @@ class UnzerQuoteExpander implements UnzerQuoteExpanderInterface
      */
     protected function addUnzerPayment(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        $paymentResourceTransfer = $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResource();
+        $unzerPaymentResourceTransfer = $this->getUnzerPaymentResource($quoteTransfer);
         $paymentSelection = $quoteTransfer->getPaymentOrFail()->getPaymentSelectionOrFail();
 
         $unzerPaymentTransfer = (new UnzerPaymentTransfer())
             ->setIsMarketplace($this->unzerConfig->isPaymentMethodMarketplaceReady($paymentSelection))
             ->setIsAuthorizable($this->unzerConfig->isPaymentAuthorizeRequired($paymentSelection))
-            ->setPaymentResource($paymentResourceTransfer);
+            ->setPaymentResource($unzerPaymentResourceTransfer);
 
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
 
         return $quoteTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentResourceTransfer
+     */
+    protected function getUnzerPaymentResource(QuoteTransfer $quoteTransfer): UnzerPaymentResourceTransfer
+    {
+        if (
+            $quoteTransfer->getPaymentOrFail()->getUnzerPayment() !== null
+            && $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResource() !== null
+        ) {
+            return $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getPaymentResourceOrFail();
+        }
+
+        return new UnzerPaymentResourceTransfer();
     }
 }
