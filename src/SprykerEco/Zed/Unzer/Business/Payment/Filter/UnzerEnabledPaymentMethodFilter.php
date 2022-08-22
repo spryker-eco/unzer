@@ -167,7 +167,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         $paymentMethodKeys = $this->getPaymentMethodKeys($marketplacePaymentMethods);
 
         foreach ($paymentMethodKeys as &$paymentMethodKey) {
-            $paymentMethodKey = str_replace(SharedUnzerConfig::PLATFORM_MARKETPLACE, '', $paymentMethodKey);
+            $paymentMethodKey = str_replace(SharedUnzerConfig::PLATFORM_MARKETPLACE, '', (string)$paymentMethodKey);
         }
 
         foreach ($merchantMarketplacePaymentMethods->getMethods() as $paymentMethodTransfer) {
