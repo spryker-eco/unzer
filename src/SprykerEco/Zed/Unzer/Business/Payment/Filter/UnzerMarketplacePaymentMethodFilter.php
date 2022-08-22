@@ -29,7 +29,7 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
             return $paymentMethodsTransfer;
         }
 
-        if ($quoteTransfer->getUnzerCredentials() && $quoteTransfer->getUnzerCredentialsOrFail()->getType() === UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
+        if ($this->hasStandardUnzerCredentials($quoteTransfer)) {
             return $this->getStandardUnzerPaymentMethods($paymentMethodsTransfer);
         }
 
@@ -37,7 +37,7 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
             return $this->getMarketplaceUnzerPaymentMethods($paymentMethodsTransfer);
         }
 
-        return $this->getMarketplacePrioritizedUnzerPaymentMethods($paymentMethodsTransfer);
+        return $paymentMethodsTransfer;
     }
 
     /**
@@ -73,18 +73,12 @@ class UnzerMarketplacePaymentMethodFilter extends AbstractUnzerPaymentMethodFilt
     }
 
     /**
-     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
+     * @return bool
      */
-    protected function getMarketplacePrioritizedUnzerPaymentMethods(PaymentMethodsTransfer $paymentMethodsTransfer): PaymentMethodsTransfer
+    protected function hasStandardUnzerCredentials(QuoteTransfer $quoteTransfer): bool
     {
-        $filteredPaymentMethods = new ArrayObject(
-            array_filter((array)$paymentMethodsTransfer->getMethods(), function (PaymentMethodTransfer $paymentMethodTransfer) use ($paymentMethodsTransfer) {
-                return !$this->isUnzerPaymentProvider($paymentMethodTransfer) || !$this->hasPrioritizedMarketplaceUnzerPaymentMethod($paymentMethodsTransfer, $paymentMethodTransfer);
-            }),
-        );
-
-        return $paymentMethodsTransfer->setMethods($filteredPaymentMethods);
+        return $quoteTransfer->getUnzerCredentials() && $quoteTransfer->getUnzerCredentialsOrFail()->getType() === UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD;
     }
 }
