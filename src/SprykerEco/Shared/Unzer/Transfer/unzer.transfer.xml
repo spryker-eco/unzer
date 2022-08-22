@@ -794,4 +794,9 @@
         <property name="idSalesShipment" type="int"/>
         <property name="chargeId" type="string"/>
     </transfer>
+
+    <transfer name="UnzerMarketplacePaymentCredentialsFinderCriteria">
+        <property name="quote" type="Quote"/>
+        <property name="paymentMethodKey" type="string"/>
+    </transfer>
 </transfers>
