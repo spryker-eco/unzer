@@ -213,7 +213,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
                     ->addMerchantReference($merchantReference),
             );
 
-        if ($quoteTransfer->getPayment() !== null && strpos(UnzerConfig::PLATFORM_MARKETPLACE, $quoteTransfer->getPaymentOrFail()->getPaymentMethod()) !== false) {
+        if ($quoteTransfer->getPayment() !== null && strpos(UnzerConfig::PLATFORM_MARKETPLACE, $quoteTransfer->getPaymentOrFail()->getPaymentMethodOrFail()) !== false) {
             $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
                 ->setUnzerCredentialsConditions(
                     (new UnzerCredentialsConditionsTransfer())

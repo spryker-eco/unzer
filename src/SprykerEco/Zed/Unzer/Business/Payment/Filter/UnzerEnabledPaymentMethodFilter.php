@@ -134,7 +134,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        $merchantMarketplaceUnzerKeypairTransfer = $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypair();
+        $merchantMarketplaceUnzerKeypairTransfer = $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail();
         $merchantMarketplacePaymentMethods = new ArrayObject();
 
         foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
@@ -143,13 +143,13 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
             }
         }
 
-        $merchantMarketplacePaymentMethods = $this->filterEnabledPaymentMethods(
-            $merchantMarketplacePaymentMethods,
+        $merchantMarketplacePaymentMethodsTransfer = $this->filterEnabledPaymentMethods(
+            (new PaymentMethodsTransfer())->setMethods($merchantMarketplacePaymentMethods),
             $this->unzerPaymentMethodsAdapter->getPaymentMethods($merchantMarketplaceUnzerKeypairTransfer),
         );
 
         return $this->appendMarketplacePaymentMethods(
-            $merchantMarketplacePaymentMethods,
+            $merchantMarketplacePaymentMethodsTransfer,
             $this->getMarketplaceUnzerPaymentMethods($paymentMethodsTransfer, $quoteTransfer),
         );
     }
@@ -210,8 +210,8 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
     {
         $paymentMethodKeys = [];
 
-        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodsTransfer) {
-            $paymentMethodKeys[] = $paymentMethodTransfer->getPaymentMethodKey();
+        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
+            $paymentMethodKeys[] = $paymentMethodTransfer->getPaymentMethodKeyOrFail();
         }
 
         return $paymentMethodKeys;
