@@ -8,9 +8,13 @@
 namespace SprykerEco\Yves\Unzer\Form\DataProvider;
 
 use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
+use SprykerEco\Client\Unzer\UnzerClientInterface;
+use SprykerEco\Shared\Unzer\UnzerConfig;
+use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
 
 class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
@@ -25,14 +29,23 @@ class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
     /**
      * @var \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface
      */
-    protected $quoteClient;
+    protected UnzerToQuoteClientInterface $quoteClient;
+
+    /**
+     * @var \SprykerEco\Client\Unzer\UnzerClientInterface
+     */
+    protected UnzerClientInterface $unzerClient;
 
     /**
      * @param \SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface $quoteClient
+     * @param \SprykerEco\Client\Unzer\UnzerClientInterface $unzerClient
      */
-    public function __construct(UnzerToQuoteClientInterface $quoteClient)
-    {
+    public function __construct(
+        UnzerToQuoteClientInterface $quoteClient,
+        UnzerClientInterface $unzerClient
+    ) {
         $this->quoteClient = $quoteClient;
+        $this->unzerClient = $unzerClient;
     }
 
     /**
@@ -42,8 +55,19 @@ class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
      */
     public function getOptions(AbstractTransfer $quoteTransfer): array
     {
+        if ($quoteTransfer->getUnzerCredentialsOrFail()->getTypeOrFail() === UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
+            return [];
+        }
+
+        $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer())
+            ->setQuote($quoteTransfer)
+            ->setPaymentMethodKey(UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD);
+
         return [
-            static::OPTION_PUBLIC_KEY => $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
+            static::OPTION_PUBLIC_KEY => $this->unzerClient
+                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsFinderCriteriaTransfer)
+                ->getUnzerKeypairOrFail()
+                ->getPublicKey(),
         ];
     }
 
