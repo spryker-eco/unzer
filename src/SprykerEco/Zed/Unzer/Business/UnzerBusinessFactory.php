@@ -98,6 +98,8 @@ use SprykerEco\Zed\Unzer\Business\Oms\Condition\UnzerConditionInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerEnabledPaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Finder\UnzerMarketplacePaymentUnzerCredentialsFinder;
+use SprykerEco\Zed\Unzer\Business\Payment\Finder\UnzerMarketplacePaymentUnzerCredentialsFinderInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
@@ -849,6 +851,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerKeypairQuoteExpander(
             $this->createUnzerReader(),
+            $this->createUnzerMarketplacePaymentUnzerCredentialsFinder(),
         );
     }
 
@@ -1158,6 +1161,17 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerChargeMapper(),
             $this->getRepository(),
             $this->getEntityManager(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Finder\UnzerMarketplacePaymentUnzerCredentialsFinderInterface
+     */
+    public function createUnzerMarketplacePaymentUnzerCredentialsFinder(): UnzerMarketplacePaymentUnzerCredentialsFinderInterface
+    {
+        return new UnzerMarketplacePaymentUnzerCredentialsFinder(
+            $this->createUnzerReader(),
+            $this->createUnzerPaymentMethodsAdapter(),
         );
     }
 }
