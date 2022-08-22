@@ -9,7 +9,6 @@ namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
 use ArrayObject;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
-use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\StoreTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
@@ -156,8 +155,8 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
     }
 
     /**
-     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $unzerPaymentMethodsTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $childUnzerPaymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $merchantMarketplacePaymentMethods
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $marketplacePaymentMethods
      *
      * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */

@@ -77,7 +77,7 @@ class UnzerMarketplacePaymentUnzerCredentialsResolver implements UnzerMarketplac
                 UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD,
                 UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
             ],
-            true
+            true,
         );
     }
 

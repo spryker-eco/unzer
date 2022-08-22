@@ -98,8 +98,6 @@ use SprykerEco\Zed\Unzer\Business\Oms\Condition\UnzerConditionInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerEnabledPaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolver;
-use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
@@ -125,6 +123,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcesso
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Reader\UnzerPaymentReader;
 use SprykerEco\Zed\Unzer\Business\Payment\Reader\UnzerPaymentReaderInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolver;
+use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdater;
 use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapper;
