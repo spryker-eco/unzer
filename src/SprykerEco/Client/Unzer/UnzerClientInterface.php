@@ -8,6 +8,8 @@
 namespace SprykerEco\Client\Unzer;
 
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
@@ -38,4 +40,19 @@ interface UnzerClientInterface
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
      */
     public function findUpdatedUnzerPaymentForOrderAction(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer;
+
+    /**
+     * Specification:
+     * - Makes Zed request.
+     * - Gets Unzer credentials for marketplace payment method by `UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer`.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function findMarketplacePaymentUnzerCredentials(
+        UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer
+    ): UnzerCredentialsTransfer;
 }
