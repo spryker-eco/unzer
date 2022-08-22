@@ -69,7 +69,7 @@ class UnzerStub implements UnzerStubInterface
     public function findMarketplacePaymentUnzerCredentials(
         UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer {
-        /** @var UnzerCredentialsTransfer $unzerCredentialsTransfer */
+        /** @var \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer */
         $unzerCredentialsTransfer = $this->zedRequestClient->call('/unzer/gateway/find-marketplace-payment-unzer-credentials', $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
 
         return $unzerCredentialsTransfer;
