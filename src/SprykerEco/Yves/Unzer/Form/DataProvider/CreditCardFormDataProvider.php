@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
+use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Yves\Unzer\Dependency\Client\UnzerToQuoteClientInterface;
 
 class CreditCardFormDataProvider extends AbstractFormDataProvider
@@ -42,6 +43,10 @@ class CreditCardFormDataProvider extends AbstractFormDataProvider
      */
     public function getOptions(AbstractTransfer $quoteTransfer): array
     {
+        if ($quoteTransfer->getUnzerCredentialsOrFail()->getTypeOrFail() !== UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
+            return [];
+        }
+
         return [
             static::OPTION_PUBLIC_KEY => $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail()->getPublicKeyOrFail(),
         ];
