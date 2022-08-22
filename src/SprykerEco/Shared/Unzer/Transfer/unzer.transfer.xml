@@ -795,7 +795,7 @@
         <property name="chargeId" type="string"/>
     </transfer>
 
-    <transfer name="UnzerMarketplacePaymentCredentialsFinderCriteria">
+    <transfer name="UnzerMarketplacePaymentCredentialsResolverCriteria">
         <property name="quote" type="Quote"/>
         <property name="paymentMethodKey" type="string"/>
     </transfer>

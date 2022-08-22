@@ -98,8 +98,8 @@ use SprykerEco\Zed\Unzer\Business\Oms\Condition\UnzerConditionInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerEnabledPaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFilter;
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Finder\UnzerMarketplacePaymentUnzerCredentialsFinder;
-use SprykerEco\Zed\Unzer\Business\Payment\Finder\UnzerMarketplacePaymentUnzerCredentialsFinderInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolver;
+use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
@@ -851,7 +851,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerKeypairQuoteExpander(
             $this->createUnzerReader(),
-            $this->createUnzerMarketplacePaymentUnzerCredentialsFinder(),
+            $this->createUnzerMarketplacePaymentUnzerCredentialsResolver(),
         );
     }
 
@@ -1165,11 +1165,11 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \SprykerEco\Zed\Unzer\Business\Payment\Finder\UnzerMarketplacePaymentUnzerCredentialsFinderInterface
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface
      */
-    public function createUnzerMarketplacePaymentUnzerCredentialsFinder(): UnzerMarketplacePaymentUnzerCredentialsFinderInterface
+    public function createUnzerMarketplacePaymentUnzerCredentialsResolver(): UnzerMarketplacePaymentUnzerCredentialsResolverInterface
     {
-        return new UnzerMarketplacePaymentUnzerCredentialsFinder(
+        return new UnzerMarketplacePaymentUnzerCredentialsResolver(
             $this->createUnzerReader(),
             $this->createUnzerPaymentMethodsAdapter(),
         );

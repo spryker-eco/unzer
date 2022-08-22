@@ -8,7 +8,7 @@
 namespace SprykerEco\Yves\Unzer\Form\DataProvider;
 
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
@@ -59,13 +59,13 @@ class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
             return [];
         }
 
-        $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer())
+        $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
             ->setQuote($quoteTransfer)
             ->setPaymentMethodKey(UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_CREDIT_CARD);
 
         return [
             static::OPTION_PUBLIC_KEY => $this->unzerClient
-                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsFinderCriteriaTransfer)
+                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer)
                 ->getUnzerKeypairOrFail()
                 ->getPublicKey(),
         ];

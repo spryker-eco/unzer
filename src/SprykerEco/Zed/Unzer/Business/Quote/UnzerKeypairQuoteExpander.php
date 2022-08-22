@@ -11,10 +11,10 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants;
-use SprykerEco\Zed\Unzer\Business\Payment\Finder\UnzerMarketplacePaymentUnzerCredentialsFinderInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
 class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
@@ -25,20 +25,20 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     protected UnzerReaderInterface $unzerReader;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Finder\UnzerMarketplacePaymentUnzerCredentialsFinderInterface
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface
      */
-    protected UnzerMarketplacePaymentUnzerCredentialsFinderInterface $unzerMarketplacePaymentUnzerCredentialsFinder;
+    protected UnzerMarketplacePaymentUnzerCredentialsResolverInterface $unzerMarketplacePaymentUnzerCredentialsResolver;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Finder\UnzerMarketplacePaymentUnzerCredentialsFinderInterface $unzerMarketplacePaymentUnzerCredentialsFinder
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface $unzerMarketplacePaymentUnzerCredentialsResolver
      */
     public function __construct(
         UnzerReaderInterface $unzerReader,
-        UnzerMarketplacePaymentUnzerCredentialsFinderInterface $unzerMarketplacePaymentUnzerCredentialsFinder
+        UnzerMarketplacePaymentUnzerCredentialsResolverInterface $unzerMarketplacePaymentUnzerCredentialsResolver
     ) {
         $this->unzerReader = $unzerReader;
-        $this->unzerMarketplacePaymentUnzerCredentialsFinder = $unzerMarketplacePaymentUnzerCredentialsFinder;
+        $this->unzerMarketplacePaymentUnzerCredentialsResolver = $unzerMarketplacePaymentUnzerCredentialsResolver;
     }
 
     /**
@@ -117,11 +117,11 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
         $unzerCredentialsTransfer = $this->getRegularUnzerCredentials($quoteTransfer);
 
         if ($unzerCredentialsTransfer->getType() !== UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
-            $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer())
+            $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
                 ->setQuote($quoteTransfer)
                 ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentMethod());
-            $unzerCredentialsTransfer = $this->unzerMarketplacePaymentUnzerCredentialsFinder
-                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsFinderCriteriaTransfer);
+            $unzerCredentialsTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
+                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
         }
 
         $quoteTransfer->getPaymentOrFail()
@@ -157,11 +157,11 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
             ->getUnzerKeypairOrFail();
 
         if ($quoteTransfer->getPaymentOrFail()->getPaymentMethod() !== null) {
-            $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer())
+            $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
                 ->setQuote($quoteTransfer)
                 ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentMethod());
-            $unzerKeypairTransfer = $this->unzerMarketplacePaymentUnzerCredentialsFinder
-                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsFinderCriteriaTransfer)
+            $unzerKeypairTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
+                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer)
                 ->getUnzerKeypairOrFail();
         }
 

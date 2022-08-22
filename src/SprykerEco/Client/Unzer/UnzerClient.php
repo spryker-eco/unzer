@@ -9,7 +9,7 @@ namespace SprykerEco\Client\Unzer;
 
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Client\Kernel\AbstractClient;
@@ -52,15 +52,15 @@ class UnzerClient extends AbstractClient implements UnzerClientInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
     public function findMarketplacePaymentUnzerCredentials(
-        UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer
+        UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer {
         return $this->getFactory()
             ->createZedStub()
-            ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsFinderCriteriaTransfer);
+            ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
     }
 }

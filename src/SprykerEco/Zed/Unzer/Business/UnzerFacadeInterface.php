@@ -18,7 +18,7 @@ use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
-use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
@@ -407,19 +407,19 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer.quote` transfer property to be set.
-     * - Requires `UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer.paymentMethodKey` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.paymentMethodKey` transfer property to be set.
      * - Gets main marketplace Unzer credentials from persistence.
      * - Performs Unzer get payment methods API call.
      * - Returns payment method related Unzer credentials.
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
     public function findMarketplacePaymentUnzerCredentials(
-        UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer
+        UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer;
 }

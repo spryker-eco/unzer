@@ -5,19 +5,19 @@
  * For full license information, please view the LICENSE file that was distributed with this source code.
  */
 
-namespace SprykerEco\Zed\Unzer\Business\Payment\Finder;
+namespace SprykerEco\Zed\Unzer\Business\Payment\Resolver;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
-use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
-class UnzerMarketplacePaymentUnzerCredentialsFinder implements UnzerMarketplacePaymentUnzerCredentialsFinderInterface
+class UnzerMarketplacePaymentUnzerCredentialsResolver implements UnzerMarketplacePaymentUnzerCredentialsResolverInterface
 {
  /**
   * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
@@ -40,15 +40,15 @@ class UnzerMarketplacePaymentUnzerCredentialsFinder implements UnzerMarketplaceP
     }
 
     /**
-     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer
+     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
     public function findMarketplacePaymentUnzerCredentials(
-        UnzerMarketplacePaymentCredentialsFinderCriteriaTransfer $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer
+        UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer {
-        $quoteTransfer = $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer->getQuoteOrFail();
-        $paymentMethodKey = $unzerMarketplacePaymentCredentialsFinderCriteriaTransfer->getPaymentMethodKeyOrFail();
+        $quoteTransfer = $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer->getQuoteOrFail();
+        $paymentMethodKey = $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer->getPaymentMethodKeyOrFail();
 
         if ($this->hasMarketplaceMerchantUnzerCredentials($quoteTransfer)) {
             $unzerCredentialsTransfer = $this->getMainMarketplaceUnzerCredentials($quoteTransfer);
@@ -77,6 +77,7 @@ class UnzerMarketplacePaymentUnzerCredentialsFinder implements UnzerMarketplaceP
                 UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD,
                 UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
             ],
+            true
         );
     }
 
