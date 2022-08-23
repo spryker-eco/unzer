@@ -50,35 +50,6 @@ abstract class AbstractUnzerPaymentMethodFilter
     }
 
     /**
-     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodTransfer $paymentMethodTransfer
-     *
-     * @return bool
-     */
-    protected function hasPrioritizedMarketplaceUnzerPaymentMethod(
-        PaymentMethodsTransfer $paymentMethodsTransfer,
-        PaymentMethodTransfer $paymentMethodTransfer
-    ): bool {
-        if ($this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer)) {
-            return false;
-        }
-
-        foreach ($paymentMethodsTransfer->getMethods() as $availablePaymentMethodTransfer) {
-            $marketplaceEquivalentPaymentMethodKey = str_replace(
-                SharedUnzerConfig::PAYMENT_PROVIDER_TYPE,
-                SharedUnzerConfig::PAYMENT_PROVIDER_TYPE . SharedUnzerConfig::PLATFORM_MARKETPLACE,
-                $paymentMethodTransfer->getPaymentMethodKeyOrFail(),
-            );
-
-            if ($availablePaymentMethodTransfer->getPaymentMethodKeyOrFail() === $marketplaceEquivalentPaymentMethodKey) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
      * @return bool
