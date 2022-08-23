@@ -13,4 +13,4 @@ Unzer module provides main business logic for Unzer regular and marketplace paym
 composer require spryker-eco/unzer
 ```
 ## Documentation
-[Documentation](https://docs.spryker.com/industry_partners/payment/unzer/unzer-details.htm)
+[Documentation](https://docs.spryker.com/docs/pbc/all/payment-service-providers/unzer/unzer.html)
