@@ -412,14 +412,17 @@ interface UnzerFacadeInterface
      * - Gets main marketplace Unzer credentials from persistence.
      * - Performs Unzer get payment methods API call.
      * - Returns payment method related Unzer credentials.
+     * - Throws `UnzerException` if Unzer Credentials for current store configuration could not be found in Persistence.
      *
      * @api
      *
      * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
      *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function findMarketplacePaymentUnzerCredentials(
+    public function resolveMarketplacePaymentUnzerCredentials(
         UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer;
 }
