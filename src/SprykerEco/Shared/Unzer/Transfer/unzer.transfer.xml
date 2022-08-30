@@ -240,8 +240,8 @@
         <property name="refundableAmount" type="int"/>
         <property name="shipment" type="Shipment"/>
         <property name="merchantReference" type="string"/>
-        <property name="sumPriceToPayAggregation" type="int"/>
         <property name="canceledAmount" type="int"/>
+        <property name="sumPriceToPayAggregation" type="int"/>
     </transfer>
 
     <transfer name="PaymentUnzer">
