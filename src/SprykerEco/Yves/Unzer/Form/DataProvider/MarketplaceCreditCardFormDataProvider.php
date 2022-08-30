@@ -65,7 +65,7 @@ class MarketplaceCreditCardFormDataProvider extends AbstractFormDataProvider
 
         return [
             static::OPTION_PUBLIC_KEY => $this->unzerClient
-                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer)
+                ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer)
                 ->getUnzerKeypairOrFail()
                 ->getPublicKey(),
         ];

@@ -44,7 +44,7 @@ class UnzerMarketplacePaymentUnzerCredentialsResolver implements UnzerMarketplac
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function findMarketplacePaymentUnzerCredentials(
+    public function resolveMarketplacePaymentUnzerCredentials(
         UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer {
         $quoteTransfer = $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer->getQuoteOrFail();

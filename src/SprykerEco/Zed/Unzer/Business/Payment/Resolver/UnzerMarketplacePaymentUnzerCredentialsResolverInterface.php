@@ -17,7 +17,7 @@ interface UnzerMarketplacePaymentUnzerCredentialsResolverInterface
   *
   * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
   */
-    public function findMarketplacePaymentUnzerCredentials(
+    public function resolveMarketplacePaymentUnzerCredentials(
         UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer;
 }

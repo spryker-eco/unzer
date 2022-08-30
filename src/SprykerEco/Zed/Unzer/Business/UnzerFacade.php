@@ -397,11 +397,11 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function findMarketplacePaymentUnzerCredentials(
+    public function resolveMarketplacePaymentUnzerCredentials(
         UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer {
         return $this->getFactory()
             ->createUnzerMarketplacePaymentUnzerCredentialsResolver()
-            ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
+            ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
     }
 }

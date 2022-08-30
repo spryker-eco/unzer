@@ -121,7 +121,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
                 ->setQuote($quoteTransfer)
                 ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentMethod());
             $unzerCredentialsTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
-                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
+                ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
         }
 
         $quoteTransfer->getPaymentOrFail()
@@ -161,7 +161,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
                 ->setQuote($quoteTransfer)
                 ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentMethod());
             $unzerKeypairTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
-                ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer)
+                ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer)
                 ->getUnzerKeypairOrFail();
         }
 

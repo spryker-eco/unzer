@@ -56,11 +56,11 @@ class UnzerClient extends AbstractClient implements UnzerClientInterface
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function findMarketplacePaymentUnzerCredentials(
+    public function resolveMarketplacePaymentUnzerCredentials(
         UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer {
         return $this->getFactory()
             ->createZedStub()
-            ->findMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
+            ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
     }
 }

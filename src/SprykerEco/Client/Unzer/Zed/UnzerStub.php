@@ -60,17 +60,17 @@ class UnzerStub implements UnzerStubInterface
     }
 
     /**
-     * @uses \SprykerEco\Zed\Unzer\Communication\Controller\GatewayController::findMarketplacePaymentUnzerCredentials()
+     * @uses \SprykerEco\Zed\Unzer\Communication\Controller\GatewayController::resolveMarketplacePaymentUnzerCredentials()
      *
      * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function findMarketplacePaymentUnzerCredentials(
+    public function resolveMarketplacePaymentUnzerCredentials(
         UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer {
         /** @var \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer */
-        $unzerCredentialsTransfer = $this->zedRequestClient->call('/unzer/gateway/find-marketplace-payment-unzer-credentials', $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
+        $unzerCredentialsTransfer = $this->zedRequestClient->call('/unzer/gateway/resolve-marketplace-payment-unzer-credentials', $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
 
         return $unzerCredentialsTransfer;
     }
