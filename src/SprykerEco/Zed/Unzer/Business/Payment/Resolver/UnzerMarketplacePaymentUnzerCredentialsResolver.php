@@ -83,25 +83,19 @@ class UnzerMarketplacePaymentUnzerCredentialsResolver implements UnzerMarketplac
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
-     *
+     * 
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
     protected function getMainMarketplaceUnzerCredentials(QuoteTransfer $quoteTransfer): UnzerCredentialsTransfer
     {
-        $unzerCredentialsConditions = (new UnzerCredentialsConditionsTransfer())
+        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
             ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
             ->setTypes([
                 UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
             ]);
-        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions($unzerCredentialsConditions);
+        $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
         $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
 
-        if ($unzerCredentialsTransfer === null) {
-            throw new UnzerException('Unzer Credentials for current Store configuration not found.');
-        }
-
-        return $unzerCredentialsTransfer;
+        return $unzerCredentialsTransfer ?? new UnzerCredentialsTransfer();
     }
 }
