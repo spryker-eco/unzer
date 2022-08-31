@@ -8,6 +8,8 @@
 namespace SprykerEco\Zed\Unzer\Communication\Controller;
 
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Spryker\Zed\Kernel\Communication\Controller\AbstractGatewayController;
@@ -37,5 +39,16 @@ class GatewayController extends AbstractGatewayController
     public function findUpdatedUnzerPaymentForOrderAction(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer
     {
         return $this->getFacade()->findUpdatedUnzerPaymentForOrder($orderTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function resolveMarketplacePaymentUnzerCredentials(
+        UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
+    ): UnzerCredentialsTransfer {
+        return $this->getFacade()->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
     }
 }

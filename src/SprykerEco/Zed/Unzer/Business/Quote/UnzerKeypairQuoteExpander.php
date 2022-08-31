@@ -11,7 +11,10 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
+use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEco\Shared\Unzer\UnzerConstants;
+use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
 class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
@@ -19,14 +22,23 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
-    protected $unzerReader;
+    protected UnzerReaderInterface $unzerReader;
+
+    /**
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface
+     */
+    protected UnzerMarketplacePaymentUnzerCredentialsResolverInterface $unzerMarketplacePaymentUnzerCredentialsResolver;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface $unzerReader
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface $unzerMarketplacePaymentUnzerCredentialsResolver
      */
-    public function __construct(UnzerReaderInterface $unzerReader)
-    {
+    public function __construct(
+        UnzerReaderInterface $unzerReader,
+        UnzerMarketplacePaymentUnzerCredentialsResolverInterface $unzerMarketplacePaymentUnzerCredentialsResolver
+    ) {
         $this->unzerReader = $unzerReader;
+        $this->unzerMarketplacePaymentUnzerCredentialsResolver = $unzerMarketplacePaymentUnzerCredentialsResolver;
     }
 
     /**
@@ -36,11 +48,11 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
      */
     public function expandQuoteWithUnzerKeypair(QuoteTransfer $quoteTransfer): QuoteTransfer
     {
-        if ($quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->getIsMarketplaceOrFail()) {
+        $uniqueMerchantReferences = $this->extractUniqueMerchantReferences($quoteTransfer);
+        if (count($uniqueMerchantReferences) > 1) {
             return $this->setMainMarketplaceUnzerKeypair($quoteTransfer);
         }
 
-        $uniqueMerchantReferences = $this->extractUniqueMerchantReferences($quoteTransfer);
         if (count($uniqueMerchantReferences) === 1 && $uniqueMerchantReferences[0] !== UnzerConstants::MAIN_SELLER_REFERENCE) {
             return $this->setMarketplaceMerchantUnzerKeypair($quoteTransfer, $uniqueMerchantReferences[0]);
         }
@@ -104,7 +116,19 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     {
         $unzerCredentialsTransfer = $this->getRegularUnzerCredentials($quoteTransfer);
 
-        $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+        if ($unzerCredentialsTransfer->getType() !== UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
+            $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
+                ->setQuote($quoteTransfer)
+                ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentMethod());
+            $unzerCredentialsTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
+                ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
+        }
+
+        if ($unzerCredentialsTransfer->getUnzerKeypair() !== null) {
+            $quoteTransfer->getPaymentOrFail()
+                ->getUnzerPaymentOrFail()
+                ->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+        }
 
         return $quoteTransfer;
     }
@@ -133,7 +157,19 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     {
         $unzerCredentialsTransfer = $this->getMarketplaceMerchantUnzerCredentialsTransfer($quoteTransfer, $merchantReference);
 
-        $quoteTransfer->getPaymentOrFail()->getUnzerPaymentOrFail()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentMethod() !== null) {
+            $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
+                ->setQuote($quoteTransfer)
+                ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentMethod());
+            $unzerCredentialsTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
+                ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
+        }
+
+        if ($unzerCredentialsTransfer->getUnzerKeypair() !== null) {
+            $quoteTransfer->getPaymentOrFail()
+            ->getUnzerPaymentOrFail()
+            ->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+        }
 
         return $quoteTransfer;
     }
@@ -178,6 +214,17 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
                     ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
                     ->addMerchantReference($merchantReference),
             );
+
+        if ($quoteTransfer->getPayment() !== null && strpos(UnzerConfig::PLATFORM_MARKETPLACE, $quoteTransfer->getPaymentOrFail()->getPaymentMethodOrFail()) !== false) {
+            $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
+                ->setUnzerCredentialsConditions(
+                    (new UnzerCredentialsConditionsTransfer())
+                        ->setTypes([
+                            UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
+                        ])
+                        ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail()),
+                );
+        }
 
         $unzerCredentials = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
 

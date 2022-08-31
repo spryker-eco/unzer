@@ -123,6 +123,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcesso
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Reader\UnzerPaymentReader;
 use SprykerEco\Zed\Unzer\Business\Payment\Reader\UnzerPaymentReaderInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolver;
+use SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdater;
 use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Quote\Mapper\UnzerQuoteMapper;
@@ -849,6 +851,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerKeypairQuoteExpander(
             $this->createUnzerReader(),
+            $this->createUnzerMarketplacePaymentUnzerCredentialsResolver(),
         );
     }
 
@@ -942,6 +945,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentMethodImportFilter(),
             $this->createPaymentImportAdapter(),
             $this->createUnzerPaymentMethodsAdapter(),
+            $this->createUnzerReader(),
         );
     }
 
@@ -1157,6 +1161,17 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerChargeMapper(),
             $this->getRepository(),
             $this->getEntityManager(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\Resolver\UnzerMarketplacePaymentUnzerCredentialsResolverInterface
+     */
+    public function createUnzerMarketplacePaymentUnzerCredentialsResolver(): UnzerMarketplacePaymentUnzerCredentialsResolverInterface
+    {
+        return new UnzerMarketplacePaymentUnzerCredentialsResolver(
+            $this->createUnzerReader(),
+            $this->createUnzerPaymentMethodsAdapter(),
         );
     }
 }

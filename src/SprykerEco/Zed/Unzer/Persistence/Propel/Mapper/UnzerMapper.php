@@ -203,6 +203,7 @@ class UnzerMapper
 
         return $unzerCredentialsTransfer->setUnzerKeypair(
             (new UnzerKeypairTransfer())
+                ->setIdUnzerCredentials($unzerCredentialsTransfer->getIdUnzerCredentials())
                 ->setPublicKey($unzerCredentialsEntity->getPublicKey())
                 ->setKeypairId($unzerCredentialsEntity->getKeypairId()),
         );
