@@ -124,9 +124,11 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
                 ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
         }
 
-        $quoteTransfer->getPaymentOrFail()
-            ->getUnzerPaymentOrFail()
-            ->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+        if ($unzerCredentialsTransfer->getUnzerKeypair() !== null) {
+            $quoteTransfer->getPaymentOrFail()
+                ->getUnzerPaymentOrFail()
+                ->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+        }
 
         return $quoteTransfer;
     }
