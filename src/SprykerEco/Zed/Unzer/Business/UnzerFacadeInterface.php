@@ -407,12 +407,12 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote.unzerCredentials.type` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote.store.name` transfer property to be set.
      * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.paymentMethodKey` transfer property to be set.
      * - Gets main marketplace Unzer credentials from persistence.
      * - Performs Unzer get payment methods API call.
      * - Returns payment method related Unzer credentials.
-     * - Throws `UnzerException` if Unzer Credentials for current store configuration could not be found in Persistence.
      *
      * @api
      *
