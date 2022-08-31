@@ -14,7 +14,6 @@ use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use SprykerEco\Shared\Unzer\UnzerConstants;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 
 class UnzerMarketplacePaymentUnzerCredentialsResolver implements UnzerMarketplacePaymentUnzerCredentialsResolverInterface
@@ -83,7 +82,7 @@ class UnzerMarketplacePaymentUnzerCredentialsResolver implements UnzerMarketplac
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * 
+     *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
     protected function getMainMarketplaceUnzerCredentials(QuoteTransfer $quoteTransfer): UnzerCredentialsTransfer
