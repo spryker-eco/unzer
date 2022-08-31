@@ -121,7 +121,7 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
         PaymentMethodsTransfer $paymentMethodsTransfer,
         PaymentMethodsTransfer $childPaymentMethodsTransfer
     ): PaymentMethodsTransfer {
-        $unzerPaymentMethodKeys = $this->getPaymentMethodKeys($paymentMethodsTransfer);
+        $unzerPaymentMethodKeys = $this->extractPaymentMethodKeysFromPaymentMethodsTransfer($paymentMethodsTransfer);
 
         foreach ($childPaymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
             if (!in_array($paymentMethodTransfer->getPaymentMethodKeyOrFail(), $unzerPaymentMethodKeys, true)) {
@@ -151,7 +151,7 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
      *
      * @return array<string>
      */
-    protected function getPaymentMethodKeys(PaymentMethodsTransfer $paymentMethodsTransfer): array
+    protected function extractPaymentMethodKeysFromPaymentMethodsTransfer(PaymentMethodsTransfer $paymentMethodsTransfer): array
     {
         $paymentMethodKeys = [];
         foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
