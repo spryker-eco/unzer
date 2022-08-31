@@ -155,21 +155,21 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
      */
     protected function setMarketplaceMerchantUnzerKeypair(QuoteTransfer $quoteTransfer, string $merchantReference): QuoteTransfer
     {
-        $unzerKeypairTransfer = $this->getMarketplaceMerchantUnzerCredentialsTransfer($quoteTransfer, $merchantReference)
-            ->getUnzerKeypairOrFail();
+        $unzerCredentialsTransfer = $this->getMarketplaceMerchantUnzerCredentialsTransfer($quoteTransfer, $merchantReference);
 
         if ($quoteTransfer->getPaymentOrFail()->getPaymentMethod() !== null) {
             $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
                 ->setQuote($quoteTransfer)
                 ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentMethod());
-            $unzerKeypairTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
-                ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer)
-                ->getUnzerKeypairOrFail();
+            $unzerCredentialsTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
+                ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
         }
 
-        $quoteTransfer->getPaymentOrFail()
+        if ($unzerCredentialsTransfer->getUnzerKeypair() !== null) {
+            $quoteTransfer->getPaymentOrFail()
             ->getUnzerPaymentOrFail()
-            ->setUnzerKeypair($unzerKeypairTransfer);
+            ->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+        }
 
         return $quoteTransfer;
     }
