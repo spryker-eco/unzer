@@ -799,7 +799,6 @@
         <property name="chargeId" type="string"/>
     </transfer>
 
-
     <transfer name="UnzerApiGetWebhookResponse">
     </transfer>
 
