@@ -46,7 +46,7 @@ class GatewayController extends AbstractGatewayController
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
      */
-    public function resolveMarketplacePaymentUnzerCredentials(
+    public function resolveMarketplacePaymentUnzerCredentialsAction(
         UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
     ): UnzerCredentialsTransfer {
         return $this->getFacade()->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
