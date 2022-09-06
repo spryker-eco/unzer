@@ -44,7 +44,7 @@ interface UnzerClientInterface
     /**
      * Specification:
      * - Makes Zed request.
-     * - Gets Unzer credentials for marketplace payment method by `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer`.
+     * - Gets Unzer marketplace credentials by `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer`.
      *
      * @api
      *
