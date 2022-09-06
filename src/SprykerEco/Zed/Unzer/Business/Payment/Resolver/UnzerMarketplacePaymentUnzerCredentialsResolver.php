@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Resolver;
 
+use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
@@ -53,14 +54,29 @@ class UnzerMarketplacePaymentUnzerCredentialsResolver implements UnzerMarketplac
             $unzerCredentialsTransfer = $this->getMainMarketplaceUnzerCredentials($quoteTransfer);
             $paymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerCredentialsTransfer->getUnzerKeypairOrFail());
 
-            foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
-                if ($paymentMethodTransfer->getPaymentMethodKey() === $paymentMethodKey) {
-                    return $unzerCredentialsTransfer;
-                }
+            if ($this->isMainMarketplacePaymentMethodAvailable($paymentMethodsTransfer, $paymentMethodKey)) {
+                return $unzerCredentialsTransfer;
             }
         }
 
         return $quoteTransfer->getUnzerCredentialsOrFail();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     * @param string $paymentMethodKey
+     *
+     * @return bool
+     */
+    protected function isMainMarketplacePaymentMethodAvailable(PaymentMethodsTransfer $paymentMethodsTransfer, string $paymentMethodKey): bool
+    {
+        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
+            if ($paymentMethodTransfer->getPaymentMethodKey() === $paymentMethodKey) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
