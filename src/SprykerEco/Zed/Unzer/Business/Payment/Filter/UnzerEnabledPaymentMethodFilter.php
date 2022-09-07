@@ -134,7 +134,6 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        $merchantMarketplaceUnzerKeypairTransfer = $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail();
         $merchantMarketplacePaymentMethods = new ArrayObject();
 
         foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
@@ -143,10 +142,13 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
             }
         }
 
-        $merchantMarketplacePaymentMethodsTransfer = $this->filterEnabledPaymentMethods(
-            (new PaymentMethodsTransfer())->setMethods($merchantMarketplacePaymentMethods),
-            $this->unzerPaymentMethodsAdapter->getPaymentMethods($merchantMarketplaceUnzerKeypairTransfer),
-        );
+        if ($quoteTransfer->getUnzerCredentials() && $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypair()) {
+            $merchantMarketplaceUnzerKeypairTransfer = $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail();
+            $merchantMarketplacePaymentMethodsTransfer = $this->filterEnabledPaymentMethods(
+                (new PaymentMethodsTransfer())->setMethods($merchantMarketplacePaymentMethods),
+                $this->unzerPaymentMethodsAdapter->getPaymentMethods($merchantMarketplaceUnzerKeypairTransfer),
+            );
+        }
 
         return $this->appendMarketplacePaymentMethods(
             $merchantMarketplacePaymentMethodsTransfer,
@@ -164,11 +166,7 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         PaymentMethodsTransfer $merchantMarketplacePaymentMethods,
         PaymentMethodsTransfer $marketplacePaymentMethods
     ): PaymentMethodsTransfer {
-        $paymentMethodKeys = $this->getPaymentMethodKeys($marketplacePaymentMethods);
-
-        foreach ($paymentMethodKeys as &$paymentMethodKey) {
-            $paymentMethodKey = str_replace(SharedUnzerConfig::PLATFORM_MARKETPLACE, '', (string)$paymentMethodKey);
-        }
+        $paymentMethodKeys = $this->getMarketplaceEquivalentStandardPaymentMethodKeys($marketplacePaymentMethods);
 
         foreach ($merchantMarketplacePaymentMethods->getMethods() as $paymentMethodTransfer) {
             if ($this->isUnzerPaymentProvider($paymentMethodTransfer) && !in_array($paymentMethodTransfer->getPaymentMethodKey(), $paymentMethodKeys, true)) {
@@ -177,6 +175,23 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         }
 
         return $marketplacePaymentMethods;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $marketplacePaymentMethods
+     *
+     * @return array<string>
+     */
+    protected function getMarketplaceEquivalentStandardPaymentMethodKeys(PaymentMethodsTransfer $marketplacePaymentMethods): array
+    {
+        $marketplacePaymentMethodKeys = $this->getPaymentMethodKeys($marketplacePaymentMethods);
+        $paymentMethodKeys = [];
+
+        foreach ($marketplacePaymentMethodKeys as $paymentMethodKey) {
+            $paymentMethodKeys[] = str_replace(SharedUnzerConfig::PLATFORM_MARKETPLACE, '', (string)$paymentMethodKey);
+        }
+
+        return $paymentMethodKeys;
     }
 
     /**
@@ -270,22 +285,5 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         }
 
         return $unzerCredentialsTransfer->getUnzerKeypairOrFail();
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     *
-     * @return array<array-key, string>
-     */
-    protected function getUniqueMerchantReferences(QuoteTransfer $quoteTransfer): array
-    {
-        $merchantReferences = [];
-        foreach ($quoteTransfer->getItems() as $itemTransfer) {
-            if ($itemTransfer->getMerchantReference() !== null) {
-                $merchantReferences[$itemTransfer->getMerchantReferenceOrFail()] = $itemTransfer->getMerchantReferenceOrFail();
-            }
-        }
-
-        return $merchantReferences;
     }
 }

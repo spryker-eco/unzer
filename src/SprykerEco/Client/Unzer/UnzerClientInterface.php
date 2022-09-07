@@ -44,6 +44,9 @@ interface UnzerClientInterface
     /**
      * Specification:
      * - Makes Zed request.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote.unzerCredentials.type` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote.store.name` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.paymentMethodKey` transfer property to be set.
      * - Gets Unzer marketplace credentials by `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer`.
      *
      * @api

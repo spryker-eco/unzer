@@ -105,9 +105,7 @@ class UnzerMarketplacePaymentUnzerCredentialsResolver implements UnzerMarketplac
     {
         $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())
             ->addStoreName($quoteTransfer->getStoreOrFail()->getNameOrFail())
-            ->setTypes([
-                UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
-            ]);
+            ->addType(UnzerConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE);
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
         $unzerCredentialsTransfer = $this->unzerReader->findUnzerCredentialsByCriteria($unzerCredentialsCriteriaTransfer);
 

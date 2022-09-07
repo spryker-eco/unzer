@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentMethodsAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Import\Adapter\PaymentImportAdapterInterface;
@@ -75,12 +76,10 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
     {
         $paymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
         $unzerCredentialsCollectionTransfer = $this->getChildUnzerCredentialsCollectionTransfer($unzerKeypairTransfer);
-        foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
-            if ($unzerCredentialsTransfer->getUnzerKeypair()) {
-                $paymentMethodsTransfer = $this->appendChildPaymentMethods(
-                    $paymentMethodsTransfer,
-                    $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerCredentialsTransfer->getUnzerKeypairOrFail()),
-                );
+
+        if ($unzerCredentialsCollectionTransfer) {
+            foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
+                $paymentMethodsTransfer = $this->appendChildPaymentMethods($paymentMethodsTransfer, $unzerCredentialsTransfer);
             }
         }
 
@@ -113,14 +112,19 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
 
     /**
      * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
-     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $childPaymentMethodsTransfer
+     * @param \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
     protected function appendChildPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
-        PaymentMethodsTransfer $childPaymentMethodsTransfer
+        UnzerCredentialsTransfer $childPaymentMethodsTransfer
     ): PaymentMethodsTransfer {
+        if (!$unzerCredentialsTransfer->getUnzerKeypair()) {
+            return $paymentMethodsTransfer;
+        }
+
+        $childPaymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerCredentialsTransfer->getUnzerKeypair());
         $unzerPaymentMethodKeys = $this->extractPaymentMethodKeysFromPaymentMethodsTransfer($paymentMethodsTransfer);
 
         foreach ($childPaymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
@@ -135,12 +139,16 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer|null
      */
     protected function getChildUnzerCredentialsCollectionTransfer(
         UnzerKeypairTransfer $unzerKeypairTransfer
-    ): UnzerCredentialsCollectionTransfer {
-        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())->addParentId($unzerKeypairTransfer->getIdUnzerCredentialsOrFail());
+    ): ?UnzerCredentialsCollectionTransfer {
+        if (!$unzerKeypairTransfer->getIdUnzerCredentials()) {
+            return null;
+        }
+
+        $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())->addParentId($unzerKeypairTransfer->getIdUnzerCredentials());
         $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())->setUnzerCredentialsConditions($unzerCredentialsConditionsTransfer);
 
         return $this->unzerReader->getUnzerCredentialsCollectionByCriteria($unzerCredentialsCriteriaTransfer);

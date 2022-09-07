@@ -60,7 +60,7 @@ class UnzerStub implements UnzerStubInterface
     }
 
     /**
-     * @uses \SprykerEco\Zed\Unzer\Communication\Controller\GatewayController::resolveMarketplacePaymentUnzerCredentials()
+     * @uses \SprykerEco\Zed\Unzer\Communication\Controller\GatewayController::resolveMarketplacePaymentUnzerCredentialsAction()
      *
      * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
      *
