@@ -7,8 +7,8 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business\UnzerFacade;
 
-use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
+use SprykerEco\Shared\Unzer\UnzerConfig;
 use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
 
 /**
@@ -26,18 +26,46 @@ class ResolveMarketplacePaymentUnzerCredentialsTest extends UnzerFacadeBaseTest
     /**
      * @return void
      */
-    public function testResolveMarketplacePaymentUnzerCredentials(): void
+    public function testResolveMarketplacePaymentUnzerCredentialsWithMainMarketplaceUnzerCredentialsWithinQuoteShouldReturnMainMarketplaceUnzerCredentials(): void
     {
         // Arrange
-        $quoteTransfer = new QuoteTransfer();
+        $quoteTransfer = $this->tester->createMarketplaceQuoteTransfer();
         $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
-            ->setPaymentMethodKey('UnzerMarketplaceCreditCard')
+            ->setPaymentMethodKey(UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT)
             ->setQuote($quoteTransfer);
 
         // Act
-        $this->tester->getFacade()->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
+        $resolvedUnzerCredentialsTransfer = $this->tester
+            ->getFacade()
+            ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
 
         // Assert
-        $this->assertTrue(true);
+        $this->assertSame(
+            $quoteTransfer->getUnzerCredentialsOrFail()->getIdUnzerCredentials(),
+            $resolvedUnzerCredentialsTransfer->getIdUnzerCredentials(),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testResolveMarketplacePaymentUnzerCredentialsWithMarketplaceMerchantUnzerCredentialsWithinQuoteShouldReturnMainMarketplaceUnzerCredentials(): void
+    {
+        // Arrange
+        $quoteTransfer = $this->tester->createMarketplaceMerchantQuoteTransfer();
+        $unzerMarketplacePaymentCredentialsResolverCrdsdsiteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
+            ->setPaymentMethodKey(UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_SOFORT)
+            ->setQuote($quoteTransfer);
+
+        // Act
+        $resolvedUnzerCredentialsTransfer = $this->tester
+            ->getFacade()
+            ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCrdsdsiteriaTransfer);
+
+        // Assert
+        $this->assertSame(
+            $quoteTransfer->getUnzerCredentialsOrFail()->getParentIdUnzerCredentials(),
+            $resolvedUnzerCredentialsTransfer->getIdUnzerCredentials(),
+        );
     }
 }

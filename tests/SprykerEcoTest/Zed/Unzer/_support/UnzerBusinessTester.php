@@ -111,6 +111,15 @@ class UnzerBusinessTester extends Actor
     ];
 
     /**
+     * @var array<string>
+     */
+    public const UNZER_STANDARD_PAYMENT_METHODS = [
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_CREDIT_CARD,
+        UnzerSharedConfig::PAYMENT_METHOD_KEY_SOFORT,
+    ];
+
+    /**
      * @var int
      */
     protected const TOTALS_PRICE_TO_PAY = 72350;
@@ -242,6 +251,8 @@ class UnzerBusinessTester extends Actor
     }
 
     /**
+     * @param array $override
+     *
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function createQuoteTransfer(): QuoteTransfer
@@ -262,8 +273,24 @@ class UnzerBusinessTester extends Actor
     /**
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
-    public function createMarketplaceQuoteTransfer(): QuoteTransfer
+    public function createUnzerStandardQuoteTransfer(): QuoteTransfer
     {
+        $unzerCredentialsTransfer = $this->haveStandardUnzerCredentials();
+        $storeTransfer = $unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0);
+
+        return $this->createQuoteTransfer()
+            ->setStore($storeTransfer)
+            ->setUnzerCredentials($unzerCredentialsTransfer);
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\QuoteTransfer
+     */
+    public function createMarketplaceQuoteTransfer(array $override = []): QuoteTransfer
+    {
+        $unzerCredentialsTransfer = $this->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
+        $storeTransfer = $unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0);
+
         $quoteTransfer = (new QuoteBuilder())
             ->withItem([
                 'merchantReference' => static::MERCHANT_REFERENCE,
@@ -280,7 +307,32 @@ class UnzerBusinessTester extends Actor
 
         return $quoteTransfer->setCustomer($this->haveCustomer())
             ->setPayment($this->createPaymentTransfer('unzerBankTransfer')->setUnzerPayment($this->createUnzerPaymentTransfer(true, false)))
-            ->setStore($this->haveStore());
+            ->setStore($this->haveStore())
+            ->setUnzerCredentials($unzerCredentialsTransfer);
+    }
+
+    public function createMarketplaceMerchantQuoteTransfer(array $override = []): QuoteTransfer
+    {
+        $unzerCredentialsTransfer = $this->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
+        $storeTransfer = $unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0);
+        $quoteTransfer = (new QuoteBuilder())
+            ->withItem([
+                'merchantReference' => static::MERCHANT_REFERENCE,
+            ])
+            ->withItem([
+                'merchantReference' => static::MERCHANT_REFERENCE,
+            ])
+            ->withTotals(
+                (new TotalsBuilder())->withTaxTotal(),
+            )
+            ->withCurrency([CurrencyTransfer::CODE => static::CURRENCY_CODE])
+            ->withBillingAddress()
+            ->build();
+
+        return $quoteTransfer->setCustomer($this->haveCustomer())
+            ->setPayment($this->createPaymentTransfer('unzerMarketplaceCreditCard')->setUnzerPayment($this->createUnzerPaymentTransfer(true, true)))
+            ->setStore($storeTransfer)
+            ->setUnzerCredentials($unzerCredentialsTransfer->getChildUnzerCredentials());
     }
 
     /**
@@ -373,17 +425,30 @@ class UnzerBusinessTester extends Actor
     /**
      * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
-    public function createPaymentMethodsTransfer(): PaymentMethodsTransfer
+    public function createPaymentMethodsTransfer($withUnzerPaymentMethods = true): PaymentMethodsTransfer
     {
         $paymentMethodsBuilder = (new PaymentMethodsBuilder())->withMethod();
-        foreach (static::UNZER_MARKETPLACE_PAYMENT_METHODS as $paymentMethod) {
-            $paymentMethodsBuilder->withAnotherMethod([
-                'paymentProvider' => UnzerSharedConfig::PAYMENT_PROVIDER_NAME,
-                'paymentMethodKey' => $paymentMethod,
-            ]);
+
+        if ($withUnzerPaymentMethods) {
+            $unzerPaymentMethods = array_merge(static::UNZER_MARKETPLACE_PAYMENT_METHODS, static::UNZER_STANDARD_PAYMENT_METHODS);
+
+            foreach ($unzerPaymentMethods as $paymentMethod) {
+                $paymentMethodsBuilder->withAnotherMethod([
+                    'paymentProvider' => UnzerSharedConfig::PAYMENT_PROVIDER_NAME,
+                    'paymentMethodKey' => $paymentMethod,
+                ]);
+            }
         }
 
         return $paymentMethodsBuilder->build();
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
+     */
+    public function createPaymentMethodsTransferWithoutUnzerPaymentMethods(): PaymentMethodsTransfer
+    {
+        return (new PaymentMethodsBuilder())->withMethod()->build();
     }
 
     /**
@@ -655,6 +720,8 @@ class UnzerBusinessTester extends Actor
             UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MAIN_MARKETPLACE,
         ], $mainMarketplaceOverride));
 
+        $mainMarketplaceUnzerCredentialsTransfer = $this->addUnzerKeypair($mainMarketplaceUnzerCredentialsTransfer, $mainMarketplaceOverride);
+
         $marketplaceMainMerchantUnzerCredentialsTransfer = $this->haveUnzerCredentials(array_merge([
             UnzerCredentialsTransfer::TYPE => UnzerSharedConstants::UNZER_CREDENTIALS_TYPE_MARKETPLACE_MAIN_MERCHANT,
             UnzerCredentialsTransfer::PARENT_ID_UNZER_CREDENTIALS => $mainMarketplaceUnzerCredentialsTransfer->getIdUnzerCredentials(),
@@ -663,6 +730,8 @@ class UnzerBusinessTester extends Actor
                 StoreRelationTransfer::ID_STORES => [$mainMarketplaceUnzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0)->getIdStore()],
             ],
         ], $merchantMainMarketplaceOverride));
+
+        $marketplaceMainMerchantUnzerCredentialsTransfer = $this->addUnzerKeypair($marketplaceMainMerchantUnzerCredentialsTransfer, $merchantMainMarketplaceOverride);
 
         return $mainMarketplaceUnzerCredentialsTransfer->setChildUnzerCredentials($marketplaceMainMerchantUnzerCredentialsTransfer);
     }

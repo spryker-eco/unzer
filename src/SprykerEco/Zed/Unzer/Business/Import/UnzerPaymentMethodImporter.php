@@ -118,7 +118,7 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
      */
     protected function appendChildPaymentMethods(
         PaymentMethodsTransfer $paymentMethodsTransfer,
-        UnzerCredentialsTransfer $childPaymentMethodsTransfer
+        UnzerCredentialsTransfer $unzerCredentialsTransfer
     ): PaymentMethodsTransfer {
         if (!$unzerCredentialsTransfer->getUnzerKeypair()) {
             return $paymentMethodsTransfer;
