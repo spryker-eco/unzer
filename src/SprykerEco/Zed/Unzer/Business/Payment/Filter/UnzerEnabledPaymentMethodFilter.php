@@ -134,18 +134,18 @@ class UnzerEnabledPaymentMethodFilter extends AbstractUnzerPaymentMethodFilter i
         PaymentMethodsTransfer $paymentMethodsTransfer,
         QuoteTransfer $quoteTransfer
     ): PaymentMethodsTransfer {
-        $merchantMarketplacePaymentMethods = new ArrayObject();
+        $merchantMarketplacePaymentMethodsTransfer = (new PaymentMethodsTransfer())->setMethods(new ArrayObject());
 
         foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
             if (!$this->isUnzerPaymentProvider($paymentMethodTransfer) xor !$this->isMarketplaceUnzerPaymentMethod($paymentMethodTransfer)) {
-                $merchantMarketplacePaymentMethods->append($paymentMethodTransfer);
+                $merchantMarketplacePaymentMethodsTransfer->getMethods()->append($paymentMethodTransfer);
             }
         }
 
         if ($quoteTransfer->getUnzerCredentials() && $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypair()) {
             $merchantMarketplaceUnzerKeypairTransfer = $quoteTransfer->getUnzerCredentialsOrFail()->getUnzerKeypairOrFail();
             $merchantMarketplacePaymentMethodsTransfer = $this->filterEnabledPaymentMethods(
-                (new PaymentMethodsTransfer())->setMethods($merchantMarketplacePaymentMethods),
+                $merchantMarketplacePaymentMethodsTransfer,
                 $this->unzerPaymentMethodsAdapter->getPaymentMethods($merchantMarketplaceUnzerKeypairTransfer),
             );
         }
