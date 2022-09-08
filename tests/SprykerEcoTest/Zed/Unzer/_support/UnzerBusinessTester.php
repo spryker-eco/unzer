@@ -10,7 +10,6 @@ namespace SprykerEcoTest\Zed\Unzer;
 use Codeception\Actor;
 use Codeception\Scenario;
 use Generated\Shared\DataBuilder\CheckoutResponseBuilder;
-use Generated\Shared\DataBuilder\ItemBuilder;
 use Generated\Shared\DataBuilder\PaymentMethodsBuilder;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\SaveOrderBuilder;
@@ -434,7 +433,7 @@ class UnzerBusinessTester extends Actor
      *
      * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
-    public function createPaymentMethodsTransfer($withUnzerPaymentMethods = true): PaymentMethodsTransfer
+    public function createPaymentMethodsTransfer(bool $withUnzerPaymentMethods = true): PaymentMethodsTransfer
     {
         $paymentMethodsBuilder = (new PaymentMethodsBuilder())->withMethod();
 
