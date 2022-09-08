@@ -10,9 +10,11 @@ namespace SprykerEcoTest\Zed\Unzer;
 use Codeception\Actor;
 use Codeception\Scenario;
 use Generated\Shared\DataBuilder\CheckoutResponseBuilder;
+use Generated\Shared\DataBuilder\ItemBuilder;
 use Generated\Shared\DataBuilder\PaymentMethodsBuilder;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\SaveOrderBuilder;
+use Generated\Shared\DataBuilder\ShipmentBuilder;
 use Generated\Shared\DataBuilder\StoreRelationBuilder;
 use Generated\Shared\DataBuilder\TaxTotalBuilder;
 use Generated\Shared\DataBuilder\TotalsBuilder;
@@ -22,6 +24,7 @@ use Generated\Shared\DataBuilder\UnzerNotificationBuilder;
 use Generated\Shared\DataBuilder\UnzerPaymentBuilder;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\CurrencyTransfer;
+use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -256,10 +259,13 @@ class UnzerBusinessTester extends Actor
     public function createQuoteTransfer(): QuoteTransfer
     {
         return (new QuoteBuilder())
-            ->withItem()
+            ->withItem([
+                ItemTransfer::SHIPMENT => (new ShipmentBuilder())->withShippingAddress()->build(),
+            ])
             ->withTotals([
                 TotalsTransfer::TAX_TOTAL => (new TaxTotalBuilder())->build(),
             ])
+            ->withShippingAddress()
             ->withBillingAddress()
             ->withStore()
             ->withCurrency()
@@ -630,6 +636,7 @@ class UnzerBusinessTester extends Actor
     protected function createUnzerApiChargeResponseTransfer(): UnzerApiChargeResponseTransfer
     {
         return (new UnzerApiChargeResponseTransfer())
+            ->setId(uniqid())
             ->setIsSuccessful(true)
             ->setRedirectUrl(static::UNZER_REDIRECT_URL)
             ->setAmountCharged(static::TOTALS_PRICE_TO_PAY / 100)
