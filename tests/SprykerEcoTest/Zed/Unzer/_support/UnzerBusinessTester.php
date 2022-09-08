@@ -251,8 +251,6 @@ class UnzerBusinessTester extends Actor
     }
 
     /**
-     * @param array $override
-     *
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function createQuoteTransfer(): QuoteTransfer
@@ -286,7 +284,7 @@ class UnzerBusinessTester extends Actor
     /**
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
-    public function createMarketplaceQuoteTransfer(array $override = []): QuoteTransfer
+    public function createMarketplaceQuoteTransfer(): QuoteTransfer
     {
         $unzerCredentialsTransfer = $this->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
         $storeTransfer = $unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0);
@@ -311,7 +309,10 @@ class UnzerBusinessTester extends Actor
             ->setUnzerCredentials($unzerCredentialsTransfer);
     }
 
-    public function createMarketplaceMerchantQuoteTransfer(array $override = []): QuoteTransfer
+    /**
+     * @return \Generated\Shared\Transfer\QuoteTransfer
+     */
+    public function createMarketplaceMerchantQuoteTransfer(): QuoteTransfer
     {
         $unzerCredentialsTransfer = $this->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
         $storeTransfer = $unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0);
@@ -423,6 +424,8 @@ class UnzerBusinessTester extends Actor
     }
 
     /**
+     * @param bool $withUnzerPaymentMethods
+     *
      * @return \Generated\Shared\Transfer\PaymentMethodsTransfer
      */
     public function createPaymentMethodsTransfer($withUnzerPaymentMethods = true): PaymentMethodsTransfer
