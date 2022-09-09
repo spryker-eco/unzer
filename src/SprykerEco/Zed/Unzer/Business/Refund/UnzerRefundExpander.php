@@ -155,6 +155,10 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         RefundTransfer $refundTransfer,
         ExpenseTransfer $expenseTransfer
     ): RefundTransfer {
+        if (!$expenseTransfer->getRefundableAmountOrFail()) {
+            return $refundTransfer;
+        }
+
         foreach ($refundTransfer->getUnzerRefunds() as $unzerRefundTransfer) {
             if ($unzerRefundTransfer->getChargeId() === $expenseTransfer->getUnzerChargeId()) {
                 $unzerRefundTransfer->addItem($this->createUnzerRefundItemFromExpense($expenseTransfer));
