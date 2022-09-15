@@ -18,6 +18,7 @@ use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
@@ -25,32 +26,37 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface
      */
-    protected $unzerPaymentResourceAdapter;
+    protected UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface
      */
-    protected $unzerRefundProcessor;
+    protected UnzerRefundProcessorInterface $unzerRefundProcessor;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
      */
-    protected $unzerPreparePaymentProcessor;
+    protected UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
      */
-    protected $unzerCheckoutMapper;
+    protected UnzerCheckoutMapperInterface $unzerCheckoutMapper;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
      */
-    protected $unzerPaymentAdapter;
+    protected UnzerPaymentAdapterInterface $unzerPaymentAdapter;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessorInterface
      */
-    protected $unzerDirectChargeProcessor;
+    protected UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor;
+
+    /**
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface
+     */
+    protected UnzerPaymentUpdaterInterface $unzerPaymentUpdater;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
@@ -59,6 +65,7 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface $unzerPaymentUpdater
      */
     public function __construct(
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
@@ -66,7 +73,8 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
         UnzerRefundProcessorInterface $unzerRefundProcessor,
         UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor,
         UnzerCheckoutMapperInterface $unzerCheckoutMapper,
-        UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor
+        UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor,
+        UnzerPaymentUpdaterInterface $unzerPaymentUpdater
     ) {
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerPaymentResourceAdapter = $unzerPaymentResourceAdapter;
@@ -74,6 +82,7 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
         $this->unzerPreparePaymentProcessor = $unzerPreparePaymentProcessor;
         $this->unzerCheckoutMapper = $unzerCheckoutMapper;
         $this->unzerDirectChargeProcessor = $unzerDirectChargeProcessor;
+        $this->unzerPaymentUpdater = $unzerPaymentUpdater;
     }
 
     /**

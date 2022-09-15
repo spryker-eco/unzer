@@ -566,6 +566,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPreparePaymentProcessor(),
             $this->createUnzerCheckoutMapper(),
             $this->createUnzerDirectChargeProcessor(),
+            $this->createUnzerPaymentUpdater(),
         );
     }
 
@@ -580,6 +581,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerMarketplaceCreditCardChargeProcessor(),
             $this->createUnzerMarketplaceRefundProcessor(),
             $this->createUnzerPreparePaymentProcessor(),
+            $this->createUnzerPaymentUpdater(),
         );
     }
 
@@ -610,6 +612,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPreparePaymentProcessor(),
             $this->createUnzerCheckoutMapper(),
             $this->createUnzerDirectChargeProcessor(),
+            $this->createUnzerPaymentUpdater(),
         );
     }
 

@@ -67,7 +67,7 @@ class UnzerPaymentAdapter implements UnzerPaymentAdapterInterface
      */
     protected function getMarketplacePaymentInfo(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $unzerApiGetPaymentRequestTransfer = $this->createUnzerApiRequestTransferWithGetPaymentRequest($unzerPaymentTransfer);
+        $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithGetPaymentRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceGetPaymentApiCall($unzerApiRequestTransfer);
         $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
 
@@ -84,7 +84,7 @@ class UnzerPaymentAdapter implements UnzerPaymentAdapterInterface
      */
     protected function getStandardPaymentInfo(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $unzerApiGetPaymentRequestTransfer = $this->createUnzerApiRequestTransferWithGetPaymentRequest($unzerPaymentTransfer);
+        $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithGetPaymentRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performGetPaymentApiCall($unzerApiRequestTransfer);
         $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
 

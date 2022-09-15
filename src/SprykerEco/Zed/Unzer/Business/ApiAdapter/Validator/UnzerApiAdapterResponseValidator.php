@@ -24,7 +24,7 @@ class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidat
     public function isSuccessfulUnzerApiResponse(
         UnzerApiResponseTransfer $unzerApiResponseTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
-    ): CheckoutResponseTransfer {
+    ): bool {
         if ($unzerApiResponseTransfer->getIsSuccessful()) {
             return true;
         }
@@ -74,7 +74,7 @@ class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidat
 
     /**
      * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
      *
      * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
      */
@@ -82,6 +82,10 @@ class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidat
         CheckoutResponseTransfer $checkoutResponseTransfer,
         UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
     ): CheckoutResponseTransfer {
+        if (!$unzerApiResponseErrorTransfer->getErrors()) {
+            return $checkoutResponseTransfer;
+        }
+
         foreach ($unzerApiErrorResponseTransfer->getErrors() as $unzerApiResponseErrorTransfer) {
             $checkoutErrorTransfer = $this->createCheckoutErrorTransfer(
                 (string)$unzerApiResponseErrorTransfer->getCustomerMessage(),
