@@ -19,17 +19,17 @@ class UnzerPaymentAdapter implements UnzerPaymentAdapterInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
      */
-    protected $unzerApiFacade;
+    protected UnzerToUnzerApiFacadeInterface $unzerApiFacade;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerGetPaymentMapperInterface
      */
-    protected $unzerPaymentMapper;
+    protected UnzerGetPaymentMapperInterface $unzerPaymentMapper;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
      */
-    protected $unzerApiAdapterResponseValidator;
+    protected UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
@@ -57,7 +57,7 @@ class UnzerPaymentAdapter implements UnzerPaymentAdapterInterface
             return $this->getMarketplacePaymentInfo($unzerPaymentTransfer);
         }
 
-        return $this->getRegularPaymentInfo($unzerPaymentTransfer);
+        return $this->getStandardPaymentInfo($unzerPaymentTransfer);
     }
 
     /**
@@ -67,22 +67,12 @@ class UnzerPaymentAdapter implements UnzerPaymentAdapterInterface
      */
     protected function getMarketplacePaymentInfo(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $unzerApiGetPaymentRequestTransfer = $this->unzerPaymentMapper
-            ->mapUnzerPaymentTransferToUnzerApiGetPaymentRequestTransfer(
-                $unzerPaymentTransfer,
-                new UnzerApiGetPaymentRequestTransfer(),
-            );
-        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setGetPaymentRequest($unzerApiGetPaymentRequestTransfer)
-            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
-
+        $unzerApiGetPaymentRequestTransfer = $this->createUnzerApiRequestTransferWithGetPaymentRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceGetPaymentApiCall($unzerApiRequestTransfer);
         $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
 
-        $unzerApiGetPaymentResponse = $unzerApiResponseTransfer->getGetPaymentResponseOrFail();
-
         return $this->unzerPaymentMapper->mapUnzerApiGetPaymentResponseTransferToUnzerPaymentTransfer(
-            $unzerApiGetPaymentResponse,
+            $unzerApiResponseTransfer->getGetPaymentResponseOrFail(),
             $unzerPaymentTransfer,
         );
     }
@@ -92,25 +82,33 @@ class UnzerPaymentAdapter implements UnzerPaymentAdapterInterface
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    protected function getRegularPaymentInfo(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
+    protected function getStandardPaymentInfo(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $unzerApiPaymentRequestTransfer = $this->unzerPaymentMapper
+        $unzerApiGetPaymentRequestTransfer = $this->createUnzerApiRequestTransferWithGetPaymentRequest($unzerPaymentTransfer);
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performGetPaymentApiCall($unzerApiRequestTransfer);
+        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
+
+        return $this->unzerPaymentMapper->mapUnzerApiGetPaymentResponseTransferToUnzerPaymentTransfer(
+            $unzerApiResponseTransfer->getGetPaymentResponseOrFail(),
+            $unzerPaymentTransfer,
+        );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiRequestTransfer
+     */
+    protected function createUnzerApiRequestTransferWithGetPaymentRequest(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiRequestTransfer
+    {
+        $unzerApiGetPaymentRequestTransfer = $this->unzerPaymentMapper
             ->mapUnzerPaymentTransferToUnzerApiGetPaymentRequestTransfer(
                 $unzerPaymentTransfer,
                 new UnzerApiGetPaymentRequestTransfer(),
             );
-        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setGetPaymentRequest($unzerApiPaymentRequestTransfer)
+
+        return (new UnzerApiRequestTransfer())
+            ->setGetPaymentRequest($unzerApiGetPaymentRequestTransfer)
             ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
-
-        $unzerApiResponseTransfer = $this->unzerApiFacade->performGetPaymentApiCall($unzerApiRequestTransfer);
-        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
-
-        $unzerApiGetPaymentResponseTransfer = $unzerApiResponseTransfer->getGetPaymentResponseOrFail();
-
-        return $this->unzerPaymentMapper->mapUnzerApiGetPaymentResponseTransferToUnzerPaymentTransfer(
-            $unzerApiGetPaymentResponseTransfer,
-            $unzerPaymentTransfer,
-        );
     }
 }

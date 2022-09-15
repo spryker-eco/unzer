@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator;
 
+use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 
 interface UnzerApiAdapterResponseValidatorInterface
@@ -19,4 +20,15 @@ interface UnzerApiAdapterResponseValidatorInterface
      * @return void
      */
     public function assertSuccessResponse(UnzerApiResponseTransfer $unzerApiResponseTransfer): void;
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiResponseTransfer $unzerApiResponseTransfer
+     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     *
+     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     */
+    public function isSuccessfulUnzerApiResponse(
+        UnzerApiResponseTransfer $unzerApiResponseTransfer,
+        CheckoutResponseTransfer $checkoutResponseTransfer
+    ): CheckoutResponseTransfer;
 }

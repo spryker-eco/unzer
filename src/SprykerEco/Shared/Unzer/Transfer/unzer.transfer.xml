@@ -813,4 +813,7 @@
 
     <transfer name="UnzerApiMessage">
     </transfer>
+
+    <transfer name="CheckoutError">
+    </transfer>
 </transfers>
