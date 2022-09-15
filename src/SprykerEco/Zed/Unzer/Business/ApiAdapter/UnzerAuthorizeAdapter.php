@@ -11,7 +11,6 @@ use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
-use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
@@ -66,11 +65,14 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
 
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    protected function performMarketplaceAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): UnzerPaymentTransfer
-    {
+    protected function performMarketplaceAuthorize(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        CheckoutResponseTransfer $checkoutResponseTransfer
+    ): UnzerPaymentTransfer {
         $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithMarketplaceAuthorizeRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceAuthorizeApiCall($unzerApiRequestTransfer);
 
@@ -87,11 +89,14 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
 
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    protected function performStandardAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): UnzerPaymentTransfer
-    {
+    protected function performStandardAuthorize(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        CheckoutResponseTransfer $checkoutResponseTransfer
+    ): UnzerPaymentTransfer {
         $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithAuthorizeRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performAuthorizeApiCall($unzerApiRequestTransfer);
 

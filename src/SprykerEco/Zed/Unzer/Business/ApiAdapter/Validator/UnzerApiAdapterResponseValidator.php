@@ -80,7 +80,7 @@ class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidat
      */
     protected function appendUnzerApiResponseErrorTransfersToCheckoutResponseTransfer(
         CheckoutResponseTransfer $checkoutResponseTransfer,
-        UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
+        ?UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
     ): CheckoutResponseTransfer {
         if (!$unzerApiErrorResponseTransfer) {
             return $checkoutResponseTransfer;
