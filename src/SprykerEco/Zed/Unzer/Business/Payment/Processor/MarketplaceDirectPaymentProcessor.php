@@ -33,7 +33,7 @@ class MarketplaceDirectPaymentProcessor extends DirectPaymentProcessor
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
         $this->unzerPaymentUpdater->updateUnzerPaymentDetails(
             $unzerPaymentTransfer,
-            UnzerConstants::OMS_STATUS_PAYMENT_PENDING
+            UnzerConstants::OMS_STATUS_PAYMENT_PENDING,
         );
 
         return $checkoutResponseTransfer->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
