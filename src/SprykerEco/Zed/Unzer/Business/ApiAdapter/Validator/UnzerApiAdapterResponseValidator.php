@@ -19,7 +19,7 @@ class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidat
      * @param \Generated\Shared\Transfer\UnzerApiResponseTransfer $unzerApiResponseTransfer
      * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
      *
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     * @return bool
      */
     public function isSuccessfulUnzerApiResponse(
         UnzerApiResponseTransfer $unzerApiResponseTransfer,
@@ -74,7 +74,7 @@ class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidat
 
     /**
      * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer|null $unzerApiErrorResponseTransfer
      *
      * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
      */
@@ -82,7 +82,7 @@ class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidat
         CheckoutResponseTransfer $checkoutResponseTransfer,
         UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
     ): CheckoutResponseTransfer {
-        if (!$unzerApiResponseErrorTransfer->getErrors()) {
+        if (!$unzerApiErrorResponseTransfer) {
             return $checkoutResponseTransfer;
         }
 

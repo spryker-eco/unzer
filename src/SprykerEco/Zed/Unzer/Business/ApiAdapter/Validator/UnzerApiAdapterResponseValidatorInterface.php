@@ -25,10 +25,10 @@ interface UnzerApiAdapterResponseValidatorInterface
      * @param \Generated\Shared\Transfer\UnzerApiResponseTransfer $unzerApiResponseTransfer
      * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
      *
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     * @return bool
      */
     public function isSuccessfulUnzerApiResponse(
         UnzerApiResponseTransfer $unzerApiResponseTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
-    ): CheckoutResponseTransfer;
+    ): bool;
 }
