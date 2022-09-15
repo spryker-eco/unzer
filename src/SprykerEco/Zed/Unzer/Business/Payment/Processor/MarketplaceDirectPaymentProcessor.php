@@ -19,16 +19,22 @@ class MarketplaceDirectPaymentProcessor extends DirectPaymentProcessor
      *
      * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
      */
-    public function processOrderPayment(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): CheckoutResponseTransfer
-    {
-        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
+    public function processOrderPayment(
+        QuoteTransfer $quoteTransfer,
+        CheckoutResponseTransfer $checkoutResponseTransfer
+    ): CheckoutResponseTransfer {
+        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor
+            ->prepareUnzerPaymentTransfer($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
 
         $unzerPaymentTransfer->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
 
         $unzerPaymentTransfer = $this->unzerDirectChargeProcessor->charge($unzerPaymentTransfer);
 
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
-        $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
+        $this->unzerPaymentUpdater->updateUnzerPaymentDetails(
+            $unzerPaymentTransfer,
+            UnzerConstants::OMS_STATUS_PAYMENT_PENDING
+        );
 
         return $checkoutResponseTransfer->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
             ->setIsExternalRedirect(true)
