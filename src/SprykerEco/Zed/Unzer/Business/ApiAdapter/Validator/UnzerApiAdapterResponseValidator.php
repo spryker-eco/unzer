@@ -29,9 +29,8 @@ class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidat
             return true;
         }
 
-        $checkoutResponseTransfer = $checkoutResponseTransfer->setIsSuccess(false);
         $checkoutResponseTransfer = $this->appendUnzerApiResponseErrorTransfersToCheckoutResponseTransfer(
-            $checkoutResponseTransfer,
+            $checkoutResponseTransfer->setIsSuccess(false),
             $unzerApiResponseTransfer->getErrorResponse(),
         );
 
