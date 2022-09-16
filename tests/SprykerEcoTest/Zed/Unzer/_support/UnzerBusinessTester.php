@@ -563,6 +563,7 @@ class UnzerBusinessTester extends Actor
     {
         return (new UnzerApiChargeResponseTransfer())
             ->setIsSuccessful(true)
+            ->setId('chargeId')
             ->setRedirectUrl(static::UNZER_REDIRECT_URL)
             ->setAmountCharged(static::TOTALS_PRICE_TO_PAY / 100)
             ->setOrderId(static::ORDER_REFERENCE)

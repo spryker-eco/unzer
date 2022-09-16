@@ -20,22 +20,13 @@ suites:
             enabled:
                 - Asserts
                 - \SprykerTest\Zed\Testify\Helper\Business\BusinessHelper
-                - \SprykerTest\Shared\Testify\Helper\Environment:
-                      isolated: true
+                - \SprykerTest\Shared\Testify\Helper\Environment
                 - \SprykerTest\Shared\Testify\Helper\ConfigHelper
                 - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
                 - \SprykerTest\Zed\Testify\Helper\Communication\CommunicationHelper
                 - \SprykerTest\Zed\Testify\Helper\Communication\Table\TableHelper
-                - \SprykerTest\Shared\Transfer\Helper\TransferGenerateHelper:
-                      isolated: true
-                      schemaDirectories:
-                          - src/*/Shared/*/Transfer/
-                          - vendor/spryker/*/src/Spryker/Shared/*/Transfer/
-                - \SprykerTest\Shared\Propel\Helper\PropelHelper:
-                      isolated: true
-                      schemaSourceDirectoryList:
-                          - src/*/Zed/*/Persistence/Propel/Schema
-                          - vendor/*/*/src/*/Zed/*/Persistence/Propel/Schema
+                - \SprykerTest\Shared\Transfer\Helper\TransferGenerateHelper
+                - \SprykerTest\Shared\Propel\Helper\PropelHelper
                 - \SprykerTest\Shared\Testify\Helper\LocatorHelper:
                     projectNamespaces:
                       - 'Spryker'

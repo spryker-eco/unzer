@@ -23,6 +23,7 @@ use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
+ * @group ExecutePostSaveHookTest
  */
 class ExecutePostSaveHookTest extends UnzerFacadeBaseTest
 {
@@ -39,6 +40,7 @@ class ExecutePostSaveHookTest extends UnzerFacadeBaseTest
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_BANK_TRANSFER)->setUnzerPayment($unzerPaymentTransfer);
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
         $checkoutResponseTransfer = (new CheckoutResponseBuilder([
+            CheckoutResponseTransfer::IS_SUCCESS => true,
             CheckoutResponseTransfer::SAVE_ORDER => $saveOrderTransfer->toArray(),
         ]))->build();
         $quoteTransfer->setItems($saveOrderTransfer->getOrderItems());
@@ -69,6 +71,7 @@ class ExecutePostSaveHookTest extends UnzerFacadeBaseTest
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_SOFORT)->setUnzerPayment($unzerPaymentTransfer);
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
         $checkoutResponseTransfer = (new CheckoutResponseBuilder([
+            CheckoutResponseTransfer::IS_SUCCESS => true,
             CheckoutResponseTransfer::SAVE_ORDER => $saveOrderTransfer->toArray(),
         ]))->build();
         $quoteTransfer->setItems($saveOrderTransfer->getOrderItems());
@@ -101,6 +104,7 @@ class ExecutePostSaveHookTest extends UnzerFacadeBaseTest
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_CREDIT_CARD)->setUnzerPayment($unzerPaymentTransfer)->setUnzerCreditCard($unzerPaymentTransfer);
         $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer);
         $checkoutResponseTransfer = (new CheckoutResponseBuilder([
+            CheckoutResponseTransfer::IS_SUCCESS => true,
             CheckoutResponseTransfer::SAVE_ORDER => $saveOrderTransfer->toArray(),
         ]))->build();
         $quoteTransfer->setItems($saveOrderTransfer->getOrderItems());
@@ -136,6 +140,7 @@ class ExecutePostSaveHookTest extends UnzerFacadeBaseTest
             ->createQuoteTransfer()
             ->setPayment($paymentTransfer);
         $checkoutResponseTransfer = (new CheckoutResponseBuilder([
+            CheckoutResponseTransfer::IS_SUCCESS => true,
             CheckoutResponseTransfer::SAVE_ORDER => $saveOrderTransfer->toArray(),
         ]))->build();
         $quoteTransfer->setItems($saveOrderTransfer->getOrderItems());
@@ -171,6 +176,7 @@ class ExecutePostSaveHookTest extends UnzerFacadeBaseTest
             ->createQuoteTransfer()
             ->setPayment($paymentTransfer);
         $checkoutResponseTransfer = (new CheckoutResponseBuilder([
+            CheckoutResponseTransfer::IS_SUCCESS => true,
             CheckoutResponseTransfer::SAVE_ORDER => $saveOrderTransfer->toArray(),
         ]))->build();
         $quoteTransfer->setItems($saveOrderTransfer->getOrderItems());
@@ -207,6 +213,7 @@ class ExecutePostSaveHookTest extends UnzerFacadeBaseTest
             ->createQuoteTransfer()
             ->setPayment($paymentTransfer);
         $checkoutResponseTransfer = (new CheckoutResponseBuilder([
+            CheckoutResponseTransfer::IS_SUCCESS => true,
             CheckoutResponseTransfer::SAVE_ORDER => $saveOrderTransfer->toArray(),
         ]))->build();
         $quoteTransfer->setItems($saveOrderTransfer->getOrderItems());
