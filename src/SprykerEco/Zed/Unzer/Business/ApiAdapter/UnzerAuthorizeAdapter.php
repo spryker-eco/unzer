@@ -7,8 +7,10 @@
 
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
+use Generated\Shared\Transfer\CheckoutErrorTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer;
+use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
@@ -76,13 +78,18 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
         $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithMarketplaceAuthorizeRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceAuthorizeApiCall($unzerApiRequestTransfer);
 
-        if ($this->unzerApiAdapterResponseValidator->isSuccessfulUnzerApiResponse($unzerApiResponseTransfer, $checkoutResponseTransfer)) {
+        if ($unzerApiResponseTransfer->getIsSuccessful()) {
             return $this->unzerAuthorizePaymentMapper
                 ->mapUnzerApiMarketplaceAuthorizeResponseTransferToUnzerPaymentTransfer(
                     $unzerApiResponseTransfer->getMarketplaceAuthorizeResponseOrFail(),
                     $unzerPaymentTransfer,
                 );
         }
+
+        $checkoutResponseTransfer = $this->appendUnzerApiResponseErrorTransfersToCheckoutResponseTransfer(
+            $checkoutResponseTransfer->setIsSuccess(false),
+            $unzerApiResponseTransfer->getErrorResponse(),
+        );
 
         return $unzerPaymentTransfer;
     }
@@ -100,13 +107,18 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
         $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithAuthorizeRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performAuthorizeApiCall($unzerApiRequestTransfer);
 
-        if ($this->unzerApiAdapterResponseValidator->isSuccessfulUnzerApiResponse($unzerApiResponseTransfer, $checkoutResponseTransfer)) {
+        if ($unzerApiResponseTransfer->getIsSuccessful()) {
             return $this->unzerAuthorizePaymentMapper
                 ->mapUnzerApiAuthorizeResponseTransferToUnzerPaymentTransfer(
                     $unzerApiResponseTransfer->getAuthorizeResponseOrFail(),
                     $unzerPaymentTransfer,
                 );
         }
+
+        $checkoutResponseTransfer = $this->appendUnzerApiResponseErrorTransfersToCheckoutResponseTransfer(
+            $checkoutResponseTransfer->setIsSuccess(false),
+            $unzerApiResponseTransfer->getErrorResponse(),
+        );
 
         return $unzerPaymentTransfer;
     }
@@ -146,5 +158,44 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
         return (new UnzerApiRequestTransfer())
             ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail())
             ->setAuthorizeRequest($unzerApiAuthorizeRequestTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer|null $unzerApiErrorResponseTransfer
+     *
+     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     */
+    protected function appendUnzerApiResponseErrorTransfersToCheckoutResponseTransfer(
+        CheckoutResponseTransfer $checkoutResponseTransfer,
+        ?UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
+    ): CheckoutResponseTransfer {
+        if (!$unzerApiErrorResponseTransfer) {
+            return $checkoutResponseTransfer;
+        }
+
+        foreach ($unzerApiErrorResponseTransfer->getErrors() as $unzerApiResponseErrorTransfer) {
+            $checkoutErrorTransfer = $this->createCheckoutErrorTransfer(
+                (string)$unzerApiResponseErrorTransfer->getCustomerMessage(),
+                (string)$unzerApiResponseErrorTransfer->getCode(),
+            );
+
+            $checkoutResponseTransfer->addError($checkoutErrorTransfer);
+        }
+
+        return $checkoutResponseTransfer;
+    }
+
+    /**
+     * @param string $message
+     * @param string $errorCode
+     *
+     * @return \Generated\Shared\Transfer\CheckoutErrorTransfer
+     */
+    protected function createCheckoutErrorTransfer(string $message, string $errorCode): CheckoutErrorTransfer
+    {
+        return (new CheckoutErrorTransfer())
+            ->setMessage($message)
+            ->setErrorCode($errorCode);
     }
 }

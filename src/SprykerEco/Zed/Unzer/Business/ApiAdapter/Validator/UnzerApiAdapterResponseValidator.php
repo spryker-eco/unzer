@@ -7,36 +7,12 @@
 
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator;
 
-use Generated\Shared\Transfer\CheckoutErrorTransfer;
-use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 
 class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidatorInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\UnzerApiResponseTransfer $unzerApiResponseTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     *
-     * @return bool
-     */
-    public function isSuccessfulUnzerApiResponse(
-        UnzerApiResponseTransfer $unzerApiResponseTransfer,
-        CheckoutResponseTransfer $checkoutResponseTransfer
-    ): bool {
-        if ($unzerApiResponseTransfer->getIsSuccessful()) {
-            return true;
-        }
-
-        $checkoutResponseTransfer = $this->appendUnzerApiResponseErrorTransfersToCheckoutResponseTransfer(
-            $checkoutResponseTransfer->setIsSuccess(false),
-            $unzerApiResponseTransfer->getErrorResponse(),
-        );
-
-        return false;
-    }
-
     /**
      * @param \Generated\Shared\Transfer\UnzerApiResponseTransfer $unzerApiResponseTransfer
      *
@@ -69,44 +45,5 @@ class UnzerApiAdapterResponseValidator implements UnzerApiAdapterResponseValidat
         }
 
         return trim($errorsMessage);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
-     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer|null $unzerApiErrorResponseTransfer
-     *
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
-     */
-    protected function appendUnzerApiResponseErrorTransfersToCheckoutResponseTransfer(
-        CheckoutResponseTransfer $checkoutResponseTransfer,
-        ?UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
-    ): CheckoutResponseTransfer {
-        if (!$unzerApiErrorResponseTransfer) {
-            return $checkoutResponseTransfer;
-        }
-
-        foreach ($unzerApiErrorResponseTransfer->getErrors() as $unzerApiResponseErrorTransfer) {
-            $checkoutErrorTransfer = $this->createCheckoutErrorTransfer(
-                (string)$unzerApiResponseErrorTransfer->getCustomerMessage(),
-                (string)$unzerApiResponseErrorTransfer->getCode(),
-            );
-
-            $checkoutResponseTransfer->addError($checkoutErrorTransfer);
-        }
-
-        return $checkoutResponseTransfer;
-    }
-
-    /**
-     * @param string $message
-     * @param string $errorCode
-     *
-     * @return \Generated\Shared\Transfer\CheckoutErrorTransfer
-     */
-    protected function createCheckoutErrorTransfer(string $message, string $errorCode): CheckoutErrorTransfer
-    {
-        return (new CheckoutErrorTransfer())
-            ->setMessage($message)
-            ->setErrorCode($errorCode);
     }
 }
