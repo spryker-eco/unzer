@@ -165,6 +165,11 @@ class UnzerBusinessTester extends Actor
     /**
      * @var string
      */
+    protected const UNZER_CHARGE_ID = 's-chg-1';
+
+    /**
+     * @var string
+     */
     protected const UNZER_EVENT_AUTHORIZED = 'authorize.succeeded';
 
     /**
@@ -563,7 +568,7 @@ class UnzerBusinessTester extends Actor
     {
         return (new UnzerApiChargeResponseTransfer())
             ->setIsSuccessful(true)
-            ->setId('chargeId')
+            ->setId(static::UNZER_CHARGE_ID)
             ->setRedirectUrl(static::UNZER_REDIRECT_URL)
             ->setAmountCharged(static::TOTALS_PRICE_TO_PAY / 100)
             ->setOrderId(static::ORDER_REFERENCE)
