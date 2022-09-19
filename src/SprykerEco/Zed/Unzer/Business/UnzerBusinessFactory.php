@@ -314,7 +314,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     {
         return new UnzerAuthorizeAdapter(
             $this->getUnzerApiFacade(),
-            $this->createUnzerAuthorizePaymentMapper()
+            $this->createUnzerAuthorizePaymentMapper(),
         );
     }
 
