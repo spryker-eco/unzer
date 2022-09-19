@@ -23,11 +23,7 @@ class MarketplaceDirectPaymentProcessor extends DirectPaymentProcessor
         QuoteTransfer $quoteTransfer,
         CheckoutResponseTransfer $checkoutResponseTransfer
     ): CheckoutResponseTransfer {
-        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor
-            ->prepareUnzerPaymentTransfer($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
-
-        $unzerPaymentTransfer->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
-
+        $unzerPaymentTransfer = $this->prepareUnzerPayment($quoteTransfer, $checkoutResponseTransfer);
         $unzerPaymentTransfer = $this->unzerDirectChargeProcessor->charge($unzerPaymentTransfer);
 
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);

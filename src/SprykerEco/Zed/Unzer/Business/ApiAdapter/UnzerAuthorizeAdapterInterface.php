@@ -7,19 +7,14 @@
 
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter;
 
-use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
 interface UnzerAuthorizeAdapterInterface
 {
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    public function authorizePayment(
-        UnzerPaymentTransfer $unzerPaymentTransfer,
-        CheckoutResponseTransfer $checkoutResponseTransfer
-    ): UnzerPaymentTransfer;
+    public function authorizePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer;
 }

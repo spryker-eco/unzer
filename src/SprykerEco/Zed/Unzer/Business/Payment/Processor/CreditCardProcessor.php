@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 
+use Generated\Shared\Transfer\CheckoutErrorTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -16,6 +17,7 @@ use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
@@ -80,27 +82,20 @@ class CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
      *
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    public function processOrderPayment(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): CheckoutResponseTransfer
+    public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
         $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
-        $unzerPaymentTransfer = $this->unzerAuthorizeAdapter->authorizePayment($unzerPaymentTransfer, $checkoutResponseTransfer);
+        $unzerPaymentTransfer = $this->unzerAuthorizeAdapter->authorizePayment($unzerPaymentTransfer);
 
-        if (!$checkoutResponseTransfer->getIsSuccess()) {
-            return $checkoutResponseTransfer;
+        if ($unzerPaymentTransfer->getErrors()->count()) {
+            return $unzerPaymentTransfer;
         }
 
-        $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
-
-        $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
-        $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
-
-        return $checkoutResponseTransfer->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
-            ->setIsExternalRedirect(true)
-            ->setIsSuccess(true);
+        return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
     }
 
     /**

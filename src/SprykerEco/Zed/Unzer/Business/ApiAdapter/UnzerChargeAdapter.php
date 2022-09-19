@@ -12,6 +12,7 @@ use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiResponseTransfer;
 use Generated\Shared\Transfer\UnzerChargeTransfer;
+use Generated\Shared\Transfer\UnzerPaymentErrorTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerChargeMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
@@ -57,9 +58,17 @@ class UnzerChargeAdapter implements UnzerChargeAdapterInterface
     public function chargePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiChargeResponseTransfer
     {
         $unzerApiRequestTransfer = $this->prepareChargeRequest($unzerPaymentTransfer);
-
         $unzerApiResponseTransfer = $this->performCharge($unzerApiRequestTransfer, $unzerPaymentTransfer);
-        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
+
+        if (!$unzerApiResponseTransfer->getIsSuccessful()) {
+            foreach ($unzerApiResponseTransfer->getErrorResponse()->getErrors() as $unzerApiResponseErrorTransfer) {
+                $unzerPaymentTransfer->addError(
+                    (new UnzerPaymentErrorTransfer())
+                        ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
+                        ->setErrorCode($unzerApiResponseErrorTransfer->getCode())
+                );
+            }
+        }
 
         return $unzerApiResponseTransfer->getChargeResponseOrFail();
     }

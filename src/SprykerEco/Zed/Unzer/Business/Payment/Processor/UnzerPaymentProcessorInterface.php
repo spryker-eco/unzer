@@ -7,20 +7,21 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 
-use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
+use Generated\Shared\Transfer\SaveOrderTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
 interface UnzerPaymentProcessorInterface
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
      *
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    public function processOrderPayment(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): CheckoutResponseTransfer;
+    public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer;
 
     /**
      * @param \Generated\Shared\Transfer\RefundTransfer $refundTransfer

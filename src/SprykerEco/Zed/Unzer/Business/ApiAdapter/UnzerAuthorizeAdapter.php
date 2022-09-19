@@ -13,6 +13,7 @@ use Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
+use Generated\Shared\Transfer\UnzerPaymentErrorTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
@@ -52,17 +53,16 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
 
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    public function authorizePayment(UnzerPaymentTransfer $unzerPaymentTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): UnzerPaymentTransfer
+    public function authorizePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
         if ($unzerPaymentTransfer->getIsMarketplaceOrFail()) {
-            return $this->performMarketplaceAuthorize($unzerPaymentTransfer, $checkoutResponseTransfer);
+            return $this->performMarketplaceAuthorize($unzerPaymentTransfer);
         }
 
-        return $this->performStandardAuthorize($unzerPaymentTransfer, $checkoutResponseTransfer);
+        return $this->performStandardAuthorize($unzerPaymentTransfer);
     }
 
     /**
@@ -71,10 +71,7 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    protected function performMarketplaceAuthorize(
-        UnzerPaymentTransfer $unzerPaymentTransfer,
-        CheckoutResponseTransfer $checkoutResponseTransfer
-    ): UnzerPaymentTransfer {
+    protected function performMarketplaceAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer {
         $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithMarketplaceAuthorizeRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceAuthorizeApiCall($unzerApiRequestTransfer);
 
@@ -86,10 +83,13 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
                 );
         }
 
-        $checkoutResponseTransfer = $this->appendUnzerApiResponseErrorTransfersToCheckoutResponseTransfer(
-            $checkoutResponseTransfer->setIsSuccess(false),
-            $unzerApiResponseTransfer->getErrorResponse(),
-        );
+        foreach ($unzerApiResponseTransfer->getErrorResponse()->getErrors() as $unzerApiResponseErrorTransfer) {
+            $unzerPaymentTransfer->addError(
+                (new UnzerPaymentErrorTransfer())
+                    ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
+                    ->setErrorCode($unzerApiResponseErrorTransfer->getCode())
+            );
+        }
 
         return $unzerPaymentTransfer;
     }
@@ -100,10 +100,7 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    protected function performStandardAuthorize(
-        UnzerPaymentTransfer $unzerPaymentTransfer,
-        CheckoutResponseTransfer $checkoutResponseTransfer
-    ): UnzerPaymentTransfer {
+    protected function performStandardAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer {
         $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithAuthorizeRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performAuthorizeApiCall($unzerApiRequestTransfer);
 
@@ -115,10 +112,13 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
                 );
         }
 
-        $checkoutResponseTransfer = $this->appendUnzerApiResponseErrorTransfersToCheckoutResponseTransfer(
-            $checkoutResponseTransfer->setIsSuccess(false),
-            $unzerApiResponseTransfer->getErrorResponse(),
-        );
+        foreach ($unzerApiResponseTransfer->getErrorResponse()->getErrors() as $unzerApiResponseErrorTransfer) {
+            $unzerPaymentTransfer->addError(
+                (new UnzerPaymentErrorTransfer())
+                    ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
+                    ->setErrorCode($unzerApiResponseErrorTransfer->getCode())
+            );
+        }
 
         return $unzerPaymentTransfer;
     }
