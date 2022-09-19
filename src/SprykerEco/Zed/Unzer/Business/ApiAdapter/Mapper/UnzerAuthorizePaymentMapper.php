@@ -122,11 +122,15 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
         ?UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer,
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
+        if (!$unzerApiErrorResponseTransfer) {
+            return $unzerPaymentTransfer;
+        }
+
         foreach ($unzerApiErrorResponseTransfer->getErrors() as $unzerApiResponseErrorTransfer) {
             $unzerPaymentTransfer->addError(
                 (new UnzerPaymentErrorTransfer())
                     ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
-                    ->setErrorCode($unzerApiResponseErrorTransfer->getCode()),
+                    ->setErrorCode((int)$unzerApiResponseErrorTransfer->getCode()),
             );
         }
 
