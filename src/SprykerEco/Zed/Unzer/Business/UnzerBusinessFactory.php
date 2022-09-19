@@ -191,6 +191,7 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
     public function createUnzerPostSaveCheckoutHook(): UnzerCheckoutHookExecutorInterface
     {
         return new UnzerPostSaveCheckoutHookExecutor(
+            $this->createUnzerPaymentUpdater(),
             $this->createUnzerPaymentProcessorResolver(),
         );
     }
@@ -358,7 +359,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
         return new UnzerPaymentAdapter(
             $this->getUnzerApiFacade(),
             $this->createUnzerGetPaymentMapper(),
-            $this->createUnzerApiAdapterResponseValidator(),
         );
     }
 
@@ -581,7 +581,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerMarketplaceCreditCardChargeProcessor(),
             $this->createUnzerMarketplaceRefundProcessor(),
             $this->createUnzerPreparePaymentProcessor(),
-            $this->createUnzerPaymentUpdater(),
         );
     }
 
@@ -596,7 +595,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerCreditCardChargeProcessor(),
             $this->createUnzerRefundProcessor(),
             $this->createUnzerPreparePaymentProcessor(),
-            $this->createUnzerPaymentUpdater(),
         );
     }
 
@@ -612,7 +610,6 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPreparePaymentProcessor(),
             $this->createUnzerCheckoutMapper(),
             $this->createUnzerDirectChargeProcessor(),
-            $this->createUnzerPaymentUpdater(),
         );
     }
 

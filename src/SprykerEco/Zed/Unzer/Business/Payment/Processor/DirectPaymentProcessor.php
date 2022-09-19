@@ -7,11 +7,10 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 
-use Generated\Shared\Transfer\CheckoutErrorTransfer;
-use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
+use Generated\Shared\Transfer\SaveOrderTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
@@ -20,8 +19,6 @@ use SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
-use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
 {
@@ -56,18 +53,12 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
     protected UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface
-     */
-    protected UnzerPaymentUpdaterInterface $unzerPaymentUpdater;
-
-    /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface $unzerCheckoutMapper
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface $unzerPaymentUpdater
      */
     public function __construct(
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
@@ -75,8 +66,7 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
         UnzerRefundProcessorInterface $unzerRefundProcessor,
         UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor,
         UnzerCheckoutMapperInterface $unzerCheckoutMapper,
-        UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor,
-        UnzerPaymentUpdaterInterface $unzerPaymentUpdater
+        UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor
     ) {
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerPaymentResourceAdapter = $unzerPaymentResourceAdapter;
@@ -84,36 +74,24 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
         $this->unzerPreparePaymentProcessor = $unzerPreparePaymentProcessor;
         $this->unzerCheckoutMapper = $unzerCheckoutMapper;
         $this->unzerDirectChargeProcessor = $unzerDirectChargeProcessor;
-        $this->unzerPaymentUpdater = $unzerPaymentUpdater;
     }
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
      *
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    public function processOrderPayment(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): CheckoutResponseTransfer
+    public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = $this->prepareUnzerPayment($quoteTransfer, $checkoutResponseTransfer);
+        $unzerPaymentTransfer = $this->prepareUnzerPayment($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer = $this->unzerDirectChargeProcessor->charge($unzerPaymentTransfer);
 
-        if (!$unzerPaymentTransfer->getErrors()->count() !== 0) {
-            foreach ($unzerPaymentTransfer->getErrors() as $unzerPaymentErrorTransfer) {
-                $checkoutResponseTransfer->addError((new CheckoutErrorTransfer())->fromArray($unzerPaymentErrorTransfer->toArray()));
-            }
-
-            return $checkoutResponseTransfer->setIsSuccess(false);
+        if ($unzerPaymentTransfer->getErrors()->count() !== 0) {
+            return $unzerPaymentTransfer;
         }
 
-        $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
-
-        $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
-        $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
-
-        return $checkoutResponseTransfer->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
-            ->setIsExternalRedirect(true)
-            ->setIsSuccess(true);
+        return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
     }
 
     /**
@@ -130,16 +108,16 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
 
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
     protected function prepareUnzerPayment(
         QuoteTransfer $quoteTransfer,
-        CheckoutResponseTransfer $checkoutResponseTransfer
+        SaveOrderTransfer $saveOrderTransfer
     ): UnzerPaymentTransfer {
         return $this->unzerPreparePaymentProcessor
-            ->prepareUnzerPaymentTransfer($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail())
+            ->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer)
             ->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
     }
 

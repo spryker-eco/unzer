@@ -7,8 +7,6 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 
-use Generated\Shared\Transfer\CheckoutErrorTransfer;
-use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\OrderTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RefundTransfer;
@@ -17,12 +15,9 @@ use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
-use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface;
-use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
-use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
 {
@@ -52,32 +47,24 @@ class CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
     protected UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor;
 
     /**
-     * @var \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface
-     */
-    protected UnzerPaymentUpdaterInterface $unzerPaymentUpdater;
-
-    /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface $unzerAuthorizeAdapter
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface $unzerChargeProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface $unzerRefundProcessor
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
-     * @param \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface $unzerPaymentUpdater
      */
     public function __construct(
         UnzerAuthorizeAdapterInterface $unzerAuthorizeAdapter,
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
         UnzerChargeProcessorInterface $unzerChargeProcessor,
         UnzerRefundProcessorInterface $unzerRefundProcessor,
-        UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor,
-        UnzerPaymentUpdaterInterface $unzerPaymentUpdater
+        UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor
     ) {
         $this->unzerAuthorizeAdapter = $unzerAuthorizeAdapter;
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerChargeProcessor = $unzerChargeProcessor;
         $this->unzerRefundProcessor = $unzerRefundProcessor;
         $this->unzerPreparePaymentProcessor = $unzerPreparePaymentProcessor;
-        $this->unzerPaymentUpdater = $unzerPaymentUpdater;
     }
 
     /**
@@ -88,10 +75,10 @@ class CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
      */
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
+        $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer = $this->unzerAuthorizeAdapter->authorizePayment($unzerPaymentTransfer);
 
-        if ($unzerPaymentTransfer->getErrors()->count()) {
+        if ($unzerPaymentTransfer->getErrors()->count() !== 0) {
             return $unzerPaymentTransfer;
         }
 

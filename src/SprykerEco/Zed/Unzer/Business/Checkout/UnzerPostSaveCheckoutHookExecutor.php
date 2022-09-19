@@ -55,21 +55,22 @@ class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInte
         $paymentProcessor = $this->unzerPaymentProcessorResolver->resolvePaymentProcessor($paymentMethod);
         $unzerPaymentTransfer = $paymentProcessor->processOrderPayment($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
 
-        if ($unzerPaymentTransfer->getIsSuccess()) {
-            $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
-            $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
+        if ($unzerPaymentTransfer->getErrors()->count() !== 0) {
+            foreach ($unzerPaymentTransfer->getErrors() as $unzerPaymentErrorTransfer) {
+                $checkoutErrorTransfer = (new CheckoutErrorTransfer())->fromArray($unzerPaymentErrorTransfer->toArray(), true);
 
-            return $checkoutResponseTransfer->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
-                ->setIsExternalRedirect(true);
+                $checkoutResponseTransfer->addError($checkoutErrorTransfer);
+            }
+
+            return $checkoutResponseTransfer->setIsSuccess(false);
         }
 
-        foreach ($unzerPaymentTransfer->getErrors() as $unzerPaymentErrorTransfer) {
-            $checkoutErrorTransfer = (new CheckoutErrorTransfer())->fromArray($unzerPaymentErrorTransfer->toArray());
+        $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
+        $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
 
-            $checkoutResponseTransfer->addError($checkoutErrorTransfer);
-        }
-
-        return $checkoutResponseTransfer->setIsSuccess(false);
+        return $checkoutResponseTransfer
+            ->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
+            ->setIsExternalRedirect(true);
     }
 
     /**

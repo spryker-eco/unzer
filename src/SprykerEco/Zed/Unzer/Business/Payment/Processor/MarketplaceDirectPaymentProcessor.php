@@ -7,33 +7,22 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Processor;
 
-use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use SprykerEco\Zed\Unzer\UnzerConstants;
+use Generated\Shared\Transfer\SaveOrderTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
 class MarketplaceDirectPaymentProcessor extends DirectPaymentProcessor
 {
     /**
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
-     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
      *
-     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    public function processOrderPayment(
-        QuoteTransfer $quoteTransfer,
-        CheckoutResponseTransfer $checkoutResponseTransfer
-    ): CheckoutResponseTransfer {
-        $unzerPaymentTransfer = $this->prepareUnzerPayment($quoteTransfer, $checkoutResponseTransfer);
-        $unzerPaymentTransfer = $this->unzerDirectChargeProcessor->charge($unzerPaymentTransfer);
+    public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
+    {
+        $unzerPaymentTransfer = $this->prepareUnzerPayment($quoteTransfer, $saveOrderTransfer);
 
-        $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
-        $this->unzerPaymentUpdater->updateUnzerPaymentDetails(
-            $unzerPaymentTransfer,
-            UnzerConstants::OMS_STATUS_PAYMENT_PENDING,
-        );
-
-        return $checkoutResponseTransfer->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
-            ->setIsExternalRedirect(true)
-            ->setIsSuccess(true);
+        return $this->unzerDirectChargeProcessor->charge($unzerPaymentTransfer);
     }
 }
