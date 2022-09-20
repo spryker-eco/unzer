@@ -75,7 +75,7 @@ class UnzerDirectChargeProcessor implements UnzerDirectChargeProcessorInterface
 
         return $this->unzerChargeMapper
             ->mapUnzerApiErrorResponseTransferToUnzerPaymentTransfer(
-                $unzerApiResponseTransfer->getErrorResponse(),
+                $unzerApiResponseTransfer->getErrorResponseOrFail(),
                 $unzerPaymentTransfer,
             );
     }

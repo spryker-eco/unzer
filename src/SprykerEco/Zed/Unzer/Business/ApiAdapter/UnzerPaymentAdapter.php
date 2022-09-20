@@ -70,7 +70,7 @@ class UnzerPaymentAdapter implements UnzerPaymentAdapterInterface
 
         return $this->unzerPaymentMapper
             ->mapUnzerApiErrorResponseTransferToUnzerPaymentTransfer(
-                $unzerApiResponseTransfer->getErrorResponse(),
+                $unzerApiResponseTransfer->getErrorResponseOrFail(),
                 $unzerPaymentTransfer,
             );
     }
@@ -94,7 +94,7 @@ class UnzerPaymentAdapter implements UnzerPaymentAdapterInterface
 
         return $this->unzerPaymentMapper
             ->mapUnzerApiErrorResponseTransferToUnzerPaymentTransfer(
-                $unzerApiResponseTransfer->getErrorResponse(),
+                $unzerApiResponseTransfer->getErrorResponseOrFail(),
                 $unzerPaymentTransfer,
             );
     }
