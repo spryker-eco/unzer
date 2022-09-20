@@ -25,7 +25,7 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
-    protected $unzerConfig;
+    protected UnzerConfig $unzerConfig;
 
     /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig

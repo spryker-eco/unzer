@@ -22,17 +22,17 @@ class UnzerChargeAdapter implements UnzerChargeAdapterInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
      */
-    protected $unzerApiFacade;
+    protected UnzerToUnzerApiFacadeInterface $unzerApiFacade;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerChargeMapperInterface
      */
-    protected $unzerChargeMapper;
+    protected UnzerChargeMapperInterface $unzerChargeMapper;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
      */
-    protected $unzerApiAdapterResponseValidator;
+    protected UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
