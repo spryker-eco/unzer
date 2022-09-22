@@ -9,17 +9,15 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiChargeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
-use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerChargeTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
-use Generated\Shared\Transfer\UnzerPaymentErrorTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
-class UnzerChargeMapper implements UnzerChargeMapperInterface
+class UnzerChargeMapper extends UnzerErrorMapper implements UnzerChargeMapperInterface
 {
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
@@ -118,27 +116,6 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
         return $unzerApiChargeRequestTransfer
             ->fromArray($unzerChargeTransfer->toArray(), true)
             ->setAmount($unzerChargeTransfer->getAmount() / UnzerConstants::INT_TO_FLOAT_DIVIDER);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
-     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
-     *
-     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
-     */
-    public function mapUnzerApiErrorResponseTransferToUnzerPaymentTransfer(
-        UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer,
-        UnzerPaymentTransfer $unzerPaymentTransfer
-    ): UnzerPaymentTransfer {
-        foreach ($unzerApiErrorResponseTransfer->getErrors() as $unzerApiResponseErrorTransfer) {
-            $unzerPaymentTransfer->addError(
-                (new UnzerPaymentErrorTransfer())
-                    ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
-                    ->setErrorCode((int)$unzerApiResponseErrorTransfer->getCode()),
-            );
-        }
-
-        return $unzerPaymentTransfer;
     }
 
     /**
