@@ -119,7 +119,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
         if ($unzerCredentialsTransfer->getType() !== UnzerConstants::UNZER_CREDENTIALS_TYPE_STANDARD) {
             $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
                 ->setQuote($quoteTransfer)
-                ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentMethod());
+                ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentSelection());
             $unzerCredentialsTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
                 ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
         }
@@ -157,10 +157,10 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
     {
         $unzerCredentialsTransfer = $this->getMarketplaceMerchantUnzerCredentialsTransfer($quoteTransfer, $merchantReference);
 
-        if ($quoteTransfer->getPaymentOrFail()->getPaymentMethod() !== null) {
+        if ($quoteTransfer->getPaymentOrFail()->getPaymentSelection() !== null) {
             $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer = (new UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer())
                 ->setQuote($quoteTransfer)
-                ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentMethod());
+                ->setPaymentMethodKey($quoteTransfer->getPaymentOrFail()->getPaymentSelection());
             $unzerCredentialsTransfer = $this->unzerMarketplacePaymentUnzerCredentialsResolver
                 ->resolveMarketplacePaymentUnzerCredentials($unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
         }
@@ -215,7 +215,7 @@ class UnzerKeypairQuoteExpander implements UnzerKeypairQuoteExpanderInterface
                     ->addMerchantReference($merchantReference),
             );
 
-        if ($quoteTransfer->getPayment() !== null && strpos(UnzerConfig::PLATFORM_MARKETPLACE, $quoteTransfer->getPaymentOrFail()->getPaymentMethodOrFail()) !== false) {
+        if ($quoteTransfer->getPayment() !== null && strpos($quoteTransfer->getPaymentOrFail()->getPaymentMethodOrFail(), UnzerConfig::PLATFORM_MARKETPLACE) !== false) {
             $unzerCredentialsCriteriaTransfer = (new UnzerCredentialsCriteriaTransfer())
                 ->setUnzerCredentialsConditions(
                     (new UnzerCredentialsConditionsTransfer())
