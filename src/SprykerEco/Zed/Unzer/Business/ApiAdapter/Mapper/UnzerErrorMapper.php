@@ -43,6 +43,5 @@ class UnzerErrorMapper implements UnzerErrorMapperInterface
         return (new UnzerPaymentErrorTransfer())
             ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
             ->setErrorCode((int)$unzerApiResponseErrorTransfer->getCode());
-
     }
 }
