@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 use Generated\Shared\Transfer\UnzerApiChargeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiChargeResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
+use Generated\Shared\Transfer\UnzerApiResponseErrorTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerChargeTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
@@ -131,14 +132,24 @@ class UnzerChargeMapper implements UnzerChargeMapperInterface
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
         foreach ($unzerApiErrorResponseTransfer->getErrors() as $unzerApiResponseErrorTransfer) {
-            $unzerPaymentTransfer->addError(
-                (new UnzerPaymentErrorTransfer())
-                    ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
-                    ->setErrorCode((int)$unzerApiResponseErrorTransfer->getCode()),
-            );
+            $unzerPaymentErrorTransfer = $this->createUnzerPaymentErrorTransfer($unzerApiResponseErrorTransfer);
+
+            $unzerPaymentTransfer->addError($unzerPaymentErrorTransfer);
         }
 
         return $unzerPaymentTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiResponseErrorTransfer $unzerApiResponseErrorTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentErrorTransfer
+     */
+    protected function createUnzerPaymentErrorTransfer(UnzerApiResponseErrorTransfer $unzerApiResponseErrorTransfer): UnzerPaymentErrorTransfer
+    {
+        return (new UnzerPaymentErrorTransfer())
+            ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
+            ->setErrorCode((int)$unzerApiResponseErrorTransfer->getCode());
     }
 
     /**
