@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Notification\Processor;
 
+use Generated\Shared\Transfer\PaymentUnzerTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsConditionsTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
@@ -100,22 +101,39 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
             return $unzerNotificationTransfer;
         }
 
-        $unzerPaymentTransfer = $this->unzerPaymentMapper->mapPaymentUnzerTransferToUnzerPaymentTransfer(
-            $paymentUnzerTransfer,
-            new UnzerPaymentTransfer(),
-        );
+        $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($paymentUnzerTransfer);
 
-        $unzerPaymentTransfer = $this->setUnzerKeypair($unzerPaymentTransfer, $paymentUnzerTransfer->getKeypairIdOrFail());
-        $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
+        if ($unzerPaymentTransfer->getErrors()->count() !== 0) {
+            $unzerNotificationTransfer->setIsProcessed(false);
+
+            return $unzerNotificationTransfer;
+        }
 
         $orderItemStatus = $this->unzerConfig->mapUnzerEventToOmsStatus(
             $unzerNotificationTransfer->getEventOrFail(),
         );
 
         $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, $orderItemStatus);
-        $unzerNotificationTransfer->setIsProcessed(true);
 
-        return $unzerNotificationTransfer;
+        return $unzerNotificationTransfer->setIsProcessed(true);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentUnzerTransfer $paymentUnzerTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     */
+    protected function prepareUnzerPaymentTransfer(PaymentUnzerTransfer $paymentUnzerTransfer): UnzerPaymentTransfer
+    {
+        $unzerPaymentTransfer = $this->unzerPaymentMapper
+            ->mapPaymentUnzerTransferToUnzerPaymentTransfer(
+                $paymentUnzerTransfer,
+                new UnzerPaymentTransfer(),
+        );
+
+        $unzerPaymentTransfer = $this->setUnzerKeypair($unzerPaymentTransfer, $paymentUnzerTransfer->getKeypairIdOrFail());
+
+        return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
     }
 
     /**

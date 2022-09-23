@@ -64,10 +64,12 @@ class UnzerRefundPaymentSaver implements UnzerRefundPaymentSaverInterface
         $unzerPaymentTransfer->setUnzerKeypair($unzerKeypairTransfer);
         $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
 
-        $this->unzerPaymentUpdater->updateUnzerPaymentDetails(
-            $unzerPaymentTransfer,
-            UnzerConstants::OMS_STATUS_CHARGE_REFUNDED,
-            $salesOrderItemIds,
-        );
+        if ($unzerPaymentTransfer->getErrors()->count() === 0) {
+            $this->unzerPaymentUpdater->updateUnzerPaymentDetails(
+                $unzerPaymentTransfer,
+                UnzerConstants::OMS_STATUS_CHARGE_REFUNDED,
+                $salesOrderItemIds,
+            );
+        }
     }
 }
