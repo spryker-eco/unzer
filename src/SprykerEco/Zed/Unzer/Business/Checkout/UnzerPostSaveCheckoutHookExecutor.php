@@ -10,6 +10,7 @@ namespace SprykerEco\Zed\Unzer\Business\Checkout;
 use Generated\Shared\Transfer\CheckoutErrorTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
@@ -56,13 +57,10 @@ class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInte
         $unzerPaymentTransfer = $paymentProcessor->processOrderPayment($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
 
         if ($unzerPaymentTransfer->getErrors()->count() !== 0) {
-            foreach ($unzerPaymentTransfer->getErrors() as $unzerPaymentErrorTransfer) {
-                $checkoutErrorTransfer = (new CheckoutErrorTransfer())->fromArray($unzerPaymentErrorTransfer->toArray(), true);
-
-                $checkoutResponseTransfer->addError($checkoutErrorTransfer);
-            }
-
-            return $checkoutResponseTransfer->setIsSuccess(false);
+            return $this->appendUnzerPaymentErrorTransfersToCheckoutResponseTransfer(
+                $unzerPaymentTransfer,
+                $checkoutResponseTransfer,
+            );
         }
 
         $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
@@ -71,6 +69,28 @@ class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInte
         return $checkoutResponseTransfer
             ->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
             ->setIsExternalRedirect(true);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     *
+     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     */
+    protected function appendUnzerPaymentErrorTransfersToCheckoutResponseTransfer(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        CheckoutResponseTransfer $checkoutResponseTransfer
+    ): CheckoutResponseTransfer {
+        foreach ($unzerPaymentTransfer->getErrors() as $unzerPaymentErrorTransfer) {
+            $checkoutErrorTransfer = (new CheckoutErrorTransfer())->fromArray(
+                $unzerPaymentErrorTransfer->toArray(),
+                true,
+            );
+
+            $checkoutResponseTransfer->addError($checkoutErrorTransfer);
+        }
+
+        return $checkoutResponseTransfer->setIsSuccess(false);
     }
 
     /**

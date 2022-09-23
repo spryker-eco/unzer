@@ -67,7 +67,10 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         UnzerPaymentTransfer $unzerPaymentTransfer
     ): UnzerPaymentTransfer {
         foreach ($unzerApiErrorResponseTransfer->getErrors() as $unzerApiResponseErrorTransfer) {
-            $unzerPaymentErrorTransfer = $this->createUnzerPaymentErrorTransfer($unzerApiResponseErrorTransfer);
+            $unzerPaymentErrorTransfer = $this->mapUnzerApiResponseErrorTransferToUnzerPaymentErrorTransfer(
+                $unzerApiResponseErrorTransfer,
+                new UnzerPaymentErrorTransfer(),
+            );
 
             $unzerPaymentTransfer->addError($unzerPaymentErrorTransfer);
         }
@@ -77,12 +80,15 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
 
     /**
      * @param \Generated\Shared\Transfer\UnzerApiResponseErrorTransfer $unzerApiResponseErrorTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentErrorTransfer $unzerPaymentErrorTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentErrorTransfer
      */
-    protected function createUnzerPaymentErrorTransfer(UnzerApiResponseErrorTransfer $unzerApiResponseErrorTransfer): UnzerPaymentErrorTransfer
-    {
-        return (new UnzerPaymentErrorTransfer())
+    protected function mapUnzerApiResponseErrorTransferToUnzerPaymentErrorTransfer(
+        UnzerApiResponseErrorTransfer $unzerApiResponseErrorTransfer,
+        UnzerPaymentErrorTransfer $unzerPaymentErrorTransfer
+    ): UnzerPaymentErrorTransfer {
+        return $unzerPaymentErrorTransfer
             ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
             ->setErrorCode((int)$unzerApiResponseErrorTransfer->getCode());
     }
