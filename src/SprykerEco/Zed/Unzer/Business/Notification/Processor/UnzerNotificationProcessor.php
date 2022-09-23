@@ -129,7 +129,7 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
             ->mapPaymentUnzerTransferToUnzerPaymentTransfer(
                 $paymentUnzerTransfer,
                 new UnzerPaymentTransfer(),
-        );
+            );
 
         $unzerPaymentTransfer = $this->setUnzerKeypair($unzerPaymentTransfer, $paymentUnzerTransfer->getKeypairIdOrFail());
 
