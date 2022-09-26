@@ -77,7 +77,7 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
         $paymentMethodsTransfer = $this->unzerPaymentMethodsAdapter->getPaymentMethods($unzerKeypairTransfer);
         $unzerCredentialsCollectionTransfer = $this->getChildUnzerCredentialsCollectionTransfer($unzerKeypairTransfer);
 
-        if ($unzerCredentialsCollectionTransfer) {
+        if ($unzerCredentialsCollectionTransfer->getUnzerCredentials()->count()) {
             foreach ($unzerCredentialsCollectionTransfer->getUnzerCredentials() as $unzerCredentialsTransfer) {
                 $paymentMethodsTransfer = $this->appendChildPaymentMethods($paymentMethodsTransfer, $unzerCredentialsTransfer);
             }
@@ -139,13 +139,13 @@ class UnzerPaymentMethodImporter implements UnzerPaymentMethodImporterInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerKeypairTransfer $unzerKeypairTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer|null
+     * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
     protected function getChildUnzerCredentialsCollectionTransfer(
         UnzerKeypairTransfer $unzerKeypairTransfer
-    ): ?UnzerCredentialsCollectionTransfer {
+    ): UnzerCredentialsCollectionTransfer {
         if (!$unzerKeypairTransfer->getIdUnzerCredentials()) {
-            return null;
+            return new UnzerCredentialsCollectionTransfer();
         }
 
         $unzerCredentialsConditionsTransfer = (new UnzerCredentialsConditionsTransfer())->addParentId($unzerKeypairTransfer->getIdUnzerCredentials());
