@@ -28,7 +28,7 @@ interface UnzerFacadeInterface
      * Specification:
      * - Requires `QuoteTransfer.payment.unzerPayment` to be set.
      * - Requires `QuoteTransfer.customer` to be set.
-     * - Requires `QuoteTransfer.store` to be set.
+     * - Requires `QuoteTransfer.store.name` to be set.
      * - Expands `QuoteTransfer` with `UnzerPaymentTransfer`.
      * - Expands `QuoteTransfer` with `UnzerKeypairTransfer`.
      * - Expands `QuoteTransfer` with `UnzerCustomerTransfer`.
