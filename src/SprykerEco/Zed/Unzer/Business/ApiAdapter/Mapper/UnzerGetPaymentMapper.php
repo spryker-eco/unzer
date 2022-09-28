@@ -8,8 +8,11 @@
 namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use ArrayObject;
+use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiGetPaymentRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiGetPaymentResponseTransfer;
+use Generated\Shared\Transfer\UnzerApiResponseErrorTransfer;
+use Generated\Shared\Transfer\UnzerPaymentErrorTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use Generated\Shared\Transfer\UnzerTransactionTransfer;
 use SprykerEco\Zed\Unzer\UnzerConstants;
@@ -51,6 +54,43 @@ class UnzerGetPaymentMapper implements UnzerGetPaymentMapperInterface
         $unzerPaymentTransactions = $this->mapUnzerApiGetPaymentResponseTransferToUnzerTransactionTransfers($unzerApiGetPaymentResponseTransfer);
 
         return $unzerPaymentTransfer->setTransactions($unzerPaymentTransactions);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     */
+    public function mapUnzerApiErrorResponseTransferToUnzerPaymentTransfer(
+        UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer,
+        UnzerPaymentTransfer $unzerPaymentTransfer
+    ): UnzerPaymentTransfer {
+        foreach ($unzerApiErrorResponseTransfer->getErrors() as $unzerApiResponseErrorTransfer) {
+            $unzerPaymentErrorTransfer = $this->mapUnzerApiResponseErrorTransferToUnzerPaymentErrorTransfer(
+                $unzerApiResponseErrorTransfer,
+                new UnzerPaymentErrorTransfer(),
+            );
+
+            $unzerPaymentTransfer->addError($unzerPaymentErrorTransfer);
+        }
+
+        return $unzerPaymentTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiResponseErrorTransfer $unzerApiResponseErrorTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentErrorTransfer $unzerPaymentErrorTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentErrorTransfer
+     */
+    protected function mapUnzerApiResponseErrorTransferToUnzerPaymentErrorTransfer(
+        UnzerApiResponseErrorTransfer $unzerApiResponseErrorTransfer,
+        UnzerPaymentErrorTransfer $unzerPaymentErrorTransfer
+    ): UnzerPaymentErrorTransfer {
+        return $unzerPaymentErrorTransfer
+            ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
+            ->setErrorCode((int)$unzerApiResponseErrorTransfer->getCode());
     }
 
     /**

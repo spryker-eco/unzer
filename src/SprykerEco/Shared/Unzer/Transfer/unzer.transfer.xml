@@ -120,6 +120,7 @@
         <property name="isAuthorizable" type="bool"/>
         <property name="redirectUrl" type="string"/>
         <property name="unzerKeypair" type="UnzerKeypair"/>
+        <property name="errors" type="UnzerPaymentError[]" singular="error"/>
     </transfer>
 
     <transfer name="UnzerCharge">
@@ -812,5 +813,13 @@
     </transfer>
 
     <transfer name="UnzerApiMessage">
+    </transfer>
+
+    <transfer name="CheckoutError">
+    </transfer>
+
+    <transfer name="UnzerPaymentError">
+        <property name="errorCode" type="int"/>
+        <property name="message" type="string"/>
     </transfer>
 </transfers>

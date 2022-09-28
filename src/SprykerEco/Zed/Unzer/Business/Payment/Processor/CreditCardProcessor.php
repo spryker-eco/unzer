@@ -24,27 +24,27 @@ class CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface
      */
-    protected $unzerAuthorizeAdapter;
+    protected UnzerAuthorizeAdapterInterface $unzerAuthorizeAdapter;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
      */
-    protected $unzerPaymentAdapter;
+    protected UnzerPaymentAdapterInterface $unzerPaymentAdapter;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface
      */
-    protected $unzerChargeProcessor;
+    protected UnzerChargeProcessorInterface $unzerChargeProcessor;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface
      */
-    protected $unzerRefundProcessor;
+    protected UnzerRefundProcessorInterface $unzerRefundProcessor;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
      */
-    protected $unzerPreparePaymentProcessor;
+    protected UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerAuthorizeAdapterInterface $unzerAuthorizeAdapter
@@ -75,10 +75,12 @@ class CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
      */
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
-        $unzerPaymentTransfer->setPaymentResource($this->getUnzerPaymentResourceFromQuote($quoteTransfer));
-
+        $unzerPaymentTransfer = $this->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer = $this->unzerAuthorizeAdapter->authorizePayment($unzerPaymentTransfer);
+
+        if ($unzerPaymentTransfer->getErrors()->count() !== 0) {
+            return $unzerPaymentTransfer;
+        }
 
         return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
     }
@@ -104,6 +106,22 @@ class CreditCardProcessor implements UnzerChargeablePaymentProcessorInterface
     public function processRefund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         $this->unzerRefundProcessor->refund($refundTransfer, $orderTransfer, $salesOrderItemIds);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     */
+    protected function prepareUnzerPaymentTransfer(
+        QuoteTransfer $quoteTransfer,
+        SaveOrderTransfer $saveOrderTransfer
+    ): UnzerPaymentTransfer {
+        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
+        $unzerPaymentResourceTransfer = $this->getUnzerPaymentResourceFromQuote($quoteTransfer);
+
+        return $unzerPaymentTransfer->setPaymentResource($unzerPaymentResourceTransfer);
     }
 
     /**

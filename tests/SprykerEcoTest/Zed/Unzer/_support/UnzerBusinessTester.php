@@ -13,6 +13,7 @@ use Generated\Shared\DataBuilder\CheckoutResponseBuilder;
 use Generated\Shared\DataBuilder\PaymentMethodsBuilder;
 use Generated\Shared\DataBuilder\QuoteBuilder;
 use Generated\Shared\DataBuilder\SaveOrderBuilder;
+use Generated\Shared\DataBuilder\ShipmentBuilder;
 use Generated\Shared\DataBuilder\StoreRelationBuilder;
 use Generated\Shared\DataBuilder\TaxTotalBuilder;
 use Generated\Shared\DataBuilder\TotalsBuilder;
@@ -22,6 +23,7 @@ use Generated\Shared\DataBuilder\UnzerNotificationBuilder;
 use Generated\Shared\DataBuilder\UnzerPaymentBuilder;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\CurrencyTransfer;
+use Generated\Shared\Transfer\ItemTransfer;
 use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\PaymentTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -165,6 +167,11 @@ class UnzerBusinessTester extends Actor
     /**
      * @var string
      */
+    protected const UNZER_CHARGE_ID = 's-chg-1';
+
+    /**
+     * @var string
+     */
     protected const UNZER_EVENT_AUTHORIZED = 'authorize.succeeded';
 
     /**
@@ -247,7 +254,9 @@ class UnzerBusinessTester extends Actor
     public function createQuoteTransfer(): QuoteTransfer
     {
         return (new QuoteBuilder())
-            ->withItem()
+            ->withItem([
+                ItemTransfer::SHIPMENT => (new ShipmentBuilder())->withShippingAddress()->build(),
+            ])
             ->withTotals([
                 TotalsTransfer::TAX_TOTAL => (new TaxTotalBuilder())->build(),
             ])
@@ -563,6 +572,7 @@ class UnzerBusinessTester extends Actor
     {
         return (new UnzerApiChargeResponseTransfer())
             ->setIsSuccessful(true)
+            ->setId(static::UNZER_CHARGE_ID)
             ->setRedirectUrl(static::UNZER_REDIRECT_URL)
             ->setAmountCharged(static::TOTALS_PRICE_TO_PAY / 100)
             ->setOrderId(static::ORDER_REFERENCE)

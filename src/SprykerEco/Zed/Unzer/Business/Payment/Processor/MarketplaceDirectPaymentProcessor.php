@@ -21,10 +21,8 @@ class MarketplaceDirectPaymentProcessor extends DirectPaymentProcessor
      */
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
-        $unzerPaymentTransfer->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
-        $unzerPaymentTransfer = $this->unzerDirectChargeProcessor->charge($unzerPaymentTransfer);
+        $unzerPaymentTransfer = $this->prepareUnzerPayment($quoteTransfer, $saveOrderTransfer);
 
-        return $unzerPaymentTransfer;
+        return $this->unzerDirectChargeProcessor->charge($unzerPaymentTransfer);
     }
 }

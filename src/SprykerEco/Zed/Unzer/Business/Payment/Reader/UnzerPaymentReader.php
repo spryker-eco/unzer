@@ -82,8 +82,13 @@ class UnzerPaymentReader implements UnzerPaymentReaderInterface
         );
 
         $unzerPaymentTransfer = $this->setUnzerKeypair($unzerPaymentTransfer, $paymentUnzerTransfer->getKeypairIdOrFail());
+        $unzerPaymentTransfer = $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
 
-        return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
+        if ($unzerPaymentTransfer->getErrors()->count() !== 0) {
+            return null;
+        }
+
+        return $unzerPaymentTransfer;
     }
 
     /**
