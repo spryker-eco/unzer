@@ -9,10 +9,13 @@ namespace SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper;
 
 use Generated\Shared\Transfer\UnzerApiAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiAuthorizeResponseTransfer;
+use Generated\Shared\Transfer\UnzerApiErrorResponseTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeResponseTransfer;
+use Generated\Shared\Transfer\UnzerApiResponseErrorTransfer;
 use Generated\Shared\Transfer\UnzerBasketTransfer;
 use Generated\Shared\Transfer\UnzerCustomerTransfer;
+use Generated\Shared\Transfer\UnzerPaymentErrorTransfer;
 use Generated\Shared\Transfer\UnzerPaymentResourceTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\UnzerConfig;
@@ -23,7 +26,7 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
-    protected $unzerConfig;
+    protected UnzerConfig $unzerConfig;
 
     /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
@@ -108,5 +111,42 @@ class UnzerAuthorizePaymentMapper implements UnzerAuthorizePaymentMapperInterfac
             ->setCustomer((new UnzerCustomerTransfer())->setId($unzerApiAuthorizeResponseTransfer->getCustomerId()))
             ->setPaymentResource((new UnzerPaymentResourceTransfer())->setId($unzerApiAuthorizeResponseTransfer->getTypeId()))
             ->setRedirectUrl($unzerApiAuthorizeResponseTransfer->getRedirectUrl());
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     */
+    public function mapUnzerApiErrorResponseTransferToUnzerPaymentTransfer(
+        UnzerApiErrorResponseTransfer $unzerApiErrorResponseTransfer,
+        UnzerPaymentTransfer $unzerPaymentTransfer
+    ): UnzerPaymentTransfer {
+        foreach ($unzerApiErrorResponseTransfer->getErrors() as $unzerApiResponseErrorTransfer) {
+            $unzerPaymentErrorTransfer = $this->mapUnzerApiResponseErrorTransferToUnzerPaymentErrorTransfer(
+                $unzerApiResponseErrorTransfer,
+                new UnzerPaymentErrorTransfer(),
+            );
+
+            $unzerPaymentTransfer->addError($unzerPaymentErrorTransfer);
+        }
+
+        return $unzerPaymentTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerApiResponseErrorTransfer $unzerApiResponseErrorTransfer
+     * @param \Generated\Shared\Transfer\UnzerPaymentErrorTransfer $unzerPaymentErrorTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentErrorTransfer
+     */
+    protected function mapUnzerApiResponseErrorTransferToUnzerPaymentErrorTransfer(
+        UnzerApiResponseErrorTransfer $unzerApiResponseErrorTransfer,
+        UnzerPaymentErrorTransfer $unzerPaymentErrorTransfer
+    ): UnzerPaymentErrorTransfer {
+        return $unzerPaymentErrorTransfer
+            ->setMessage($unzerApiResponseErrorTransfer->getCustomerMessage())
+            ->setErrorCode((int)$unzerApiResponseErrorTransfer->getCode());
     }
 }

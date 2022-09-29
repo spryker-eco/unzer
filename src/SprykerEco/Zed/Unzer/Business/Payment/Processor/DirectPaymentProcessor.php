@@ -25,32 +25,32 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentResourceAdapterInterface
      */
-    protected $unzerPaymentResourceAdapter;
+    protected UnzerPaymentResourceAdapterInterface $unzerPaymentResourceAdapter;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\Refund\UnzerRefundProcessorInterface
      */
-    protected $unzerRefundProcessor;
+    protected UnzerRefundProcessorInterface $unzerRefundProcessor;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\PreparePayment\UnzerPreparePaymentProcessorInterface
      */
-    protected $unzerPreparePaymentProcessor;
+    protected UnzerPreparePaymentProcessorInterface $unzerPreparePaymentProcessor;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Checkout\Mapper\UnzerCheckoutMapperInterface
      */
-    protected $unzerCheckoutMapper;
+    protected UnzerCheckoutMapperInterface $unzerCheckoutMapper;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
      */
-    protected $unzerPaymentAdapter;
+    protected UnzerPaymentAdapterInterface $unzerPaymentAdapter;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Processor\DirectCharge\UnzerDirectChargeProcessorInterface
      */
-    protected $unzerDirectChargeProcessor;
+    protected UnzerDirectChargeProcessorInterface $unzerDirectChargeProcessor;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
@@ -84,9 +84,12 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
      */
     public function processOrderPayment(QuoteTransfer $quoteTransfer, SaveOrderTransfer $saveOrderTransfer): UnzerPaymentTransfer
     {
-        $unzerPaymentTransfer = $this->unzerPreparePaymentProcessor->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer);
-        $unzerPaymentTransfer->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
+        $unzerPaymentTransfer = $this->prepareUnzerPayment($quoteTransfer, $saveOrderTransfer);
         $unzerPaymentTransfer = $this->unzerDirectChargeProcessor->charge($unzerPaymentTransfer);
+
+        if ($unzerPaymentTransfer->getErrors()->count() !== 0) {
+            return $unzerPaymentTransfer;
+        }
 
         return $this->unzerPaymentAdapter->getPaymentInfo($unzerPaymentTransfer);
     }
@@ -101,6 +104,21 @@ class DirectPaymentProcessor implements UnzerPaymentProcessorInterface
     public function processRefund(RefundTransfer $refundTransfer, OrderTransfer $orderTransfer, array $salesOrderItemIds): void
     {
         $this->unzerRefundProcessor->refund($refundTransfer, $orderTransfer, $salesOrderItemIds);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\SaveOrderTransfer $saveOrderTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
+     */
+    protected function prepareUnzerPayment(
+        QuoteTransfer $quoteTransfer,
+        SaveOrderTransfer $saveOrderTransfer
+    ): UnzerPaymentTransfer {
+        return $this->unzerPreparePaymentProcessor
+            ->prepareUnzerPaymentTransfer($quoteTransfer, $saveOrderTransfer)
+            ->setPaymentResource($this->createUnzerPaymentResource($quoteTransfer));
     }
 
     /**

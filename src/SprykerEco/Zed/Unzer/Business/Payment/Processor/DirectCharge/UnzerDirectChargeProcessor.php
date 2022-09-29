@@ -61,12 +61,21 @@ class UnzerDirectChargeProcessor implements UnzerDirectChargeProcessorInterface
      */
     public function charge(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $unzerApiChargeResponseTransfer = $this->unzerChargeAdapter->chargePayment($unzerPaymentTransfer);
-        $this->updatePaymentUnzerOrderItemEntities($unzerPaymentTransfer, $unzerApiChargeResponseTransfer);
+        $unzerApiResponseTransfer = $this->unzerChargeAdapter->chargePayment($unzerPaymentTransfer);
+
+        if ($unzerApiResponseTransfer->getIsSuccessful()) {
+            $this->updatePaymentUnzerOrderItemEntities($unzerPaymentTransfer, $unzerApiResponseTransfer->getChargeResponseOrFail());
+
+            return $this->unzerChargeMapper
+                ->mapUnzerApiChargeResponseTransferToUnzerPaymentTransfer(
+                    $unzerApiResponseTransfer->getChargeResponseOrFail(),
+                    $unzerPaymentTransfer,
+                );
+        }
 
         return $this->unzerChargeMapper
-            ->mapUnzerApiChargeResponseTransferToUnzerPaymentTransfer(
-                $unzerApiChargeResponseTransfer,
+            ->mapUnzerApiErrorResponseTransferToUnzerPaymentTransfer(
+                $unzerApiResponseTransfer->getErrorResponseOrFail(),
                 $unzerPaymentTransfer,
             );
     }

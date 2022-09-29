@@ -12,7 +12,6 @@ use Generated\Shared\Transfer\UnzerApiMarketplaceAuthorizeRequestTransfer;
 use Generated\Shared\Transfer\UnzerApiRequestTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface;
-use SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface;
 use SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface;
 
 class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
@@ -20,31 +19,23 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
      */
-    protected $unzerApiFacade;
+    protected UnzerToUnzerApiFacadeInterface $unzerApiFacade;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface
      */
-    protected $unzerAuthorizePaymentMapper;
-
-    /**
-     * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
-     */
-    protected $unzerApiAdapterResponseValidator;
+    protected UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper
-     * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
      */
     public function __construct(
         UnzerToUnzerApiFacadeInterface $unzerApiFacade,
-        UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper,
-        UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator
+        UnzerAuthorizePaymentMapperInterface $unzerAuthorizePaymentMapper
     ) {
         $this->unzerApiFacade = $unzerApiFacade;
         $this->unzerAuthorizePaymentMapper = $unzerAuthorizePaymentMapper;
-        $this->unzerApiAdapterResponseValidator = $unzerApiAdapterResponseValidator;
     }
 
     /**
@@ -58,7 +49,7 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
             return $this->performMarketplaceAuthorize($unzerPaymentTransfer);
         }
 
-        return $this->performRegularAuthorize($unzerPaymentTransfer);
+        return $this->performStandardAuthorize($unzerPaymentTransfer);
     }
 
     /**
@@ -68,26 +59,20 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
      */
     protected function performMarketplaceAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
-
-        $unzerApiMarketplaceAuthorizeRequestTransfer = $this
-            ->unzerAuthorizePaymentMapper
-            ->mapUnzerPaymentTransferToUnzerApiMarketplaceAuthorizeRequestTransfer(
-                $unzerPaymentTransfer,
-                new UnzerApiMarketplaceAuthorizeRequestTransfer(),
-            );
-
-        $unzerApiRequestTransfer->setMarketplaceAuthorizeRequest($unzerApiMarketplaceAuthorizeRequestTransfer);
+        $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithMarketplaceAuthorizeRequest($unzerPaymentTransfer);
         $unzerApiResponseTransfer = $this->unzerApiFacade->performMarketplaceAuthorizeApiCall($unzerApiRequestTransfer);
-        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
 
-        $unzerApiMarketplaceAuthorizeResponseTransfer = $unzerApiResponseTransfer->getMarketplaceAuthorizeResponseOrFail();
+        if ($unzerApiResponseTransfer->getIsSuccessful()) {
+            return $this->unzerAuthorizePaymentMapper
+                ->mapUnzerApiMarketplaceAuthorizeResponseTransferToUnzerPaymentTransfer(
+                    $unzerApiResponseTransfer->getMarketplaceAuthorizeResponseOrFail(),
+                    $unzerPaymentTransfer,
+                );
+        }
 
-        return $this
-            ->unzerAuthorizePaymentMapper
-            ->mapUnzerApiMarketplaceAuthorizeResponseTransferToUnzerPaymentTransfer(
-                $unzerApiMarketplaceAuthorizeResponseTransfer,
+        return $this->unzerAuthorizePaymentMapper
+            ->mapUnzerApiErrorResponseTransferToUnzerPaymentTransfer(
+                $unzerApiResponseTransfer->getErrorResponseOrFail(),
                 $unzerPaymentTransfer,
             );
     }
@@ -97,29 +82,60 @@ class UnzerAuthorizeAdapter implements UnzerAuthorizeAdapterInterface
      *
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer
      */
-    protected function performRegularAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
+    protected function performStandardAuthorize(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerPaymentTransfer
     {
-        $unzerApiRequestTransfer = (new UnzerApiRequestTransfer())
-            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail());
+        $unzerApiRequestTransfer = $this->createUnzerApiRequestTransferWithAuthorizeRequest($unzerPaymentTransfer);
+        $unzerApiResponseTransfer = $this->unzerApiFacade->performAuthorizeApiCall($unzerApiRequestTransfer);
 
-        $unzerApiAuthorizeRequestTransfer = $this
+        if ($unzerApiResponseTransfer->getIsSuccessful()) {
+            return $this->unzerAuthorizePaymentMapper
+                ->mapUnzerApiAuthorizeResponseTransferToUnzerPaymentTransfer(
+                    $unzerApiResponseTransfer->getAuthorizeResponseOrFail(),
+                    $unzerPaymentTransfer,
+                );
+        }
+
+        return $this->unzerAuthorizePaymentMapper
+            ->mapUnzerApiErrorResponseTransferToUnzerPaymentTransfer(
+                $unzerApiResponseTransfer->getErrorResponseOrFail(),
+                $unzerPaymentTransfer,
+            );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiRequestTransfer
+     */
+    protected function createUnzerApiRequestTransferWithMarketplaceAuthorizeRequest(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiRequestTransfer
+    {
+        $unzerApiMarketplaceAuthorizeRequestTransfer = $this
             ->unzerAuthorizePaymentMapper
+            ->mapUnzerPaymentTransferToUnzerApiMarketplaceAuthorizeRequestTransfer(
+                $unzerPaymentTransfer,
+                new UnzerApiMarketplaceAuthorizeRequestTransfer(),
+            );
+
+        return (new UnzerApiRequestTransfer())
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail())
+            ->setMarketplaceAuthorizeRequest($unzerApiMarketplaceAuthorizeRequestTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerApiRequestTransfer
+     */
+    protected function createUnzerApiRequestTransferWithAuthorizeRequest(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiRequestTransfer
+    {
+        $unzerApiAuthorizeRequestTransfer = $this->unzerAuthorizePaymentMapper
             ->mapUnzerPaymentTransferToUnzerApiAuthorizeRequestTransfer(
                 $unzerPaymentTransfer,
                 new UnzerApiAuthorizeRequestTransfer(),
             );
 
-        $unzerApiRequestTransfer->setAuthorizeRequest($unzerApiAuthorizeRequestTransfer);
-        $unzerApiResponseTransfer = $this->unzerApiFacade->performAuthorizeApiCall($unzerApiRequestTransfer);
-        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
-
-        $unzerApiAuthorizeResponseTransfer = $unzerApiResponseTransfer->getAuthorizeResponseOrFail();
-
-        return $this
-            ->unzerAuthorizePaymentMapper
-            ->mapUnzerApiAuthorizeResponseTransferToUnzerPaymentTransfer(
-                $unzerApiAuthorizeResponseTransfer,
-                $unzerPaymentTransfer,
-            );
+        return (new UnzerApiRequestTransfer())
+            ->setUnzerKeypair($unzerPaymentTransfer->getUnzerKeypairOrFail())
+            ->setAuthorizeRequest($unzerApiAuthorizeRequestTransfer);
     }
 }

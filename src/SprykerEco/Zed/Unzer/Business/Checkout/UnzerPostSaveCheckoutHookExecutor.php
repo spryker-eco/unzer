@@ -7,8 +7,10 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Checkout;
 
+use Generated\Shared\Transfer\CheckoutErrorTransfer;
 use Generated\Shared\Transfer\CheckoutResponseTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
+use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
 use SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
@@ -19,12 +21,12 @@ class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInte
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface
      */
-    protected $unzerPaymentUpdater;
+    protected UnzerPaymentUpdaterInterface $unzerPaymentUpdater;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\ProcessorResolver\UnzerPaymentProcessorResolverInterface
      */
-    protected $unzerPaymentProcessorResolver;
+    protected UnzerPaymentProcessorResolverInterface $unzerPaymentProcessorResolver;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface $unzerPaymentUpdater
@@ -42,27 +44,62 @@ class UnzerPostSaveCheckoutHookExecutor implements UnzerCheckoutHookExecutorInte
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
      *
-     * @return void
+     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
      */
-    public function execute(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): void
+    public function execute(QuoteTransfer $quoteTransfer, CheckoutResponseTransfer $checkoutResponseTransfer): CheckoutResponseTransfer
     {
-        if ($quoteTransfer->getPayment() === null) {
-            return;
-        }
-
-        if ($quoteTransfer->getPaymentOrFail()->getPaymentProvider() !== SharedUnzerConfig::PAYMENT_PROVIDER_NAME) {
-            return;
+        if (!$this->hasUnzerPayment($quoteTransfer)) {
+            return $checkoutResponseTransfer;
         }
 
         $paymentMethod = $quoteTransfer->getPaymentOrFail()->getPaymentSelectionOrFail();
         $paymentProcessor = $this->unzerPaymentProcessorResolver->resolvePaymentProcessor($paymentMethod);
         $unzerPaymentTransfer = $paymentProcessor->processOrderPayment($quoteTransfer, $checkoutResponseTransfer->getSaveOrderOrFail());
 
-        $checkoutResponseTransfer
+        if ($unzerPaymentTransfer->getErrors()->count() !== 0) {
+            return $this->appendUnzerPaymentErrorTransfersToCheckoutResponseTransfer(
+                $unzerPaymentTransfer,
+                $checkoutResponseTransfer,
+            );
+        }
+
+        $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
+        $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
+
+        return $checkoutResponseTransfer
             ->setRedirectUrl($unzerPaymentTransfer->getRedirectUrl())
             ->setIsExternalRedirect(true);
-        $quoteTransfer->getPaymentOrFail()->setUnzerPayment($unzerPaymentTransfer);
+    }
 
-        $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, UnzerConstants::OMS_STATUS_PAYMENT_PENDING);
+    /**
+     * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
+     * @param \Generated\Shared\Transfer\CheckoutResponseTransfer $checkoutResponseTransfer
+     *
+     * @return \Generated\Shared\Transfer\CheckoutResponseTransfer
+     */
+    protected function appendUnzerPaymentErrorTransfersToCheckoutResponseTransfer(
+        UnzerPaymentTransfer $unzerPaymentTransfer,
+        CheckoutResponseTransfer $checkoutResponseTransfer
+    ): CheckoutResponseTransfer {
+        foreach ($unzerPaymentTransfer->getErrors() as $unzerPaymentErrorTransfer) {
+            $checkoutErrorTransfer = (new CheckoutErrorTransfer())->fromArray(
+                $unzerPaymentErrorTransfer->toArray(),
+                true,
+            );
+
+            $checkoutResponseTransfer->addError($checkoutErrorTransfer);
+        }
+
+        return $checkoutResponseTransfer->setIsSuccess(false);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     *
+     * @return bool
+     */
+    protected function hasUnzerPayment(QuoteTransfer $quoteTransfer): bool
+    {
+        return $quoteTransfer->getPayment() !== null && $quoteTransfer->getPaymentOrFail()->getPaymentProvider() === SharedUnzerConfig::PAYMENT_PROVIDER_NAME;
     }
 }

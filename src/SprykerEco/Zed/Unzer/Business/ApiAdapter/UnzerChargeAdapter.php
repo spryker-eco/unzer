@@ -22,17 +22,17 @@ class UnzerChargeAdapter implements UnzerChargeAdapterInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface
      */
-    protected $unzerApiFacade;
+    protected UnzerToUnzerApiFacadeInterface $unzerApiFacade;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Mapper\UnzerChargeMapperInterface
      */
-    protected $unzerChargeMapper;
+    protected UnzerChargeMapperInterface $unzerChargeMapper;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\Validator\UnzerApiAdapterResponseValidatorInterface
      */
-    protected $unzerApiAdapterResponseValidator;
+    protected UnzerApiAdapterResponseValidatorInterface $unzerApiAdapterResponseValidator;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Dependency\UnzerToUnzerApiFacadeInterface $unzerApiFacade
@@ -52,16 +52,13 @@ class UnzerChargeAdapter implements UnzerChargeAdapterInterface
     /**
      * @param \Generated\Shared\Transfer\UnzerPaymentTransfer $unzerPaymentTransfer
      *
-     * @return \Generated\Shared\Transfer\UnzerApiChargeResponseTransfer
+     * @return \Generated\Shared\Transfer\UnzerApiResponseTransfer
      */
-    public function chargePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiChargeResponseTransfer
+    public function chargePayment(UnzerPaymentTransfer $unzerPaymentTransfer): UnzerApiResponseTransfer
     {
         $unzerApiRequestTransfer = $this->prepareChargeRequest($unzerPaymentTransfer);
 
-        $unzerApiResponseTransfer = $this->performCharge($unzerApiRequestTransfer, $unzerPaymentTransfer);
-        $this->unzerApiAdapterResponseValidator->assertSuccessResponse($unzerApiResponseTransfer);
-
-        return $unzerApiResponseTransfer->getChargeResponseOrFail();
+        return $this->performCharge($unzerApiRequestTransfer, $unzerPaymentTransfer);
     }
 
     /**
