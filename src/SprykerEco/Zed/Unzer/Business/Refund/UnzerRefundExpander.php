@@ -178,7 +178,7 @@ class UnzerRefundExpander implements UnzerRefundExpanderInterface
         return (new UnzerRefundItemTransfer())->setBasketItemReferenceId(
             sprintf(UnzerConstants::UNZER_BASKET_SHIPMENT_REFERENCE_ID_TEMPLATE, $expenseTransfer->getUnzerParticipantIdOrFail()),
         )
-            ->setQuantity(UnzerConstants::FULL_REFUND_QUANTITY)
+            ->setQuantity(UnzerConstants::PARTIAL_REFUND_QUANTITY)
             ->setAmountGross($expenseTransfer->getRefundableAmountOrFail() / UnzerConstants::INT_TO_FLOAT_DIVIDER);
     }
 
