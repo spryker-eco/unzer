@@ -134,6 +134,7 @@
     </transfer>
 
     <transfer name="UnzerKeypair">
+        <property name="idUnzerCredentials" type="int"/>
         <property name="keypairId" type="string"/>
         <property name="publicKey" type="string"/>
         <property name="privateKey" type="string"/>
@@ -799,7 +800,6 @@
         <property name="chargeId" type="string"/>
     </transfer>
 
-
     <transfer name="UnzerApiGetWebhookResponse">
     </transfer>
 
@@ -813,6 +813,11 @@
     </transfer>
 
     <transfer name="UnzerApiMessage">
+    </transfer>
+
+    <transfer name="UnzerMarketplacePaymentCredentialsResolverCriteria">
+        <property name="quote" type="Quote"/>
+        <property name="paymentMethodKey" type="string"/>
     </transfer>
 
     <transfer name="CheckoutError">

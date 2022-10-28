@@ -17,19 +17,39 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
+ * @group PerformPaymentMethodsImportTest
  */
 class PerformPaymentMethodsImportTest extends UnzerFacadeBaseTest
 {
     /**
      * @return void
      */
-    public function testPerformPaymentMethodsImportTest(): void
+    public function testStandardCredentialsPerformPaymentMethodsImport(): void
     {
         // Arrange
         $this->tester->ensureUnzerCredentialsTablesAreEmpty();
         $this->tester->ensurePaymentMethodTableIsEmpty();
         $this->tester->ensurePaymentProviderTableIsEmpty();
         $unzerCredentialsTransfer = $this->tester->haveStandardUnzerCredentials();
+
+        // Act
+        $this->tester->getFacade()->performPaymentMethodsImport($unzerCredentialsTransfer->getUnzerKeypairOrFail());
+
+        // Assert
+        $this->assertSame(1, $this->tester->getNumberOfPaymentProviders());
+        $this->assertSame(2, $this->tester->getNumberOfPaymentMethods());
+    }
+
+    /**
+     * @return void
+     */
+    public function testMarketplaceCredentialsPerformPaymentMethodsImport(): void
+    {
+        // Arrange
+        $this->tester->ensureUnzerCredentialsTablesAreEmpty();
+        $this->tester->ensurePaymentMethodTableIsEmpty();
+        $this->tester->ensurePaymentProviderTableIsEmpty();
+        $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
 
         // Act
         $this->tester->getFacade()->performPaymentMethodsImport($unzerCredentialsTransfer->getUnzerKeypairOrFail());

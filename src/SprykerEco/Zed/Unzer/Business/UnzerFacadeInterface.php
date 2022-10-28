@@ -18,6 +18,7 @@ use Generated\Shared\Transfer\UnzerCredentialsCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsResponseTransfer;
 use Generated\Shared\Transfer\UnzerCredentialsTransfer;
 use Generated\Shared\Transfer\UnzerKeypairTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
@@ -27,7 +28,7 @@ interface UnzerFacadeInterface
      * Specification:
      * - Requires `QuoteTransfer.payment.unzerPayment` to be set.
      * - Requires `QuoteTransfer.customer` to be set.
-     * - Requires `QuoteTransfer.store` to be set.
+     * - Requires `QuoteTransfer.store.name` to be set.
      * - Expands `QuoteTransfer` with `UnzerPaymentTransfer`.
      * - Expands `QuoteTransfer` with `UnzerKeypairTransfer`.
      * - Expands `QuoteTransfer` with `UnzerCustomerTransfer`.
@@ -316,7 +317,7 @@ interface UnzerFacadeInterface
 
     /**
      * Specification:
-     * - Imports available Unzer payment methods and saves them in persistence.
+     * - Imports available Unzer payment methods for selected credentials and its child credentials and saves them in persistence.
      *
      * @api
      *
@@ -403,4 +404,24 @@ interface UnzerFacadeInterface
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
      */
     public function findUpdatedUnzerPaymentForOrder(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer;
+
+    /**
+     * Specification:
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote.unzerCredentials.type` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote.store.name` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.paymentMethodKey` transfer property to be set.
+     * - Performs Unzer get payment methods API call to check whether main marketplace payment method is used.
+     * - Returns Unzer credentials matching the specified payment method.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function resolveMarketplacePaymentUnzerCredentials(
+        UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
+    ): UnzerCredentialsTransfer;
 }

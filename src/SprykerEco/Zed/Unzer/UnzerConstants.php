@@ -245,6 +245,11 @@ interface UnzerConstants
     public const PARTIAL_REFUND_QUANTITY = 0;
 
     /**
+     * @var int
+     */
+    public const FULL_REFUND_QUANTITY = 1;
+
+    /**
      * @var string
      */
     public const TRANSACTION_TYPE_CHARGE = 'charge';

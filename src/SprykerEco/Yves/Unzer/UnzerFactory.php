@@ -57,6 +57,7 @@ class UnzerFactory extends AbstractFactory
     {
         return new MarketplaceCreditCardFormDataProvider(
             $this->getQuoteClient(),
+            $this->getUnzerClient(),
         );
     }
 

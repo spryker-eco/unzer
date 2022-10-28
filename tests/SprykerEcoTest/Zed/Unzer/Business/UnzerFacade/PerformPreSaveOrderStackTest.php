@@ -22,6 +22,7 @@ use SprykerEcoTest\Zed\Unzer\Business\UnzerFacadeBaseTest;
  * @group Unzer
  * @group Business
  * @group UnzerFacade
+ * @group PerformPreSaveOrderStackTest
  */
 class PerformPreSaveOrderStackTest extends UnzerFacadeBaseTest
 {
@@ -35,7 +36,7 @@ class PerformPreSaveOrderStackTest extends UnzerFacadeBaseTest
         $unzerPaymentTransfer = $this->tester->createUnzerPaymentTransfer(true, false);
         $paymentTransfer = $this->tester->createPaymentTransfer(UnzerConfig::PAYMENT_METHOD_KEY_MARKETPLACE_BANK_TRANSFER)->setUnzerPayment($unzerPaymentTransfer);
         $unzerCredentialsTransfer = $this->tester->haveMarketplaceUnzerCredentialsWithMarketplaceMainMerchantUnzerCredentails();
-        $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer)->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0));
+        $quoteTransfer = $this->tester->createQuoteTransfer()->setPayment($paymentTransfer)->setStore($unzerCredentialsTransfer->getStoreRelation()->getStores()->offsetGet(0))->setUnzerCredentials($unzerCredentialsTransfer);
         $quoteTransfer->getPayment()->getUnzerPayment()->setUnzerKeypair($unzerCredentialsTransfer->getUnzerKeypair());
 
         // Act

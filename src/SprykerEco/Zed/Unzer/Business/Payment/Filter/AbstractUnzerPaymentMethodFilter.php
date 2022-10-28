@@ -7,6 +7,7 @@
 
 namespace SprykerEco\Zed\Unzer\Business\Payment\Filter;
 
+use Generated\Shared\Transfer\PaymentMethodsTransfer;
 use Generated\Shared\Transfer\PaymentMethodTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use SprykerEco\Shared\Unzer\UnzerConfig as SharedUnzerConfig;
@@ -18,7 +19,7 @@ abstract class AbstractUnzerPaymentMethodFilter
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
-    protected $unzerConfig;
+    protected UnzerConfig $unzerConfig;
 
     /**
      * @param \SprykerEco\Zed\Unzer\UnzerConfig $unzerConfig
@@ -72,5 +73,21 @@ abstract class AbstractUnzerPaymentMethodFilter
         }
 
         return count($merchantReferences) > 1;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\PaymentMethodsTransfer $paymentMethodsTransfer
+     *
+     * @return bool
+     */
+    protected function hasUnzerPaymentMethod(PaymentMethodsTransfer $paymentMethodsTransfer): bool
+    {
+        foreach ($paymentMethodsTransfer->getMethods() as $paymentMethodTransfer) {
+            if ($this->isUnzerPaymentProvider($paymentMethodTransfer)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

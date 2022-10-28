@@ -8,6 +8,8 @@
 namespace SprykerEco\Client\Unzer;
 
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 
@@ -38,4 +40,22 @@ interface UnzerClientInterface
      * @return \Generated\Shared\Transfer\UnzerPaymentTransfer|null
      */
     public function findUpdatedUnzerPaymentForOrderAction(OrderTransfer $orderTransfer): ?UnzerPaymentTransfer;
+
+    /**
+     * Specification:
+     * - Makes Zed request.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote.unzerCredentials.type` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.quote.store.name` transfer property to be set.
+     * - Requires `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer.paymentMethodKey` transfer property to be set.
+     * - Gets Unzer marketplace credentials by `UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer`.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function resolveMarketplacePaymentUnzerCredentials(
+        UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
+    ): UnzerCredentialsTransfer;
 }

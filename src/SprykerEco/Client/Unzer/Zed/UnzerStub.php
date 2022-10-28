@@ -8,6 +8,8 @@
 namespace SprykerEco\Client\Unzer\Zed;
 
 use Generated\Shared\Transfer\OrderTransfer;
+use Generated\Shared\Transfer\UnzerCredentialsTransfer;
+use Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer;
 use Generated\Shared\Transfer\UnzerNotificationTransfer;
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Client\Unzer\Dependency\Client\UnzerToZedRequestClientInterface;
@@ -55,5 +57,21 @@ class UnzerStub implements UnzerStubInterface
         $unzerPaymentTransfer = $this->zedRequestClient->call('/unzer/gateway/find-updated-unzer-payment-for-order', $orderTransfer);
 
         return $unzerPaymentTransfer;
+    }
+
+    /**
+     * @uses \SprykerEco\Zed\Unzer\Communication\Controller\GatewayController::resolveMarketplacePaymentUnzerCredentialsAction()
+     *
+     * @param \Generated\Shared\Transfer\UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\UnzerCredentialsTransfer
+     */
+    public function resolveMarketplacePaymentUnzerCredentials(
+        UnzerMarketplacePaymentCredentialsResolverCriteriaTransfer $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer
+    ): UnzerCredentialsTransfer {
+        /** @var \Generated\Shared\Transfer\UnzerCredentialsTransfer $unzerCredentialsTransfer */
+        $unzerCredentialsTransfer = $this->zedRequestClient->call('/unzer/gateway/resolve-marketplace-payment-unzer-credentials', $unzerMarketplacePaymentCredentialsResolverCriteriaTransfer);
+
+        return $unzerCredentialsTransfer;
     }
 }

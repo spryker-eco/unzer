@@ -50,7 +50,7 @@ jobs:
             fail-fast: false
             matrix:
                 php-versions:
-                    - '7.4'
+                    - '8.0'
                     - '8.1'
 
         services:
@@ -91,7 +91,6 @@ jobs:
               run: composer --version
 
             - name: Composer install
-                #        if: steps.cache.outputs.cache-hit != 'true'
               run: composer install --prefer-dist --no-interaction --optimize-autoloader
 
             - name: PHP syntax validation
@@ -118,7 +117,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '7.4'
+                  php-version: '8.0'
                   extensions: mbstring, intl, bcmath, pdo_mysql
 
             - name: Composer Install
