@@ -52,6 +52,24 @@ class UnzerConfig extends AbstractBundleConfig
     /**
      * @var array<string, string>
      */
+    protected const UNZER_CHARGE_STATE_OMS_STATUS_MAP = [
+        UnzerConstants::TRANSACTION_STATUS_SUCCESS => UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
+        UnzerConstants::TRANSACTION_STATUS_PENDING => UnzerConstants::OMS_STATUS_CHARGE_PENDING,
+        UnzerConstants::TRANSACTION_STATUS_ERROR => UnzerConstants::OMS_STATUS_CHARGE_FAILED,
+    ];
+
+    /**
+     * @var array<string, string>
+     */
+    protected const UNZER_AUTHORIZE_STATE_OMS_STATUS_MAP = [
+        UnzerConstants::TRANSACTION_STATUS_SUCCESS => UnzerConstants::OMS_STATUS_AUTHORIZE_SUCCEEDED,
+        UnzerConstants::TRANSACTION_STATUS_PENDING => UnzerConstants::OMS_STATUS_AUTHORIZE_PENDING,
+        UnzerConstants::TRANSACTION_STATUS_ERROR => UnzerConstants::OMS_STATUS_AUTHORIZE_FAILED,
+    ];
+
+    /**
+     * @var array<string, string>
+     */
     protected const UNZER_EVENT_OMS_STATUS_MAP = [
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS => UnzerConstants::OMS_STATUS_AUTHORIZE_SUCCEEDED,
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_PENDING => UnzerConstants::OMS_STATUS_AUTHORIZE_PENDING,
@@ -367,6 +385,8 @@ class UnzerConfig extends AbstractBundleConfig
      *
      * @api
      *
+     * @deprecated Will be removed without replacement.
+     *
      * @param string $unzerEvent
      *
      * @return string
@@ -374,6 +394,36 @@ class UnzerConfig extends AbstractBundleConfig
     public function mapUnzerEventToOmsStatus(string $unzerEvent): string
     {
         return static::UNZER_EVENT_OMS_STATUS_MAP[$unzerEvent];
+    }
+
+    /**
+     * Specification:
+     * - Maps Unzer charge transaction status to OMS status.
+     *
+     * @api
+     *
+     * @param string $transactionStatus
+     *
+     * @return string
+     */
+    public function mapUnzerChargePaymentStatusToOmsStatus(string $transactionStatus): string
+    {
+        return static::UNZER_CHARGE_STATE_OMS_STATUS_MAP[$transactionStatus];
+    }
+
+    /**
+     * Specification:
+     * - Maps Unzer authorize transaction status to OMS status.
+     *
+     * @api
+     *
+     * @param string $transactionStatus
+     *
+     * @return string
+     */
+    public function mapUnzerAuthorizePaymentStatusToOmsStatus(string $transactionStatus): string
+    {
+        return static::UNZER_AUTHORIZE_STATE_OMS_STATUS_MAP[$transactionStatus];
     }
 
     /**

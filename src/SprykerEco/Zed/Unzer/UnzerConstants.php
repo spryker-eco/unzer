@@ -265,6 +265,16 @@ interface UnzerConstants
     public const TRANSACTION_STATUS_SUCCESS = 'success';
 
     /**
+     * @var string
+     */
+    public const TRANSACTION_STATUS_PENDING = 'pending';
+
+    /**
+     * @var string
+     */
+    public const TRANSACTION_STATUS_ERROR = 'error';
+
+    /**
      * @var int
      */
     public const INT_TO_FLOAT_DIVIDER = 100;

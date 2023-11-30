@@ -77,7 +77,7 @@ use SprykerEco\Zed\Unzer\UnzerConfig;
  * @method void comment($description)
  * @method \Codeception\Lib\Friend haveFriend($name, $actorClass = null)
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings(\SprykerEcoTest\Zed\Unzer\PHPMD)
  */
 class UnzerBusinessTester extends Actor
 {
