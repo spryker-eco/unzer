@@ -39,7 +39,7 @@ class UnzerOmsStateResolver implements UnzerOmsStateResolverInterface
                 continue;
             }
 
-            if ($unzerTransactionTransfer->getTypeOrFail() === UnzerConstants::TRANSACTION_TYPE_CHARGE) {
+            if ($unzerTransactionTransfer->getTypeOrFail() === UnzerConstants::TRANSACTION_TYPE_AUTHORIZE) {
                 $authorizeUnzerTransactionTransfer = $unzerTransactionTransfer;
             }
         }
