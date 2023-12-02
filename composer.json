@@ -31,8 +31,8 @@
         "spryker/zed-request": "^3.0.0"
     },
     "require-dev": {
-        "codeception/module-asserts": "^1.3.0",
-        "phpstan/phpstan": "^1.2.0",
+        "codeception/module-asserts": "*",
+        "phpstan/phpstan": "*",
         "spryker/application": "*",
         "spryker/code-sniffer": "*",
         "spryker/customer": "*",
@@ -44,7 +44,7 @@
         "spryker/queue": "*",
         "spryker/router": "*",
         "spryker/state-machine": "*",
-        "spryker/testify": "^3.43.0"
+        "spryker/testify": "*"
     },
     "suggest": {
         "spryker/checkout": "Use this module if you want to use Checkout plugins.",
