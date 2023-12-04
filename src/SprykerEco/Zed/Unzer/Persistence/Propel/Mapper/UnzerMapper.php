@@ -24,18 +24,18 @@ use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
-use Propel\Runtime\Collection\ObjectCollection;
+use Propel\Runtime\Collection\Collection;
 
 class UnzerMapper
 {
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection $paymentUnzerOrderItemEntities
+     * @param \Propel\Runtime\Collection\Collection<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem> $paymentUnzerOrderItemEntities
      * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
      */
     public function mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
-        ObjectCollection $paymentUnzerOrderItemEntities,
+        Collection $paymentUnzerOrderItemEntities,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
     ): PaymentUnzerOrderItemCollectionTransfer {
         foreach ($paymentUnzerOrderItemEntities as $paymentUnzerOrderItemEntity) {
@@ -210,13 +210,13 @@ class UnzerMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsStoreEntities
+     * @param \Propel\Runtime\Collection\Collection<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore> $unzerCredentialsStoreEntities
      * @param \Generated\Shared\Transfer\StoreRelationTransfer $storeRelationTransfer
      *
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
     public function mapUnzerCredentialsStoreEntitiesToStoreRelationTransfer(
-        ObjectCollection $unzerCredentialsStoreEntities,
+        Collection $unzerCredentialsStoreEntities,
         StoreRelationTransfer $storeRelationTransfer
     ): StoreRelationTransfer {
         foreach ($unzerCredentialsStoreEntities as $unzerCredentialsStoreEntity) {
@@ -239,13 +239,13 @@ class UnzerMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsEntities
+     * @param \Propel\Runtime\Collection\Collection<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentials> $unzerCredentialsEntities
      * @param \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
     public function mapUnzerCredentialsEntityCollectionToUnzerCredentialsTransferCollection(
-        ObjectCollection $unzerCredentialsEntities,
+        Collection $unzerCredentialsEntities,
         UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
     ): UnzerCredentialsCollectionTransfer {
         foreach ($unzerCredentialsEntities as $unzerCredentialsEntity) {
@@ -258,13 +258,13 @@ class UnzerMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction> $paymentUnzerTransactionEntities
+     * @param \Propel\Runtime\Collection\Collection<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction> $paymentUnzerTransactionEntities
      * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
      */
     public function mapPaymentUnzerTransactionEntityCollectionToPaymentUnzerTransactionCollectionTransfer(
-        ObjectCollection $paymentUnzerTransactionEntities,
+        Collection $paymentUnzerTransactionEntities,
         PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
     ): PaymentUnzerTransactionCollectionTransfer {
         foreach ($paymentUnzerTransactionEntities as $paymentUnzerTransactionEntity) {

@@ -374,7 +374,7 @@ class UnzerConfig extends AbstractBundleConfig
      *
      * @return array<int, string>
      */
-    public function getUnzerPaymentStateToOmsStatusMap(): string
+    public function getUnzerPaymentStateToOmsStatusMap(): array
     {
         return static::UNZER_PAYMENT_STATE_OMS_STATUS_MAP;
     }
