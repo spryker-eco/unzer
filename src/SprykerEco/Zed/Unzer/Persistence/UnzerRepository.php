@@ -56,6 +56,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      */
     public function getPaymentUnzerOrderItemCollectionByOrderId(string $orderId): PaymentUnzerOrderItemCollectionTransfer
     {
+        /** @var \Propel\Runtime\Collection\ObjectCollection $paymentUnzerOrderItemEntities */
         $paymentUnzerOrderItemEntities = $this->getFactory()
             ->getPaymentUnzerOrderItemQuery()
             ->usePaymentUnzerQuery()
@@ -151,6 +152,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
      */
     public function getStoreRelationByIdUnzerCredentials(int $idUnzerCredentials): StoreRelationTransfer
     {
+        /** @var \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsStoreEntities */
         $unzerCredentialsStoreEntities = $this->getFactory()
             ->getUnzerCredentialsStoreQuery()
             ->filterByFkUnzerCredentials($idUnzerCredentials)
@@ -178,6 +180,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             $unzerCredentialsCriteriaTransfer->getUnzerCredentialsConditionsOrFail(),
         );
 
+        /** @var \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsEntities */
         $unzerCredentialsEntities = $unzerCredentialsQuery->find();
 
         return $this->getFactory()->getUnzerMapper()
@@ -216,6 +219,7 @@ class UnzerRepository extends AbstractRepository implements UnzerRepositoryInter
             $paymentUnzerTransactionQuery,
             $paymentUnzerTransactionCriteriaTransfer->getPaymentUnzerTransactionConditionsOrFail(),
         );
+        /** @var \Propel\Runtime\Collection\ObjectCollection $paymentUnzerTransactionEntities */
         $paymentUnzerTransactionEntities = $paymentUnzerTransactionQuery->find();
 
         return $this->getFactory()->getUnzerMapper()

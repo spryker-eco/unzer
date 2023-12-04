@@ -24,18 +24,18 @@ use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerCustomer;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem;
 use Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction;
 use Orm\Zed\Unzer\Persistence\SpyUnzerCredentials;
-use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 
 class UnzerMapper
 {
     /**
-     * @param \Propel\Runtime\Collection\Collection<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem> $paymentUnzerOrderItemEntities
+     * @param \Propel\Runtime\Collection\ObjectCollection<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem> $paymentUnzerOrderItemEntities
      * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
      */
     public function mapPaymentUnzerOrderItemEntitiesToPaymentUnzerOrderItemCollectionTransfer(
-        Collection $paymentUnzerOrderItemEntities,
+        ObjectCollection $paymentUnzerOrderItemEntities,
         PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
     ): PaymentUnzerOrderItemCollectionTransfer {
         foreach ($paymentUnzerOrderItemEntities as $paymentUnzerOrderItemEntity) {
@@ -210,13 +210,13 @@ class UnzerMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\Collection<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore> $unzerCredentialsStoreEntities
+     * @param \Propel\Runtime\Collection\ObjectCollection<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore> $unzerCredentialsStoreEntities
      * @param \Generated\Shared\Transfer\StoreRelationTransfer $storeRelationTransfer
      *
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
      */
     public function mapUnzerCredentialsStoreEntitiesToStoreRelationTransfer(
-        Collection $unzerCredentialsStoreEntities,
+        ObjectCollection $unzerCredentialsStoreEntities,
         StoreRelationTransfer $storeRelationTransfer
     ): StoreRelationTransfer {
         foreach ($unzerCredentialsStoreEntities as $unzerCredentialsStoreEntity) {
@@ -239,13 +239,13 @@ class UnzerMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\Collection<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentials> $unzerCredentialsEntities
+     * @param \Propel\Runtime\Collection\ObjectCollection<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentials> $unzerCredentialsEntities
      * @param \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer
      */
     public function mapUnzerCredentialsEntityCollectionToUnzerCredentialsTransferCollection(
-        Collection $unzerCredentialsEntities,
+        ObjectCollection $unzerCredentialsEntities,
         UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
     ): UnzerCredentialsCollectionTransfer {
         foreach ($unzerCredentialsEntities as $unzerCredentialsEntity) {
@@ -258,13 +258,13 @@ class UnzerMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\Collection<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction> $paymentUnzerTransactionEntities
+     * @param \Propel\Runtime\Collection\ObjectCollection<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerTransaction> $paymentUnzerTransactionEntities
      * @param \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerTransactionCollectionTransfer
      */
     public function mapPaymentUnzerTransactionEntityCollectionToPaymentUnzerTransactionCollectionTransfer(
-        Collection $paymentUnzerTransactionEntities,
+        ObjectCollection $paymentUnzerTransactionEntities,
         PaymentUnzerTransactionCollectionTransfer $paymentUnzerTransactionCollectionTransfer
     ): PaymentUnzerTransactionCollectionTransfer {
         foreach ($paymentUnzerTransactionEntities as $paymentUnzerTransactionEntity) {
