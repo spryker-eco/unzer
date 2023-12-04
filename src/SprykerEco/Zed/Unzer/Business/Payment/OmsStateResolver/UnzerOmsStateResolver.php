@@ -8,11 +8,15 @@
 namespace SprykerEco\Zed\Unzer\Business\Payment\OmsStateResolver;
 
 use Generated\Shared\Transfer\UnzerPaymentTransfer;
+use SprykerEco\Zed\Unzer\Business\Exception\UnzerException;
 use SprykerEco\Zed\Unzer\UnzerConfig;
 use SprykerEco\Zed\Unzer\UnzerConstants;
 
 class UnzerOmsStateResolver implements UnzerOmsStateResolverInterface
 {
+    /**
+     * @var \SprykerEco\Zed\Unzer\UnzerConfig
+     */
     protected UnzerConfig $unzerConfig;
 
     /**
@@ -45,13 +49,57 @@ class UnzerOmsStateResolver implements UnzerOmsStateResolverInterface
         }
 
         if ($chargeUnzerTransactionTransfer !== null) {
-            return $this->unzerConfig->mapUnzerChargePaymentStatusToOmsStatus($chargeUnzerTransactionTransfer->getStatusOrFail());
+            return $this->mapUnzerPaymentTransactionStatusToOmsStatus(
+                $this->unzerConfig->getUnzerChargePaymentStatusToOmsStatusMap(),
+                $chargeUnzerTransactionTransfer->getStatusOrFail(),
+            );
         }
 
         if ($authorizeUnzerTransactionTransfer !== null) {
-            return $this->unzerConfig->mapUnzerAuthorizePaymentStatusToOmsStatus($authorizeUnzerTransactionTransfer->getStatusOrFail());
+            return $this->mapUnzerPaymentTransactionStatusToOmsStatus(
+                $this->unzerConfig->getUnzerAuthorizePaymentStatusToOmsStatusMap(),
+                $authorizeUnzerTransactionTransfer->getStatusOrFail(),
+            );
         }
 
-        return $this->unzerConfig->mapUnzerPaymentStatusToOmsStatus($unzerPaymentTransfer->getStateIdOrFail());
+        return $this->mapUnzerPaymentStateToOmsStatus($unzerPaymentTransfer->getStateIdOrFail());
+    }
+
+    /**
+     * @param array<string, string> $unzerPaymentStatusToOmsStatusMap
+     * @param string $unzerPaymentStatus
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return string
+     */
+    protected function mapUnzerPaymentTransactionStatusToOmsStatus(array $unzerPaymentStatusToOmsStatusMap, string $unzerPaymentStatus): string
+    {
+        if (!isset($unzerPaymentStatusToOmsStatusMap[$unzerPaymentStatus])) {
+            $message = sprintf('Undefined payment transaction status provided by Unzer: %s', $unzerPaymentStatus);
+
+            throw new UnzerException($message);
+        }
+
+        return $unzerPaymentStatusToOmsStatusMap[$unzerPaymentStatus];
+    }
+
+    /**
+     * @param int $unzerPaymentStateId
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
+     * @return string
+     */
+    protected function mapUnzerPaymentStateToOmsStatus(int $unzerPaymentStateId): string
+    {
+        $paymentStateToOmsStatusMap = $this->unzerConfig->getUnzerPaymentStateToOmsStatusMap();
+        if (!isset($paymentStateToOmsStatusMap[$unzerPaymentStateId])) {
+            $message = sprintf('Undefined payment state provided by Unzer: %s', $unzerPaymentStateId);
+
+            throw new UnzerException($message);
+        }
+
+        return $paymentStateToOmsStatusMap[$unzerPaymentStateId];
     }
 }

@@ -355,6 +355,8 @@ class UnzerConfig extends AbstractBundleConfig
      *
      * @api
      *
+     * @deprecated Will be removed without replacement.
+     *
      * @param int $unzerStateId
      *
      * @return string
@@ -362,6 +364,19 @@ class UnzerConfig extends AbstractBundleConfig
     public function mapUnzerPaymentStatusToOmsStatus(int $unzerStateId): string
     {
         return static::UNZER_PAYMENT_STATE_OMS_STATUS_MAP[$unzerStateId];
+    }
+
+    /**
+     * Specification:
+     * - Returns Unzer payment state to OMS status map.
+     *
+     * @api
+     *
+     * @return array<int, string>
+     */
+    public function getUnzerPaymentStateToOmsStatusMap(): string
+    {
+        return static::UNZER_PAYMENT_STATE_OMS_STATUS_MAP;
     }
 
     /**
@@ -398,32 +413,28 @@ class UnzerConfig extends AbstractBundleConfig
 
     /**
      * Specification:
-     * - Maps Unzer charge transaction status to OMS status.
+     * - Returns Unzer charge transaction status to OMS status map.
      *
      * @api
      *
-     * @param string $transactionStatus
-     *
-     * @return string
+     * @return array<string, string>
      */
-    public function mapUnzerChargePaymentStatusToOmsStatus(string $transactionStatus): string
+    public function getUnzerChargePaymentStatusToOmsStatusMap(): array
     {
-        return static::UNZER_CHARGE_STATE_OMS_STATUS_MAP[$transactionStatus];
+        return static::UNZER_CHARGE_STATE_OMS_STATUS_MAP;
     }
 
     /**
      * Specification:
-     * - Maps Unzer authorize transaction status to OMS status.
+     * - Returns Unzer authorize transaction status to OMS status map.
      *
      * @api
      *
-     * @param string $transactionStatus
-     *
-     * @return string
+     * @return array<string, string>
      */
-    public function mapUnzerAuthorizePaymentStatusToOmsStatus(string $transactionStatus): string
+    public function getUnzerAuthorizePaymentStatusToOmsStatusMap(): array
     {
-        return static::UNZER_AUTHORIZE_STATE_OMS_STATUS_MAP[$transactionStatus];
+        return static::UNZER_AUTHORIZE_STATE_OMS_STATUS_MAP;
     }
 
     /**
