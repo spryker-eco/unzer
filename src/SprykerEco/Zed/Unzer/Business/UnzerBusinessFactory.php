@@ -100,6 +100,8 @@ use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerMarketplacePaymentMethodFi
 use SprykerEco\Zed\Unzer\Business\Payment\Filter\UnzerPaymentMethodFilterInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapper;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\OmsStateResolver\UnzerOmsStateResolver;
+use SprykerEco\Zed\Unzer\Business\Payment\OmsStateResolver\UnzerOmsStateResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerChargeProcessorInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerCreditCardChargeProcessor;
 use SprykerEco\Zed\Unzer\Business\Payment\Processor\Charge\UnzerMarketplaceCreditCardChargeProcessor;
@@ -403,6 +405,17 @@ class UnzerBusinessFactory extends AbstractBusinessFactory
             $this->createUnzerPaymentMapper(),
             $this->createUnzerPaymentUpdater(),
             $this->createUnzerCredentialsResolver(),
+            $this->createUnzerOmsStateResolver(),
+        );
+    }
+
+    /**
+     * @return \SprykerEco\Zed\Unzer\Business\Payment\OmsStateResolver\UnzerOmsStateResolverInterface
+     */
+    public function createUnzerOmsStateResolver(): UnzerOmsStateResolverInterface
+    {
+        return new UnzerOmsStateResolver(
+            $this->getConfig(),
         );
     }
 

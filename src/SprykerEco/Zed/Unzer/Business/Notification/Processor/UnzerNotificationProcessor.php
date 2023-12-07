@@ -15,6 +15,7 @@ use Generated\Shared\Transfer\UnzerPaymentTransfer;
 use SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface;
 use SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface;
+use SprykerEco\Zed\Unzer\Business\Payment\OmsStateResolver\UnzerOmsStateResolverInterface;
 use SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface;
 use SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface;
 use SprykerEco\Zed\Unzer\UnzerConfig;
@@ -24,32 +25,37 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
     /**
      * @var \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface
      */
-    protected $unzerPaymentAdapter;
+    protected UnzerPaymentAdapterInterface $unzerPaymentAdapter;
 
     /**
      * @var \SprykerEco\Zed\Unzer\UnzerConfig
      */
-    protected $unzerConfig;
+    protected UnzerConfig $unzerConfig;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Reader\UnzerReaderInterface
      */
-    protected $unzerReader;
+    protected UnzerReaderInterface $unzerReader;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface
      */
-    protected $unzerPaymentMapper;
+    protected UnzerPaymentMapperInterface $unzerPaymentMapper;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface
      */
-    protected $unzerPaymentUpdater;
+    protected UnzerPaymentUpdaterInterface $unzerPaymentUpdater;
 
     /**
      * @var \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface
      */
-    protected $unzerCredentialsResolver;
+    protected UnzerCredentialsResolverInterface $unzerCredentialsResolver;
+
+    /**
+     * @var \SprykerEco\Zed\Unzer\Business\Payment\OmsStateResolver\UnzerOmsStateResolverInterface
+     */
+    protected UnzerOmsStateResolverInterface $unzerOmsStateResolver;
 
     /**
      * @param \SprykerEco\Zed\Unzer\Business\ApiAdapter\UnzerPaymentAdapterInterface $unzerPaymentAdapter
@@ -58,6 +64,7 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Mapper\UnzerPaymentMapperInterface $unzerPaymentMapper
      * @param \SprykerEco\Zed\Unzer\Business\Payment\Updater\UnzerPaymentUpdaterInterface $unzerPaymentUpdater
      * @param \SprykerEco\Zed\Unzer\Business\Credentials\UnzerCredentialsResolverInterface $unzerCredentialsResolver
+     * @param \SprykerEco\Zed\Unzer\Business\Payment\OmsStateResolver\UnzerOmsStateResolverInterface $unzerOmsStateResolver
      */
     public function __construct(
         UnzerPaymentAdapterInterface $unzerPaymentAdapter,
@@ -65,7 +72,8 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
         UnzerReaderInterface $unzerReader,
         UnzerPaymentMapperInterface $unzerPaymentMapper,
         UnzerPaymentUpdaterInterface $unzerPaymentUpdater,
-        UnzerCredentialsResolverInterface $unzerCredentialsResolver
+        UnzerCredentialsResolverInterface $unzerCredentialsResolver,
+        UnzerOmsStateResolverInterface $unzerOmsStateResolver
     ) {
         $this->unzerPaymentAdapter = $unzerPaymentAdapter;
         $this->unzerConfig = $unzerConfig;
@@ -73,6 +81,7 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
         $this->unzerPaymentMapper = $unzerPaymentMapper;
         $this->unzerPaymentUpdater = $unzerPaymentUpdater;
         $this->unzerCredentialsResolver = $unzerCredentialsResolver;
+        $this->unzerOmsStateResolver = $unzerOmsStateResolver;
     }
 
     /**
@@ -109,9 +118,7 @@ class UnzerNotificationProcessor implements UnzerNotificationProcessorInterface
             return $unzerNotificationTransfer;
         }
 
-        $orderItemStatus = $this->unzerConfig->mapUnzerEventToOmsStatus(
-            $unzerNotificationTransfer->getEventOrFail(),
-        );
+        $orderItemStatus = $this->unzerOmsStateResolver->getUnzerPaymentOmsStatus($unzerPaymentTransfer);
 
         $this->unzerPaymentUpdater->updateUnzerPaymentDetails($unzerPaymentTransfer, $orderItemStatus);
 

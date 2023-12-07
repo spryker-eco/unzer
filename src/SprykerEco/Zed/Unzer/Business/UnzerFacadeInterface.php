@@ -68,10 +68,13 @@ interface UnzerFacadeInterface
      * - Checks if provided Unzer notification is enabled.
      * - Processes Unzer notification.
      * - Updates payment details in DB.
+     * - Throws `UnzerException` if payment status cannot be mapped to OMS status correctly.
      *
      * @api
      *
      * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $notificationTransfer
+     *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
      *
      * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
      */

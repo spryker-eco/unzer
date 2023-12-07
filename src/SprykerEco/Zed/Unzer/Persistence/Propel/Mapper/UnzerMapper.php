@@ -29,7 +29,7 @@ use Propel\Runtime\Collection\ObjectCollection;
 class UnzerMapper
 {
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection $paymentUnzerOrderItemEntities
+     * @param \Propel\Runtime\Collection\ObjectCollection<\Orm\Zed\Unzer\Persistence\SpyPaymentUnzerOrderItem> $paymentUnzerOrderItemEntities
      * @param \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer $paymentUnzerOrderItemCollectionTransfer
      *
      * @return \Generated\Shared\Transfer\PaymentUnzerOrderItemCollectionTransfer
@@ -210,7 +210,7 @@ class UnzerMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsStoreEntities
+     * @param \Propel\Runtime\Collection\ObjectCollection<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentialsStore> $unzerCredentialsStoreEntities
      * @param \Generated\Shared\Transfer\StoreRelationTransfer $storeRelationTransfer
      *
      * @return \Generated\Shared\Transfer\StoreRelationTransfer
@@ -239,7 +239,7 @@ class UnzerMapper
     }
 
     /**
-     * @param \Propel\Runtime\Collection\ObjectCollection $unzerCredentialsEntities
+     * @param \Propel\Runtime\Collection\ObjectCollection<\Orm\Zed\Unzer\Persistence\SpyUnzerCredentials> $unzerCredentialsEntities
      * @param \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer $unzerCredentialsCollectionTransfer
      *
      * @return \Generated\Shared\Transfer\UnzerCredentialsCollectionTransfer

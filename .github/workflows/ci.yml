@@ -25,7 +25,7 @@ on:
 jobs:
     setup:
         name: Setup Database MariaDB
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-22.04
 
         steps:
             - uses: actions/checkout@v2
@@ -44,14 +44,14 @@ jobs:
     ci:
         name: Unzer (PHP ${{ matrix.php-versions }})
         needs: setup
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-22.04
 
         strategy:
             fail-fast: false
             matrix:
                 php-versions:
-                    - '8.0'
                     - '8.1'
+                    - '8.2'
 
         services:
             mariadb:
@@ -108,7 +108,7 @@ jobs:
 
     lowest:
         name: Unzer Prefer Lowest (PHP ${{ matrix.php-versions }})
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-22.04
 
         steps:
             - name: Checkout
@@ -117,7 +117,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.0'
+                  php-version: '8.1'
                   extensions: mbstring, intl, bcmath, pdo_mysql
 
             - name: Composer Install

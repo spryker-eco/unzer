@@ -52,6 +52,24 @@ class UnzerConfig extends AbstractBundleConfig
     /**
      * @var array<string, string>
      */
+    protected const UNZER_CHARGE_STATE_OMS_STATUS_MAP = [
+        UnzerConstants::TRANSACTION_STATUS_SUCCESS => UnzerConstants::OMS_STATUS_PAYMENT_COMPLETED,
+        UnzerConstants::TRANSACTION_STATUS_PENDING => UnzerConstants::OMS_STATUS_CHARGE_PENDING,
+        UnzerConstants::TRANSACTION_STATUS_ERROR => UnzerConstants::OMS_STATUS_CHARGE_FAILED,
+    ];
+
+    /**
+     * @var array<string, string>
+     */
+    protected const UNZER_AUTHORIZE_STATE_OMS_STATUS_MAP = [
+        UnzerConstants::TRANSACTION_STATUS_SUCCESS => UnzerConstants::OMS_STATUS_AUTHORIZE_SUCCEEDED,
+        UnzerConstants::TRANSACTION_STATUS_PENDING => UnzerConstants::OMS_STATUS_AUTHORIZE_PENDING,
+        UnzerConstants::TRANSACTION_STATUS_ERROR => UnzerConstants::OMS_STATUS_AUTHORIZE_FAILED,
+    ];
+
+    /**
+     * @var array<string, string>
+     */
     protected const UNZER_EVENT_OMS_STATUS_MAP = [
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_SUCCESS => UnzerConstants::OMS_STATUS_AUTHORIZE_SUCCEEDED,
         UnzerConstants::NOTIFICATION_TYPE_AUTHORIZE_PENDING => UnzerConstants::OMS_STATUS_AUTHORIZE_PENDING,
@@ -337,6 +355,8 @@ class UnzerConfig extends AbstractBundleConfig
      *
      * @api
      *
+     * @deprecated Will be removed without replacement.
+     *
      * @param int $unzerStateId
      *
      * @return string
@@ -344,6 +364,19 @@ class UnzerConfig extends AbstractBundleConfig
     public function mapUnzerPaymentStatusToOmsStatus(int $unzerStateId): string
     {
         return static::UNZER_PAYMENT_STATE_OMS_STATUS_MAP[$unzerStateId];
+    }
+
+    /**
+     * Specification:
+     * - Returns Unzer payment state to OMS status map.
+     *
+     * @api
+     *
+     * @return array<int, string>
+     */
+    public function getUnzerPaymentStateToOmsStatusMap(): array
+    {
+        return static::UNZER_PAYMENT_STATE_OMS_STATUS_MAP;
     }
 
     /**
@@ -367,6 +400,8 @@ class UnzerConfig extends AbstractBundleConfig
      *
      * @api
      *
+     * @deprecated Will be removed without replacement.
+     *
      * @param string $unzerEvent
      *
      * @return string
@@ -374,6 +409,32 @@ class UnzerConfig extends AbstractBundleConfig
     public function mapUnzerEventToOmsStatus(string $unzerEvent): string
     {
         return static::UNZER_EVENT_OMS_STATUS_MAP[$unzerEvent];
+    }
+
+    /**
+     * Specification:
+     * - Returns Unzer charge transaction status to OMS status map.
+     *
+     * @api
+     *
+     * @return array<string, string>
+     */
+    public function getUnzerChargePaymentStatusToOmsStatusMap(): array
+    {
+        return static::UNZER_CHARGE_STATE_OMS_STATUS_MAP;
+    }
+
+    /**
+     * Specification:
+     * - Returns Unzer authorize transaction status to OMS status map.
+     *
+     * @api
+     *
+     * @return array<string, string>
+     */
+    public function getUnzerAuthorizePaymentStatusToOmsStatusMap(): array
+    {
+        return static::UNZER_AUTHORIZE_STATE_OMS_STATUS_MAP;
     }
 
     /**

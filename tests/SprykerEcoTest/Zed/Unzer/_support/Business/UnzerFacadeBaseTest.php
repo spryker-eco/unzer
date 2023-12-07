@@ -7,7 +7,7 @@
 
 namespace SprykerEcoTest\Zed\Unzer\Business;
 
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Generated\Shared\Transfer\LocaleTransfer;
 use Spryker\Service\UtilText\UtilTextService;
 use Spryker\Zed\Locale\Business\LocaleFacade;
@@ -25,7 +25,7 @@ use SprykerEco\Zed\Unzer\Dependency\UnzerToVaultFacadeBridge;
 use SprykerEco\Zed\UnzerApi\Business\UnzerApiFacade;
 use SprykerEcoTest\Zed\Unzer\UnzerBusinessTester;
 
-class UnzerFacadeBaseTest extends Test
+class UnzerFacadeBaseTest extends Unit
 {
     /**
      * @var string

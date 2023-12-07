@@ -81,6 +81,8 @@ class UnzerFacade extends AbstractFacade implements UnzerFacadeInterface
      *
      * @param \Generated\Shared\Transfer\UnzerNotificationTransfer $notificationTransfer
      *
+     * @throws \SprykerEco\Zed\Unzer\Business\Exception\UnzerException
+     *
      * @return \Generated\Shared\Transfer\UnzerNotificationTransfer
      */
     public function processNotification(UnzerNotificationTransfer $notificationTransfer): UnzerNotificationTransfer
